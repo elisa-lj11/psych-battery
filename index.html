@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Psych Battery</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --border: #2a2a3a;
+      --text: #e0e0f0;
+      --muted: #6060a0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1.5rem;
+      gap: 0;
+    }
+
+    h1 {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    #battery-wrap {
+      margin-bottom: 0.75rem;
+    }
+
+    #status {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .breakdown {
+      width: 100%;
+      max-width: 360px;
+      margin-bottom: 2rem;
+    }
+
+    .drain-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      gap: 0.75rem;
+    }
+
+    .drain-row .app-label { flex: 1; color: var(--text); }
+    .drain-row .mins { color: var(--muted); font-size: 0.78rem; min-width: 36px; text-align: right; }
+    .drain-row .rate-badge {
+      font-size: 0.72rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      background: var(--border);
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .controls label { display: flex; align-items: center; gap: 0.5rem; }
+
+    .controls select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    #error {
+      color: #f87171;
+      font-size: 0.82rem;
+      margin-top: 1.5rem;
+      text-align: center;
+      line-height: 1.6;
+      display: none;
+      max-width: 360px;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+  </style>
+</head>
+<body>
+  <h1>Psych Battery</h1>
+
+  <div id="battery-wrap">
+    <svg width="212" height="90" viewBox="0 0 212 90">
+      <rect x="0" y="0" width="200" height="90" rx="10" fill="none" stroke="#2a2a3a" stroke-width="3"/>
+      <rect x="202" y="30" width="10" height="30" rx="3" fill="#2a2a3a"/>
+    </svg>
+  </div>
+
+  <div id="status">Connecting to ActivityWatch…</div>
+
+  <p class="section-title">Activity breakdown</p>
+  <div class="breakdown">
+    <div id="breakdown-list"></div>
+  </div>
+
+  <div class="controls">
+    <label>Window:
+      <select id="window-select">
+        <option value="1">1 hour</option>
+        <option value="2">2 hours</option>
+        <option value="4" selected>4 hours</option>
+        <option value="8">8 hours</option>
+      </select>
+    </label>
+    <span id="last-updated"></span>
+  </div>
+
+  <div id="error"></div>
+
+  <script>
+    const AW = '/aw';
+
+    // ── Drain rules ───────────────────────────────────────────────────────────
+    // Patterns match app name OR window title (case-insensitive, substring).
+    // First match wins. Rate = drain units per minute.
+    // Negative rate = recharge (used for AFK below, but you can add low-stim apps here too).
+    const DRAIN_RULES = [
+      // ● High drain — cognitive output + social stimulation + AI
+      { patterns: ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'], rate: 3.0, label: 'AI Tools' },
+      { patterns: ['zoom', 'teams', 'google meet', 'webex', 'whereby', 'loom'],                                   rate: 3.0, label: 'Video Calls' },
+      { patterns: ['slack', 'discord', 'telegram', 'whatsapp', 'messenger', 'signal'],                            rate: 2.5, label: 'Messaging' },
+      { patterns: ['twitter', 'x.com', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],  rate: 2.5, label: 'Social Media' },
+      { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                    rate: 2.0, label: 'Email' },
+
+      // ● Medium drain — focused work
+      { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],    rate: 1.5, label: 'Coding' },
+      { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                          rate: 1.5, label: 'Design' },
+      { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                              rate: 1.0, label: 'Browser' },
+      { patterns: ['word', 'docs', 'notion', 'obsidian', 'excel', 'sheets', 'pages', 'numbers', 'onenote'],      rate: 1.0, label: 'Documents' },
+
+      // ● Low drain — passive / ambient
+      { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                               rate: 0.3, label: 'Music' },
+      { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                         rate: 0.5, label: 'Video' },
+      { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                rate: 0.3, label: 'System' },
+
+      // ● Fallback
+      { patterns: [], rate: 0.8, label: 'Other' },
+    ];
+
+    const RECHARGE_RATE  = 0.5;  // drain units recovered per AFK minute
+    const HIGH_DRAIN_CAP = 3.0;  // max rate, used to set 0% threshold
+
+    // ── State ─────────────────────────────────────────────────────────────────
+    let windowHours  = 4;
+    let windowBucket = null;
+    let afkBucket    = null;
+
+    // ── API helpers ───────────────────────────────────────────────────────────
+    async function apiFetch(path) {
+      const res = await fetch(AW + path);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    }
+
+    async function findBuckets() {
+      const buckets = await apiFetch('/buckets');
+      const ids = Object.keys(buckets);
+      windowBucket = ids.find(id => id.startsWith('aw-watcher-window_')) ?? null;
+      afkBucket    = ids.find(id => id.startsWith('aw-watcher-afk_'))    ?? null;
+    }
+
+    async function getEvents(bucketId, start, end) {
+      const s = encodeURIComponent(start);
+      const e = encodeURIComponent(end);
+      return apiFetch(`/buckets/${encodeURIComponent(bucketId)}/events?start=${s}&end=${e}&limit=-1`);
+    }
+
+    // ── Drain logic ───────────────────────────────────────────────────────────
+    function matchRule(event) {
+      const app   = (event.data.app   ?? '').toLowerCase();
+      const title = (event.data.title ?? '').toLowerCase();
+      for (const rule of DRAIN_RULES) {
+        if (rule.patterns.length === 0) return rule; // fallback
+        if (rule.patterns.some(p => app.includes(p) || title.includes(p))) return rule;
+      }
+      return DRAIN_RULES[DRAIN_RULES.length - 1];
+    }
+
+    function calculate(windowEvents, afkEvents) {
+      const capacity = windowHours * 60 * HIGH_DRAIN_CAP;
+
+      // Accumulate drain per category
+      const tally = {};
+      let totalDrain = 0;
+
+      for (const ev of windowEvents) {
+        const mins = ev.duration / 60;
+        if (mins < 0.1) continue;
+        const rule = matchRule(ev);
+        if (!tally[rule.label]) tally[rule.label] = { minutes: 0, drain: 0, rate: rule.rate };
+        tally[rule.label].minutes += mins;
+        tally[rule.label].drain  += mins * rule.rate;
+        totalDrain += mins * rule.rate;
+      }
+
+      // Recharge from AFK periods
+      let totalRecharge = 0;
+      for (const ev of afkEvents) {
+        if (ev.data.status === 'afk') {
+          totalRecharge += (ev.duration / 60) * RECHARGE_RATE;
+        }
+      }
+
+      const netDrain = Math.max(0, totalDrain - totalRecharge);
+      const battery  = Math.round(Math.max(0, Math.min(100, 100 - (netDrain / capacity) * 100)));
+
+      return { battery, tally, totalDrain: Math.round(totalDrain), totalRecharge: Math.round(totalRecharge) };
+    }
+
+    // ── Rendering ─────────────────────────────────────────────────────────────
+    function levelColor(pct) {
+      if (pct > 60) return '#4ade80';
+      if (pct > 35) return '#facc15';
+      if (pct > 15) return '#fb923c';
+      return '#f87171';
+    }
+
+    function rateColor(rate) {
+      if (rate >= 2.5) return '#f87171';
+      if (rate >= 1.5) return '#fb923c';
+      if (rate >= 1.0) return '#facc15';
+      return '#4ade80';
+    }
+
+    function renderBattery(level) {
+      const W = 200, H = 90, pad = 6;
+      const color  = levelColor(level);
+      const fillW  = Math.max(0, (W - pad * 2) * (level / 100));
+      const isLow  = level < 20;
+      const textFill = level < 40 ? color : '#0f0f13';
+
+      document.getElementById('battery-wrap').innerHTML = `
+        <svg width="${W + 12}" height="${H}" viewBox="0 0 ${W + 12} ${H}">
+          <rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="none" stroke="#2a2a3a" stroke-width="3"/>
+          <rect x="${W + 2}" y="${(H - 30) / 2}" width="10" height="30" rx="3" fill="#2a2a3a"/>
+          <rect x="${pad}" y="${pad}" width="${fillW}" height="${H - pad * 2}" rx="6"
+            fill="${color}"${isLow ? ' style="animation:pulse 1s ease-in-out infinite"' : ''}/>
+          <text x="${W / 2}" y="${H / 2 + 8}" text-anchor="middle"
+            font-family="system-ui,sans-serif" font-size="24" font-weight="700"
+            fill="${textFill}">${level}%</text>
+        </svg>`;
+    }
+
+    function renderBreakdown(tally, totalRecharge) {
+      const rows = Object.entries(tally)
+        .filter(([, v]) => v.minutes >= 0.5)
+        .sort((a, b) => b[1].drain - a[1].drain);
+
+      const rechargeRow = totalRecharge > 0
+        ? `<div class="drain-row">
+             <span class="app-label" style="color:var(--muted)">AFK (recharge)</span>
+             <span class="mins">${Math.round(totalRecharge / 0.5)}m</span>
+             <span class="rate-badge" style="color:#4ade80">−${(RECHARGE_RATE).toFixed(1)}</span>
+           </div>`
+        : '';
+
+      document.getElementById('breakdown-list').innerHTML =
+        rows.map(([label, v]) => `
+          <div class="drain-row">
+            <span class="app-label">${label}</span>
+            <span class="mins">${Math.round(v.minutes)}m</span>
+            <span class="rate-badge" style="color:${rateColor(v.rate)}">×${v.rate.toFixed(1)}</span>
+          </div>`).join('')
+        + rechargeRow
+        || '<div style="color:var(--muted);font-size:0.82rem;padding:0.6rem 0">No activity in this window.</div>';
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error');
+      el.innerHTML = msg;
+      el.style.display = 'block';
+    }
+
+    function clearError() {
+      document.getElementById('error').style.display = 'none';
+    }
+
+    // ── Main loop ─────────────────────────────────────────────────────────────
+    async function update() {
+      clearError();
+      try {
+        if (!windowBucket) await findBuckets();
+
+        if (!windowBucket) {
+          showError('No window-watcher bucket found.<br>Make sure aw-watcher-window is running.');
+          return;
+        }
+
+        const now   = new Date();
+        const start = new Date(now - windowHours * 3600 * 1000);
+
+        const [windowEvents, afkEvents] = await Promise.all([
+          getEvents(windowBucket, start.toISOString(), now.toISOString()),
+          afkBucket ? getEvents(afkBucket, start.toISOString(), now.toISOString()) : Promise.resolve([]),
+        ]);
+
+        const { battery, tally, totalRecharge } = calculate(windowEvents, afkEvents);
+
+        renderBattery(battery);
+        renderBreakdown(tally, totalRecharge);
+
+        document.getElementById('status').textContent =
+          `${windowHours}h rolling window · ${windowEvents.length} events`;
+        document.getElementById('last-updated').textContent =
+          `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+      } catch (err) {
+        showError(
+          `Could not reach ActivityWatch at <code>localhost:5600</code>.<br>` +
+          `Is it running? <small style="color:var(--muted)">${err.message}</small>`
+        );
+        console.error(err);
+      }
+    }
+
+    document.getElementById('window-select').addEventListener('change', e => {
+      windowHours  = parseInt(e.target.value, 10);
+      windowBucket = null; // refetch buckets on next update to be safe
+      update();
+    });
+
+    update();
+    setInterval(update, 60_000);
+  </script>
+</body>
+</html>
