@@ -135,9 +135,12 @@
   <div class="controls">
     <label>Window:
       <select id="window-select">
+        <option value="0.033">2 min</option>
+        <option value="0.083" selected>5 min</option>
+        <option value="0.25">15 min</option>
         <option value="1">1 hour</option>
         <option value="2">2 hours</option>
-        <option value="4" selected>4 hours</option>
+        <option value="4">4 hours</option>
         <option value="8">8 hours</option>
       </select>
     </label>
@@ -155,34 +158,36 @@
     // Negative rate = recharge (used for AFK below, but you can add low-stim apps here too).
     const DRAIN_RULES = [
       // ● High drain — cognitive output + social stimulation + AI
-      { patterns: ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'], rate: 3.0, label: 'AI Tools' },
-      { patterns: ['zoom', 'teams', 'google meet', 'webex', 'whereby', 'loom'],                                   rate: 3.0, label: 'Video Calls' },
-      { patterns: ['slack', 'discord', 'telegram', 'whatsapp', 'messenger', 'signal'],                            rate: 2.5, label: 'Messaging' },
-      { patterns: ['twitter', 'x.com', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],  rate: 2.5, label: 'Social Media' },
-      { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                    rate: 2.0, label: 'Email' },
+      // Title patterns catch browser-wrapped versions of these apps
+      { patterns: ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'],        rate: 15.0, label: 'AI Tools' },
+      { patterns: ['zoom', 'teams', 'webex', 'whereby', 'loom', 'meet -', '| meet', 'google meet', 'zoom meeting'],       rate: 15.0, label: 'Video Calls' },
+      { patterns: ['slack', 'discord', 'telegram', 'whatsapp', 'messenger', 'signal'],                                    rate: 12.5, label: 'Messaging' },
+      { patterns: ['twitter', 'x.com', '/ x', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],   rate: 12.5, label: 'Social Media' },
+      { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                             rate: 10.0, label: 'Email' },
 
       // ● Medium drain — focused work
-      { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],    rate: 1.5, label: 'Coding' },
-      { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                          rate: 1.5, label: 'Design' },
-      { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                              rate: 1.0, label: 'Browser' },
-      { patterns: ['word', 'docs', 'notion', 'obsidian', 'excel', 'sheets', 'pages', 'numbers', 'onenote'],      rate: 1.0, label: 'Documents' },
+      { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],             rate: 7.5, label: 'Coding' },
+      { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                                   rate: 7.5, label: 'Design' },
+      { patterns: ['notion', 'obsidian', 'onenote', 'google docs', 'google sheets', 'google slides'],                     rate: 5.0, label: 'Documents' },
+      { patterns: ['word', 'excel', 'pages', 'numbers', 'powerpoint', 'keynote'],                                         rate: 5.0, label: 'Documents' },
+      { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                                       rate: 5.0, label: 'Browser' },
 
       // ● Low drain — passive / ambient
-      { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                               rate: 0.3, label: 'Music' },
-      { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                         rate: 0.5, label: 'Video' },
-      { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                rate: 0.3, label: 'System' },
+      { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                                  rate: 2.5, label: 'Video' },
+      { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                                         rate: 1.5, label: 'Music' },
+      { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                         rate: 1.5, label: 'System' },
 
       // ● Fallback
-      { patterns: [], rate: 0.8, label: 'Other' },
+      { patterns: [], rate: 4.0, label: 'Other' },
     ];
 
-    const RECHARGE_RATE  = 0.5;  // drain units recovered per AFK minute
-    const HIGH_DRAIN_CAP = 3.0;  // max rate, used to set 0% threshold
+    const HIGH_DRAIN_CAP = 15.0; // max rate, used to set 0% threshold
 
     // ── State ─────────────────────────────────────────────────────────────────
-    let windowHours  = 4;
+    let windowHours  = 0.083; // 5 minutes
     let windowBucket = null;
     let afkBucket    = null;
+    const sessionStart = new Date(); // battery always starts at 100% from here
 
     // ── API helpers ───────────────────────────────────────────────────────────
     async function apiFetch(path) {
@@ -215,35 +220,33 @@
       return DRAIN_RULES[DRAIN_RULES.length - 1];
     }
 
-    function calculate(windowEvents, afkEvents) {
-      const capacity = windowHours * 60 * HIGH_DRAIN_CAP;
-
+    function calculate(windowEvents, now) {
       // Accumulate drain per category
       const tally = {};
-      let totalDrain = 0;
+      let totalDrain   = 0;
+      let totalActMins = 0;
 
       for (const ev of windowEvents) {
-        const mins = ev.duration / 60;
+        // Clip event to [sessionStart, now] — AW may return events that started before page load
+        const evStart = new Date(ev.timestamp).getTime();
+        const evEnd   = evStart + ev.duration * 1000;
+        const clipped = (Math.min(evEnd, now.getTime()) - Math.max(evStart, sessionStart.getTime())) / 1000;
+        const mins = clipped / 60;
         if (mins < 0.1) continue;
         const rule = matchRule(ev);
         if (!tally[rule.label]) tally[rule.label] = { minutes: 0, drain: 0, rate: rule.rate };
         tally[rule.label].minutes += mins;
         tally[rule.label].drain  += mins * rule.rate;
-        totalDrain += mins * rule.rate;
+        totalDrain   += mins * rule.rate;
+        totalActMins += mins;
       }
 
-      // Recharge from AFK periods
-      let totalRecharge = 0;
-      for (const ev of afkEvents) {
-        if (ev.data.status === 'afk') {
-          totalRecharge += (ev.duration / 60) * RECHARGE_RATE;
-        }
-      }
+      // Capacity = max drain over the full window (not just active time),
+      // so the battery depletes as time passes with active use.
+      const capacity = windowHours * 60 * HIGH_DRAIN_CAP;
+      const battery  = Math.round(Math.max(0, Math.min(100, 100 - (totalDrain / capacity) * 100)));
 
-      const netDrain = Math.max(0, totalDrain - totalRecharge);
-      const battery  = Math.round(Math.max(0, Math.min(100, 100 - (netDrain / capacity) * 100)));
-
-      return { battery, tally, totalDrain: Math.round(totalDrain), totalRecharge: Math.round(totalRecharge) };
+      return { battery, tally, totalActMins: Math.round(totalActMins) };
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
@@ -280,18 +283,10 @@
         </svg>`;
     }
 
-    function renderBreakdown(tally, totalRecharge) {
+    function renderBreakdown(tally) {
       const rows = Object.entries(tally)
         .filter(([, v]) => v.minutes >= 0.5)
         .sort((a, b) => b[1].drain - a[1].drain);
-
-      const rechargeRow = totalRecharge > 0
-        ? `<div class="drain-row">
-             <span class="app-label" style="color:var(--muted)">AFK (recharge)</span>
-             <span class="mins">${Math.round(totalRecharge / 0.5)}m</span>
-             <span class="rate-badge" style="color:#4ade80">−${(RECHARGE_RATE).toFixed(1)}</span>
-           </div>`
-        : '';
 
       document.getElementById('breakdown-list').innerHTML =
         rows.map(([label, v]) => `
@@ -300,7 +295,6 @@
             <span class="mins">${Math.round(v.minutes)}m</span>
             <span class="rate-badge" style="color:${rateColor(v.rate)}">×${v.rate.toFixed(1)}</span>
           </div>`).join('')
-        + rechargeRow
         || '<div style="color:var(--muted);font-size:0.82rem;padding:0.6rem 0">No activity in this window.</div>';
     }
 
@@ -326,20 +320,19 @@
         }
 
         const now   = new Date();
-        const start = new Date(now - windowHours * 3600 * 1000);
 
-        const [windowEvents, afkEvents] = await Promise.all([
-          getEvents(windowBucket, start.toISOString(), now.toISOString()),
-          afkBucket ? getEvents(afkBucket, start.toISOString(), now.toISOString()) : Promise.resolve([]),
-        ]);
+        const windowEvents = await getEvents(windowBucket, sessionStart.toISOString(), now.toISOString());
 
-        const { battery, tally, totalRecharge } = calculate(windowEvents, afkEvents);
+        const { battery, tally, totalActMins } = calculate(windowEvents, now);
 
         renderBattery(battery);
-        renderBreakdown(tally, totalRecharge);
+        renderBreakdown(tally);
 
+        const capacityLabel = windowHours < 1
+          ? `${Math.round(windowHours * 60)}min`
+          : `${windowHours}h`;
         document.getElementById('status').textContent =
-          `${windowHours}h rolling window · ${windowEvents.length} events`;
+          `${totalActMins}m active since open · depletes in ${capacityLabel} at max drain`;
         document.getElementById('last-updated').textContent =
           `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -359,7 +352,7 @@
     });
 
     update();
-    setInterval(update, 60_000);
+    setInterval(update, 10_000);
   </script>
 </body>
 </html>
