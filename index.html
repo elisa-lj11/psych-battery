@@ -8,149 +8,1065 @@
     :root {
       --bg: #0f0f13;
       --surface: #1a1a24;
+      --surface-2: #22223a;
       --border: #2a2a3a;
+      --border-light: #333350;
       --text: #e0e0f0;
       --muted: #6060a0;
+      --good: #4ade80;
+      --warn: #facc15;
+      --low: #fb923c;
+      --critical: #f87171;
+      --drain: #f87171;
+      --recover: #4ade80;
+      --accent: #818cf8;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
 
     body {
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      margin: 0;
       min-height: 100vh;
+      padding: 20px 16px 164px;
+      font-family: Aptos, "Segoe UI Variable Display", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(129, 140, 248, 0.12), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(74, 222, 128, 0.08), transparent 32%),
+        linear-gradient(180deg, #12121a 0%, var(--bg) 62%);
+      color: var(--text);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 2.5rem 1.5rem;
-      gap: 0;
+      gap: 16px;
     }
 
-    h1 {
-      font-size: 0.8rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 2rem;
+    body[data-mode="rating"],
+    body[data-mode="recovery-menu"],
+    body[data-mode="screensaver"] {
+      overflow: hidden;
     }
 
-    #battery-wrap {
-      margin-bottom: 0.75rem;
+    button,
+    select {
+      font: inherit;
     }
 
-    #status {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-bottom: 2.5rem;
+    button {
+      color: inherit;
     }
 
-    .section-title {
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-      width: 100%;
-      max-width: 360px;
+    header#app-header,
+    #battery-card {
+      width: min(100%, 980px);
+      margin-inline: auto;
     }
 
-    .breakdown {
-      width: 100%;
-      max-width: 360px;
-      margin-bottom: 2rem;
-    }
-
-    .drain-row {
+    #app-header {
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      align-items: center;
-      padding: 0.45rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.88rem;
-      gap: 0.75rem;
+      gap: 16px;
+      padding-top: 6px;
     }
 
-    .drain-row .app-label { flex: 1; color: var(--text); }
-    .drain-row .mins { color: var(--muted); font-size: 0.78rem; min-width: 36px; text-align: right; }
-    .drain-row .rate-badge {
-      font-size: 0.72rem;
-      padding: 0.1rem 0.45rem;
-      border-radius: 4px;
-      background: var(--border);
-      min-width: 36px;
-      text-align: center;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      font-size: 0.82rem;
+    .eyebrow,
+    .section-title {
+      font-size: 0.76rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       color: var(--muted);
     }
 
-    .controls label { display: flex; align-items: center; gap: 0.5rem; }
+    #connection-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+      background: rgba(34, 34, 58, 0.72);
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--critical);
+      backdrop-filter: blur(10px);
+    }
 
-    .controls select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.82rem;
+    #battery-card {
+      position: relative;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--border-light);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 42%),
+        linear-gradient(180deg, rgba(129, 140, 248, 0.12), rgba(26, 26, 36, 0.95) 18%, rgba(26, 26, 36, 0.98) 100%);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      transition: opacity 200ms ease, filter 200ms ease;
+    }
+
+    #battery-card::before {
+      content: "";
+      position: absolute;
+      inset: -12% 48% auto -12%;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(129, 140, 248, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    #battery-toggle {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 0;
+      min-height: 112px;
+      display: grid;
+      grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      text-align: left;
       cursor: pointer;
     }
 
-    #error {
-      color: #f87171;
-      font-size: 0.82rem;
-      margin-top: 1.5rem;
-      text-align: center;
-      line-height: 1.6;
-      display: none;
-      max-width: 360px;
+    #battery-visual {
+      width: min(100%, 240px);
+      margin-inline: auto;
     }
 
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    #battery-visual svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .battery-fill {
+      transition: fill 500ms ease, width 600ms ease;
+    }
+
+    .battery-fill.is-low {
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .battery-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    #battery-percent {
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    #battery-caption {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    #battery-meta {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 1;
+      transition: max-height 300ms ease, opacity 200ms ease, margin-top 200ms ease;
+    }
+
+    body[data-layer="0"] #layer-1,
+    body[data-layer="0"] #layer-2 {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    body[data-layer="1"] #layer-1 {
+      max-height: 9999px;
+      opacity: 1;
+      margin-top: 18px;
+    }
+
+    body[data-layer="1"] #layer-2 {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    body[data-layer="2"] #layer-1,
+    body[data-layer="2"] #layer-2 {
+      max-height: 9999px;
+      opacity: 1;
+      margin-top: 18px;
+    }
+
+    #metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric-card {
+      min-height: 96px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(26, 26, 36, 0.92);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-label,
+    .metric-unit {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .metric-value {
+      font-size: 1.55rem;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-section-head {
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    #window-select {
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    #breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: opacity 200ms ease, filter 200ms ease;
+    }
+
+    .breakdown-empty {
+      padding: 14px 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .drain-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 0.96rem;
+    }
+
+    .drain-row .app-label {
+      min-width: 0;
+      font-weight: 700;
+    }
+
+    .drain-row .mins {
+      color: var(--muted);
+      font-size: 0.88rem;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .drain-row .rate-badge {
+      min-width: 52px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+      background: var(--surface-2);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .panel-link {
+      min-height: 48px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin-top: 12px;
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .panel-link[disabled] {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .diag-columns {
+      display: grid;
+      gap: 16px;
+    }
+
+    .diag-col {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .diag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .diag-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .diag-row:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .diag-label {
+      font-size: 0.92rem;
+    }
+
+    .diag-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .diag-value .diag-unit {
+      margin-left: 4px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    #diag-footer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    #collapse-btn {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      cursor: pointer;
+      display: none;
+    }
+
+    body[data-layer="1"] #collapse-btn,
+    body[data-layer="2"] #collapse-btn {
+      display: block;
+    }
+
+    #self-log-dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px env(safe-area-inset-bottom, 16px);
+      background: rgba(15, 15, 19, 0.94);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      z-index: 30;
+    }
+
+    #self-log-dock button {
+      flex: 1;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--border-light);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    #recovery-trigger {
+      position: fixed;
+      right: 20px;
+      bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      z-index: 31;
+      min-height: 48px;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6d76f8 0%, #818cf8 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 18px 36px rgba(99, 102, 241, 0.24);
+      cursor: pointer;
+    }
+
+    #backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+    body[data-mode="rating"] #backdrop,
+    body[data-mode="recovery-menu"] #backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      border-radius: 16px 16px 0 0;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      background:
+        linear-gradient(180deg, rgba(129, 140, 248, 0.12), transparent 28%),
+        var(--surface);
+      transform: translateY(100%);
+      transition: transform 220ms ease;
+      padding: 18px 16px calc(env(safe-area-inset-bottom, 16px) + 16px);
+      box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.36);
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    body[data-mode="rating"] #rating-sheet,
+    body[data-mode="recovery-menu"] #recovery-sheet {
+      transform: translateY(0);
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .sheet-subtitle {
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-bottom: 14px;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .tab-btn.is-active {
+      color: var(--text);
+      border-color: rgba(129, 140, 248, 0.48);
+      background: rgba(129, 140, 248, 0.16);
+    }
+
+    #rating-hint {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-bottom: 12px;
+    }
+
+    .tap-rail {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .tap-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tap-score {
+      flex: 0 0 auto;
+      min-width: 44px;
+      min-height: 52px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    .tap-score.is-pressed {
+      border-color: rgba(129, 140, 248, 0.6);
+      background: rgba(129, 140, 248, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .activity-item {
+      --activity-accent: var(--accent);
+    }
+
+    .activity-btn {
+      width: 100%;
+      min-height: 64px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .activity-btn.is-active {
+      border-color: var(--activity-accent);
+      background: rgba(129, 140, 248, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.12);
+    }
+
+    .activity-copy {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .activity-emoji {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .activity-label {
+      font-weight: 700;
+    }
+
+    .activity-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .stepper-wrap {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      background: rgba(15, 15, 19, 0.34);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stepper-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stepper-btn,
+    .start-btn {
+      min-height: 48px;
+      border-radius: 12px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .stepper-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .stepper-display {
+      min-width: 96px;
+      min-height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .start-btn {
+      border: none;
+      background: linear-gradient(135deg, #6d76f8 0%, #818cf8 100%);
+      color: #fff;
+    }
+
+    #screensaver {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #090910;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 160ms ease;
+    }
+
+    body[data-mode="screensaver"] #screensaver {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    #screensaver-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #screensaver-timer {
+      position: relative;
+      z-index: 2;
+      font-family: "JetBrains Mono", "Cascadia Mono", "SFMono-Regular", monospace;
+      font-size: clamp(3rem, 12vw, 4.5rem);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.06em;
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+      text-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    #screensaver-done {
+      position: absolute;
+      bottom: calc(48px + env(safe-area-inset-bottom, 16px));
+      z-index: 2;
+      min-height: 48px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.88);
+      padding: 0 18px;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+    }
+
+    #toast-stack {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: calc(96px + env(safe-area-inset-bottom, 16px));
+      z-index: 60;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      align-self: center;
+      min-width: min(100%, 260px);
+      max-width: min(100%, 460px);
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border-light);
+      background: rgba(26, 26, 36, 0.96);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.34);
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      transition: opacity 180ms ease, transform 180ms ease;
+      color: var(--text);
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .toast.success {
+      border-color: rgba(74, 222, 128, 0.46);
+    }
+
+    .toast.error {
+      border-color: rgba(248, 113, 113, 0.46);
+    }
+
+    .is-stale {
+      opacity: 0.45;
+      filter: saturate(0.3);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-inline: 20px;
+      }
+
+      #metrics-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 900px) {
+      .diag-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      #battery-toggle {
+        grid-template-columns: 1fr;
+      }
+
+      #battery-visual {
+        margin-inline: 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      #battery-card {
+        padding: 16px;
+      }
+
+      .stepper-wrap {
+        align-items: stretch;
+      }
+
+      .stepper-controls,
+      .start-btn {
+        width: 100%;
+      }
+
+      .stepper-controls {
+        justify-content: space-between;
+      }
+
+      .start-btn {
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
-<body>
-  <h1>Psych Battery</h1>
+<body data-layer="0" data-mode="normal">
+  <header id="app-header">
+    <div class="eyebrow">Psych Battery</div>
+    <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
+  </header>
 
-  <div id="battery-wrap">
-    <svg width="212" height="90" viewBox="0 0 212 90">
-      <rect x="0" y="0" width="200" height="90" rx="10" fill="none" stroke="#2a2a3a" stroke-width="3"/>
-      <rect x="202" y="30" width="10" height="30" rx="3" fill="#2a2a3a"/>
-    </svg>
+  <section id="battery-card" aria-labelledby="battery-percent">
+    <button id="battery-toggle" type="button" aria-expanded="false">
+      <div id="battery-visual" aria-hidden="true"></div>
+      <div class="battery-copy">
+        <div id="battery-percent">--%</div>
+        <div id="battery-caption">Mental energy</div>
+      </div>
+    </button>
+
+    <div id="battery-meta">
+      <span id="model-status-text">Waiting for model or ActivityWatch</span>
+      <span id="last-tick-text">No recent tick</span>
+    </div>
+
+    <section id="layer-1" class="panel" aria-hidden="true">
+      <div id="metrics-grid"></div>
+
+      <div class="panel-section-head">
+        <h2 class="section-title">Activity breakdown</h2>
+        <select id="window-select" aria-label="Activity window">
+          <option value="0.083" selected>5 min</option>
+          <option value="0.25">15 min</option>
+          <option value="1">1 hr</option>
+          <option value="2">2 hr</option>
+          <option value="4">4 hr</option>
+          <option value="8">8 hr</option>
+        </select>
+      </div>
+
+      <div id="breakdown-list" aria-live="polite"></div>
+      <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics ↓</button>
+    </section>
+
+    <section id="layer-2" class="panel" aria-hidden="true">
+      <div class="diag-columns">
+        <div class="diag-col">
+          <h3 class="section-title">Drain signals</h3>
+          <div id="diag-drain" class="diag-list"></div>
+        </div>
+        <div class="diag-col">
+          <h3 class="section-title">Recovery signals</h3>
+          <div id="diag-recovery" class="diag-list"></div>
+        </div>
+      </div>
+      <div id="diag-footer">Last tick: unavailable</div>
+    </section>
+
+    <button id="collapse-btn" type="button">↑</button>
+  </section>
+
+  <div id="self-log-dock">
+    <button id="energy-btn" type="button" data-kind="energy_rating">⚡ Energy</button>
+    <button id="stress-btn" type="button" data-kind="stress_rating">🌀 Stress</button>
   </div>
 
-  <div id="status">Connecting to ActivityWatch…</div>
+  <button id="recovery-trigger" type="button">🌿 Recovery</button>
 
-  <p class="section-title">Activity breakdown</p>
-  <div class="breakdown">
-    <div id="breakdown-list"></div>
+  <div id="backdrop" hidden></div>
+
+  <section id="rating-sheet" class="bottom-sheet" hidden aria-hidden="true" aria-label="Rating sheet">
+    <div class="sheet-head">
+      <div class="section-title">Quick check-in</div>
+    </div>
+    <div class="tab-row">
+      <button type="button" class="tab-btn" data-kind="energy_rating">Energy</button>
+      <button type="button" class="tab-btn" data-kind="stress_rating">Stress</button>
+    </div>
+    <div id="rating-hint">Tap the number that matches right now.</div>
+    <div id="rating-rail" class="tap-rail"></div>
+  </section>
+
+  <section id="recovery-sheet" class="bottom-sheet" hidden aria-hidden="true" aria-label="Recovery sheet">
+    <div class="sheet-head">
+      <div class="section-title">Recovery</div>
+    </div>
+    <div class="sheet-subtitle">Pick a recovery activity and start a timer.</div>
+    <div id="recovery-activities" class="activity-list"></div>
+  </section>
+
+  <div id="screensaver" hidden aria-hidden="true">
+    <canvas id="screensaver-canvas"></canvas>
+    <div id="screensaver-timer">20:00</div>
+    <button id="screensaver-done" type="button">Done</button>
   </div>
 
-  <div class="controls">
-    <label>Window:
-      <select id="window-select">
-        <option value="0.033">2 min</option>
-        <option value="0.083" selected>5 min</option>
-        <option value="0.25">15 min</option>
-        <option value="1">1 hour</option>
-        <option value="2">2 hours</option>
-        <option value="4">4 hours</option>
-        <option value="8">8 hours</option>
-      </select>
-    </label>
-    <span id="last-updated"></span>
-  </div>
-
-  <div id="error"></div>
+  <div id="toast-stack" aria-live="polite"></div>
 
   <script>
+    const MODEL_BASE = localStorage.getItem('pb_api') || 'http://localhost:7070';
     const AW = '/aw';
+    const STATE_CACHE_KEY = 'pb_state';
+    const MODEL_POLL_MS = 30_000;
+    const AW_POLL_MS = 30_000;
+    const BATTERY_INNER_WIDTH = 204;
+
+    const APP = {
+      uiLayer: 0,
+      mode: 'normal',
+      model: { online: false, stale: false, payload: null, lastFetchAt: 0 },
+      aw: { online: false, windowHours: 0.083, buckets: { win: null, afk: null }, breakdown: {}, lastFetchAt: 0, fallbackBattery: null, totalActMins: 0 },
+      rating: { kind: 'energy_rating', submitting: false },
+      recovery: { activityId: null, logKind: null, theme: null, plannedMin: 20, startTs: 0, timerId: null }
+    };
+
+    const DOM = {
+      body: document.body,
+      connectionPill: document.getElementById('connection-pill'),
+      batteryCard: document.getElementById('battery-card'),
+      batteryToggle: document.getElementById('battery-toggle'),
+      batteryVisual: document.getElementById('battery-visual'),
+      batteryPercent: document.getElementById('battery-percent'),
+      modelStatusText: document.getElementById('model-status-text'),
+      lastTickText: document.getElementById('last-tick-text'),
+      layer1: document.getElementById('layer-1'),
+      layer2: document.getElementById('layer-2'),
+      metricsGrid: document.getElementById('metrics-grid'),
+      windowSelect: document.getElementById('window-select'),
+      breakdownList: document.getElementById('breakdown-list'),
+      openDiagnostics: document.getElementById('open-diagnostics'),
+      diagDrain: document.getElementById('diag-drain'),
+      diagRecovery: document.getElementById('diag-recovery'),
+      diagFooter: document.getElementById('diag-footer'),
+      collapseBtn: document.getElementById('collapse-btn'),
+      energyBtn: document.getElementById('energy-btn'),
+      stressBtn: document.getElementById('stress-btn'),
+      recoveryTrigger: document.getElementById('recovery-trigger'),
+      backdrop: document.getElementById('backdrop'),
+      ratingSheet: document.getElementById('rating-sheet'),
+      ratingTabs: Array.from(document.querySelectorAll('.tab-btn')),
+      ratingHint: document.getElementById('rating-hint'),
+      ratingRail: document.getElementById('rating-rail'),
+      recoverySheet: document.getElementById('recovery-sheet'),
+      recoveryActivities: document.getElementById('recovery-activities'),
+      screensaver: document.getElementById('screensaver'),
+      screensaverCanvas: document.getElementById('screensaver-canvas'),
+      screensaverTimer: document.getElementById('screensaver-timer'),
+      screensaverDone: document.getElementById('screensaver-done'),
+      toastStack: document.getElementById('toast-stack')
+    };
+
+    const RATING_HINTS = {
+      energy_rating: {
+        1: 'Running on empty',
+        2: 'Running on empty',
+        3: 'Noticeably low',
+        4: 'Noticeably low',
+        5: 'Getting by',
+        6: 'Getting by',
+        7: 'Good',
+        8: 'Good',
+        9: 'Peak',
+        10: 'Peak'
+      },
+      stress_rating: {
+        1: 'Maxed out',
+        2: 'Maxed out',
+        3: 'Heavy',
+        4: 'Heavy',
+        5: 'Moderate',
+        6: 'Moderate',
+        7: 'Manageable',
+        8: 'Manageable',
+        9: 'Effortless',
+        10: 'Effortless'
+      }
+    };
+
+    const RECOVERY_ACTIVITIES = [
+      { id: 'outside', emoji: '🌿', label: 'Go outside', logKind: 'outside', theme: 'outside', accent: '#4ade80' },
+      { id: 'quiet', emoji: '🤫', label: 'Quiet time', logKind: 'detach', theme: 'quiet', accent: '#818cf8' },
+      { id: 'connect', emoji: '👥', label: 'Connect with others', logKind: 'with_people', theme: 'connect', accent: '#22d3ee' },
+      { id: 'eat', emoji: '🍎', label: 'Eat food', logKind: 'detach', theme: 'eat', accent: '#fb923c' },
+      { id: 'home', emoji: '🏠', label: 'Go home', logKind: 'detach', theme: 'home', accent: '#f59e0b' }
+    ];
+
+    const DRAIN_FEATS = [
+      { key: 'meeting_video_min', label: 'Video meetings', unit: 'min' },
+      { key: 'meeting_f2f_min', label: 'F2F meetings', unit: 'min' },
+      { key: 'context_switches', label: 'Context switches', unit: '' },
+      { key: 'kpm_p95_over_base', label: 'Typing intensity', unit: '×base' },
+      { key: 'after_hours_frac', label: 'After-hours', unit: '%' },
+      { key: 'sleep_debt_h', label: 'Sleep debt', unit: 'h' },
+      { key: 'fragmentation_dev', label: 'Fragmentation', unit: '×base' },
+      { key: 'zoom_back_to_back_frac', label: 'Back-to-back', unit: '%' },
+      { key: 'todoist_overdue_count', label: 'Overdue tasks', unit: '' }
+    ];
+
+    const RECOVERY_FEATS = [
+      { key: 'focus_block_min', label: 'Focus blocks', unit: 'min' },
+      { key: 'walk_outside_min', label: 'Walk/outside', unit: 'min' },
+      { key: 'outside_log_min', label: 'Logged outside', unit: 'min' },
+      { key: 'afk_10plus_min', label: 'AFK 10+ min', unit: 'min' },
+      { key: 'social_voice_min', label: 'Social voice', unit: 'min' },
+      { key: 'with_people_min', label: 'With people', unit: 'min' },
+      { key: 'detach_block_min', label: 'Detach blocks', unit: 'min' },
+      { key: 'continuous_sleep_h', label: 'Continuous sleep', unit: 'h' },
+      { key: 'hrv_z', label: 'HRV z-score', unit: 'z' }
+    ];
+
+    let windowHours = 0.083;
+    let windowBucket = null;
+    let afkBucket = null;
+    const sessionStart = new Date();
+    let modelFetchInFlight = false;
+    let awFetchInFlight = false;
+    let screenScene = null;
+    let screensaverCtx = null;
+    let screensaverWidth = 0;
+    let screensaverHeight = 0;
+    let lastTimerText = '';
 
     // ── Drain rules ───────────────────────────────────────────────────────────
     // Patterns match app name OR window title (case-insensitive, substring).
@@ -181,15 +1097,8 @@
       { patterns: [], rate: 4.0, label: 'Other' },
     ];
 
-    const HIGH_DRAIN_CAP = 15.0; // max rate, used to set 0% threshold
+    const HIGH_DRAIN_CAP = 15.0;
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    let windowHours  = 0.083; // 5 minutes
-    let windowBucket = null;
-    let afkBucket    = null;
-    const sessionStart = new Date(); // battery always starts at 100% from here
-
-    // ── API helpers ───────────────────────────────────────────────────────────
     async function apiFetch(path) {
       const res = await fetch(AW + path);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
@@ -209,25 +1118,22 @@
       return apiFetch(`/buckets/${encodeURIComponent(bucketId)}/events?start=${s}&end=${e}&limit=-1`);
     }
 
-    // ── Drain logic ───────────────────────────────────────────────────────────
     function matchRule(event) {
       const app   = (event.data.app   ?? '').toLowerCase();
       const title = (event.data.title ?? '').toLowerCase();
       for (const rule of DRAIN_RULES) {
-        if (rule.patterns.length === 0) return rule; // fallback
+        if (rule.patterns.length === 0) return rule;
         if (rule.patterns.some(p => app.includes(p) || title.includes(p))) return rule;
       }
       return DRAIN_RULES[DRAIN_RULES.length - 1];
     }
 
     function calculate(windowEvents, now) {
-      // Accumulate drain per category
       const tally = {};
       let totalDrain   = 0;
       let totalActMins = 0;
 
       for (const ev of windowEvents) {
-        // Clip event to [sessionStart, now] — AW may return events that started before page load
         const evStart = new Date(ev.timestamp).getTime();
         const evEnd   = evStart + ev.duration * 1000;
         const clipped = (Math.min(evEnd, now.getTime()) - Math.max(evStart, sessionStart.getTime())) / 1000;
@@ -241,15 +1147,12 @@
         totalActMins += mins;
       }
 
-      // Capacity = max drain over the full window (not just active time),
-      // so the battery depletes as time passes with active use.
       const capacity = windowHours * 60 * HIGH_DRAIN_CAP;
       const battery  = Math.round(Math.max(0, Math.min(100, 100 - (totalDrain / capacity) * 100)));
 
       return { battery, tally, totalActMins: Math.round(totalActMins) };
     }
 
-    // ── Rendering ─────────────────────────────────────────────────────────────
     function levelColor(pct) {
       if (pct > 60) return '#4ade80';
       if (pct > 35) return '#facc15';
@@ -264,95 +1167,908 @@
       return '#4ade80';
     }
 
-    function renderBattery(level) {
-      const W = 200, H = 90, pad = 6;
-      const color  = levelColor(level);
-      const fillW  = Math.max(0, (W - pad * 2) * (level / 100));
-      const isLow  = level < 20;
-      const textFill = level < 40 ? color : '#0f0f13';
-
-      document.getElementById('battery-wrap').innerHTML = `
-        <svg width="${W + 12}" height="${H}" viewBox="0 0 ${W + 12} ${H}">
-          <rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="none" stroke="#2a2a3a" stroke-width="3"/>
-          <rect x="${W + 2}" y="${(H - 30) / 2}" width="10" height="30" rx="3" fill="#2a2a3a"/>
-          <rect x="${pad}" y="${pad}" width="${fillW}" height="${H - pad * 2}" rx="6"
-            fill="${color}"${isLow ? ' style="animation:pulse 1s ease-in-out infinite"' : ''}/>
-          <text x="${W / 2}" y="${H / 2 + 8}" text-anchor="middle"
-            font-family="system-ui,sans-serif" font-size="24" font-weight="700"
-            fill="${textFill}">${level}%</text>
-        </svg>`;
-    }
-
     function renderBreakdown(tally) {
-      const rows = Object.entries(tally)
+      const rows = Object.entries(tally || {})
         .filter(([, v]) => v.minutes >= 0.5)
         .sort((a, b) => b[1].drain - a[1].drain);
 
-      document.getElementById('breakdown-list').innerHTML =
+      const emptyLabel = !APP.aw.online && rows.length === 0
+        ? 'ActivityWatch unavailable.'
+        : 'No activity in this window.';
+
+      DOM.breakdownList.innerHTML =
         rows.map(([label, v]) => `
           <div class="drain-row">
             <span class="app-label">${label}</span>
             <span class="mins">${Math.round(v.minutes)}m</span>
             <span class="rate-badge" style="color:${rateColor(v.rate)}">×${v.rate.toFixed(1)}</span>
           </div>`).join('')
-        || '<div style="color:var(--muted);font-size:0.82rem;padding:0.6rem 0">No activity in this window.</div>';
+        || `<div class="breakdown-empty">${emptyLabel}</div>`;
     }
 
-    function showError(msg) {
-      const el = document.getElementById('error');
-      el.innerHTML = msg;
-      el.style.display = 'block';
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
     }
 
-    function clearError() {
-      document.getElementById('error').style.display = 'none';
-    }
-
-    // ── Main loop ─────────────────────────────────────────────────────────────
-    async function update() {
-      clearError();
+    function safeParse(text) {
       try {
-        if (!windowBucket) await findBuckets();
-
-        if (!windowBucket) {
-          showError('No window-watcher bucket found.<br>Make sure aw-watcher-window is running.');
-          return;
-        }
-
-        const now   = new Date();
-
-        const windowEvents = await getEvents(windowBucket, sessionStart.toISOString(), now.toISOString());
-
-        const { battery, tally, totalActMins } = calculate(windowEvents, now);
-
-        renderBattery(battery);
-        renderBreakdown(tally);
-
-        const capacityLabel = windowHours < 1
-          ? `${Math.round(windowHours * 60)}min`
-          : `${windowHours}h`;
-        document.getElementById('status').textContent =
-          `${totalActMins}m active since open · depletes in ${capacityLabel} at max drain`;
-        document.getElementById('last-updated').textContent =
-          `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-
-      } catch (err) {
-        showError(
-          `Could not reach ActivityWatch at <code>localhost:5600</code>.<br>` +
-          `Is it running? <small style="color:var(--muted)">${err.message}</small>`
-        );
-        console.error(err);
+        return JSON.parse(text);
+      } catch {
+        return null;
       }
     }
 
-    document.getElementById('window-select').addEventListener('change', e => {
-      windowHours  = parseInt(e.target.value, 10);
-      windowBucket = null; // refetch buckets on next update to be safe
-      update();
-    });
+    function modelUrl(path) {
+      return `${MODEL_BASE.replace(/\/$/, '')}${path}`;
+    }
 
-    update();
-    setInterval(update, 10_000);
+    function getCachedState() {
+      const cached = safeParse(localStorage.getItem(STATE_CACHE_KEY) || '');
+      if (!cached || typeof cached !== 'object' || !cached.payload) return null;
+      return cached;
+    }
+
+    function formatTime(dateLike) {
+      const date = new Date(dateLike);
+      if (Number.isNaN(date.getTime())) return 'unavailable';
+      const now = new Date();
+      const sameDay = date.toDateString() === now.toDateString();
+      const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      return sameDay ? time : `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${time}`;
+    }
+
+    function getModelPayload() {
+      return APP.model.payload;
+    }
+
+    function getLastFeats() {
+      return getModelPayload()?.last_feats || {};
+    }
+
+    function getBatterySource() {
+      if (getModelPayload() && !APP.model.stale && APP.model.online) return 'model';
+      if (getModelPayload() && APP.model.stale) return 'cached-model';
+      if (typeof APP.aw.fallbackBattery === 'number') return 'aw';
+      return 'none';
+    }
+
+    function getDisplayedBatteryPercent() {
+      if (getModelPayload() && typeof getModelPayload().E_display === 'number') {
+        return clamp(getModelPayload().E_display * 100, 0, 100);
+      }
+      if (typeof APP.aw.fallbackBattery === 'number') {
+        return clamp(APP.aw.fallbackBattery, 0, 100);
+      }
+      return null;
+    }
+
+    function applyState() {
+      DOM.body.dataset.layer = String(APP.uiLayer);
+      DOM.body.dataset.mode = APP.mode;
+      DOM.batteryToggle.setAttribute('aria-expanded', APP.uiLayer > 0 ? 'true' : 'false');
+      DOM.layer1.setAttribute('aria-hidden', APP.uiLayer >= 1 ? 'false' : 'true');
+      DOM.layer2.setAttribute('aria-hidden', APP.uiLayer >= 2 ? 'false' : 'true');
+      DOM.ratingSheet.setAttribute('aria-hidden', APP.mode === 'rating' ? 'false' : 'true');
+      DOM.recoverySheet.setAttribute('aria-hidden', APP.mode === 'recovery-menu' ? 'false' : 'true');
+      DOM.screensaver.setAttribute('aria-hidden', APP.mode === 'screensaver' ? 'false' : 'true');
+      DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
+      DOM.openDiagnostics.disabled = APP.uiLayer === 2;
+    }
+
+    function ensureBatterySvg() {
+      if (DOM.batteryVisual.querySelector('svg')) return;
+      DOM.batteryVisual.innerHTML = `
+        <svg width="240" height="90" viewBox="0 0 252 90" role="img" aria-hidden="true">
+          <rect x="1.5" y="1" width="220" height="88" rx="10" fill="none" stroke="#333350" stroke-width="3"></rect>
+          <rect x="231" y="30" width="10" height="30" rx="3" fill="#333350"></rect>
+          <rect id="battery-fill-rect" class="battery-fill" x="9" y="8" width="0" height="74" rx="7" fill="#4ade80"></rect>
+          <text id="battery-fill-text" x="111" y="56" text-anchor="middle" font-family="Aptos, 'Segoe UI Variable Display', 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#e0e0f0">--%</text>
+        </svg>
+      `;
+    }
+
+    function renderBattery(level) {
+      ensureBatterySvg();
+      const fillRect = document.getElementById('battery-fill-rect');
+      const fillText = document.getElementById('battery-fill-text');
+
+      if (level == null) {
+        fillRect.setAttribute('width', '0');
+        fillRect.setAttribute('fill', '#333350');
+        fillRect.classList.remove('is-low');
+        fillText.textContent = '--%';
+        fillText.setAttribute('fill', '#e0e0f0');
+        DOM.batteryPercent.textContent = '--%';
+        return;
+      }
+
+      const rounded = Math.round(level);
+      const fillWidth = clamp((level / 100) * BATTERY_INNER_WIDTH, 0, BATTERY_INNER_WIDTH);
+      const color = levelColor(level);
+      const textFill = fillWidth > 112 ? '#0f0f13' : '#e0e0f0';
+
+      fillRect.setAttribute('width', fillWidth.toFixed(2));
+      fillRect.setAttribute('fill', color);
+      fillRect.classList.toggle('is-low', level < 20);
+      fillText.textContent = `${rounded}%`;
+      fillText.setAttribute('fill', textFill);
+      DOM.batteryPercent.textContent = `${rounded}%`;
+    }
+
+    function stressColor(value) {
+      const stress = clamp(value, 0, 100);
+      if (stress < 35) return '#4ade80';
+      if (stress < 60) return '#facc15';
+      if (stress < 80) return '#fb923c';
+      return '#f87171';
+    }
+
+    function renderMetrics() {
+      const payload = getModelPayload();
+      const feats = getLastFeats();
+      const modelUnavailable = !payload;
+      const stale = !APP.model.online || APP.model.stale;
+
+      const cards = [
+        {
+          label: 'Energy',
+          value: modelUnavailable ? '--%' : `${Math.round(payload.E_internal)}%`,
+          unit: '',
+          color: modelUnavailable ? 'var(--text)' : levelColor(Math.round(payload.E_internal))
+        },
+        {
+          label: 'Stress',
+          value: modelUnavailable ? '--%' : `${Math.round(payload.S)}%`,
+          unit: '',
+          color: modelUnavailable ? 'var(--text)' : stressColor(Math.round(payload.S))
+        },
+        {
+          label: 'Circadian',
+          value: modelUnavailable ? '--%' : `${Math.round(payload.E_rest_now)}%`,
+          unit: 'Expected now',
+          color: modelUnavailable ? 'var(--text)' : levelColor(Math.round(payload.E_rest_now))
+        },
+        {
+          label: 'Video meetings',
+          value: modelUnavailable ? '--' : `${Math.round(feats.meeting_video_min || 0)}m`,
+          unit: '',
+          color: 'var(--text)'
+        },
+        {
+          label: 'Focus blocks',
+          value: modelUnavailable ? '--' : `${Math.round(feats.focus_block_min || 0)}m`,
+          unit: '',
+          color: 'var(--text)'
+        },
+        {
+          label: 'Context switches',
+          value: modelUnavailable ? '--' : `${Math.round(feats.context_switches || 0)} switches`,
+          unit: '',
+          color: 'var(--text)'
+        }
+      ];
+
+      DOM.metricsGrid.classList.toggle('is-stale', stale);
+      DOM.metricsGrid.innerHTML = cards.map(card => `
+        <div class="metric-card${stale ? ' is-stale' : ''}">
+          <div class="metric-label">${card.label}</div>
+          <div class="metric-value" style="color:${card.color}">${card.value}</div>
+          <div class="metric-unit">${card.unit || '&nbsp;'}</div>
+        </div>
+      `).join('');
+    }
+
+    function formatFeatureValue(key, unit, raw) {
+      if (raw == null || Number.isNaN(Number(raw))) {
+        return { text: '—', zero: true };
+      }
+
+      let value = Number(raw);
+      if (unit === '%' && key.endsWith('_frac')) {
+        value *= 100;
+      }
+
+      const isInteger = Number.isInteger(value);
+      return {
+        text: isInteger ? String(value) : value.toFixed(1),
+        zero: value === 0
+      };
+    }
+
+    function renderDiagnosticList(target, items, tone) {
+      const feats = getLastFeats();
+      target.innerHTML = items.map(item => {
+        const { text, zero } = formatFeatureValue(item.key, item.unit, feats[item.key]);
+        return `
+          <div class="diag-row" style="opacity:${zero ? '0.35' : '1'}">
+            <span class="diag-label">${item.label}</span>
+            <span class="diag-value" style="color:var(--${tone})">${text}${item.unit ? `<span class="diag-unit">${item.unit}</span>` : ''}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDiagnostics() {
+      renderDiagnosticList(DOM.diagDrain, DRAIN_FEATS, 'drain');
+      renderDiagnosticList(DOM.diagRecovery, RECOVERY_FEATS, 'recover');
+      const tick = getModelPayload()?.last_tick_iso ? formatTime(getModelPayload().last_tick_iso) : 'unavailable';
+      DOM.diagFooter.textContent = `Last tick: ${tick}`;
+    }
+
+    function renderConnectionPill() {
+      let text = '✕ offline';
+      let color = 'var(--critical)';
+
+      if (APP.model.online && !APP.model.stale) {
+        text = '● live';
+        color = 'var(--good)';
+      } else if (APP.model.stale) {
+        text = '◐ cached';
+        color = 'var(--warn)';
+      }
+
+      DOM.connectionPill.textContent = text;
+      DOM.connectionPill.style.color = color;
+    }
+
+    function renderMeta() {
+      const source = getBatterySource();
+      const payload = getModelPayload();
+
+      if (source === 'model') {
+        DOM.modelStatusText.textContent = 'Model server live';
+      } else if (source === 'cached-model') {
+        DOM.modelStatusText.textContent = 'Using cached model state';
+      } else if (source === 'aw') {
+        DOM.modelStatusText.textContent = APP.aw.online ? 'ActivityWatch fallback' : 'Using last ActivityWatch fallback';
+      } else {
+        DOM.modelStatusText.textContent = 'Waiting for model or ActivityWatch';
+      }
+
+      if (payload?.last_tick_iso) {
+        DOM.lastTickText.textContent = `Last tick ${formatTime(payload.last_tick_iso)}`;
+      } else if (APP.aw.lastFetchAt) {
+        DOM.lastTickText.textContent = `AW updated ${formatTime(APP.aw.lastFetchAt)}`;
+      } else {
+        DOM.lastTickText.textContent = 'No recent tick';
+      }
+
+      const staleBattery = APP.model.stale || (!APP.model.online && !payload);
+      DOM.batteryCard.classList.toggle('is-stale', staleBattery);
+    }
+
+    function renderApp() {
+      renderConnectionPill();
+      renderBattery(getDisplayedBatteryPercent());
+      renderMeta();
+      renderMetrics();
+      renderDiagnostics();
+      renderBreakdown(APP.aw.breakdown);
+      DOM.breakdownList.classList.toggle('is-stale', !APP.aw.online);
+      applyState();
+    }
+
+    function getRatingDefaultHint(kind) {
+      return kind === 'energy_rating'
+        ? '1 = running on empty, 10 = peak.'
+        : '1 = maxed out, 10 = effortless.';
+    }
+
+    function renderRatingSheet() {
+      const kind = APP.rating.kind;
+      DOM.ratingTabs.forEach(tab => {
+        tab.classList.toggle('is-active', tab.dataset.kind === kind);
+      });
+      DOM.ratingHint.textContent = getRatingDefaultHint(kind);
+      DOM.ratingRail.innerHTML = Array.from({ length: 10 }, (_, index) => {
+        const value = index + 1;
+        return `<button type="button" class="tap-score" data-value="${value}" aria-label="${RATING_HINTS[kind][value]}">${value}</button>`;
+      }).join('');
+    }
+
+    function renderRecoverySheet() {
+      DOM.recoveryActivities.innerHTML = RECOVERY_ACTIVITIES.map(activity => {
+        const selected = activity.id === APP.recovery.activityId;
+        return `
+          <div class="activity-item" style="--activity-accent:${activity.accent}">
+            <button
+              type="button"
+              class="activity-btn${selected ? ' is-active' : ''}"
+              data-activity-id="${activity.id}"
+              data-log-kind="${activity.logKind}"
+              data-theme="${activity.theme}">
+              <span class="activity-copy">
+                <span class="activity-emoji">${activity.emoji}</span>
+                <span class="activity-label">${activity.label}</span>
+              </span>
+              <span class="activity-meta">${selected ? `${APP.recovery.plannedMin} min` : 'Select'}</span>
+            </button>
+            ${selected ? `
+              <div class="stepper-wrap">
+                <div class="stepper-controls">
+                  <button type="button" class="stepper-btn" data-step="-5">← 5</button>
+                  <div class="stepper-display">${APP.recovery.plannedMin} min</div>
+                  <button type="button" class="stepper-btn" data-step="5">5 →</button>
+                </div>
+                <button type="button" class="start-btn" data-action="start">Start</button>
+              </div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openRatingSheet(kind) {
+      APP.rating.kind = kind;
+      renderRatingSheet();
+      APP.mode = 'rating';
+      applyState();
+    }
+
+    function closeRatingSheet() {
+      APP.mode = 'normal';
+      applyState();
+    }
+
+    function openRecoverySheet() {
+      renderRecoverySheet();
+      APP.mode = 'recovery-menu';
+      applyState();
+    }
+
+    function closeRecoverySheet() {
+      APP.mode = 'normal';
+      applyState();
+    }
+
+    function showToast(message, type = 'success', duration = 2500) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      DOM.toastStack.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('is-visible'));
+      window.setTimeout(() => {
+        toast.classList.remove('is-visible');
+        window.setTimeout(() => toast.remove(), 220);
+      }, duration);
+    }
+
+    async function postLog(payload) {
+      try {
+        const res = await fetch(modelUrl('/log'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    }
+
+    async function submitRating(rawValue, button) {
+      if (APP.rating.submitting) return;
+      APP.rating.submitting = true;
+      if (button) button.classList.add('is-pressed');
+      const kind = APP.rating.kind;
+      const savePromise = postLog({ kind, value: rawValue * 10 });
+      await new Promise(resolve => window.setTimeout(resolve, 90));
+      closeRatingSheet();
+      const saved = await savePromise;
+      if (saved) {
+        showToast('Logged!');
+        void refreshModelState({ allowCache: true });
+      } else {
+        showToast('Backend offline — rating not saved', 'error');
+      }
+      APP.rating.submitting = false;
+    }
+
+    function selectRecoveryActivity(activityId, logKind, theme) {
+      APP.recovery.activityId = activityId;
+      APP.recovery.logKind = logKind;
+      APP.recovery.theme = theme;
+      renderRecoverySheet();
+    }
+
+    function changeRecoveryDuration(delta) {
+      APP.recovery.plannedMin = clamp(APP.recovery.plannedMin + delta, 5, 120);
+      renderRecoverySheet();
+    }
+
+    function sizeScreensaverCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      screensaverWidth = window.innerWidth;
+      screensaverHeight = window.innerHeight;
+      DOM.screensaverCanvas.width = Math.round(screensaverWidth * dpr);
+      DOM.screensaverCanvas.height = Math.round(screensaverHeight * dpr);
+      DOM.screensaverCanvas.style.width = `${screensaverWidth}px`;
+      DOM.screensaverCanvas.style.height = `${screensaverHeight}px`;
+      screensaverCtx = DOM.screensaverCanvas.getContext('2d');
+      screensaverCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function makeLeaf() {
+      return {
+        x: Math.random() * screensaverWidth,
+        y: Math.random() * screensaverHeight,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: 0.3 + Math.random() * 0.5,
+        rotation: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.01,
+        scale: 0.8 + Math.random() * 0.7,
+        color: ['#4ade80', '#6ee7b7', '#86efac'][Math.floor(Math.random() * 3)]
+      };
+    }
+
+    function initScreensaverScene(theme) {
+      sizeScreensaverCanvas();
+      if (theme === 'outside') {
+        screenScene = { leaves: Array.from({ length: 10 }, makeLeaf) };
+        return;
+      }
+      screenScene = {};
+    }
+
+    function drawBackground(colorTop, colorBottom) {
+      const gradient = screensaverCtx.createLinearGradient(0, 0, 0, screensaverHeight);
+      gradient.addColorStop(0, colorTop);
+      gradient.addColorStop(1, colorBottom);
+      screensaverCtx.fillStyle = gradient;
+      screensaverCtx.fillRect(0, 0, screensaverWidth, screensaverHeight);
+    }
+
+    function drawOutside() {
+      drawBackground('#091015', '#080b0d');
+      for (const leaf of screenScene.leaves) {
+        leaf.x += leaf.vx;
+        leaf.y += leaf.vy;
+        leaf.rotation += leaf.vr;
+
+        if (leaf.y > screensaverHeight + 20) {
+          leaf.y = -20;
+          leaf.x = Math.random() * screensaverWidth;
+        }
+        if (leaf.x < -20) leaf.x = screensaverWidth + 20;
+        if (leaf.x > screensaverWidth + 20) leaf.x = -20;
+
+        screensaverCtx.save();
+        screensaverCtx.translate(leaf.x, leaf.y);
+        screensaverCtx.rotate(leaf.rotation);
+        screensaverCtx.scale(leaf.scale, leaf.scale);
+        screensaverCtx.fillStyle = leaf.color;
+        screensaverCtx.beginPath();
+        screensaverCtx.moveTo(-11, 0);
+        screensaverCtx.bezierCurveTo(-7, -8, 7, -8, 11, 0);
+        screensaverCtx.bezierCurveTo(7, 8, -7, 8, -11, 0);
+        screensaverCtx.fill();
+        screensaverCtx.strokeStyle = 'rgba(255,255,255,0.18)';
+        screensaverCtx.lineWidth = 1;
+        screensaverCtx.beginPath();
+        screensaverCtx.moveTo(-7, 0);
+        screensaverCtx.lineTo(7, 0);
+        screensaverCtx.stroke();
+        screensaverCtx.restore();
+      }
+    }
+
+    function drawQuiet(time) {
+      drawBackground('#090910', '#090910');
+      const radius = Math.min(screensaverWidth, screensaverHeight) * 0.18 * (Math.sin(time / 4000) * 0.15 + 1.0);
+      const gradient = screensaverCtx.createRadialGradient(
+        screensaverWidth / 2,
+        screensaverHeight / 2,
+        0,
+        screensaverWidth / 2,
+        screensaverHeight / 2,
+        radius
+      );
+      gradient.addColorStop(0, 'rgba(59,59,107,0.95)');
+      gradient.addColorStop(1, 'rgba(59,59,107,0)');
+      screensaverCtx.fillStyle = gradient;
+      screensaverCtx.beginPath();
+      screensaverCtx.arc(screensaverWidth / 2, screensaverHeight / 2, radius, 0, Math.PI * 2);
+      screensaverCtx.fill();
+    }
+
+    function drawConnect(time) {
+      drawBackground('#090d12', '#090910');
+      const cx = screensaverWidth / 2;
+      const cy = screensaverHeight / 2;
+      const offset = Math.cos(time / 8000) * 80;
+      const drift = Math.sin(time / 5000) * 14;
+
+      screensaverCtx.save();
+      screensaverCtx.filter = 'blur(18px)';
+      for (const circle of [
+        { x: cx + offset, y: cy + drift, color: 'rgba(34,211,238,0.62)' },
+        { x: cx - offset, y: cy - drift, color: 'rgba(129,140,248,0.58)' }
+      ]) {
+        screensaverCtx.beginPath();
+        screensaverCtx.fillStyle = circle.color;
+        screensaverCtx.arc(circle.x, circle.y, 92, 0, Math.PI * 2);
+        screensaverCtx.fill();
+      }
+      screensaverCtx.restore();
+    }
+
+    function drawEat(time) {
+      drawBackground('#120e0a', '#090910');
+      const cx = screensaverWidth / 2;
+      const cy = screensaverHeight / 2 + 40;
+
+      screensaverCtx.strokeStyle = 'rgba(251,146,60,0.9)';
+      screensaverCtx.lineWidth = 6;
+      screensaverCtx.beginPath();
+      screensaverCtx.arc(cx, cy, 88, 0, Math.PI, false);
+      screensaverCtx.stroke();
+
+      screensaverCtx.strokeStyle = 'rgba(255,255,255,0.65)';
+      screensaverCtx.lineWidth = 3;
+      for (let i = 0; i < 3; i += 1) {
+        const phase = ((time / 1000) + i * 0.9) % 3;
+        const progress = phase / 3;
+        const alpha = 1 - progress;
+        const rise = progress * 130;
+        const wobble = Math.sin((time / 700) + i) * 10;
+        const startX = cx + (i - 1) * 24;
+        const startY = cy - 18;
+
+        screensaverCtx.globalAlpha = alpha;
+        screensaverCtx.beginPath();
+        screensaverCtx.moveTo(startX, startY);
+        screensaverCtx.bezierCurveTo(
+          startX - 18 + wobble,
+          startY - 38 - rise * 0.35,
+          startX + 18 - wobble,
+          startY - 72 - rise * 0.75,
+          startX + wobble,
+          startY - 108 - rise
+        );
+        screensaverCtx.stroke();
+      }
+      screensaverCtx.globalAlpha = 1;
+    }
+
+    function drawHome(time) {
+      drawBackground('#090910', '#090910');
+      const pulse = 0.18 + Math.sin(time / 6000) * 0.08;
+      const gradient = screensaverCtx.createRadialGradient(
+        screensaverWidth / 2,
+        screensaverHeight / 2,
+        0,
+        screensaverWidth / 2,
+        screensaverHeight / 2,
+        Math.min(screensaverWidth, screensaverHeight) * 0.4
+      );
+      gradient.addColorStop(0, `rgba(245,158,11,${pulse + 0.07})`);
+      gradient.addColorStop(0.5, `rgba(245,158,11,${pulse})`);
+      gradient.addColorStop(1, 'rgba(245,158,11,0)');
+      screensaverCtx.fillStyle = gradient;
+      screensaverCtx.fillRect(0, 0, screensaverWidth, screensaverHeight);
+    }
+
+    function updateScreensaverTimer() {
+      const totalSeconds = APP.recovery.plannedMin * 60;
+      const elapsedSeconds = Math.floor((Date.now() - APP.recovery.startTs) / 1000);
+      const remaining = totalSeconds - elapsedSeconds;
+      const abs = Math.abs(remaining);
+      const minutes = String(Math.floor(abs / 60)).padStart(2, '0');
+      const seconds = String(abs % 60).padStart(2, '0');
+      const next = remaining >= 0 ? `${minutes}:${seconds}` : `+${minutes}:${seconds}`;
+      if (next !== lastTimerText) {
+        lastTimerText = next;
+        DOM.screensaverTimer.textContent = next;
+      }
+    }
+
+    function tickScreensaver(time) {
+      if (APP.mode !== 'screensaver' || !screensaverCtx) return;
+      screensaverCtx.clearRect(0, 0, screensaverWidth, screensaverHeight);
+
+      switch (APP.recovery.theme) {
+        case 'outside':
+          drawOutside();
+          break;
+        case 'quiet':
+          drawQuiet(time);
+          break;
+        case 'connect':
+          drawConnect(time);
+          break;
+        case 'eat':
+          drawEat(time);
+          break;
+        case 'home':
+          drawHome(time);
+          break;
+        default:
+          drawBackground('#090910', '#090910');
+          break;
+      }
+
+      updateScreensaverTimer();
+      APP.recovery.timerId = requestAnimationFrame(tickScreensaver);
+    }
+
+    function stopScreensaverLoop() {
+      if (APP.recovery.timerId) {
+        cancelAnimationFrame(APP.recovery.timerId);
+        APP.recovery.timerId = null;
+      }
+      if (screensaverCtx) {
+        screensaverCtx.clearRect(0, 0, screensaverWidth, screensaverHeight);
+      }
+      lastTimerText = '';
+    }
+
+    function startScreensaver() {
+      stopScreensaverLoop();
+      APP.mode = 'screensaver';
+      initScreensaverScene(APP.recovery.theme);
+      applyState();
+      updateScreensaverTimer();
+      APP.recovery.timerId = requestAnimationFrame(tickScreensaver);
+    }
+
+    async function endScreensaver() {
+      if (!APP.recovery.startTs || !APP.recovery.logKind) return;
+      stopScreensaverLoop();
+      const elapsed = Math.max(1, Math.round((Date.now() - APP.recovery.startTs) / 60000));
+      APP.mode = 'normal';
+      applyState();
+      const saved = await postLog({ kind: APP.recovery.logKind, minutes: elapsed });
+      if (saved) {
+        showToast(`Recovery logged: ${elapsed}m`);
+        void refreshModelState({ allowCache: true });
+      } else {
+        showToast('Backend offline — recovery not saved', 'error');
+      }
+      APP.recovery.startTs = 0;
+    }
+
+    async function refreshModelState({ allowCache = true } = {}) {
+      if (modelFetchInFlight) return;
+      modelFetchInFlight = true;
+
+      try {
+        const res = await fetch(modelUrl('/state'), { cache: 'no-store' });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const payload = await res.json();
+        APP.model.online = true;
+        APP.model.stale = false;
+        APP.model.payload = payload;
+        APP.model.lastFetchAt = Date.now();
+        localStorage.setItem(STATE_CACHE_KEY, JSON.stringify({
+          payload,
+          fetchedAt: APP.model.lastFetchAt
+        }));
+      } catch (error) {
+        console.error(error);
+        const cached = allowCache ? getCachedState() : null;
+        if (cached) {
+          APP.model.online = false;
+          APP.model.stale = true;
+          APP.model.payload = cached.payload;
+          APP.model.lastFetchAt = cached.fetchedAt || 0;
+        } else {
+          APP.model.online = false;
+          APP.model.stale = false;
+          APP.model.payload = null;
+          APP.model.lastFetchAt = 0;
+        }
+
+        if (!APP.model.payload && typeof APP.aw.fallbackBattery !== 'number') {
+          await refreshAwData({ reason: 'fallback' });
+        }
+      } finally {
+        modelFetchInFlight = false;
+        renderApp();
+      }
+    }
+
+    async function refreshAwData({ reason = 'poll' } = {}) {
+      if (awFetchInFlight) return;
+      if (reason === 'poll' && APP.uiLayer < 1) return;
+      awFetchInFlight = true;
+
+      try {
+        if (!windowBucket) {
+          await findBuckets();
+          APP.aw.buckets.win = windowBucket;
+          APP.aw.buckets.afk = afkBucket;
+        }
+
+        if (!windowBucket) {
+          throw new Error('No ActivityWatch window bucket found.');
+        }
+
+        const now = new Date();
+        const start = new Date(Math.max(sessionStart.getTime(), now.getTime() - windowHours * 60 * 60 * 1000));
+        const events = await getEvents(windowBucket, start.toISOString(), now.toISOString());
+        const { battery, tally, totalActMins } = calculate(events, now);
+
+        APP.aw.online = true;
+        APP.aw.breakdown = tally;
+        APP.aw.fallbackBattery = battery;
+        APP.aw.totalActMins = totalActMins;
+        APP.aw.lastFetchAt = Date.now();
+        APP.aw.windowHours = windowHours;
+      } catch (error) {
+        console.error(error);
+        APP.aw.online = false;
+      } finally {
+        awFetchInFlight = false;
+        renderApp();
+      }
+    }
+
+    function initUi() {
+      DOM.backdrop.hidden = false;
+      DOM.ratingSheet.hidden = false;
+      DOM.recoverySheet.hidden = false;
+      DOM.screensaver.hidden = false;
+
+      renderRatingSheet();
+      renderRecoverySheet();
+      renderApp();
+
+      DOM.windowSelect.value = String(APP.aw.windowHours);
+
+      DOM.batteryToggle.addEventListener('click', () => {
+        APP.uiLayer = APP.uiLayer === 0 ? 1 : 0;
+        applyState();
+        if (APP.uiLayer >= 1) {
+          void refreshAwData({ reason: 'expand' });
+        }
+      });
+
+      DOM.openDiagnostics.addEventListener('click', () => {
+        APP.uiLayer = 2;
+        applyState();
+        void refreshAwData({ reason: 'expand' });
+      });
+
+      DOM.collapseBtn.addEventListener('click', () => {
+        APP.uiLayer = 0;
+        applyState();
+      });
+
+      DOM.energyBtn.addEventListener('click', () => {
+        APP.rating.kind = 'energy_rating';
+        openRatingSheet('energy_rating');
+      });
+
+      DOM.stressBtn.addEventListener('click', () => {
+        APP.rating.kind = 'stress_rating';
+        openRatingSheet('stress_rating');
+      });
+
+      DOM.recoveryTrigger.addEventListener('click', () => {
+        openRecoverySheet();
+      });
+
+      DOM.backdrop.addEventListener('click', () => {
+        if (APP.mode === 'rating') closeRatingSheet();
+        if (APP.mode === 'recovery-menu') closeRecoverySheet();
+      });
+
+      DOM.windowSelect.addEventListener('change', event => {
+        windowHours = parseFloat(event.target.value);
+        APP.aw.windowHours = windowHours;
+        windowBucket = null;
+        afkBucket = null;
+        APP.aw.buckets = { win: null, afk: null };
+        void refreshAwData({ reason: 'change' });
+      });
+
+      DOM.ratingTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          APP.rating.kind = tab.dataset.kind;
+          renderRatingSheet();
+        });
+      });
+
+      DOM.ratingRail.addEventListener('mouseover', event => {
+        const button = event.target.closest('.tap-score');
+        if (!button) return;
+        DOM.ratingHint.textContent = `${button.dataset.value}: ${RATING_HINTS[APP.rating.kind][button.dataset.value]}`;
+      });
+
+      DOM.ratingRail.addEventListener('focusin', event => {
+        const button = event.target.closest('.tap-score');
+        if (!button) return;
+        DOM.ratingHint.textContent = `${button.dataset.value}: ${RATING_HINTS[APP.rating.kind][button.dataset.value]}`;
+      });
+
+      DOM.ratingRail.addEventListener('mouseleave', () => {
+        DOM.ratingHint.textContent = getRatingDefaultHint(APP.rating.kind);
+      });
+
+      DOM.ratingRail.addEventListener('focusout', event => {
+        if (DOM.ratingRail.contains(event.relatedTarget)) return;
+        DOM.ratingHint.textContent = getRatingDefaultHint(APP.rating.kind);
+      });
+
+      DOM.ratingRail.addEventListener('click', event => {
+        const button = event.target.closest('.tap-score');
+        if (!button) return;
+        void submitRating(Number(button.dataset.value), button);
+      });
+
+      DOM.recoveryActivities.addEventListener('click', event => {
+        const activityButton = event.target.closest('.activity-btn');
+        const stepperButton = event.target.closest('.stepper-btn');
+        const startButton = event.target.closest('.start-btn');
+
+        if (activityButton) {
+          selectRecoveryActivity(
+            activityButton.dataset.activityId,
+            activityButton.dataset.logKind,
+            activityButton.dataset.theme
+          );
+          return;
+        }
+
+        if (stepperButton) {
+          changeRecoveryDuration(Number(stepperButton.dataset.step));
+          return;
+        }
+
+        if (startButton && APP.recovery.activityId) {
+          APP.recovery.startTs = Date.now();
+          closeRecoverySheet();
+          startScreensaver();
+        }
+      });
+
+      DOM.screensaverDone.addEventListener('click', () => {
+        void endScreensaver();
+      });
+
+      window.addEventListener('resize', () => {
+        if (APP.mode === 'screensaver') {
+          initScreensaverScene(APP.recovery.theme);
+        }
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        void refreshModelState({ allowCache: true });
+        if (APP.uiLayer >= 1) {
+          void refreshAwData({ reason: 'visible' });
+        }
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (APP.mode === 'rating') closeRatingSheet();
+        if (APP.mode === 'recovery-menu') closeRecoverySheet();
+      });
+
+      window.setInterval(() => {
+        if (!document.hidden) {
+          void refreshModelState({ allowCache: true });
+        }
+      }, MODEL_POLL_MS);
+
+      window.setInterval(() => {
+        if (!document.hidden && APP.uiLayer >= 1) {
+          void refreshAwData({ reason: 'poll' });
+        }
+      }, AW_POLL_MS);
+    }
+
+    async function start() {
+      initUi();
+      await refreshModelState({ allowCache: true });
+      if (!APP.model.payload) {
+        await refreshAwData({ reason: 'fallback' });
+      }
+    }
+
+    start();
   </script>
 </body>
 </html>
