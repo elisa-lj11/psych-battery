@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "psych-battery",
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
