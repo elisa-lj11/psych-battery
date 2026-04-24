@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Psych Battery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f0f13;
@@ -881,6 +884,312 @@
         transition: none !important;
       }
     }
+
+    /* ── Pixel-art aesthetic override ──────────────────────────────────────
+       Restrained pixel-art skin: arcade palette, blocky borders, bitmap
+       typography. Emoji/system type intentionally preserved in paragraph
+       prose where readability matters; pixel fonts used for labels,
+       numbers, and chrome.
+    */
+
+    :root {
+      --px-bg:       #0b0b14;  /* slightly cooler than before */
+      --px-surface:  #16162a;
+      --px-surface-2:#1e1e38;
+      --px-border:   #3d3d60;  /* chunkier visible borders */
+      --px-border-2: #5a5a88;
+      --px-text:     #e8e8f8;
+      --px-muted:    #8080b0;
+
+      --px-good:     #9FE86A;  /* GB green */
+      --px-warn:     #FFC857;  /* arcade yellow */
+      --px-low:      #FF9E5E;  /* warm orange */
+      --px-critical: #E8615A;  /* arcade red */
+      --px-accent:   #B388FF;  /* SNES lavender */
+      --px-info:     #6AC6EA;  /* NES cyan */
+      --px-focus:    #FFD447;  /* bright focus ring */
+
+      --px-font-ui:    'Silkscreen', ui-monospace, 'Courier New', monospace;
+      --px-font-body:  'VT323', ui-monospace, 'Courier New', monospace;
+    }
+
+    /* Palette remap */
+    :root {
+      --bg: var(--px-bg);
+      --surface: var(--px-surface);
+      --surface-2: var(--px-surface-2);
+      --border: var(--px-border);
+      --border-light: var(--px-border-2);
+      --text: var(--px-text);
+      --muted: var(--px-muted);
+      --good: var(--px-good);
+      --warn: var(--px-warn);
+      --low: var(--px-low);
+      --critical: var(--px-critical);
+      --drain: var(--px-critical);
+      --recover: var(--px-good);
+      --accent: var(--px-accent);
+    }
+
+    body {
+      font-family: var(--px-font-body);
+      font-size: 1.06rem;        /* VT323 needs slight upscale */
+      letter-spacing: 0.01em;
+      background:
+        radial-gradient(circle at top, rgba(179, 136, 255, 0.10), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(159, 232, 106, 0.06), transparent 32%),
+        linear-gradient(180deg, #0e0e1c 0%, var(--bg) 62%);
+    }
+
+    /* Chrome typography — bitmap Silkscreen for all-caps labels */
+    .eyebrow,
+    .section-title,
+    .metric-label,
+    .metric-unit,
+    .tab-btn,
+    #demo-select,
+    #connection-pill,
+    .activity-label,
+    .sheet-subtitle,
+    #window-select,
+    .stepper-display,
+    #rating-hint,
+    #breakdown-list .app-label,
+    #breakdown-list .mins,
+    #breakdown-list .rate-badge,
+    .diag-label,
+    #diag-footer,
+    #battery-caption,
+    #model-status-text,
+    #last-tick-text {
+      font-family: var(--px-font-ui);
+      letter-spacing: 0.04em;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
+    }
+
+    /* Display numerals — big VT323 */
+    #battery-percent,
+    .metric-value,
+    .diag-value,
+    .tap-score,
+    #screensaver-timer,
+    .stepper-display {
+      font-family: var(--px-font-body);
+      font-variant-numeric: tabular-nums;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
+      letter-spacing: 0.02em;
+    }
+
+    /* Flatten rounded corners to square-edged pixel frames */
+    #battery-card,
+    .metric-card,
+    .drain-row,
+    .diag-row,
+    #connection-pill,
+    #demo-select,
+    #window-select,
+    .tab-btn,
+    .tap-score,
+    .activity-btn,
+    .stepper-btn,
+    .start-btn,
+    #energy-btn,
+    #stress-btn,
+    #recovery-trigger,
+    #collapse-btn,
+    #open-diagnostics,
+    .bottom-sheet,
+    #screensaver-done,
+    #help-sheet,
+    .help-row {
+      border-radius: 0 !important;
+    }
+
+    /* Battery card: stronger border, no glass glow */
+    #battery-card {
+      border: 2px solid var(--px-border);
+      background: linear-gradient(180deg, rgba(179, 136, 255, 0.06), rgba(14, 14, 28, 0.95) 24%, rgba(14, 14, 28, 0.98) 100%);
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.4);
+    }
+    #battery-card::before { display: none; }  /* kill blurry glow */
+
+    .metric-card {
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.96);
+    }
+
+    .drain-row,
+    .diag-row {
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.55);
+    }
+
+    #connection-pill,
+    #demo-select,
+    #window-select,
+    .tab-btn,
+    .stepper-btn,
+    #energy-btn,
+    #stress-btn,
+    #recovery-trigger,
+    #open-diagnostics,
+    #collapse-btn,
+    #screensaver-done {
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35), 2px 2px 0 0 #000;
+    }
+
+    #recovery-trigger {
+      background: var(--px-accent);
+      color: #120728;
+      border-color: #6b4cc4;
+      box-shadow: 2px 2px 0 0 #000, inset 1px 1px 0 rgba(255,255,255,0.25);
+      font-family: var(--px-font-ui);
+      letter-spacing: 0.05em;
+    }
+
+    .tap-score,
+    .activity-btn,
+    .start-btn {
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      box-shadow: 2px 2px 0 0 #000;
+    }
+
+    .tap-score { font-size: 1.6rem; }
+
+    /* Chunky pixel focus outline — guide rule: :focus-visible must signal care */
+    :focus-visible {
+      outline: 3px solid var(--px-focus) !important;
+      outline-offset: 2px !important;
+      box-shadow: 0 0 0 1px #000 !important;
+    }
+
+    /* Battery SVG rendering — keep strokes crisp */
+    #battery-visual svg {
+      image-rendering: pixelated;
+      shape-rendering: crispEdges;
+    }
+    .battery-fill {
+      /* Step the animation so fill feels like it's filling blocks */
+      transition: fill 240ms steps(4), width 360ms steps(10) !important;
+    }
+    .bat-cell {
+      transition: fill 200ms steps(3), opacity 200ms steps(2), width 200ms steps(4);
+    }
+    .bat-cell.is-low {
+      animation: pulse 0.9s steps(3) infinite;
+    }
+
+    /* Activity pixel-glyph SVGs */
+    .pxicon {
+      width: 28px;
+      height: 28px;
+      image-rendering: pixelated;
+      shape-rendering: crispEdges;
+      flex-shrink: 0;
+    }
+    .activity-emoji {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Help sheet (?) */
+    #help-sheet {
+      position: fixed;
+      inset: auto 16px 16px 16px;
+      max-width: 560px;
+      margin-inline: auto;
+      padding: 16px;
+      background: var(--px-surface);
+      border: 2px solid var(--px-border-2);
+      box-shadow: 4px 4px 0 0 #000;
+      z-index: 60;
+      display: none;
+      font-family: var(--px-font-body);
+    }
+    body[data-mode="help"] #help-sheet { display: block; }
+    body[data-mode="help"] #backdrop { opacity: 1; pointer-events: auto; }
+
+    #help-sheet h2 {
+      font-family: var(--px-font-ui);
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+      color: var(--px-accent);
+    }
+    .help-row {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--px-border);
+      font-size: 1.1rem;
+    }
+    .help-row kbd {
+      font-family: var(--px-font-ui);
+      font-size: 0.78rem;
+      background: var(--px-surface-2);
+      border: 2px solid var(--px-border-2);
+      padding: 2px 6px;
+      box-shadow: 2px 2px 0 0 #000;
+      color: var(--px-text);
+    }
+    #help-close {
+      margin-top: 12px;
+      width: 100%;
+      min-height: 40px;
+      font-family: var(--px-font-ui);
+      letter-spacing: 0.05em;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      color: var(--px-text);
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000;
+    }
+    #help-trigger {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000;
+      z-index: 10;
+      display: none;  /* shown only on desktop widths */
+    }
+    @media (min-width: 720px) {
+      #help-trigger { display: inline-flex; align-items: center; justify-content: center; }
+    }
+
+    /* Empty state copy is important — guide says teach the next action */
+    .teaching-empty {
+      padding: 14px;
+      border: 2px dashed var(--px-border-2);
+      background: rgba(179, 136, 255, 0.05);
+      font-family: var(--px-font-body);
+      font-size: 1.1rem;
+      color: var(--px-text);
+    }
+    .teaching-empty code {
+      font-family: var(--px-font-ui);
+      font-size: 0.82rem;
+      background: var(--px-surface-2);
+      padding: 2px 6px;
+      border: 1px solid var(--px-border-2);
+    }
   </style>
 </head>
 <body data-layer="0" data-mode="normal">
@@ -953,7 +1262,22 @@
     <button id="stress-btn" type="button" data-kind="stress_rating">🌀 Stress</button>
   </div>
 
-  <button id="recovery-trigger" type="button">🌿 Recovery</button>
+  <button id="recovery-trigger" type="button">RECOVERY</button>
+
+  <button id="help-trigger" type="button" aria-label="Keyboard shortcuts (press ? key)">?</button>
+
+  <section id="help-sheet" aria-hidden="true" aria-label="Keyboard shortcuts">
+    <h2>Keyboard shortcuts</h2>
+    <div class="help-row"><kbd>E</kbd><span>Log energy rating</span></div>
+    <div class="help-row"><kbd>S</kbd><span>Log stress rating</span></div>
+    <div class="help-row"><kbd>R</kbd><span>Open recovery menu</span></div>
+    <div class="help-row"><kbd>Space</kbd><span>Expand / collapse battery</span></div>
+    <div class="help-row"><kbd>D</kbd><span>Open full diagnostics</span></div>
+    <div class="help-row"><kbd>1 – 0</kbd><span>Submit rating value (1–10) when rating sheet is open</span></div>
+    <div class="help-row"><kbd>Esc</kbd><span>Close any open sheet or screensaver</span></div>
+    <div class="help-row"><kbd>?</kbd><span>This sheet</span></div>
+    <button id="help-close" type="button">Close</button>
+  </section>
 
   <div id="backdrop" hidden></div>
 
@@ -1276,12 +1600,89 @@
       }
     };
 
+    // 10x10 pixel-art sprites — '.' empty, 'X' filled. Drawn with
+    // shape-rendering:crispEdges so they stay chunky at any scale.
+    const PIXEL_SPRITES = {
+      outside: [
+        '....XX....',
+        '...XXX....',
+        '..XXXX....',
+        '.XXXXX....',
+        'XXXXX.....',
+        'XXXX......',
+        '.XXX......',
+        '.XX.......',
+        '.X........',
+        '..........'
+      ],
+      quiet: [
+        '.XXXXXX...',
+        '......X...',
+        '.....X....',
+        '....X.....',
+        '...X......',
+        '..X.......',
+        '.X........',
+        'XXXXXX....',
+        '..........',
+        '..........'
+      ],
+      connect: [
+        '..XX.XX...',
+        '..XX.XX...',
+        '...X.X....',
+        '..XXXXX...',
+        '.X.X.X.X..',
+        '...X.X....',
+        '...X.X....',
+        '..XX.XX...',
+        '..........',
+        '..........'
+      ],
+      eat: [
+        '...X......',
+        '..X.......',
+        '..XXX.....',
+        '.XXXXX....',
+        'XXXXXXX...',
+        'XXXXXXX...',
+        'XXXXXXX...',
+        '.XXXXX....',
+        '..XXX.....',
+        '..........'
+      ],
+      home: [
+        '....X.....',
+        '...XXX....',
+        '..XXXXX...',
+        '.XXXXXXX..',
+        'XXXXXXXXX.',
+        'XX.XXX.XX.',
+        'XX.XXX.XX.',
+        'XX.XXX.XX.',
+        'XXXXXXXXX.',
+        '..........'
+      ]
+    };
+
+    function pixelIcon(spriteKey, color) {
+      const rows = PIXEL_SPRITES[spriteKey];
+      if (!rows) return '';
+      let rects = '';
+      for (let y = 0; y < rows.length; y++) {
+        for (let x = 0; x < rows[y].length; x++) {
+          if (rows[y][x] !== '.') rects += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+        }
+      }
+      return `<svg class="pxicon" viewBox="0 0 10 10" shape-rendering="crispEdges" fill="${color}" aria-hidden="true">${rects}</svg>`;
+    }
+
     const RECOVERY_ACTIVITIES = [
-      { id: 'outside', emoji: '🌿', label: 'Go outside', logKind: 'outside', theme: 'outside', accent: '#4ade80' },
-      { id: 'quiet', emoji: '🤫', label: 'Quiet time', logKind: 'detach', theme: 'quiet', accent: '#818cf8' },
-      { id: 'connect', emoji: '👥', label: 'Connect with others', logKind: 'with_people', theme: 'connect', accent: '#22d3ee' },
-      { id: 'eat', emoji: '🍎', label: 'Eat food', logKind: 'detach', theme: 'eat', accent: '#fb923c' },
-      { id: 'home', emoji: '🏠', label: 'Go home', logKind: 'detach', theme: 'home', accent: '#f59e0b' }
+      { id: 'outside', sprite: 'outside', label: 'Go outside',          logKind: 'outside',     theme: 'outside', accent: '#9FE86A' },
+      { id: 'quiet',   sprite: 'quiet',   label: 'Quiet time',           logKind: 'detach',      theme: 'quiet',   accent: '#B388FF' },
+      { id: 'connect', sprite: 'connect', label: 'Connect with others',  logKind: 'with_people', theme: 'connect', accent: '#6AC6EA' },
+      { id: 'eat',     sprite: 'eat',     label: 'Eat food',             logKind: 'detach',      theme: 'eat',     accent: '#FF9E5E' },
+      { id: 'home',    sprite: 'home',    label: 'Go home',              logKind: 'detach',      theme: 'home',    accent: '#FFC857' }
     ];
 
     const DRAIN_FEATS = [
@@ -1406,17 +1807,17 @@
     }
 
     function levelColor(pct) {
-      if (pct > 60) return '#4ade80';
-      if (pct > 35) return '#facc15';
-      if (pct > 15) return '#fb923c';
-      return '#f87171';
+      if (pct > 60) return '#9FE86A';
+      if (pct > 35) return '#FFC857';
+      if (pct > 15) return '#FF9E5E';
+      return '#E8615A';
     }
 
     function rateColor(rate) {
-      if (rate >= 2.5) return '#f87171';
-      if (rate >= 1.5) return '#fb923c';
-      if (rate >= 1.0) return '#facc15';
-      return '#4ade80';
+      if (rate >= 2.5) return '#E8615A';
+      if (rate >= 1.5) return '#FF9E5E';
+      if (rate >= 1.0) return '#FFC857';
+      return '#9FE86A';
     }
 
     function renderBreakdown(tally) {
@@ -1507,52 +1908,86 @@
       DOM.openDiagnostics.disabled = APP.uiLayer === 2;
     }
 
+    // Pixel-art battery: 10 discrete cells + a partial last cell that reflects
+    // sub-10% values. Sharp corners, crispEdges rendering, no anti-alias.
     function ensureBatterySvg() {
       if (DOM.batteryVisual.querySelector('svg')) return;
+      const CELL_W = 18;
+      const CELL_H = 66;
+      const CELL_X0 = 12;
+      const CELL_Y = 12;
+      const CELL_GAP = 2;
+      let cellsSvg = '';
+      for (let i = 0; i < 10; i++) {
+        const x = CELL_X0 + i * (CELL_W + CELL_GAP);
+        cellsSvg += `<rect class="bat-cell" data-idx="${i}" x="${x}" y="${CELL_Y}" width="${CELL_W}" height="${CELL_H}" fill="#2a2a3a" opacity="0.35"></rect>`;
+      }
       DOM.batteryVisual.innerHTML = `
-        <svg width="240" height="90" viewBox="0 0 252 90" role="img" aria-hidden="true">
-          <rect x="1.5" y="1" width="220" height="88" rx="10" fill="none" stroke="#333350" stroke-width="3"></rect>
-          <rect x="231" y="30" width="10" height="30" rx="3" fill="#333350"></rect>
-          <rect id="battery-fill-rect" class="battery-fill" x="9" y="8" width="0" height="74" rx="7" fill="#4ade80"></rect>
-          <text id="battery-fill-text" x="111" y="56" text-anchor="middle" font-family="Aptos, 'Segoe UI Variable Display', 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#e0e0f0">--%</text>
+        <svg width="240" height="90" viewBox="0 0 252 90" role="img" aria-hidden="true" shape-rendering="crispEdges">
+          <rect x="2" y="2" width="220" height="86" fill="none" stroke="#5a5a88" stroke-width="4"></rect>
+          <rect x="228" y="28" width="14" height="34" fill="#5a5a88"></rect>
+          <g id="battery-fill-group">${cellsSvg}</g>
+          <text id="battery-fill-text" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400" fill="#e8e8f8">--%</text>
         </svg>
       `;
     }
 
     function renderBattery(level) {
       ensureBatterySvg();
-      const fillRect = document.getElementById('battery-fill-rect');
+      const cells = DOM.batteryVisual.querySelectorAll('.bat-cell');
       const fillText = document.getElementById('battery-fill-text');
 
       if (level == null) {
-        fillRect.setAttribute('width', '0');
-        fillRect.setAttribute('fill', '#333350');
-        fillRect.classList.remove('is-low');
+        cells.forEach(cell => {
+          cell.setAttribute('width', 18);
+          cell.setAttribute('fill', '#2a2a3a');
+          cell.setAttribute('opacity', '0.35');
+        });
         fillText.textContent = '--%';
-        fillText.setAttribute('fill', '#e0e0f0');
+        fillText.setAttribute('fill', '#e8e8f8');
         DOM.batteryPercent.textContent = '--%';
         return;
       }
 
       const rounded = Math.round(level);
-      const fillWidth = clamp((level / 100) * BATTERY_INNER_WIDTH, 0, BATTERY_INNER_WIDTH);
       const color = levelColor(level);
-      const textFill = fillWidth > 112 ? '#0f0f13' : '#e0e0f0';
+      const full = Math.floor(level / 10);
+      const partialFrac = (level / 10) - full;
+      const CELL_W = 18;
 
-      fillRect.setAttribute('width', fillWidth.toFixed(2));
-      fillRect.setAttribute('fill', color);
-      fillRect.classList.toggle('is-low', level < 20);
+      cells.forEach((cell, i) => {
+        if (i < full) {
+          cell.setAttribute('width', CELL_W);
+          cell.setAttribute('fill', color);
+          cell.setAttribute('opacity', '1');
+        } else if (i === full && partialFrac > 0) {
+          cell.setAttribute('width', Math.max(2, CELL_W * partialFrac).toFixed(2));
+          cell.setAttribute('fill', color);
+          cell.setAttribute('opacity', '1');
+        } else {
+          cell.setAttribute('width', CELL_W);
+          cell.setAttribute('fill', '#2a2a3a');
+          cell.setAttribute('opacity', '0.35');
+        }
+      });
+
+      // Low-power pulse on the last visible cell
+      const isLow = level < 20;
+      cells.forEach((cell, i) => {
+        cell.classList.toggle('is-low', isLow && i === Math.max(0, full));
+      });
+
       fillText.textContent = `${rounded}%`;
-      fillText.setAttribute('fill', textFill);
+      fillText.setAttribute('fill', rounded >= 60 ? '#0b0b14' : '#e8e8f8');
       DOM.batteryPercent.textContent = `${rounded}%`;
     }
 
     function stressColor(value) {
       const stress = clamp(value, 0, 100);
-      if (stress < 35) return '#4ade80';
-      if (stress < 60) return '#facc15';
-      if (stress < 80) return '#fb923c';
-      return '#f87171';
+      if (stress < 35) return '#9FE86A';
+      if (stress < 60) return '#FFC857';
+      if (stress < 80) return '#FF9E5E';
+      return '#E8615A';
     }
 
     function renderMetrics() {
@@ -1650,24 +2085,30 @@
     function renderConnectionPill() {
       const demo = getActiveDemoProfile();
       if (demo) {
-        DOM.connectionPill.textContent = `◆ demo · ${demo.name}`;
+        DOM.connectionPill.textContent = `◆ DEMO · ${demo.name.toUpperCase()}`;
         DOM.connectionPill.style.color = demo.accent;
+        DOM.connectionPill.title = `Demo profile: ${demo.tagline}. Not real data.`;
         return;
       }
 
-      let text = '✕ offline';
+      // Guide rule: errors name their system, name the user's recourse.
+      let text = '✕ BACKEND :7070';
       let color = 'var(--critical)';
+      let tip  = 'Flask server at localhost:7070 is unreachable. Run `python -m integrations.models.main` or pick a demo profile.';
 
       if (APP.model.online && !APP.model.stale) {
-        text = '● live';
+        text = '● LIVE :7070';
         color = 'var(--good)';
+        tip  = 'Connected to Flask backend at localhost:7070.';
       } else if (APP.model.stale) {
-        text = '◐ cached';
+        text = '◐ CACHED';
         color = 'var(--warn)';
+        tip  = 'Backend unreachable. Showing the last cached tick.';
       }
 
       DOM.connectionPill.textContent = text;
       DOM.connectionPill.style.color = color;
+      DOM.connectionPill.title = tip;
     }
 
     function renderMeta() {
@@ -1676,15 +2117,17 @@
       const demo = getActiveDemoProfile();
 
       if (demo) {
-        DOM.modelStatusText.textContent = `Demo profile: ${demo.tagline}`;
+        DOM.modelStatusText.textContent = `Demo: ${demo.tagline}`;
       } else if (source === 'model') {
-        DOM.modelStatusText.textContent = 'Model server live';
+        DOM.modelStatusText.textContent = 'Flask :7070 · live';
       } else if (source === 'cached-model') {
-        DOM.modelStatusText.textContent = 'Using cached model state';
+        DOM.modelStatusText.textContent = 'Flask :7070 unreachable — showing cached values';
       } else if (source === 'aw') {
-        DOM.modelStatusText.textContent = APP.aw.online ? 'ActivityWatch fallback' : 'Using last ActivityWatch fallback';
+        DOM.modelStatusText.textContent = APP.aw.online
+          ? 'Flask :7070 offline — ActivityWatch fallback'
+          : 'Flask :7070 offline — last ActivityWatch read';
       } else {
-        DOM.modelStatusText.textContent = 'Waiting for model or ActivityWatch';
+        DOM.modelStatusText.textContent = 'No backend. Start Flask at :7070 or pick a demo.';
       }
 
       if (payload?.last_tick_iso) {
@@ -1740,7 +2183,7 @@
               data-log-kind="${activity.logKind}"
               data-theme="${activity.theme}">
               <span class="activity-copy">
-                <span class="activity-emoji">${activity.emoji}</span>
+                <span class="activity-emoji">${pixelIcon(activity.sprite, activity.accent)}</span>
                 <span class="activity-label">${activity.label}</span>
               </span>
               <span class="activity-meta">${selected ? `${APP.recovery.plannedMin} min` : 'Select'}</span>
@@ -2272,6 +2715,7 @@
       DOM.backdrop.addEventListener('click', () => {
         if (APP.mode === 'rating') closeRatingSheet();
         if (APP.mode === 'recovery-menu') closeRecoverySheet();
+        if (APP.mode === 'help') closeHelp();
       });
 
       DOM.windowSelect.addEventListener('change', event => {
@@ -2361,10 +2805,83 @@
         }
       });
 
+      // Help sheet wiring (keyboard-discoverable, per the guide)
+      const helpSheet = document.getElementById('help-sheet');
+      const helpTrigger = document.getElementById('help-trigger');
+      const helpClose = document.getElementById('help-close');
+
+      function openHelp() {
+        APP.mode = 'help';
+        applyState();
+        if (helpSheet) helpSheet.setAttribute('aria-hidden', 'false');
+      }
+      function closeHelp() {
+        if (APP.mode === 'help') {
+          APP.mode = 'normal';
+          applyState();
+        }
+        if (helpSheet) helpSheet.setAttribute('aria-hidden', 'true');
+      }
+
+      if (helpTrigger) helpTrigger.addEventListener('click', openHelp);
+      if (helpClose) helpClose.addEventListener('click', closeHelp);
+
       document.addEventListener('keydown', event => {
-        if (event.key !== 'Escape') return;
-        if (APP.mode === 'rating') closeRatingSheet();
-        if (APP.mode === 'recovery-menu') closeRecoverySheet();
+        // Ignore if the user is typing in a form control
+        const tag = (event.target && event.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+        // Esc handled everywhere
+        if (event.key === 'Escape') {
+          if (APP.mode === 'rating') { closeRatingSheet(); return; }
+          if (APP.mode === 'recovery-menu') { closeRecoverySheet(); return; }
+          if (APP.mode === 'help') { closeHelp(); return; }
+          if (APP.mode === 'screensaver') { void endScreensaver(); return; }
+        }
+
+        // While rating sheet open, 1–9 / 0 submit that value
+        if (APP.mode === 'rating') {
+          const digit = event.key === '0' ? 10 : (event.key.match(/^[1-9]$/) ? Number(event.key) : null);
+          if (digit != null) {
+            event.preventDefault();
+            void submitRating(digit, null);
+            return;
+          }
+          return;
+        }
+
+        if (APP.mode !== 'normal') return;
+
+        const key = event.key.toLowerCase();
+        if (key === 'e') {
+          event.preventDefault();
+          APP.rating.kind = 'energy_rating';
+          openRatingSheet('energy_rating');
+        } else if (key === 's') {
+          event.preventDefault();
+          APP.rating.kind = 'stress_rating';
+          openRatingSheet('stress_rating');
+        } else if (key === 'r') {
+          event.preventDefault();
+          openRecoverySheet();
+        } else if (key === 'd') {
+          event.preventDefault();
+          APP.uiLayer = 2;
+          applyState();
+          void refreshAwData({ reason: 'expand' });
+        } else if (event.key === ' ' || event.key === 'Enter') {
+          // Only swallow Space/Enter when not focused on a button (lets native clicks work)
+          if (tag !== 'BUTTON') {
+            event.preventDefault();
+            APP.uiLayer = APP.uiLayer === 0 ? 1 : 0;
+            applyState();
+            if (APP.uiLayer >= 1) void refreshAwData({ reason: 'expand' });
+          }
+        } else if (event.key === '?' || (event.key === '/' && event.shiftKey)) {
+          event.preventDefault();
+          openHelp();
+        }
       });
 
       window.setInterval(() => {
