@@ -211,6 +211,26 @@
       font-size: 0.96rem;
     }
 
+    .battery-expand-hint {
+      display: none;
+      margin-top: 6px;
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-align: center;
+      animation: battery-hint-blink 2s steps(2, end) infinite;
+    }
+
+    body[data-layer="0"] .battery-expand-hint {
+      display: block;
+    }
+
+    body[data-layer="1"] .battery-expand-hint,
+    body[data-layer="2"] .battery-expand-hint {
+      display: none;
+    }
+
     #battery-meta {
       position: relative;
       z-index: 1;
@@ -767,6 +787,11 @@
     .toggle-banner-end {
       margin-left: 4px;
       padding: 6px 10px;
+      min-height: 44px;
+      min-width: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: transparent;
       border: 2px solid var(--px-border);
       color: var(--px-text);
@@ -886,6 +911,11 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
+    }
+
+    @keyframes battery-hint-blink {
+      0%, 50%, 100% { opacity: 1; }
+      51%, 99% { opacity: 0.55; }
     }
 
     @media (min-width: 768px) {
@@ -1389,8 +1419,8 @@
     }
     #help-trigger {
       position: fixed;
-      top: 16px;
-      right: 16px;
+      top: 10px;
+      right: 130px;
       width: 36px;
       height: 36px;
       border: 2px solid var(--px-border-2);
@@ -1995,6 +2025,7 @@
       <div class="battery-copy">
         <div id="battery-percent">--%</div>
         <div id="battery-caption">Mental energy</div>
+        <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND ▾</div>
       </div>
     </button>
 
@@ -3339,10 +3370,10 @@ P = drain - 0.5*recovery</pre>
     }
 
     function layer2AnimLoop(timestamp = 0) {
-      if (APP.uiLayer < 2 || !DOM.layer2ParticleField.childElementCount) {
+      if (APP.uiLayer < 2 || APP.mode === 'screensaver' || !DOM.layer2ParticleField.childElementCount) {
         if (APP.layer2.frameId) {
           cancelAnimationFrame(APP.layer2.frameId);
-          APP.layer2.frameId = 0;
+          APP.layer2.frameId = null;
         }
         return;
       }
@@ -4136,6 +4167,10 @@ P = drain - 0.5*recovery</pre>
 
     function startScreensaver() {
       stopScreensaverLoop();
+      if (APP.layer2.frameId) {
+        cancelAnimationFrame(APP.layer2.frameId);
+        APP.layer2.frameId = null;
+      }
       APP.mode = 'screensaver';
       initScreensaverScene(APP.recovery.theme);
       applyState();
@@ -4330,14 +4365,19 @@ P = drain - 0.5*recovery</pre>
         APP.layer2.lastStepTs = 0;
         if (APP.uiLayer >= 2) {
           renderLayer2Static();
-          if (!APP.layer2.frameId) {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            if (APP.layer2.frameId) {
+              cancelAnimationFrame(APP.layer2.frameId);
+              APP.layer2.frameId = null;
+            }
+          } else if (!APP.layer2.frameId) {
             APP.layer2.frameId = requestAnimationFrame(layer2AnimLoop);
           }
           return;
         }
         if (APP.layer2.frameId) {
           cancelAnimationFrame(APP.layer2.frameId);
-          APP.layer2.frameId = 0;
+          APP.layer2.frameId = null;
         }
       };
 
@@ -4500,6 +4540,9 @@ P = drain - 0.5*recovery</pre>
           if (activity.mode === 'toggle') {
             startToggleRecovery(activity);
             return;
+          }
+          if (APP.recovery.toggleActive) {
+            void endToggleRecovery();
           }
           APP.recovery.startTs = Date.now();
           closeRecoverySheet();
