@@ -94,7 +94,7 @@
       padding: 0 12px;
       border-radius: 999px;
       border: 1px solid var(--border-light);
-      background: rgba(34, 34, 58, 0.72);
+      background: var(--surface);
       font-size: 0.88rem;
       font-weight: 700;
       white-space: nowrap;
@@ -115,7 +115,7 @@
       padding: 0 10px;
       border-radius: 999px;
       border: 1px solid var(--border-light);
-      background: rgba(34, 34, 58, 0.72);
+      background: var(--surface);
       color: var(--text);
       font-size: 0.82rem;
       font-weight: 600;
@@ -125,13 +125,13 @@
     }
 
     body.is-demo #demo-select {
-      border-color: #818cf8;
-      color: #c7d2fe;
+      border-color: var(--px-accent);
+      color: var(--px-accent);
     }
 
     body.is-demo #connection-pill {
-      color: #c7d2fe;
-      border-color: #818cf8;
+      color: var(--px-accent);
+      border-color: var(--px-accent);
     }
 
     #battery-card {
@@ -931,14 +931,139 @@
       --accent: var(--px-accent);
     }
 
+    /* ── Theme variants ───────────────────────────────────────────────
+       Default (no data-theme) = arcade, already defined above.
+       Each theme overrides the --px-* variables so every downstream
+       rule picks them up via var() with no per-rule changes. */
+
+    body[data-theme="gameboy"] {
+      --px-bg:       #0f380f;
+      --px-surface:  #1a4a1a;
+      --px-surface-2:#2a5a2a;
+      --px-border:   #4a7a2a;
+      --px-border-2: #5a8a3a;
+      --px-text:     #9bbc0f;
+      --px-muted:    #6d8a2a;
+      --px-good:     #9bbc0f;
+      --px-warn:     #c8d848;   /* slight yellow-shift, still within GB palette */
+      --px-low:      #5a7a1a;
+      --px-critical: #c14a3e;   /* necessary red for alert states */
+      --px-accent:   #9bbc0f;
+      --px-info:     #8bac0f;
+      --px-focus:    #c8d848;
+    }
+
+    body[data-theme="amber"] {
+      --px-bg:       #1a0a00;
+      --px-surface:  #2a1505;
+      --px-surface-2:#3a1f0a;
+      --px-border:   #7a3a00;
+      --px-border-2: #a05a00;
+      --px-text:     #ffb000;
+      --px-muted:    #a07000;
+      --px-good:     #ffb000;
+      --px-warn:     #ffd060;
+      --px-low:      #b88000;
+      --px-critical: #ff4a1c;
+      --px-accent:   #ffd060;
+      --px-info:     #ff8800;
+      --px-focus:    #ffe080;
+    }
+
+    body[data-theme="phosphor"] {
+      --px-bg:       #001405;
+      --px-surface:  #002810;
+      --px-surface-2:#004020;
+      --px-border:   #1a6a1a;
+      --px-border-2: #2a8a2a;
+      --px-text:     #39ff14;
+      --px-muted:    #1a6a1a;
+      --px-good:     #39ff14;
+      --px-warn:     #b0ff39;
+      --px-low:      #3a8c39;
+      --px-critical: #ff3838;
+      --px-accent:   #39ff14;
+      --px-info:     #00ff88;
+      --px-focus:    #00ff88;
+    }
+
+    /* Battery frame / nub / digits pick up theme vars */
+    #battery-visual svg .bat-frame { stroke: var(--px-border-2); }
+    #battery-visual svg .bat-nub   { fill:   var(--px-border-2); }
+    #battery-visual svg .bat-num   { fill:   var(--px-text); }
+
+    /* ── Theme picker ─── */
+    #theme-picker {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      padding: 8px 12px;
+      margin: 6px 10px 10px;
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.6);
+    }
+    body[data-theme="gameboy"] #theme-picker,
+    body[data-theme="amber"] #theme-picker,
+    body[data-theme="phosphor"] #theme-picker {
+      background: var(--px-surface);
+    }
+    .theme-swatch {
+      display: grid;
+      grid-template-rows: 36px auto;
+      gap: 3px;
+      padding: 3px;
+      background: transparent;
+      border: 2px solid var(--px-border);
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0,0,0,0.6);
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+      min-width: 50px;
+      border-radius: 0 !important;
+    }
+    .theme-swatch:hover,
+    .theme-swatch:focus-visible {
+      outline: none;
+      border-color: var(--px-border-2);
+      color: var(--px-text);
+    }
+    .theme-swatch[aria-pressed="true"] {
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+      box-shadow: 2px 2px 0 0 var(--px-accent), inset 0 0 0 1px var(--px-accent);
+    }
+    .theme-swatch .swatch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1px;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      image-rendering: pixelated;
+    }
+    .theme-swatch .swatch-grid span {
+      display: block;
+    }
+
+    /* Self-log dock buttons should also re-tint by theme */
+    #energy-btn, #stress-btn {
+      border-color: var(--px-border);
+      color: var(--px-text);
+    }
+
     body {
       font-family: var(--px-font-body);
       font-size: 1.06rem;        /* VT323 needs slight upscale */
       letter-spacing: 0.01em;
-      background:
-        radial-gradient(circle at top, rgba(179, 136, 255, 0.10), transparent 38%),
-        radial-gradient(circle at bottom left, rgba(159, 232, 106, 0.06), transparent 32%),
-        linear-gradient(180deg, #0e0e1c 0%, var(--bg) 62%);
+      background: var(--bg);
+      color: var(--text);
+      transition: background-color 200ms steps(3), color 200ms steps(3);
     }
 
     /* Chrome typography — bitmap Silkscreen for all-caps labels */
@@ -1206,6 +1331,45 @@
       <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
     </div>
   </header>
+
+  <nav id="theme-picker" role="group" aria-label="Color theme">
+    <button type="button" class="theme-swatch" data-theme="arcade" aria-pressed="true" title="Arcade (default)">
+      <div class="swatch-grid" aria-hidden="true">
+        <span style="background:#0b0b14"></span>
+        <span style="background:#B388FF"></span>
+        <span style="background:#9FE86A"></span>
+        <span style="background:#FFC857"></span>
+      </div>
+      <span>ARCADE</span>
+    </button>
+    <button type="button" class="theme-swatch" data-theme="gameboy" aria-pressed="false" title="Game Boy">
+      <div class="swatch-grid" aria-hidden="true">
+        <span style="background:#0f380f"></span>
+        <span style="background:#9bbc0f"></span>
+        <span style="background:#8bac0f"></span>
+        <span style="background:#306230"></span>
+      </div>
+      <span>GB</span>
+    </button>
+    <button type="button" class="theme-swatch" data-theme="amber" aria-pressed="false" title="Amber CRT">
+      <div class="swatch-grid" aria-hidden="true">
+        <span style="background:#1a0a00"></span>
+        <span style="background:#ffb000"></span>
+        <span style="background:#ffd060"></span>
+        <span style="background:#b88000"></span>
+      </div>
+      <span>AMBER</span>
+    </button>
+    <button type="button" class="theme-swatch" data-theme="phosphor" aria-pressed="false" title="Phosphor green CRT">
+      <div class="swatch-grid" aria-hidden="true">
+        <span style="background:#001405"></span>
+        <span style="background:#39ff14"></span>
+        <span style="background:#00ff88"></span>
+        <span style="background:#3a8c39"></span>
+      </div>
+      <span>PHOS</span>
+    </button>
+  </nav>
 
   <section id="battery-card" aria-labelledby="battery-percent">
     <button id="battery-toggle" type="button" aria-expanded="false">
@@ -1807,17 +1971,17 @@
     }
 
     function levelColor(pct) {
-      if (pct > 60) return '#9FE86A';
-      if (pct > 35) return '#FFC857';
-      if (pct > 15) return '#FF9E5E';
-      return '#E8615A';
+      if (pct > 60) return 'var(--px-good)';
+      if (pct > 35) return 'var(--px-warn)';
+      if (pct > 15) return 'var(--px-low)';
+      return 'var(--px-critical)';
     }
 
     function rateColor(rate) {
-      if (rate >= 2.5) return '#E8615A';
-      if (rate >= 1.5) return '#FF9E5E';
-      if (rate >= 1.0) return '#FFC857';
-      return '#9FE86A';
+      if (rate >= 2.5) return 'var(--px-critical)';
+      if (rate >= 1.5) return 'var(--px-low)';
+      if (rate >= 1.0) return 'var(--px-warn)';
+      return 'var(--px-good)';
     }
 
     function renderBreakdown(tally) {
@@ -1924,10 +2088,10 @@
       }
       DOM.batteryVisual.innerHTML = `
         <svg width="240" height="90" viewBox="0 0 252 90" role="img" aria-hidden="true" shape-rendering="crispEdges">
-          <rect x="2" y="2" width="220" height="86" fill="none" stroke="#5a5a88" stroke-width="4"></rect>
-          <rect x="228" y="28" width="14" height="34" fill="#5a5a88"></rect>
+          <rect class="bat-frame" x="2" y="2" width="220" height="86" fill="none" stroke-width="4"></rect>
+          <rect class="bat-nub" x="228" y="28" width="14" height="34"></rect>
           <g id="battery-fill-group">${cellsSvg}</g>
-          <text id="battery-fill-text" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400" fill="#e8e8f8">--%</text>
+          <text id="battery-fill-text" class="bat-num" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400">--%</text>
         </svg>
       `;
     }
@@ -1940,11 +2104,11 @@
       if (level == null) {
         cells.forEach(cell => {
           cell.setAttribute('width', 18);
-          cell.setAttribute('fill', '#2a2a3a');
-          cell.setAttribute('opacity', '0.35');
+          cell.style.fill = 'var(--px-surface-2)';
+          cell.setAttribute('opacity', '0.5');
         });
         fillText.textContent = '--%';
-        fillText.setAttribute('fill', '#e8e8f8');
+        fillText.style.fill = 'var(--px-muted)';
         DOM.batteryPercent.textContent = '--%';
         return;
       }
@@ -1958,16 +2122,16 @@
       cells.forEach((cell, i) => {
         if (i < full) {
           cell.setAttribute('width', CELL_W);
-          cell.setAttribute('fill', color);
+          cell.style.fill = color;           // var() only works via inline style, not attr
           cell.setAttribute('opacity', '1');
         } else if (i === full && partialFrac > 0) {
           cell.setAttribute('width', Math.max(2, CELL_W * partialFrac).toFixed(2));
-          cell.setAttribute('fill', color);
+          cell.style.fill = color;
           cell.setAttribute('opacity', '1');
         } else {
           cell.setAttribute('width', CELL_W);
-          cell.setAttribute('fill', '#2a2a3a');
-          cell.setAttribute('opacity', '0.35');
+          cell.style.fill = 'var(--px-surface-2)';
+          cell.setAttribute('opacity', '0.5');
         }
       });
 
@@ -1978,16 +2142,16 @@
       });
 
       fillText.textContent = `${rounded}%`;
-      fillText.setAttribute('fill', rounded >= 60 ? '#0b0b14' : '#e8e8f8');
+      fillText.style.fill = rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)';
       DOM.batteryPercent.textContent = `${rounded}%`;
     }
 
     function stressColor(value) {
       const stress = clamp(value, 0, 100);
-      if (stress < 35) return '#9FE86A';
-      if (stress < 60) return '#FFC857';
-      if (stress < 80) return '#FF9E5E';
-      return '#E8615A';
+      if (stress < 35) return 'var(--px-good)';
+      if (stress < 60) return 'var(--px-warn)';
+      if (stress < 80) return 'var(--px-low)';
+      return 'var(--px-critical)';
     }
 
     function renderMetrics() {
@@ -2649,12 +2813,42 @@
       DOM.body.classList.toggle('is-demo', Boolean(getActiveDemoProfile()));
     }
 
+    // ── Theme ──
+    const THEME_KEY = 'pb_theme';
+    const VALID_THEMES = ['arcade', 'gameboy', 'amber', 'phosphor'];
+
+    function applyTheme(theme) {
+      const t = VALID_THEMES.includes(theme) ? theme : 'arcade';
+      if (t === 'arcade') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', t);
+      }
+      document.querySelectorAll('.theme-swatch').forEach(btn => {
+        btn.setAttribute('aria-pressed', btn.dataset.theme === t ? 'true' : 'false');
+      });
+    }
+
+    function initTheme() {
+      const stored = localStorage.getItem(THEME_KEY) || 'arcade';
+      applyTheme(stored);
+      document.querySelectorAll('.theme-swatch').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          if (!VALID_THEMES.includes(t)) return;
+          localStorage.setItem(THEME_KEY, t);
+          applyTheme(t);
+        });
+      });
+    }
+
     function initUi() {
       DOM.backdrop.hidden = false;
       DOM.ratingSheet.hidden = false;
       DOM.recoverySheet.hidden = false;
       DOM.screensaver.hidden = false;
 
+      initTheme();
       renderRatingSheet();
       renderRecoverySheet();
       renderApp();
