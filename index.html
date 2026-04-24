@@ -718,6 +718,70 @@
       color: #fff;
     }
 
+    .toggle-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+      padding: 2px 4px 8px;
+    }
+
+    /* Persistent toggle banner (e.g. "AT HOME since 7:30 PM · END").
+       Sits at bottom-right above the self-log dock. */
+    .toggle-banner {
+      position: fixed;
+      bottom: 96px;
+      right: 16px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px 8px 8px;
+      background: var(--surface);
+      border: 2px solid var(--px-border-2);
+      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.65);
+      color: var(--text);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+      max-width: calc(100% - 32px);
+    }
+    .toggle-banner[hidden] { display: none; }
+    .toggle-banner-icon svg.pxicon {
+      width: 22px;
+      height: 22px;
+    }
+    .toggle-banner-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toggle-banner-label {
+      color: var(--px-accent);
+    }
+    .toggle-banner-since {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: 0.04em;
+    }
+    .toggle-banner-end {
+      margin-left: 4px;
+      padding: 6px 10px;
+      background: transparent;
+      border: 2px solid var(--px-border);
+      color: var(--px-text);
+      cursor: pointer;
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+    }
+    .toggle-banner-end:hover,
+    .toggle-banner-end:focus-visible {
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+      outline: none;
+    }
+
     #screensaver {
       position: fixed;
       inset: 0;
@@ -993,23 +1057,67 @@
     #battery-visual svg .bat-num   { fill:   var(--px-text); }
 
     /* ── Theme picker ─── */
+    /* Theme picker — collapsed disclosure in the top-right chrome. Hidden by
+       default so it doesn't compete with the battery; expands on click. */
     #theme-picker {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      padding: 8px 12px;
-      margin: 6px 10px 10px;
-      border: 2px solid var(--px-border);
-      background: rgba(22, 22, 42, 0.6);
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 50;
     }
-    body[data-theme="gameboy"] #theme-picker,
-    body[data-theme="amber"] #theme-picker,
-    body[data-theme="phosphor"] #theme-picker {
-      background: var(--px-surface);
+    .theme-toggle {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0,0,0,0.6);
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+      user-select: none;
+    }
+    .theme-toggle::-webkit-details-marker { display: none; }
+    .theme-toggle::marker { content: ''; }
+    .theme-toggle-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--px-accent);
+      border: 1px solid var(--px-border-2);
+      image-rendering: pixelated;
+    }
+    .theme-toggle-caret {
+      font-size: 9px;
+      color: var(--px-muted);
+      transition: transform 150ms steps(3);
+    }
+    #theme-picker[open] .theme-toggle {
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+    }
+    #theme-picker[open] .theme-toggle-caret { transform: rotate(180deg); }
+    .theme-panel {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 8px;
+      background: var(--surface);
+      border: 2px solid var(--px-border-2);
+      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.6);
+      min-width: 196px;
     }
     .theme-swatch {
       display: grid;
-      grid-template-rows: 36px auto;
+      grid-template-rows: 30px auto;
       gap: 3px;
       padding: 3px;
       background: transparent;
@@ -1315,6 +1423,508 @@
       padding: 2px 6px;
       border: 1px solid var(--px-border-2);
     }
+
+    /* Layer 1 / Layer 2 model panels */
+    .layer-panel-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .layer-card {
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.78);
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
+      padding: 12px;
+    }
+
+    .layer1-pressure-head,
+    .layer2-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .layer1-pressure-copy,
+    .layer1-pressure-meta,
+    .layer2-mini,
+    .layer2-readout-value {
+      font-family: var(--px-font-body);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .layer1-pressure-copy {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .layer1-pressure-meta,
+    .layer-feature-hint,
+    .layer2-mini,
+    .layer2-readout-label {
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    #layer1-pressure-bar,
+    #layer2-circadian {
+      width: 100%;
+    }
+
+    #layer1-pressure-bar svg,
+    #layer2-circadian svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      shape-rendering: crispEdges;
+      image-rendering: pixelated;
+    }
+
+    .layer1-feature-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .layer-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .layer-feature-row {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 2px solid var(--px-border);
+      background: rgba(15, 15, 19, 0.42);
+    }
+
+    .layer-feature-row.is-zero {
+      opacity: 0.35;
+    }
+
+    .layer-feature-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .layer-feature-label,
+    .layer2-formula pre {
+      font-family: var(--px-font-ui);
+    }
+
+    .layer-feature-value {
+      font-family: var(--px-font-body);
+      font-size: 1.2rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .layer-feature-bar {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 3px;
+      min-height: 10px;
+    }
+
+    .layer-feature-seg {
+      min-height: 10px;
+      border: 1px solid var(--px-border);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .layer-feature-seg.is-on {
+      background: var(--layer-tone, var(--px-info));
+      border-color: var(--layer-tone, var(--px-info));
+    }
+
+    .layer-legacy {
+      border: 2px solid var(--px-border);
+      background: rgba(15, 15, 19, 0.3);
+      padding: 0;
+    }
+
+    .layer-legacy summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px;
+      font-family: var(--px-font-ui);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+    }
+
+    .layer-legacy summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .layer-legacy-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 12px 12px;
+    }
+
+    .layer2-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.9fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .layer2-chart-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .layer2-system {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      padding-top: 44px;
+      min-height: 270px;
+    }
+
+    .layer2-node {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 120px;
+      min-height: 34px;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      display: grid;
+      place-items: center;
+      font-family: var(--px-font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
+    }
+
+    .layer2-tank {
+      position: relative;
+      border: 2px solid var(--px-border);
+      background: rgba(15, 15, 19, 0.44);
+      padding: 12px;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .layer2-tank-title {
+      font-family: var(--px-font-ui);
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .layer2-tank-title.is-vertical {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .layer2-cells,
+    .layer2-cells-vertical {
+      display: grid;
+      gap: 4px;
+    }
+
+    .layer2-cells {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .layer2-cells-vertical {
+      grid-template-columns: 1fr;
+      margin-right: 24px;
+    }
+
+    .layer2-cell {
+      min-height: 22px;
+      border: 2px solid var(--px-border);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .layer2-cell.is-on {
+      background: var(--cell-tone, var(--px-good));
+      border-color: var(--cell-tone, var(--px-good));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    #layer2-particle-field {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .layer2-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--px-info);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
+      transition: transform 240ms steps(8), opacity 240ms steps(2);
+    }
+
+    .layer2-bottom {
+      display: grid;
+      grid-template-columns: minmax(180px, auto) minmax(240px, 1fr) minmax(220px, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .layer2-action-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .layer2-action {
+      min-height: 44px;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
+    }
+
+    .layer2-formula {
+      border: 2px solid var(--px-border);
+      background: rgba(15, 15, 19, 0.34);
+      padding: 12px;
+    }
+
+    .layer2-formula pre {
+      margin: 8px 0 0;
+      font-family: var(--px-font-body);
+      font-size: 1.18rem;
+      line-height: 1.1;
+      white-space: pre-wrap;
+    }
+
+    .layer2-readout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .layer2-readout-row {
+      border: 2px solid var(--px-border);
+      background: rgba(15, 15, 19, 0.34);
+      padding: 10px;
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .layer2-readout-value {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .layer2-current-dot {
+      animation: layer2-dot-blink 1s steps(2) infinite;
+      transform-origin: center;
+    }
+
+    @keyframes layer2-dot-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @media (max-width: 860px) {
+      .layer1-feature-columns,
+      .layer2-top,
+      .layer2-bottom {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Additive Layer 1 / Layer 2 refinements */
+    .layer-panel-block-v2 {
+      gap: 16px;
+    }
+
+    .layer-card-pressure,
+    .layer-feature-card,
+    .layer2-chart-card,
+    .layer2-system-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .layer-copy-stack,
+    .layer-title-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .layer1-feature-columns-v2 {
+      align-items: start;
+    }
+
+    .layer-feature-card > .section-title,
+    .layer2-system-card > .section-title,
+    .layer2-formula-v2 > .section-title {
+      margin: 0;
+    }
+
+    .layer-feature-card .layer-feature-list {
+      margin-top: 0;
+    }
+
+    #layer1-pressure-bar {
+      min-height: 30px;
+    }
+
+    #layer1-pressure-bar svg rect,
+    #layer2-circadian svg line,
+    #layer2-circadian svg polyline,
+    #layer2-circadian svg polygon,
+    #layer2-circadian svg circle {
+      shape-rendering: crispEdges;
+    }
+
+    .layer2-top-v2 {
+      align-items: stretch;
+    }
+
+    .layer2-system-card {
+      overflow: hidden;
+    }
+
+    .layer2-mini-readout {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 2px solid var(--px-border);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .layer2-system {
+      min-height: 286px;
+      align-items: end;
+    }
+
+    .layer2-node {
+      min-width: 136px;
+      min-height: 40px;
+      padding: 6px 10px;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .layer2-node-label,
+    .layer2-node-value {
+      display: block;
+    }
+
+    .layer2-node-value {
+      font-family: var(--px-font-body);
+      font-size: 1.15rem;
+      color: var(--px-text);
+    }
+
+    .layer2-tank {
+      min-height: 228px;
+      justify-content: space-between;
+    }
+
+    .layer2-tank-energy .layer2-tank-title,
+    .layer2-tank-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .layer2-tank-code {
+      min-height: 26px;
+      padding: 0 8px;
+      border: 2px solid var(--px-border);
+      background: rgba(255, 255, 255, 0.04);
+      font-family: var(--px-font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .layer2-cells {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-content: end;
+    }
+
+    .layer2-cells-vertical {
+      grid-template-rows: repeat(8, minmax(0, 1fr));
+      min-height: 184px;
+      margin-right: 34px;
+    }
+
+    .layer2-cell {
+      min-height: 20px;
+    }
+
+    .layer2-bottom-v2 {
+      align-items: stretch;
+    }
+
+    .layer2-formula-v2 {
+      min-height: 100%;
+      font-family: var(--px-font-body);
+    }
+
+    .layer2-formula-v2 pre {
+      font-family: var(--px-font-body);
+      font-size: 1.22rem;
+      line-height: 1.04;
+    }
+
+    .layer2-readout {
+      align-content: start;
+    }
+
+    .layer2-readout-row {
+      min-height: 76px;
+    }
+
+    .layer2-action-stack .layer2-action {
+      min-height: 52px;
+    }
+
+    @media (max-width: 860px) {
+      .layer2-system {
+        min-height: 252px;
+      }
+    }
   </style>
 </head>
 <body data-layer="0" data-mode="normal">
@@ -1332,44 +1942,52 @@
     </div>
   </header>
 
-  <nav id="theme-picker" role="group" aria-label="Color theme">
-    <button type="button" class="theme-swatch" data-theme="arcade" aria-pressed="true" title="Arcade (default)">
-      <div class="swatch-grid" aria-hidden="true">
-        <span style="background:#0b0b14"></span>
-        <span style="background:#B388FF"></span>
-        <span style="background:#9FE86A"></span>
-        <span style="background:#FFC857"></span>
-      </div>
-      <span>ARCADE</span>
-    </button>
-    <button type="button" class="theme-swatch" data-theme="gameboy" aria-pressed="false" title="Game Boy">
-      <div class="swatch-grid" aria-hidden="true">
-        <span style="background:#0f380f"></span>
-        <span style="background:#9bbc0f"></span>
-        <span style="background:#8bac0f"></span>
-        <span style="background:#306230"></span>
-      </div>
-      <span>GB</span>
-    </button>
-    <button type="button" class="theme-swatch" data-theme="amber" aria-pressed="false" title="Amber CRT">
-      <div class="swatch-grid" aria-hidden="true">
-        <span style="background:#1a0a00"></span>
-        <span style="background:#ffb000"></span>
-        <span style="background:#ffd060"></span>
-        <span style="background:#b88000"></span>
-      </div>
-      <span>AMBER</span>
-    </button>
-    <button type="button" class="theme-swatch" data-theme="phosphor" aria-pressed="false" title="Phosphor green CRT">
-      <div class="swatch-grid" aria-hidden="true">
-        <span style="background:#001405"></span>
-        <span style="background:#39ff14"></span>
-        <span style="background:#00ff88"></span>
-        <span style="background:#3a8c39"></span>
-      </div>
-      <span>PHOS</span>
-    </button>
-  </nav>
+  <details id="theme-picker">
+    <summary class="theme-toggle" aria-label="Change color theme" title="Color theme">
+      <span class="theme-toggle-dot" aria-hidden="true"></span>
+      <span>THEME</span>
+      <span data-theme-name>ARCADE</span>
+      <span class="theme-toggle-caret" aria-hidden="true">▾</span>
+    </summary>
+    <div class="theme-panel" role="group" aria-label="Color theme options">
+      <button type="button" class="theme-swatch" data-theme="arcade" aria-pressed="true" title="Arcade (default)">
+        <div class="swatch-grid" aria-hidden="true">
+          <span style="background:#0b0b14"></span>
+          <span style="background:#B388FF"></span>
+          <span style="background:#9FE86A"></span>
+          <span style="background:#FFC857"></span>
+        </div>
+        <span>ARCADE</span>
+      </button>
+      <button type="button" class="theme-swatch" data-theme="gameboy" aria-pressed="false" title="Game Boy">
+        <div class="swatch-grid" aria-hidden="true">
+          <span style="background:#0f380f"></span>
+          <span style="background:#9bbc0f"></span>
+          <span style="background:#8bac0f"></span>
+          <span style="background:#306230"></span>
+        </div>
+        <span>GB</span>
+      </button>
+      <button type="button" class="theme-swatch" data-theme="amber" aria-pressed="false" title="Amber CRT">
+        <div class="swatch-grid" aria-hidden="true">
+          <span style="background:#1a0a00"></span>
+          <span style="background:#ffb000"></span>
+          <span style="background:#ffd060"></span>
+          <span style="background:#b88000"></span>
+        </div>
+        <span>AMBER</span>
+      </button>
+      <button type="button" class="theme-swatch" data-theme="phosphor" aria-pressed="false" title="Phosphor green CRT">
+        <div class="swatch-grid" aria-hidden="true">
+          <span style="background:#001405"></span>
+          <span style="background:#39ff14"></span>
+          <span style="background:#00ff88"></span>
+          <span style="background:#3a8c39"></span>
+        </div>
+        <span>PHOS</span>
+      </button>
+    </div>
+  </details>
 
   <section id="battery-card" aria-labelledby="battery-percent">
     <button id="battery-toggle" type="button" aria-expanded="false">
@@ -1386,40 +2004,127 @@
     </div>
 
     <section id="layer-1" class="panel" aria-hidden="true">
-      <div id="metrics-grid"></div>
+      <div class="layer-panel-block layer-panel-block-v2">
+        <div class="layer-card layer-card-pressure">
+          <div class="layer1-pressure-head">
+            <div class="layer-copy-stack">
+              <div class="section-title">Drain pressure</div>
+              <div id="layer1-pressure-copy" class="layer1-pressure-copy">--%</div>
+            </div>
+            <div id="layer1-pressure-meta" class="layer1-pressure-meta">Waiting for model</div>
+          </div>
+          <div id="layer1-pressure-bar" aria-live="polite"></div>
+        </div>
 
-      <div class="panel-section-head">
-        <h2 class="section-title">Activity breakdown</h2>
-        <select id="window-select" aria-label="Activity window">
-          <option value="0.083" selected>5 min</option>
-          <option value="0.25">15 min</option>
-          <option value="1">1 hr</option>
-          <option value="2">2 hr</option>
-          <option value="4">4 hr</option>
-          <option value="8">8 hr</option>
-        </select>
+        <div class="layer1-feature-columns layer1-feature-columns-v2">
+          <div class="layer-card layer-feature-card">
+            <h2 class="section-title">Drain features</h2>
+            <div id="layer1-drain-list" class="layer-feature-list"></div>
+          </div>
+          <div class="layer-card layer-feature-card">
+            <h2 class="section-title">Recovery features</h2>
+            <div id="layer1-recovery-list" class="layer-feature-list"></div>
+          </div>
+        </div>
+
+        <details class="layer-legacy" id="legacy-breakdown">
+          <summary>Legacy breakdown</summary>
+          <div class="layer-legacy-body">
+            <div id="metrics-grid"></div>
+
+            <div class="panel-section-head">
+              <h2 class="section-title">Activity breakdown</h2>
+              <select id="window-select" aria-label="Activity window">
+                <option value="0.083" selected>5 min</option>
+                <option value="0.25">15 min</option>
+                <option value="1">1 hr</option>
+                <option value="2">2 hr</option>
+                <option value="4">4 hr</option>
+                <option value="8">8 hr</option>
+              </select>
+            </div>
+
+            <div id="breakdown-list" aria-live="polite"></div>
+          </div>
+        </details>
+        <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics ↓</button>
       </div>
-
-      <div id="breakdown-list" aria-live="polite"></div>
-      <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics ↓</button>
     </section>
 
     <section id="layer-2" class="panel" aria-hidden="true">
-      <div class="diag-columns">
-        <div class="diag-col">
-          <h3 class="section-title">Drain signals</h3>
-          <div id="diag-drain" class="diag-list"></div>
+      <div class="layer-panel-block layer-panel-block-v2">
+        <div class="layer2-top layer2-top-v2">
+          <div class="layer-card layer2-chart-wrap layer2-chart-card">
+            <div class="layer2-action-row">
+              <div class="layer-title-stack">
+                <div class="section-title">Circadian model</div>
+                <div class="layer2-mini">Model D baseline with current E overlay</div>
+              </div>
+              <div id="layer2-clock" class="layer2-mini layer2-mini-readout">--h</div>
+            </div>
+            <div id="layer2-circadian" aria-live="polite"></div>
+          </div>
+
+          <div class="layer-card layer2-system-card">
+            <div class="section-title">State tanks</div>
+            <div id="layer2-system" class="layer2-system">
+              <div id="layer2-pressure-node" class="layer2-node">
+                <span class="layer2-node-label">Pressure</span>
+                <span class="layer2-node-value">--%</span>
+              </div>
+              <div id="layer2-energy-tank" class="layer2-tank layer2-tank-energy">
+                <div class="layer2-tank-title">Energy</div>
+                <div class="layer2-tank-code">E</div>
+                <div id="layer2-energy-cells" class="layer2-cells"></div>
+              </div>
+              <div id="layer2-stress-tank" class="layer2-tank layer2-tank-stress">
+                <div class="layer2-tank-title is-vertical">Stress</div>
+                <div id="layer2-stress-cells" class="layer2-cells-vertical"></div>
+              </div>
+              <div id="layer2-particle-field" aria-hidden="true"></div>
+            </div>
+          </div>
         </div>
-        <div class="diag-col">
-          <h3 class="section-title">Recovery signals</h3>
-          <div id="diag-recovery" class="diag-list"></div>
+
+        <div class="layer2-bottom layer2-bottom-v2">
+          <div class="layer2-action-stack">
+            <button id="btn-replay-tick" class="layer2-action" type="button">Replay last tick</button>
+            <button id="btn-run-hour" class="layer2-action" type="button">Run +1 hour</button>
+          </div>
+
+          <div class="layer2-formula layer2-formula-v2">
+            <div class="section-title">Model B + D</div>
+            <pre>dE/dt = -0.05*P*E + (Erest-E)/120
+dS/dt = 1.5*P - S/4320
+P = drain - 0.5*recovery</pre>
+          </div>
+
+          <div id="layer2-readout" class="layer2-readout"></div>
         </div>
+
+        <details class="layer-legacy">
+          <summary>Raw diagnostics</summary>
+          <div class="layer-legacy-body">
+            <div class="diag-columns">
+              <div class="diag-col">
+                <h3 class="section-title">Drain signals</h3>
+                <div id="diag-drain" class="diag-list"></div>
+              </div>
+              <div class="diag-col">
+                <h3 class="section-title">Recovery signals</h3>
+                <div id="diag-recovery" class="diag-list"></div>
+              </div>
+            </div>
+            <div id="diag-footer">Last tick: unavailable</div>
+          </div>
+        </details>
       </div>
-      <div id="diag-footer">Last tick: unavailable</div>
     </section>
 
     <button id="collapse-btn" type="button">↑</button>
   </section>
+
+  <div id="toggle-banner" class="toggle-banner" hidden aria-hidden="true" aria-live="polite"></div>
 
   <div id="self-log-dock">
     <button id="energy-btn" type="button" data-kind="energy_rating">⚡ Energy</button>
@@ -1481,6 +2186,8 @@
     const AW_POLL_MS = 30_000;
     const BATTERY_INNER_WIDTH = 204;
     const DEMO_KEY = 'pb_demo_profile';
+    const PREV_STATE_KEY = 'pb_prev_state';
+    const SVG_NS = 'http://www.w3.org/2000/svg';
 
     // ── Synthetic demo profiles ───────────────────────────────────────────────
     // Each profile shapes the exact payload /state would return, plus a
@@ -1697,7 +2404,8 @@
       model: { online: false, stale: false, payload: null, lastFetchAt: 0 },
       aw: { online: false, windowHours: 0.083, buckets: { win: null, afk: null }, breakdown: {}, lastFetchAt: 0, fallbackBattery: null, totalActMins: 0 },
       rating: { kind: 'energy_rating', submitting: false },
-      recovery: { activityId: null, logKind: null, theme: null, plannedMin: 20, startTs: 0, timerId: null }
+      recovery: { activityId: null, logKind: null, theme: null, plannedMin: 20, startTs: 0, timerId: null, mode: null, toggleActive: false },
+      layer2: { frameId: 0, lastStepTs: 0, step: 0, observer: null }
     };
 
     const DOM = {
@@ -1712,6 +2420,11 @@
       lastTickText: document.getElementById('last-tick-text'),
       layer1: document.getElementById('layer-1'),
       layer2: document.getElementById('layer-2'),
+      layer1PressureCopy: document.getElementById('layer1-pressure-copy'),
+      layer1PressureMeta: document.getElementById('layer1-pressure-meta'),
+      layer1PressureBar: document.getElementById('layer1-pressure-bar'),
+      layer1DrainList: document.getElementById('layer1-drain-list'),
+      layer1RecoveryList: document.getElementById('layer1-recovery-list'),
       metricsGrid: document.getElementById('metrics-grid'),
       windowSelect: document.getElementById('window-select'),
       breakdownList: document.getElementById('breakdown-list'),
@@ -1719,6 +2432,18 @@
       diagDrain: document.getElementById('diag-drain'),
       diagRecovery: document.getElementById('diag-recovery'),
       diagFooter: document.getElementById('diag-footer'),
+      layer2Clock: document.getElementById('layer2-clock'),
+      layer2Circadian: document.getElementById('layer2-circadian'),
+      layer2System: document.getElementById('layer2-system'),
+      layer2PressureNode: document.getElementById('layer2-pressure-node'),
+      layer2EnergyTank: document.getElementById('layer2-energy-tank'),
+      layer2StressTank: document.getElementById('layer2-stress-tank'),
+      layer2EnergyCells: document.getElementById('layer2-energy-cells'),
+      layer2StressCells: document.getElementById('layer2-stress-cells'),
+      layer2ParticleField: document.getElementById('layer2-particle-field'),
+      layer2Readout: document.getElementById('layer2-readout'),
+      btnReplayTick: document.getElementById('btn-replay-tick'),
+      btnRunHour: document.getElementById('btn-run-hour'),
       collapseBtn: document.getElementById('collapse-btn'),
       energyBtn: document.getElementById('energy-btn'),
       stressBtn: document.getElementById('stress-btn'),
@@ -1780,16 +2505,76 @@
         '..........'
       ],
       quiet: [
-        '.XXXXXX...',
-        '......X...',
-        '.....X....',
+        '..........',
+        '...XXXX...',
+        '..XX..XX..',
+        '.XX.......',
+        '.XX.......',
+        '.XX.......',
+        '.XX.......',
+        '..XX..XX..',
+        '...XXXX...',
+        '..........'
+      ],
+      hydrate: [
         '....X.....',
+        '....X.....',
+        '...XXX....',
+        '...XXX....',
+        '..XXXXX...',
+        '..XXXXX...',
+        '.XXXXXXX..',
+        '.XXXXXXX..',
+        '..XXXXX...',
+        '...XXX....'
+      ],
+      breath: [
+        '....XX....',
+        '...XXXX...',
+        '..XXXXXX..',
+        '.XXXXXXXX.',
+        'XXXXXXXXXX',
+        '.XXXXXXXX.',
+        '..XXXXXX..',
+        '...XXXX...',
+        '....XX....',
+        '..........'
+      ],
+      exercise: [
+        '..........',
+        '..........',
+        'XX.XXXX.XX',
+        'XX.XXXX.XX',
+        'XXXXXXXXXX',
+        'XX.XXXX.XX',
+        'XX.XXXX.XX',
+        '..........',
+        '..........',
+        '..........'
+      ],
+      music: [
+        '......XX..',
+        '......XX..',
+        '....XXXX..',
+        '....XXXX..',
+        '....X.XX..',
+        '....X.XX..',
+        '.XX.X.XX..',
+        'XXXXX.....',
+        'XXX.......',
+        '..........'
+      ],
+      nap: [
+        'XXXX......',
         '...X......',
         '..X.......',
         '.X........',
-        'XXXXXX....',
+        'XXXX......',
         '..........',
-        '..........'
+        '....XXXX..',
+        '.......X..',
+        '......X...',
+        '.....XXXX.'
       ],
       connect: [
         '..XX.XX...',
@@ -1841,12 +2626,24 @@
       return `<svg class="pxicon" viewBox="0 0 10 10" shape-rendering="crispEdges" fill="${color}" aria-hidden="true">${rects}</svg>`;
     }
 
+    // Recovery modes:
+    //   'timer'   — pick a duration, enter screensaver with countdown (default)
+    //   'toggle'  — enter persistent state (no timer, no screensaver); end when
+    //               user taps again. For "you're home for the rest of the
+    //               evening," not a 20-min block.
+    //   'instant' — tap once, log immediately, close the sheet. For quick
+    //               events like drinking water.
     const RECOVERY_ACTIVITIES = [
-      { id: 'outside', sprite: 'outside', label: 'Go outside',          logKind: 'outside',     theme: 'outside', accent: '#9FE86A' },
-      { id: 'quiet',   sprite: 'quiet',   label: 'Quiet time',           logKind: 'detach',      theme: 'quiet',   accent: '#B388FF' },
-      { id: 'connect', sprite: 'connect', label: 'Connect with others',  logKind: 'with_people', theme: 'connect', accent: '#6AC6EA' },
-      { id: 'eat',     sprite: 'eat',     label: 'Eat food',             logKind: 'detach',      theme: 'eat',     accent: '#FF9E5E' },
-      { id: 'home',    sprite: 'home',    label: 'Go home',              logKind: 'detach',      theme: 'home',    accent: '#FFC857' }
+      { id: 'outside',  sprite: 'outside',  label: 'Go outside',        logKind: 'outside',     theme: 'outside',  accent: '#9FE86A', mode: 'timer'   },
+      { id: 'breath',   sprite: 'breath',   label: 'Guided breathing',  logKind: 'detach',      theme: 'breath',   accent: '#B388FF', mode: 'timer'   },
+      { id: 'exercise', sprite: 'exercise', label: 'Exercise',          logKind: 'exercise',    theme: 'exercise', accent: '#FF6B6B', mode: 'timer'   },
+      { id: 'music',    sprite: 'music',    label: 'Listen to music',   logKind: 'detach',      theme: 'music',    accent: '#FFD166', mode: 'timer'   },
+      { id: 'nap',      sprite: 'nap',      label: 'Nap',               logKind: 'sleep',       theme: 'nap',      accent: '#A6A3FF', mode: 'timer'   },
+      { id: 'eat',      sprite: 'eat',      label: 'Eat food',          logKind: 'detach',      theme: 'eat',      accent: '#FF9E5E', mode: 'timer'   },
+      { id: 'quiet',    sprite: 'quiet',    label: 'Quiet time',        logKind: 'detach',      theme: 'quiet',    accent: '#B0B0D8', mode: 'timer'   },
+      { id: 'connect',  sprite: 'connect',  label: 'Connect',           logKind: 'with_people', theme: 'connect',  accent: '#6AC6EA', mode: 'timer'   },
+      { id: 'hydrate',  sprite: 'hydrate',  label: 'Hydrate',           logKind: 'detach',      theme: 'hydrate',  accent: '#6AC6EA', mode: 'instant' },
+      { id: 'home',     sprite: 'home',     label: 'Go home',           logKind: 'detach',      theme: 'home',     accent: '#FFC857', mode: 'toggle'  }
     ];
 
     const DRAIN_FEATS = [
@@ -2226,6 +3023,413 @@
       };
     }
 
+    const FEATURE_NORM = {
+      meeting_video_min: 240,
+      meeting_f2f_min: 240,
+      context_switches: 100,
+      kpm_p95_over_base: 2.0,
+      after_hours_frac: 1.0,
+      sleep_debt_h: 4,
+      fragmentation_dev: 1.0,
+      zoom_back_to_back_frac: 1.0,
+      todoist_overdue_count: 20,
+      focus_block_min: 240,
+      walk_outside_min: 60,
+      outside_log_min: 120,
+      afk_10plus_min: 120,
+      social_voice_min: 120,
+      with_people_min: 480,
+      detach_block_min: 120,
+      continuous_sleep_h: 9,
+      hrv_z: 4
+    };
+
+    function normalizeFeature(key, raw) {
+      if (raw == null || Number.isNaN(Number(raw))) return 0;
+      const value = Number(raw);
+      if (key === 'hrv_z') {
+        return clamp(1 - ((clamp(value, -2, 2) + 2) / 4), 0, 1);
+      }
+      const cap = FEATURE_NORM[key];
+      if (!cap) return 0;
+      return clamp(value / cap, 0, 1);
+    }
+
+    function computePressure(feats) {
+      const drainSum = DRAIN_FEATS.reduce((sum, item) => sum + normalizeFeature(item.key, feats[item.key]), 0);
+      const recoverySum = RECOVERY_FEATS.reduce((sum, item) => sum + normalizeFeature(item.key, feats[item.key]), 0);
+      return clamp((drainSum / 9) - (0.5 * recoverySum / 9), 0, 1);
+    }
+
+    function computeERest(hour, chronotype) {
+      const peaks = {
+        lark: 13.87,
+        intermediate: 16.0,
+        owl: 20.98
+      };
+      const h = ((Number(hour) % 24) + 24) % 24;
+      const peakH = peaks[chronotype] ?? peaks.intermediate;
+      return clamp(
+        50 + (30 * Math.cos((2 * Math.PI * (h - peakH)) / 24)) + (5 * Math.sin((2 * Math.PI * h) / 1.5)),
+        0,
+        100
+      );
+    }
+
+    function getModelTickDate(payload = getModelPayload()) {
+      const tickDate = payload?.last_tick_iso ? new Date(payload.last_tick_iso) : new Date();
+      return Number.isNaN(tickDate.getTime()) ? new Date() : tickDate;
+    }
+
+    function clonePayload(payload) {
+      return payload ? safeParse(JSON.stringify(payload)) : null;
+    }
+
+    function loadTickHistory() {
+      const parsed = safeParse(localStorage.getItem(PREV_STATE_KEY) || '');
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(entry => entry && typeof entry === 'object' && entry.payload);
+    }
+
+    function saveTickSnapshot(payload = APP.model.payload) {
+      if (!payload) return;
+      const history = loadTickHistory();
+      const snapshot = clonePayload(payload);
+      if (!snapshot) return;
+      const last = history[history.length - 1];
+      if (last && JSON.stringify(last.payload) === JSON.stringify(snapshot)) return;
+      history.push({
+        savedAt: Date.now(),
+        payload: snapshot
+      });
+      localStorage.setItem(PREV_STATE_KEY, JSON.stringify(history.slice(-24)));
+    }
+
+    function getPressureTone(value) {
+      if (value > 0.7) return 'var(--px-critical)';
+      if (value > 0.4) return 'var(--px-warn)';
+      return 'var(--px-good)';
+    }
+
+    function getFeatureTone(group, value) {
+      if (group === 'drain') return getPressureTone(value);
+      if (value > 0.7) return 'var(--px-good)';
+      if (value > 0.4) return 'var(--px-info)';
+      return 'var(--px-warn)';
+    }
+
+    function getFeatureHint(group, value, zero) {
+      if (zero) {
+        return group === 'drain' ? 'Quiet in this window.' : 'No recovery signal logged.';
+      }
+      if (group === 'drain') {
+        if (value > 0.7) return 'Heavy contribution to pressure.';
+        if (value > 0.4) return 'Moderate contribution to pressure.';
+        return 'Light contribution to pressure.';
+      }
+      if (value > 0.7) return 'Strong recovery buffer in play.';
+      if (value > 0.4) return 'Recovery signal is helping.';
+      return 'Recovery signal is present but thin.';
+    }
+
+    function buildSvgRoot(width, height, viewBox) {
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('viewBox', viewBox || `0 0 ${width} ${height}`);
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.shapeRendering = 'crispEdges';
+      return svg;
+    }
+
+    function appendSvgText(svg, x, y, text, options = {}) {
+      const el = document.createElementNS(SVG_NS, 'text');
+      el.setAttribute('x', String(x));
+      el.setAttribute('y', String(y));
+      if (options.anchor) el.setAttribute('text-anchor', options.anchor);
+      el.textContent = text;
+      el.style.fill = options.fill || 'var(--px-muted)';
+      el.style.fontFamily = options.fontFamily || 'Silkscreen, ui-monospace, monospace';
+      el.style.fontSize = options.fontSize || '12px';
+      svg.appendChild(el);
+      return el;
+    }
+
+    function renderLayer1() {
+      const payload = getModelPayload();
+      const feats = getLastFeats();
+      const pressure = computePressure(feats);
+      const tone = getPressureTone(pressure);
+      const pressurePercent = Math.round(pressure * 100);
+      const drainLoad = DRAIN_FEATS.reduce((sum, item) => sum + normalizeFeature(item.key, feats[item.key]), 0);
+      const recoveryLoad = RECOVERY_FEATS.reduce((sum, item) => sum + normalizeFeature(item.key, feats[item.key]), 0);
+
+      DOM.layer1PressureCopy.textContent = payload ? `${pressurePercent}%` : '--%';
+      DOM.layer1PressureCopy.style.color = payload ? tone : 'var(--px-muted)';
+      DOM.layer1PressureMeta.textContent = payload
+        ? `P ${pressure.toFixed(2)} from ${drainLoad.toFixed(2)} drain vs ${recoveryLoad.toFixed(2)} recovery`
+        : 'Waiting for model';
+
+      const pressureSvg = buildSvgRoot(360, 30, '0 0 360 30');
+      const activeSegs = payload ? Math.round(pressure * 12) : 0;
+      for (let index = 0; index < 12; index += 1) {
+        const rect = document.createElementNS(SVG_NS, 'rect');
+        rect.setAttribute('x', String(6 + (index * 29)));
+        rect.setAttribute('y', '6');
+        rect.setAttribute('width', '24');
+        rect.setAttribute('height', '18');
+        rect.style.fill = index < activeSegs ? tone : 'rgba(255, 255, 255, 0.08)';
+        rect.style.stroke = 'var(--px-border)';
+        rect.style.strokeWidth = '2';
+        pressureSvg.appendChild(rect);
+      }
+      DOM.layer1PressureBar.replaceChildren(pressureSvg);
+
+      const renderFeatureRows = (target, items, group) => {
+        target.innerHTML = items.map(item => {
+          const { text, zero } = formatFeatureValue(item.key, item.unit, feats[item.key]);
+          const norm = normalizeFeature(item.key, feats[item.key]);
+          const fillCount = Math.round(norm * 12);
+          const toneColor = getFeatureTone(group, norm);
+          return `
+            <div class="layer-feature-row${zero ? ' is-zero' : ''}">
+              <div class="layer-feature-head">
+                <span class="layer-feature-label">${item.label}</span>
+                <span class="layer-feature-value" style="color:${toneColor}">${text}${item.unit ? item.unit : ''}</span>
+              </div>
+              <div class="layer-feature-bar" style="--layer-tone:${toneColor}">
+                ${Array.from({ length: 12 }, (_, index) => `<span class="layer-feature-seg${index < fillCount ? ' is-on' : ''}"></span>`).join('')}
+              </div>
+              <div class="layer-feature-hint">${getFeatureHint(group, norm, zero)}</div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      renderFeatureRows(DOM.layer1DrainList, DRAIN_FEATS, 'drain');
+      renderFeatureRows(DOM.layer1RecoveryList, RECOVERY_FEATS, 'recovery');
+    }
+
+    function renderLayer2Static() {
+      const payload = getModelPayload();
+      const feats = getLastFeats();
+      const pressure = computePressure(feats);
+      const tickDate = getModelTickDate(payload);
+      const hour = tickDate.getHours() + (tickDate.getMinutes() / 60);
+      const chronotype = payload?.chronotype || 'intermediate';
+      const eRestNow = payload && typeof payload.E_rest_now === 'number'
+        ? Number(payload.E_rest_now)
+        : computeERest(hour, chronotype);
+      const currentEnergy = payload ? clamp(Number(payload.E_internal) || 0, 0, 100) : 0;
+      const currentStress = payload ? clamp(Number(payload.S) || 0, 0, 100) : 0;
+      const dE = payload ? (-0.05 * pressure * currentEnergy) + ((eRestNow - currentEnergy) / 120) : 0;
+      const dS = payload ? (1.5 * pressure) - (currentStress / 4320) : 0;
+      const pressureTone = getPressureTone(pressure);
+
+      DOM.layer2Clock.textContent = payload
+        ? `${hour.toFixed(1)}h · ${chronotype}`
+        : '--h';
+      DOM.layer2PressureNode.innerHTML = `
+        <span class="layer2-node-label">Pressure</span>
+        <span class="layer2-node-value">${payload ? `${Math.round(pressure * 100)}%` : '--%'}</span>
+      `;
+      DOM.layer2PressureNode.style.borderColor = pressureTone;
+      DOM.layer2PressureNode.style.color = pressureTone;
+
+      const width = 720;
+      const height = 160;
+      const margin = { top: 16, right: 20, bottom: 28, left: 36 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const yMin = 20;
+      const yMax = 80;
+      const scaleX = plotHour => margin.left + ((plotHour / 24) * innerWidth);
+      const scaleY = value => {
+        const clipped = clamp(value, yMin, yMax);
+        return margin.top + (((yMax - clipped) / (yMax - yMin)) * innerHeight);
+      };
+
+      const svg = buildSvgRoot(width, height, `0 0 ${width} ${height}`);
+      const baselineY = scaleY(yMin);
+      const area = document.createElementNS(SVG_NS, 'polygon');
+      const line = document.createElementNS(SVG_NS, 'polyline');
+      const currentLine = document.createElementNS(SVG_NS, 'line');
+      const dot = document.createElementNS(SVG_NS, 'circle');
+
+      const points = Array.from({ length: 72 }, (_, index) => {
+        const sampleHour = (index / 71) * 24;
+        const value = computeERest(sampleHour, chronotype);
+        return `${scaleX(sampleHour)},${scaleY(value)}`;
+      });
+
+      area.setAttribute('points', `${margin.left},${baselineY} ${points.join(' ')} ${scaleX(24)},${baselineY}`);
+      area.style.fill = 'var(--px-info)';
+      area.style.opacity = '0.25';
+      svg.appendChild(area);
+
+      line.setAttribute('points', points.join(' '));
+      line.style.fill = 'none';
+      line.style.stroke = 'var(--px-accent)';
+      line.style.strokeWidth = '3';
+      svg.appendChild(line);
+
+      currentLine.setAttribute('x1', String(margin.left));
+      currentLine.setAttribute('x2', String(width - margin.right));
+      currentLine.setAttribute('y1', String(scaleY(payload ? currentEnergy : 50)));
+      currentLine.setAttribute('y2', String(scaleY(payload ? currentEnergy : 50)));
+      currentLine.style.stroke = payload ? levelColor(currentEnergy) : 'var(--px-muted)';
+      currentLine.style.strokeWidth = '2';
+      currentLine.style.strokeDasharray = '8 6';
+      svg.appendChild(currentLine);
+
+      dot.setAttribute('cx', String(scaleX(hour)));
+      dot.setAttribute('cy', String(scaleY(computeERest(hour, chronotype))));
+      dot.setAttribute('r', '5');
+      dot.classList.add('layer2-current-dot');
+      dot.style.fill = 'var(--px-accent)';
+      svg.appendChild(dot);
+
+      [0, 6, 12, 18, 24].forEach(labelHour => {
+        const tick = document.createElementNS(SVG_NS, 'line');
+        tick.setAttribute('x1', String(scaleX(labelHour)));
+        tick.setAttribute('x2', String(scaleX(labelHour)));
+        tick.setAttribute('y1', String(margin.top));
+        tick.setAttribute('y2', String(height - margin.bottom));
+        tick.style.stroke = 'rgba(255, 255, 255, 0.08)';
+        tick.style.strokeWidth = '1';
+        svg.appendChild(tick);
+        appendSvgText(svg, scaleX(labelHour), height - 8, `${labelHour}h`, {
+          anchor: 'middle'
+        });
+      });
+
+      appendSvgText(svg, 8, margin.top + 8, '80%', { fontSize: '11px' });
+      appendSvgText(svg, 8, height - margin.bottom, '20%', { fontSize: '11px' });
+      DOM.layer2Circadian.replaceChildren(svg);
+
+      DOM.layer2EnergyCells.innerHTML = Array.from({ length: 10 }, (_, index) => {
+        const active = index < Math.round(currentEnergy / 10);
+        return `<div class="layer2-cell${active ? ' is-on' : ''}" style="--cell-tone:${levelColor(currentEnergy)}"></div>`;
+      }).join('');
+
+      DOM.layer2StressCells.innerHTML = Array.from({ length: 8 }, (_, index) => {
+        const active = index < Math.round(currentStress / 12.5);
+        return `<div class="layer2-cell${active ? ' is-on' : ''}" style="--cell-tone:${stressColor(currentStress)}"></div>`;
+      }).join('');
+
+      if (!DOM.layer2ParticleField.childElementCount) {
+        DOM.layer2ParticleField.innerHTML = Array.from({ length: 10 }, (_, index) => (
+          `<div class="layer2-particle" data-path="${index % 2 === 0 ? 'energy' : 'stress'}" style="opacity:0"></div>`
+        )).join('');
+      }
+
+      const readouts = [
+        { label: 'Pressure', value: payload ? `${Math.round(pressure * 100)}%` : '--%' },
+        { label: 'Energy', value: payload ? `${currentEnergy.toFixed(1)}%` : '--%' },
+        { label: 'Stress', value: payload ? `${currentStress.toFixed(1)}%` : '--%' },
+        { label: 'Erest', value: payload ? `${eRestNow.toFixed(1)}%` : '--%' },
+        { label: 'dE/min', value: payload ? dE.toFixed(2) : '--' },
+        { label: 'dS/min', value: payload ? dS.toFixed(3) : '--' }
+      ];
+
+      DOM.layer2Readout.innerHTML = readouts.map(item => `
+        <div class="layer2-readout-row">
+          <div class="layer2-readout-label">${item.label}</div>
+          <div class="layer2-readout-value">${item.value}</div>
+        </div>
+      `).join('');
+    }
+
+    function layer2AnimLoop(timestamp = 0) {
+      if (APP.uiLayer < 2 || !DOM.layer2ParticleField.childElementCount) {
+        if (APP.layer2.frameId) {
+          cancelAnimationFrame(APP.layer2.frameId);
+          APP.layer2.frameId = 0;
+        }
+        return;
+      }
+
+      if (!APP.layer2.lastStepTs || (timestamp - APP.layer2.lastStepTs) >= 240) {
+        APP.layer2.lastStepTs = timestamp;
+        APP.layer2.step = (APP.layer2.step + 1) % 16;
+
+        const fieldRect = DOM.layer2ParticleField.getBoundingClientRect();
+        const pressureRect = DOM.layer2PressureNode.getBoundingClientRect();
+        const energyRect = DOM.layer2EnergyTank.getBoundingClientRect();
+        const stressRect = DOM.layer2StressTank.getBoundingClientRect();
+        const start = {
+          x: (pressureRect.left + pressureRect.width / 2) - fieldRect.left,
+          y: (pressureRect.bottom - fieldRect.top) + 4
+        };
+        const targets = {
+          energy: {
+            x: (energyRect.left + energyRect.width / 2) - fieldRect.left,
+            y: (energyRect.top + energyRect.height * 0.28) - fieldRect.top
+          },
+          stress: {
+            x: (stressRect.left + stressRect.width / 2) - fieldRect.left,
+            y: (stressRect.top + stressRect.height * 0.28) - fieldRect.top
+          }
+        };
+
+        Array.from(DOM.layer2ParticleField.children).forEach((particle, index) => {
+          const path = particle.dataset.path || 'energy';
+          const target = targets[path];
+          const progress = ((APP.layer2.step + (index * 2)) % 16) / 15;
+          const arc = Math.sin(progress * Math.PI) * 14;
+          const x = start.x + ((target.x - start.x) * progress);
+          const y = start.y + ((target.y - start.y) * progress) - arc;
+          particle.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+          particle.style.opacity = progress > 0.05 && progress < 0.98 ? '0.95' : '0';
+        });
+      }
+
+      APP.layer2.frameId = requestAnimationFrame(layer2AnimLoop);
+    }
+
+    function replayLastTick() {
+      const history = loadTickHistory();
+      const entry = history.length > 1 ? history[history.length - 2] : history[history.length - 1];
+      if (!entry?.payload) return false;
+      APP.model.payload = clonePayload(entry.payload);
+      saveTickSnapshot();
+      APP.model.lastFetchAt = Date.now();
+      renderApp();
+      return true;
+    }
+
+    function runOneHour() {
+      const payload = clonePayload(getModelPayload());
+      if (!payload) return false;
+
+      const feats = { ...getLastFeats() };
+      const pressure = computePressure(feats);
+      const chronotype = payload.chronotype || 'intermediate';
+      let cursor = getModelTickDate(payload);
+      let energy = clamp(Number(payload.E_internal) || 0, 0, 100);
+      let stress = clamp(Number(payload.S) || 0, 0, 100);
+
+      for (let minute = 0; minute < 60; minute += 1) {
+        cursor = new Date(cursor.getTime() + 60_000);
+        const hour = cursor.getHours() + (cursor.getMinutes() / 60);
+        const eRest = computeERest(hour, chronotype);
+        energy = clamp(energy + ((-0.05 * pressure * energy) + ((eRest - energy) / 120)), 0, 100);
+        stress = clamp(stress + ((1.5 * pressure) - (stress / 4320)), 0, 100);
+      }
+
+      const nextHour = cursor.getHours() + (cursor.getMinutes() / 60);
+      payload.E_internal = Number(energy.toFixed(2));
+      payload.S = Number(stress.toFixed(2));
+      payload.E_rest_now = Number(computeERest(nextHour, chronotype).toFixed(2));
+      payload.E_display = Number((payload.E_internal / 100).toFixed(4));
+      payload.last_tick_iso = cursor.toISOString();
+      payload.last_feats = feats;
+
+      APP.model.payload = payload;
+      saveTickSnapshot();
+      APP.model.lastFetchAt = Date.now();
+      renderApp();
+      return true;
+    }
+
     function renderDiagnosticList(target, items, tone) {
       const feats = getLastFeats();
       target.innerHTML = items.map(item => {
@@ -2311,8 +3515,10 @@
       renderBattery(getDisplayedBatteryPercent());
       renderMeta();
       renderMetrics();
-      renderDiagnostics();
       renderBreakdown(APP.aw.breakdown);
+      renderLayer1();
+      renderDiagnostics();
+      renderLayer2Static();
       DOM.breakdownList.classList.toggle('is-stale', !APP.aw.online);
       applyState();
     }
@@ -2335,30 +3541,49 @@
       }).join('');
     }
 
+    function recoveryActivityById(id) {
+      return RECOVERY_ACTIVITIES.find(a => a.id === id) || null;
+    }
+
+    function recoveryMetaLabel(activity, selected) {
+      if (activity.mode === 'instant') return 'Tap to log';
+      if (activity.mode === 'toggle')  return selected ? 'Start →' : 'Toggle';
+      return selected ? `${APP.recovery.plannedMin} min` : 'Select';
+    }
+
     function renderRecoverySheet() {
       DOM.recoveryActivities.innerHTML = RECOVERY_ACTIVITIES.map(activity => {
+        const mode = activity.mode || 'timer';
         const selected = activity.id === APP.recovery.activityId;
+        const showStepper = selected && mode === 'timer';
+        const showToggleStart = selected && mode === 'toggle';
         return `
-          <div class="activity-item" style="--activity-accent:${activity.accent}">
+          <div class="activity-item" style="--activity-accent:${activity.accent}" data-mode="${mode}">
             <button
               type="button"
               class="activity-btn${selected ? ' is-active' : ''}"
               data-activity-id="${activity.id}"
               data-log-kind="${activity.logKind}"
-              data-theme="${activity.theme}">
+              data-theme="${activity.theme}"
+              data-mode="${mode}">
               <span class="activity-copy">
                 <span class="activity-emoji">${pixelIcon(activity.sprite, activity.accent)}</span>
                 <span class="activity-label">${activity.label}</span>
               </span>
-              <span class="activity-meta">${selected ? `${APP.recovery.plannedMin} min` : 'Select'}</span>
+              <span class="activity-meta">${recoveryMetaLabel(activity, selected)}</span>
             </button>
-            ${selected ? `
+            ${showStepper ? `
               <div class="stepper-wrap">
                 <div class="stepper-controls">
                   <button type="button" class="stepper-btn" data-step="-5">← 5</button>
                   <div class="stepper-display">${APP.recovery.plannedMin} min</div>
                   <button type="button" class="stepper-btn" data-step="5">5 →</button>
                 </div>
+                <button type="button" class="start-btn" data-action="start">Start</button>
+              </div>` : ''}
+            ${showToggleStart ? `
+              <div class="stepper-wrap">
+                <div class="toggle-hint">No timer — you toggle it off when you're back.</div>
                 <button type="button" class="start-btn" data-action="start">Start</button>
               </div>` : ''}
           </div>
@@ -2440,15 +3665,90 @@
     }
 
     function selectRecoveryActivity(activityId, logKind, theme) {
+      const activity = recoveryActivityById(activityId);
       APP.recovery.activityId = activityId;
       APP.recovery.logKind = logKind;
       APP.recovery.theme = theme;
+      APP.recovery.mode = activity ? (activity.mode || 'timer') : 'timer';
       renderRecoverySheet();
     }
 
     function changeRecoveryDuration(delta) {
       APP.recovery.plannedMin = clamp(APP.recovery.plannedMin + delta, 5, 120);
       renderRecoverySheet();
+    }
+
+    // ── Instant + toggle recovery modes ─────────────────────────────────────
+    // "Instant" logs a tiny event and dismisses the sheet (e.g. hydrate).
+    // "Toggle" enters a persistent state with no timer and no screensaver —
+    // a banner at the bottom-right lets you end it whenever you come back.
+    async function instantLogRecovery(activity) {
+      closeRecoverySheet();
+      const saved = await postLog({ kind: activity.logKind, minutes: 1 });
+      if (saved) {
+        showToast(`Logged: ${activity.label}`);
+        void refreshModelState({ allowCache: true });
+      } else {
+        showToast('Backend offline — not saved', 'error');
+      }
+    }
+
+    function startToggleRecovery(activity) {
+      APP.recovery.activityId = activity.id;
+      APP.recovery.logKind = activity.logKind;
+      APP.recovery.theme = activity.theme;
+      APP.recovery.mode = 'toggle';
+      APP.recovery.toggleActive = true;
+      APP.recovery.startTs = Date.now();
+      closeRecoverySheet();
+      renderToggleBanner();
+    }
+
+    async function endToggleRecovery() {
+      if (!APP.recovery.toggleActive || !APP.recovery.startTs) return;
+      const elapsed = Math.max(1, Math.round((Date.now() - APP.recovery.startTs) / 60000));
+      const logKind = APP.recovery.logKind;
+      APP.recovery.toggleActive = false;
+      APP.recovery.activityId = null;
+      APP.recovery.logKind = null;
+      APP.recovery.mode = null;
+      APP.recovery.startTs = 0;
+      renderToggleBanner();
+      const saved = await postLog({ kind: logKind, minutes: elapsed });
+      if (saved) {
+        const hrs = elapsed >= 60 ? `${(elapsed / 60).toFixed(1)}h` : `${elapsed}m`;
+        showToast(`Logged · ${hrs}`);
+        void refreshModelState({ allowCache: true });
+      } else {
+        showToast('Backend offline — not saved', 'error');
+      }
+    }
+
+    function renderToggleBanner() {
+      const banner = document.getElementById('toggle-banner');
+      if (!banner) return;
+      if (!APP.recovery.toggleActive) {
+        banner.hidden = true;
+        banner.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      const activity = recoveryActivityById(APP.recovery.activityId);
+      if (!activity) {
+        banner.hidden = true;
+        return;
+      }
+      const start = new Date(APP.recovery.startTs);
+      const startTxt = start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      banner.hidden = false;
+      banner.setAttribute('aria-hidden', 'false');
+      banner.innerHTML = `
+        <span class="toggle-banner-icon">${pixelIcon(activity.sprite, activity.accent)}</span>
+        <span class="toggle-banner-text">
+          <span class="toggle-banner-label">${activity.label.toUpperCase()}</span>
+          <span class="toggle-banner-since">since ${startTxt}</span>
+        </span>
+        <button type="button" class="toggle-banner-end" data-action="end-toggle">END</button>
+      `;
     }
 
     function sizeScreensaverCanvas() {
@@ -2480,6 +3780,20 @@
       sizeScreensaverCanvas();
       if (theme === 'outside') {
         screenScene = { leaves: Array.from({ length: 10 }, makeLeaf) };
+        return;
+      }
+      if (theme === 'nap') {
+        // Sparse starfield — 60 slow-drifting dots
+        const stars = [];
+        for (let i = 0; i < 60; i++) {
+          stars.push({
+            x: Math.random() * screensaverWidth,
+            y: Math.random() * screensaverHeight,
+            vy: 0.08 + Math.random() * 0.14,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+        screenScene = { stars };
         return;
       }
       screenScene = {};
@@ -2623,6 +3937,137 @@
       screensaverCtx.fillRect(0, 0, screensaverWidth, screensaverHeight);
     }
 
+    // Guided 4-4-4-4 box breathing. Circle expands on inhale, holds, contracts
+    // on exhale, holds. The phase word is shown in a pixel font overlay
+    // painted by the screensaver DOM layer (timer text does double duty).
+    const BREATH_PHASES = [
+      { name: 'Inhale', from: 0.35, to: 0.95, duration: 4000 },
+      { name: 'Hold',   from: 0.95, to: 0.95, duration: 4000 },
+      { name: 'Exhale', from: 0.95, to: 0.35, duration: 4000 },
+      { name: 'Hold',   from: 0.35, to: 0.35, duration: 4000 }
+    ];
+    const BREATH_CYCLE = BREATH_PHASES.reduce((a, p) => a + p.duration, 0);
+
+    function currentBreathPhase(time) {
+      const t = ((time % BREATH_CYCLE) + BREATH_CYCLE) % BREATH_CYCLE;
+      let elapsed = 0;
+      for (const phase of BREATH_PHASES) {
+        if (t < elapsed + phase.duration) {
+          const p = (t - elapsed) / phase.duration;
+          const scale = phase.from + (phase.to - phase.from) * p;
+          return { name: phase.name, scale };
+        }
+        elapsed += phase.duration;
+      }
+      return { name: 'Inhale', scale: 0.35 };
+    }
+
+    function drawBreath(time) {
+      drawBackground('#0a0a18', '#06060c');
+      const cx = screensaverWidth / 2;
+      const cy = screensaverHeight / 2;
+      const maxR = Math.min(screensaverWidth, screensaverHeight) * 0.28;
+      const phase = currentBreathPhase(time);
+      const r = maxR * phase.scale;
+
+      // Outer pixel-ring halo — quantize to chunky blocks for the 8-bit feel.
+      const ring = screensaverCtx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r);
+      ring.addColorStop(0, 'rgba(179,136,255,0.55)');
+      ring.addColorStop(1, 'rgba(179,136,255,0)');
+      screensaverCtx.fillStyle = ring;
+      screensaverCtx.beginPath();
+      screensaverCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      screensaverCtx.fill();
+
+      // Solid core.
+      screensaverCtx.fillStyle = 'rgba(179,136,255,0.92)';
+      screensaverCtx.beginPath();
+      screensaverCtx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+      screensaverCtx.fill();
+
+      // Phase cue label — monospace pixel font.
+      screensaverCtx.fillStyle = '#eaeaff';
+      screensaverCtx.font = '32px "VT323", monospace';
+      screensaverCtx.textAlign = 'center';
+      screensaverCtx.textBaseline = 'middle';
+      screensaverCtx.fillText(phase.name.toUpperCase(), cx, cy - maxR - 40);
+
+      // Count helper — seconds remaining in current phase (4-3-2-1).
+      const phaseElapsed = ((time % BREATH_CYCLE) + BREATH_CYCLE) % BREATH_CYCLE;
+      let acc = 0;
+      let secondsLeft = 4;
+      for (const p of BREATH_PHASES) {
+        if (phaseElapsed < acc + p.duration) {
+          secondsLeft = Math.ceil((acc + p.duration - phaseElapsed) / 1000);
+          break;
+        }
+        acc += p.duration;
+      }
+      screensaverCtx.font = '54px "VT323", monospace';
+      screensaverCtx.fillStyle = '#B388FF';
+      screensaverCtx.fillText(String(secondsLeft), cx, cy);
+    }
+
+    // Minimal pulse-beat visual for exercise — steady "heartbeat" rings.
+    function drawExercise(time) {
+      drawBackground('#0e0708', '#080508');
+      const cx = screensaverWidth / 2;
+      const cy = screensaverHeight / 2;
+      const beatPeriod = 900; // ~67 bpm — relaxed exercise rest
+      for (let i = 0; i < 3; i++) {
+        const t = ((time + i * beatPeriod / 3) % beatPeriod) / beatPeriod;
+        const r = 40 + t * Math.min(screensaverWidth, screensaverHeight) * 0.35;
+        const alpha = (1 - t) * 0.55;
+        screensaverCtx.strokeStyle = `rgba(255,107,107,${alpha})`;
+        screensaverCtx.lineWidth = 4;
+        screensaverCtx.beginPath();
+        screensaverCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        screensaverCtx.stroke();
+      }
+      screensaverCtx.fillStyle = 'rgba(255,107,107,0.95)';
+      screensaverCtx.beginPath();
+      screensaverCtx.arc(cx, cy, 28, 0, Math.PI * 2);
+      screensaverCtx.fill();
+    }
+
+    // Music: animated equalizer bars.
+    function drawMusic(time) {
+      drawBackground('#0a0a05', '#05050a');
+      const bars = 12;
+      const barW = Math.min(32, (screensaverWidth - 40) / bars - 8);
+      const totalW = bars * barW + (bars - 1) * 8;
+      const startX = (screensaverWidth - totalW) / 2;
+      const baseY = screensaverHeight / 2 + 120;
+      for (let i = 0; i < bars; i++) {
+        const phase = (time / 180 + i * 0.45) % (Math.PI * 2);
+        const h = 40 + (Math.sin(phase) * 0.5 + 0.5) * 180;
+        const x = startX + i * (barW + 8);
+        screensaverCtx.fillStyle = i % 3 === 0 ? '#FFD166' : '#F4A261';
+        screensaverCtx.fillRect(x, baseY - h, barW, h);
+      }
+    }
+
+    // Nap: drifting starfield + slow-pulse Zzz in the center.
+    function drawNap(time) {
+      drawBackground('#030312', '#010106');
+      const stars = screenScene.stars || [];
+      for (const s of stars) {
+        s.y += s.vy;
+        if (s.y > screensaverHeight) s.y = 0;
+        const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(time / 900 + s.phase));
+        screensaverCtx.fillStyle = `rgba(180,180,255,${twinkle})`;
+        screensaverCtx.fillRect(Math.floor(s.x), Math.floor(s.y), 2, 2);
+      }
+      const cx = screensaverWidth / 2;
+      const cy = screensaverHeight / 2;
+      const drift = Math.sin(time / 1500) * 6;
+      screensaverCtx.fillStyle = 'rgba(166,163,255,0.85)';
+      screensaverCtx.font = '92px "VT323", monospace';
+      screensaverCtx.textAlign = 'center';
+      screensaverCtx.textBaseline = 'middle';
+      screensaverCtx.fillText('Zzz', cx, cy + drift);
+    }
+
     function updateScreensaverTimer() {
       const totalSeconds = APP.recovery.plannedMin * 60;
       const elapsedSeconds = Math.floor((Date.now() - APP.recovery.startTs) / 1000);
@@ -2656,6 +4101,18 @@
           break;
         case 'home':
           drawHome(time);
+          break;
+        case 'breath':
+          drawBreath(time);
+          break;
+        case 'exercise':
+          drawExercise(time);
+          break;
+        case 'music':
+          drawMusic(time);
+          break;
+        case 'nap':
+          drawNap(time);
           break;
         default:
           drawBackground('#090910', '#090910');
@@ -2716,6 +4173,7 @@
         APP.model.online = true;
         APP.model.stale = false;
         APP.model.payload = payload;
+        saveTickSnapshot();
         APP.model.lastFetchAt = Date.now();
         renderApp();
         return;
@@ -2730,6 +4188,7 @@
         APP.model.online = true;
         APP.model.stale = false;
         APP.model.payload = payload;
+        saveTickSnapshot();
         APP.model.lastFetchAt = Date.now();
         localStorage.setItem(STATE_CACHE_KEY, JSON.stringify({
           payload,
@@ -2742,11 +4201,13 @@
           APP.model.online = false;
           APP.model.stale = true;
           APP.model.payload = cached.payload;
+          saveTickSnapshot();
           APP.model.lastFetchAt = cached.fetchedAt || 0;
         } else {
           APP.model.online = false;
           APP.model.stale = false;
           APP.model.payload = null;
+          saveTickSnapshot();
           APP.model.lastFetchAt = 0;
         }
 
@@ -2827,18 +4288,30 @@
       document.querySelectorAll('.theme-swatch').forEach(btn => {
         btn.setAttribute('aria-pressed', btn.dataset.theme === t ? 'true' : 'false');
       });
+      const nameEl = document.querySelector('[data-theme-name]');
+      if (nameEl) nameEl.textContent = t.toUpperCase();
     }
 
     function initTheme() {
       const stored = localStorage.getItem(THEME_KEY) || 'arcade';
       applyTheme(stored);
+      const picker = document.getElementById('theme-picker');
       document.querySelectorAll('.theme-swatch').forEach(btn => {
         btn.addEventListener('click', () => {
           const t = btn.dataset.theme;
           if (!VALID_THEMES.includes(t)) return;
           localStorage.setItem(THEME_KEY, t);
           applyTheme(t);
+          if (picker && picker.tagName === 'DETAILS') picker.open = false;
         });
+      });
+      // Dismiss on outside click, and on Escape while open
+      document.addEventListener('click', (e) => {
+        if (!picker || !picker.open) return;
+        if (!picker.contains(e.target)) picker.open = false;
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && picker && picker.open) picker.open = false;
       });
     }
 
@@ -2853,9 +4326,34 @@
       renderRecoverySheet();
       renderApp();
 
+      const syncLayer2Motion = () => {
+        APP.layer2.lastStepTs = 0;
+        if (APP.uiLayer >= 2) {
+          renderLayer2Static();
+          if (!APP.layer2.frameId) {
+            APP.layer2.frameId = requestAnimationFrame(layer2AnimLoop);
+          }
+          return;
+        }
+        if (APP.layer2.frameId) {
+          cancelAnimationFrame(APP.layer2.frameId);
+          APP.layer2.frameId = 0;
+        }
+      };
+
+      if (APP.layer2.observer) {
+        APP.layer2.observer.disconnect();
+      }
+      APP.layer2.observer = new MutationObserver(syncLayer2Motion);
+      APP.layer2.observer.observe(DOM.body, {
+        attributes: true,
+        attributeFilter: ['data-layer']
+      });
+
       DOM.windowSelect.value = String(APP.aw.windowHours);
       DOM.demoSelect.value = getActiveDemoId();
       applyDemoModeBody();
+      syncLayer2Motion();
 
       DOM.demoSelect.addEventListener('change', event => {
         const id = event.target.value;
@@ -2865,6 +4363,7 @@
           localStorage.removeItem(DEMO_KEY);
           // Clear cached model so re-entering live mode doesn't show demo values.
           APP.model.payload = null;
+          saveTickSnapshot();
           APP.aw.breakdown = {};
           APP.aw.fallbackBattery = null;
         }
@@ -2885,6 +4384,22 @@
         APP.uiLayer = 2;
         applyState();
         void refreshAwData({ reason: 'expand' });
+      });
+
+      DOM.btnReplayTick.addEventListener('click', () => {
+        if (!replayLastTick()) {
+          showToast('No prior tick snapshot available', 'error');
+          return;
+        }
+        showToast('Previous tick restored');
+      });
+
+      DOM.btnRunHour.addEventListener('click', () => {
+        if (!runOneHour()) {
+          showToast('Model state unavailable', 'error');
+          return;
+        }
+        showToast('Simulated +1 hour');
       });
 
       DOM.collapseBtn.addEventListener('click', () => {
@@ -2961,11 +4476,16 @@
         const startButton = event.target.closest('.start-btn');
 
         if (activityButton) {
-          selectRecoveryActivity(
-            activityButton.dataset.activityId,
-            activityButton.dataset.logKind,
-            activityButton.dataset.theme
-          );
+          const id = activityButton.dataset.activityId;
+          const activity = recoveryActivityById(id);
+          if (!activity) return;
+          // Instant → log & close immediately (no selection state).
+          if (activity.mode === 'instant') {
+            void instantLogRecovery(activity);
+            return;
+          }
+          // Timer + toggle → select (to reveal Start / stepper).
+          selectRecoveryActivity(id, activity.logKind, activity.theme);
           return;
         }
 
@@ -2975,24 +4495,49 @@
         }
 
         if (startButton && APP.recovery.activityId) {
+          const activity = recoveryActivityById(APP.recovery.activityId);
+          if (!activity) return;
+          if (activity.mode === 'toggle') {
+            startToggleRecovery(activity);
+            return;
+          }
           APP.recovery.startTs = Date.now();
           closeRecoverySheet();
           startScreensaver();
         }
       });
 
+      const toggleBannerEl = document.getElementById('toggle-banner');
+      if (toggleBannerEl) {
+        toggleBannerEl.addEventListener('click', (event) => {
+          if (event.target.closest('[data-action="end-toggle"]')) {
+            void endToggleRecovery();
+          }
+        });
+      }
+
       DOM.screensaverDone.addEventListener('click', () => {
         void endScreensaver();
       });
 
       window.addEventListener('resize', () => {
+        if (APP.uiLayer >= 2) {
+          renderLayer2Static();
+        }
         if (APP.mode === 'screensaver') {
           initScreensaverScene(APP.recovery.theme);
         }
       });
 
       document.addEventListener('visibilitychange', () => {
-        if (document.hidden) return;
+        if (document.hidden) {
+          if (APP.layer2.frameId) {
+            cancelAnimationFrame(APP.layer2.frameId);
+            APP.layer2.frameId = 0;
+          }
+          return;
+        }
+        syncLayer2Motion();
         void refreshModelState({ allowCache: true });
         if (APP.uiLayer >= 1) {
           void refreshAwData({ reason: 'visible' });
