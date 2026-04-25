@@ -110,23 +110,52 @@
       justify-content: flex-end;
     }
 
-    #demo-select {
-      min-height: 36px;
-      padding: 0 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-light);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      max-width: 220px;
+    @media (min-width: 720px) {
+      #header-controls {
+        padding-right: 72px;
+      }
     }
 
-    body.is-demo #demo-select {
+    #demo-toggle-btn,
+    #demo-header-badge {
+      min-height: 48px;
+      padding: 0 12px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+      text-transform: uppercase;
+    }
+
+    #demo-toggle-btn:hover,
+    #demo-toggle-btn:focus-visible {
       border-color: var(--px-accent);
       color: var(--px-accent);
+      outline: none;
+    }
+
+    #demo-header-badge {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: var(--px-good);
+      border-color: var(--px-good);
+      background: rgba(159, 232, 106, 0.1);
+      cursor: default;
+    }
+
+    body.is-demo #demo-toggle-btn {
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+    }
+
+    body.is-demo #demo-header-badge {
+      display: none;
     }
 
     body.is-demo #connection-pill {
@@ -242,6 +271,452 @@
       gap: 10px 16px;
       color: var(--muted);
       font-size: 0.92rem;
+    }
+
+    #demo-select {
+      display: none;
+    }
+
+    #demo-shell {
+      position: relative;
+      z-index: 1;
+      display: none;
+      margin-top: 14px;
+    }
+
+    body.is-demo #demo-shell {
+      display: block;
+    }
+
+    body.is-demo #battery-toggle,
+    body.is-demo #battery-meta,
+    body.is-demo #layer-1,
+    body.is-demo #layer-2,
+    body.is-demo #collapse-btn,
+    body.is-demo #self-log-dock,
+    body.is-demo #recovery-trigger {
+      display: none !important;
+    }
+
+    #demo-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 420px;
+    }
+
+    .brand-home,
+    .demo-exit-btn,
+    .demo-back-btn,
+    .demo-card {
+      min-height: 48px;
+    }
+
+    .brand-home {
+      border: none;
+      background: transparent;
+      padding: 0;
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .brand-home:hover,
+    .brand-home:focus-visible {
+      color: var(--px-accent);
+      outline: none;
+    }
+
+    .demo-topbar,
+    .demo-topbar-copy,
+    .demo-topbar-actions,
+    .demo-menu-head,
+    .demo-scene-meta,
+    .demo-pipeline-head,
+    .demo-model-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .demo-topbar,
+    .demo-menu-head,
+    .demo-model-summary {
+      justify-content: space-between;
+    }
+
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 2px solid var(--px-good);
+      background: rgba(159, 232, 106, 0.1);
+      color: var(--px-good);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .demo-clock,
+    .demo-row-label,
+    .demo-stage-label,
+    .demo-kpi-label,
+    .demo-feature-label,
+    .demo-model-label,
+    .demo-card-duration {
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .demo-row-label.is-recovery {
+      color: var(--px-good);
+    }
+
+    .demo-row-label.is-drain {
+      color: var(--px-warn);
+    }
+
+    .demo-battery-mini {
+      width: 120px;
+      flex: 0 0 auto;
+    }
+
+    .demo-battery-mini svg,
+    .demo-scene-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      shape-rendering: crispEdges;
+    }
+
+    .demo-exit-btn,
+    .demo-back-btn {
+      padding: 0 14px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .demo-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .demo-menu-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .demo-card {
+      width: 100%;
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.96);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .demo-card[data-kind="recovery"] {
+      background: linear-gradient(180deg, rgba(106, 198, 234, 0.16), rgba(159, 232, 106, 0.08) 100%);
+    }
+
+    .demo-card[data-kind="drain"] {
+      background: linear-gradient(180deg, rgba(255, 200, 87, 0.16), rgba(232, 97, 90, 0.08) 100%);
+    }
+
+    .demo-card:hover,
+    .demo-card:focus-visible {
+      border-color: var(--px-accent);
+      outline: none;
+      transform: translate(-1px, -1px);
+    }
+
+    .demo-card-top,
+    .demo-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .demo-card-label,
+    .demo-scene-title {
+      font-family: var(--px-font-ui);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .demo-card .demo-scene-svg {
+      width: 64px;
+      height: 64px;
+    }
+
+    .demo-activity-view {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .demo-scene-panel,
+    .demo-pipeline-panel {
+      border: 2px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.96);
+      padding: 14px;
+      box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
+      min-width: 0;
+    }
+
+    .demo-scene-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .demo-scene-frame {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 220px;
+      border: 2px solid var(--px-border-2);
+      background:
+        linear-gradient(180deg, rgba(179, 136, 255, 0.08), transparent 34%),
+        rgba(11, 11, 20, 0.96);
+      overflow: hidden;
+    }
+
+    .demo-scene-frame.is-entering {
+      animation: demo-scene-enter 400ms steps(4, end) both;
+    }
+
+    .demo-scene-frame.is-recovery {
+      box-shadow: inset 0 0 0 2px rgba(106, 198, 234, 0.22);
+    }
+
+    .demo-scene-frame.is-drain {
+      box-shadow: inset 0 0 0 2px rgba(255, 200, 87, 0.22);
+    }
+
+    .demo-scene-svg .anim-walk {
+      animation: demo-walk 0.7s steps(2, end) infinite;
+      transform-origin: center;
+    }
+
+    .demo-scene-svg .anim-bob {
+      animation: demo-bob 1.1s steps(4, end) infinite;
+      transform-origin: center;
+    }
+
+    .demo-scene-svg .anim-float {
+      animation: demo-float 1.8s steps(5, end) infinite;
+      transform-origin: center;
+    }
+
+    .demo-scene-svg .anim-chat {
+      animation: demo-chat 1.2s steps(4, end) infinite;
+    }
+
+    .demo-scene-svg .anim-monitor {
+      animation: demo-monitor 1.3s steps(3, end) infinite;
+    }
+
+    .demo-stage-value,
+    .demo-kpi-value,
+    .demo-model-value {
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--px-text);
+    }
+
+    .demo-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .demo-kpi {
+      border: 2px solid var(--px-border);
+      background: rgba(11, 11, 20, 0.72);
+      padding: 10px;
+    }
+
+    .demo-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .demo-feature-row {
+      display: grid;
+      grid-template-columns: minmax(0, 120px) minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      border: 2px solid var(--px-border);
+      background: rgba(11, 11, 20, 0.64);
+      padding: 8px;
+    }
+
+    .demo-feature-row.is-active {
+      border-color: var(--tone, var(--px-accent));
+      box-shadow: inset 0 0 0 1px var(--tone, var(--px-accent));
+    }
+
+    .demo-feature-bar {
+      height: 14px;
+      border: 2px solid var(--px-border);
+      background: rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+    }
+
+    .demo-feature-fill {
+      width: calc(var(--fill, 0) * 100%);
+      height: 100%;
+      background: var(--tone, var(--px-accent));
+      transition: width 600ms steps(8, end);
+    }
+
+    .demo-feature-value,
+    .demo-delta {
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .demo-feature-value {
+      min-width: 44px;
+      text-align: right;
+      color: var(--tone, var(--px-text));
+    }
+
+    .demo-packet-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .demo-packet {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--tone, var(--px-accent));
+      border: 2px solid rgba(0, 0, 0, 0.46);
+      opacity: 0;
+      transform: translate(var(--x, 0px), var(--y, 0px));
+    }
+
+    .demo-packet.is-visible {
+      opacity: 1;
+    }
+
+    .demo-model-node {
+      border: 2px solid var(--px-border);
+      background: rgba(11, 11, 20, 0.8);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .demo-model-node.is-pulsing {
+      animation: demo-model-pulse 1s steps(5, end) infinite;
+    }
+
+    .demo-model-title {
+      font-family: var(--px-font-ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--px-accent);
+      text-transform: uppercase;
+    }
+
+    .demo-model-deltas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .demo-delta.is-pos {
+      color: var(--px-good);
+    }
+
+    .demo-delta.is-neg {
+      color: var(--px-critical);
+    }
+
+    .demo-back-wrap {
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      transition: opacity 280ms steps(4, end);
+    }
+
+    .demo-back-wrap.is-visible {
+      opacity: 1;
+    }
+
+    @keyframes demo-scene-enter {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes demo-walk {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes demo-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    @keyframes demo-float {
+      0%, 100% { transform: translateY(0); opacity: 0.8; }
+      50% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    @keyframes demo-chat {
+      0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+      50% { transform: translate(0, -3px); opacity: 1; }
+    }
+
+    @keyframes demo-monitor {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes demo-model-pulse {
+      0%, 100% { box-shadow: inset 0 0 0 0 rgba(179, 136, 255, 0.18); }
+      50% { box-shadow: inset 0 0 0 4px rgba(179, 136, 255, 0.18); }
     }
 
     .panel {
@@ -934,6 +1409,20 @@
       }
     }
 
+    @media (max-width: 720px) {
+      .demo-activity-view {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-feature-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
     @media (max-width: 640px) {
       #battery-toggle {
         grid-template-columns: 1fr;
@@ -941,6 +1430,10 @@
 
       #battery-visual {
         margin-inline: 0;
+      }
+
+      .demo-menu-row {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1210,7 +1703,8 @@
     .metric-label,
     .metric-unit,
     .tab-btn,
-    #demo-select,
+    #demo-toggle-btn,
+    #demo-header-badge,
     #connection-pill,
     .activity-label,
     .sheet-subtitle,
@@ -1251,7 +1745,8 @@
     .drain-row,
     .diag-row,
     #connection-pill,
-    #demo-select,
+    #demo-toggle-btn,
+    #demo-header-badge,
     #window-select,
     .tab-btn,
     .tap-score,
@@ -1290,7 +1785,8 @@
     }
 
     #connection-pill,
-    #demo-select,
+    #demo-toggle-btn,
+    #demo-header-badge,
     #window-select,
     .tab-btn,
     .stepper-btn,
@@ -1959,7 +2455,7 @@
 </head>
 <body data-layer="0" data-mode="normal">
   <header id="app-header">
-    <div class="eyebrow">Psych Battery</div>
+    <button id="brand-home" class="brand-home" type="button">Psych Battery</button>
     <div id="header-controls">
       <select id="demo-select" aria-label="Demo profile">
         <option value="">Live data</option>
@@ -1968,6 +2464,8 @@
         <option value="alex">Demo · Alex (isolated, unhealthy)</option>
         <option value="jordan">Demo · Jordan (tech, low AI)</option>
       </select>
+      <button id="demo-toggle-btn" type="button" aria-pressed="false">Demo mode</button>
+      <span id="demo-header-badge" aria-live="polite">Demo mode</span>
       <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
     </div>
   </header>
@@ -2033,6 +2531,10 @@
       <span id="model-status-text">Waiting for model or ActivityWatch</span>
       <span id="last-tick-text">No recent tick</span>
     </div>
+
+    <section id="demo-shell" hidden aria-hidden="true">
+      <div id="demo-layout"></div>
+    </section>
 
     <section id="layer-1" class="panel" aria-hidden="true">
       <div class="layer-panel-block layer-panel-block-v2">
@@ -2420,13 +2922,11 @@ P = drain - 0.5*recovery</pre>
     };
 
     function getActiveDemoId() {
-      const stored = localStorage.getItem(DEMO_KEY) || '';
-      return DEMO_PROFILES[stored] ? stored : '';
+      return '';
     }
 
     function getActiveDemoProfile() {
-      const id = getActiveDemoId();
-      return id ? DEMO_PROFILES[id] : null;
+      return null;
     }
 
     const APP = {
@@ -2436,19 +2936,35 @@ P = drain - 0.5*recovery</pre>
       aw: { online: false, windowHours: 0.083, buckets: { win: null, afk: null }, breakdown: {}, lastFetchAt: 0, fallbackBattery: null, totalActMins: 0 },
       rating: { kind: 'energy_rating', submitting: false },
       recovery: { activityId: null, logKind: null, theme: null, plannedMin: 20, startTs: 0, timerId: null, mode: null, toggleActive: false },
-      layer2: { frameId: 0, lastStepTs: 0, step: 0, observer: null }
+      layer2: { frameId: 0, lastStepTs: 0, step: 0, observer: null },
+      demo: {
+        enabled: false,
+        savedAppState: null,
+        E: 70,
+        S: 30,
+        simClock: null,
+        activity: null,
+        featureAccum: {},
+        animationStopId: null,
+        completedActivities: []
+      }
     };
 
     const DOM = {
       body: document.body,
+      brandHome: document.getElementById('brand-home'),
       connectionPill: document.getElementById('connection-pill'),
       demoSelect: document.getElementById('demo-select'),
+      demoToggleBtn: document.getElementById('demo-toggle-btn'),
+      demoHeaderBadge: document.getElementById('demo-header-badge'),
       batteryCard: document.getElementById('battery-card'),
       batteryToggle: document.getElementById('battery-toggle'),
       batteryVisual: document.getElementById('battery-visual'),
       batteryPercent: document.getElementById('battery-percent'),
       modelStatusText: document.getElementById('model-status-text'),
       lastTickText: document.getElementById('last-tick-text'),
+      demoShell: document.getElementById('demo-shell'),
+      demoLayout: document.getElementById('demo-layout'),
       layer1: document.getElementById('layer-1'),
       layer2: document.getElementById('layer-2'),
       layer1PressureCopy: document.getElementById('layer1-pressure-copy'),
@@ -2655,6 +3171,310 @@ P = drain - 0.5*recovery</pre>
         }
       }
       return `<svg class="pxicon" viewBox="0 0 10 10" shape-rendering="crispEdges" fill="${color}" aria-hidden="true">${rects}</svg>`;
+    }
+
+    const DEMO_ACTIVITIES = [
+      {
+        id: 'go_outside',
+        label: 'Go outside',
+        durationMin: 20,
+        kind: 'recovery',
+        accent: 'var(--px-good)',
+        deltas: { outside_min: 20, daylight_min: 20 }
+      },
+      {
+        id: 'connect_people',
+        label: 'Connect with people',
+        durationMin: 30,
+        kind: 'recovery',
+        accent: 'var(--px-info)',
+        deltas: { social_min: 30, people_cnt: 2 }
+      },
+      {
+        id: 'eat_food',
+        label: 'Eat food',
+        durationMin: 25,
+        kind: 'recovery',
+        accent: 'var(--px-info)',
+        deltas: { eat_min: 25, hydration_cnt: 1 }
+      },
+      {
+        id: 'take_nap',
+        label: 'Take a nap',
+        durationMin: 30,
+        kind: 'recovery',
+        accent: 'var(--px-accent)',
+        deltas: { nap_min: 30 }
+      },
+      {
+        id: 'zoom_meeting',
+        label: 'Zoom meeting',
+        durationMin: 45,
+        kind: 'drain',
+        accent: 'var(--px-warn)',
+        deltas: { meeting_min: 45, synchronous_load: 1 }
+      },
+      {
+        id: 'heavy_async',
+        label: 'Heavy async comms',
+        durationMin: 60,
+        kind: 'drain',
+        accent: 'var(--px-critical)',
+        deltas: { slack_msgs: 60, context_switch_cnt: 8 }
+      },
+      {
+        id: 'deep_work',
+        label: 'Deep work',
+        durationMin: 90,
+        kind: 'drain',
+        accent: 'var(--px-warn)',
+        deltas: { focus_min: 90, synchronous_load: 0.2 }
+      },
+      {
+        id: 'late_night_ai',
+        label: 'Late-night AI context-switching',
+        durationMin: 90,
+        kind: 'drain',
+        accent: 'var(--px-critical)',
+        deltas: { focus_min: 90, after_hours_min: 90, context_switch_cnt: 20 }
+      }
+    ];
+
+    const DEMO_ACTIVITY_BY_ID = Object.fromEntries(DEMO_ACTIVITIES.map(activity => [activity.id, activity]));
+    const DEMO_DRAIN_FEATS = [
+      { key: 'meeting_min', label: 'Meetings', unit: 'min', kind: 'drain', cap: 240 },
+      { key: 'synchronous_load', label: 'Synchronous load', unit: '', kind: 'drain', cap: 2 },
+      { key: 'slack_msgs', label: 'Slack messages', unit: '', kind: 'drain', cap: 120 },
+      { key: 'context_switch_cnt', label: 'Context switches', unit: '', kind: 'drain', cap: 24 },
+      { key: 'focus_min', label: 'Focus time', unit: 'min', kind: 'drain', cap: 240 },
+      { key: 'after_hours_min', label: 'After-hours', unit: 'min', kind: 'drain', cap: 240 }
+    ];
+    const DEMO_RECOVERY_FEATS = [
+      { key: 'outside_min', label: 'Outside time', unit: 'min', kind: 'recovery', cap: 60 },
+      { key: 'daylight_min', label: 'Daylight', unit: 'min', kind: 'recovery', cap: 120 },
+      { key: 'social_min', label: 'Social time', unit: 'min', kind: 'recovery', cap: 120 },
+      { key: 'people_cnt', label: 'People', unit: '', kind: 'recovery', cap: 8 },
+      { key: 'eat_min', label: 'Eating', unit: 'min', kind: 'recovery', cap: 60 },
+      { key: 'hydration_cnt', label: 'Hydration', unit: '', kind: 'recovery', cap: 6 },
+      { key: 'nap_min', label: 'Nap', unit: 'min', kind: 'recovery', cap: 60 }
+    ];
+    const DEMO_FEATURE_ITEMS = [...DEMO_RECOVERY_FEATS, ...DEMO_DRAIN_FEATS];
+    const DEMO_FEATURE_CAPS = Object.fromEntries(DEMO_FEATURE_ITEMS.map(item => [item.key, item.cap]));
+
+    function normalizeDemoFeature(key, raw) {
+      if (raw == null || Number.isNaN(Number(raw))) return 0;
+      const cap = DEMO_FEATURE_CAPS[key];
+      if (!cap) return 0;
+      return clamp(Number(raw) / cap, 0, 1);
+    }
+
+    function getDemoModelFeatureSeed() {
+      return [...DRAIN_FEATS, ...RECOVERY_FEATS].reduce((acc, item) => {
+        acc[item.key] = 0;
+        return acc;
+      }, {});
+    }
+
+    function projectDemoFeaturesToModel(scriptedFeats = {}) {
+      const modelFeats = getDemoModelFeatureSeed();
+      const outsideMin = Number(scriptedFeats.outside_min) || 0;
+      const daylightMin = Number(scriptedFeats.daylight_min) || 0;
+      const socialMin = Number(scriptedFeats.social_min) || 0;
+      const peopleCnt = Number(scriptedFeats.people_cnt) || 0;
+      const eatMin = Number(scriptedFeats.eat_min) || 0;
+      const hydrationCnt = Number(scriptedFeats.hydration_cnt) || 0;
+      const napMin = Number(scriptedFeats.nap_min) || 0;
+      const meetingMin = Number(scriptedFeats.meeting_min) || 0;
+      const synchronousLoad = Number(scriptedFeats.synchronous_load) || 0;
+      const slackMsgs = Number(scriptedFeats.slack_msgs) || 0;
+      const contextSwitchCnt = Number(scriptedFeats.context_switch_cnt) || 0;
+      const focusMin = Number(scriptedFeats.focus_min) || 0;
+      const afterHoursMin = Number(scriptedFeats.after_hours_min) || 0;
+
+      modelFeats.meeting_video_min = meetingMin;
+      modelFeats.context_switches = contextSwitchCnt + Math.round(slackMsgs / 6);
+      modelFeats.kpm_p95_over_base = clamp(
+        (focusMin / 180) + (synchronousLoad * 0.45) + (slackMsgs / 180),
+        0,
+        FEATURE_NORM.kpm_p95_over_base
+      );
+      modelFeats.after_hours_frac = clamp(afterHoursMin / 240, 0, FEATURE_NORM.after_hours_frac);
+      modelFeats.fragmentation_dev = clamp(
+        ((contextSwitchCnt / 24) * 0.55) + (synchronousLoad * 0.25) + (slackMsgs / 160),
+        0,
+        FEATURE_NORM.fragmentation_dev
+      );
+      modelFeats.zoom_back_to_back_frac = clamp(synchronousLoad / 2, 0, FEATURE_NORM.zoom_back_to_back_frac);
+      modelFeats.todoist_overdue_count = clamp(slackMsgs / 30, 0, FEATURE_NORM.todoist_overdue_count);
+
+      modelFeats.focus_block_min = focusMin;
+      modelFeats.walk_outside_min = outsideMin;
+      modelFeats.outside_log_min = daylightMin;
+      modelFeats.afk_10plus_min = clamp((outsideMin * 0.35) + eatMin + napMin, 0, FEATURE_NORM.afk_10plus_min);
+      modelFeats.social_voice_min = socialMin;
+      modelFeats.with_people_min = clamp(socialMin + (peopleCnt * 15), 0, FEATURE_NORM.with_people_min);
+      modelFeats.detach_block_min = clamp(
+        (outsideMin * 0.35) + eatMin + napMin + (hydrationCnt * 5),
+        0,
+        FEATURE_NORM.detach_block_min
+      );
+      modelFeats.continuous_sleep_h = clamp(napMin / 60, 0, FEATURE_NORM.continuous_sleep_h);
+      return modelFeats;
+    }
+
+    function pxRects(rects, fill) {
+      return rects.map(([x, y, w, h, className = '']) => (
+        `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}"${className ? ` class="${className}"` : ''}></rect>`
+      )).join('');
+    }
+
+    function spriteGroup(spriteKey, x, y, scale, fill, className = '') {
+      const rows = PIXEL_SPRITES[spriteKey];
+      if (!rows) return '';
+      let rects = '';
+      for (let row = 0; row < rows.length; row += 1) {
+        for (let col = 0; col < rows[row].length; col += 1) {
+          if (rows[row][col] !== '.') {
+            rects += `<rect x="${col}" y="${row}" width="1" height="1"></rect>`;
+          }
+        }
+      }
+      return `<g transform="translate(${x} ${y}) scale(${scale})" fill="${fill}"${className ? ` class="${className}"` : ''}>${rects}</g>`;
+    }
+
+    function personGroup(x, y, fill, className = 'anim-bob') {
+      return `<g transform="translate(${x} ${y})"${className ? ` class="${className}"` : ''}>
+        ${pxRects([
+          [8, 0, 16, 16],
+          [4, 16, 24, 8],
+          [8, 24, 16, 24],
+          [0, 24, 8, 16],
+          [24, 24, 8, 16],
+          [8, 48, 8, 20],
+          [16, 48, 8, 20]
+        ], fill)}
+      </g>`;
+    }
+
+    function deskGroup(x, y, tone) {
+      return `<g transform="translate(${x} ${y})">
+        ${pxRects([[0, 24, 56, 8], [8, 0, 36, 24], [4, 32, 8, 18], [44, 32, 8, 18]], tone)}
+      </g>`;
+    }
+
+    function renderDemoSceneSvg(activityId) {
+      const bg = 'var(--px-bg)';
+      const surface = 'var(--px-surface-2)';
+      const border = 'var(--px-border-2)';
+      const sky = pxRects([[0, 0, 160, 98]], bg);
+      const floor = pxRects([[0, 98, 160, 62]], surface);
+      let art = '';
+
+      switch (activityId) {
+        case 'go_outside':
+          art = `
+            ${sky}
+            ${pxRects([[0, 104, 160, 56]], 'rgba(159, 232, 106, 0.18)')}
+            ${pxRects([[112, 16, 24, 24, 'anim-bob']], 'var(--px-warn)')}
+            ${pxRects([[0, 120, 160, 16], [0, 136, 160, 24]], 'var(--px-good)')}
+            ${pxRects([[12, 66, 32, 10], [16, 76, 24, 10], [20, 86, 16, 8], [106, 60, 32, 10], [110, 70, 24, 10], [114, 80, 16, 8]], 'var(--px-good)')}
+            ${pxRects([[24, 94, 8, 26], [118, 88, 8, 32]], 'var(--px-border)')}
+            ${personGroup(58, 54, 'var(--px-text)', 'anim-walk')}
+            ${spriteGroup('outside', 24, 20, 4, 'var(--px-accent)', 'anim-float')}
+          `;
+          break;
+        case 'connect_people':
+          art = `
+            ${sky}
+            ${floor}
+            ${personGroup(24, 58, 'var(--px-info)', 'anim-bob')}
+            ${personGroup(88, 58, 'var(--px-good)', 'anim-bob')}
+            ${pxRects([[32, 26, 28, 18, 'anim-chat'], [100, 24, 28, 18, 'anim-chat'], [52, 40, 8, 8], [100, 38, 8, 8]], 'var(--px-text)')}
+          `;
+          break;
+        case 'eat_food':
+          art = `
+            ${sky}
+            ${floor}
+            ${deskGroup(48, 86, 'var(--px-border-2)')}
+            ${personGroup(54, 42, 'var(--px-text)', 'anim-bob')}
+            ${pxRects([[62, 92, 36, 8], [68, 84, 24, 8]], 'var(--px-warn)')}
+            ${pxRects([[74, 76, 8, 8, 'anim-bob']], 'var(--px-critical)')}
+          `;
+          break;
+        case 'take_nap':
+          art = `
+            ${pxRects([[0, 0, 160, 160]], 'rgba(11, 11, 20, 0.96)')}
+            ${pxRects([[18, 94, 104, 18], [18, 80, 20, 14], [34, 68, 56, 14], [90, 68, 20, 12]], border)}
+            ${pxRects([[20, 96, 100, 14], [34, 70, 52, 10]], 'var(--px-accent)')}
+            ${personGroup(48, 48, 'var(--px-text)', '')}
+            ${pxRects([[112, 36, 16, 8, 'anim-float'], [124, 20, 12, 8, 'anim-float'], [136, 8, 8, 8, 'anim-float']], 'var(--px-text)')}
+          `;
+          break;
+        case 'zoom_meeting':
+          art = `
+            ${sky}
+            ${floor}
+            ${deskGroup(48, 92, border)}
+            ${personGroup(54, 48, 'var(--px-text)', 'anim-bob')}
+            ${pxRects([[82, 20, 60, 44]], 'rgba(106, 198, 234, 0.18)')}
+            ${pxRects([[88, 26, 20, 12], [114, 26, 20, 12], [88, 44, 20, 12], [114, 44, 20, 12]], 'var(--px-info)')}
+            ${pxRects([[90, 28, 8, 6], [116, 28, 8, 6], [90, 46, 8, 6], [116, 46, 8, 6]], 'var(--px-text)')}
+          `;
+          break;
+        case 'heavy_async':
+          art = `
+            ${sky}
+            ${floor}
+            ${personGroup(22, 62, 'var(--px-text)', 'anim-bob')}
+            ${pxRects([[74, 22, 26, 18, 'anim-chat'], [110, 44, 24, 16, 'anim-chat'], [92, 72, 30, 18, 'anim-chat'], [94, 38, 8, 8], [122, 58, 8, 8], [112, 90, 8, 8]], 'var(--px-warn)')}
+            ${pxRects([[56, 114, 88, 10]], border)}
+          `;
+          break;
+        case 'deep_work':
+          art = `
+            ${sky}
+            ${floor}
+            ${deskGroup(42, 92, border)}
+            ${personGroup(46, 48, 'var(--px-text)', 'anim-bob')}
+            ${pxRects([[82, 26, 42, 28, 'anim-monitor']], 'rgba(106, 198, 234, 0.18)')}
+            ${pxRects([[88, 32, 10, 4], [100, 38, 16, 4], [90, 46, 18, 4]], 'var(--px-good)')}
+            ${pxRects([[40, 36, 8, 8], [122, 36, 8, 8]], 'var(--px-accent)')}
+          `;
+          break;
+        case 'late_night_ai':
+          art = `
+            ${pxRects([[0, 0, 160, 160]], 'rgba(11, 11, 20, 0.98)')}
+            ${pxRects([[108, 14, 34, 40]], 'rgba(106, 198, 234, 0.08)')}
+            ${pxRects([[114, 20, 10, 10], [126, 20, 10, 10], [114, 32, 10, 10], [126, 32, 10, 10]], 'var(--px-info)')}
+            ${deskGroup(38, 92, border)}
+            ${personGroup(42, 48, 'var(--px-text)', 'anim-bob')}
+            ${pxRects([[78, 22, 48, 28, 'anim-monitor'], [94, 56, 22, 16, 'anim-monitor']], 'rgba(232, 97, 90, 0.18)')}
+            <text x="86" y="40" fill="var(--px-critical)" font-family="Silkscreen, monospace" font-size="10">AI</text>
+            <text x="98" y="67" fill="var(--px-warn)" font-family="Silkscreen, monospace" font-size="8">CTX</text>
+          `;
+          break;
+        default:
+          art = `${sky}${floor}`;
+      }
+
+      return `<svg class="demo-scene-svg" viewBox="0 0 160 160" aria-hidden="true">${art}</svg>`;
+    }
+
+    function getDemoFeatureItems() {
+      return DEMO_FEATURE_ITEMS;
+    }
+
+    function getDemoFeatureLabelMap() {
+      return Object.fromEntries(getDemoFeatureItems().map(item => [item.key, item.label]));
+    }
+
+    function getDemoFeatureSeed() {
+      return getDemoFeatureItems().reduce((acc, item) => {
+        const key = item.key;
+        acc[key] = 0;
+        return acc;
+      }, {});
     }
 
     // Recovery modes:
@@ -2878,6 +3698,9 @@ P = drain - 0.5*recovery</pre>
     }
 
     function getDisplayedBatteryPercent() {
+      if (APP.demo.enabled) {
+        return getDemoDisplayPercent();
+      }
       if (getModelPayload() && typeof getModelPayload().E_display === 'number') {
         return clamp(getModelPayload().E_display * 100, 0, 100);
       }
@@ -2888,6 +3711,7 @@ P = drain - 0.5*recovery</pre>
     }
 
     function applyState() {
+      applyDemoModeBody();
       DOM.body.dataset.layer = String(APP.uiLayer);
       DOM.body.dataset.mode = APP.mode;
       DOM.batteryToggle.setAttribute('aria-expanded', APP.uiLayer > 0 ? 'true' : 'false');
@@ -2896,6 +3720,10 @@ P = drain - 0.5*recovery</pre>
       DOM.ratingSheet.setAttribute('aria-hidden', APP.mode === 'rating' ? 'false' : 'true');
       DOM.recoverySheet.setAttribute('aria-hidden', APP.mode === 'recovery-menu' ? 'false' : 'true');
       DOM.screensaver.setAttribute('aria-hidden', APP.mode === 'screensaver' ? 'false' : 'true');
+      DOM.demoShell.hidden = !APP.demo.enabled;
+      DOM.demoShell.setAttribute('aria-hidden', APP.demo.enabled ? 'false' : 'true');
+      DOM.demoToggleBtn.setAttribute('aria-pressed', APP.demo.enabled ? 'true' : 'false');
+      DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Exit demo' : 'Demo mode';
       DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
       DOM.openDiagnostics.disabled = APP.uiLayer === 2;
     }
@@ -3105,6 +3933,582 @@ P = drain - 0.5*recovery</pre>
         0,
         100
       );
+    }
+
+    const REDUCED_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function prefersReducedMotion() {
+      return REDUCED_MOTION_QUERY.matches;
+    }
+
+    function getHourValue(dateLike) {
+      const date = new Date(dateLike);
+      if (Number.isNaN(date.getTime())) return 6;
+      return date.getHours() + (date.getMinutes() / 60);
+    }
+
+    function stepModelForward({ cursor, energy, stress, minutes, features = {}, chronotype, featureProjector = null }) {
+      const projectedFeatures = featureProjector ? featureProjector(features) : { ...(features || {}) };
+      const normalizedFeatures = [...DRAIN_FEATS, ...RECOVERY_FEATS].reduce((acc, item) => {
+        acc[item.key] = normalizeFeature(item.key, projectedFeatures[item.key]);
+        return acc;
+      }, {});
+      const pressure = computePressure(projectedFeatures);
+      let nextCursor = new Date(cursor);
+      let nextEnergy = clamp(Number(energy) || 0, 0, 100);
+      let nextStress = clamp(Number(stress) || 0, 0, 100);
+      let eRest = computeERest(getHourValue(nextCursor), chronotype);
+
+      for (let minute = 0; minute < minutes; minute += 1) {
+        nextCursor = new Date(nextCursor.getTime() + 60_000);
+        const hour = getHourValue(nextCursor);
+        eRest = computeERest(hour, chronotype);
+        nextEnergy = clamp(nextEnergy + ((-0.05 * pressure * nextEnergy) + ((eRest - nextEnergy) / 120)), 0, 100);
+        nextStress = clamp(nextStress + ((1.5 * pressure) - (nextStress / 4320)), 0, 100);
+      }
+
+      return {
+        cursor: nextCursor,
+        energy: Number(nextEnergy.toFixed(2)),
+        stress: Number(nextStress.toFixed(2)),
+        eRest: Number(eRest.toFixed(2)),
+        pressure: Number(pressure.toFixed(4)),
+        modelFeatures: projectedFeatures,
+        normalizedFeatures
+      };
+    }
+
+    function getDemoDisplayPercent() {
+      const display = Number((clamp(APP.demo.activity?.displayBattery ?? APP.demo.E, 0, 100) / 100).toFixed(4));
+      return clamp(display * 100, 0, 100);
+    }
+
+    function formatDemoClock(dateLike) {
+      const date = new Date(dateLike);
+      if (Number.isNaN(date.getTime())) return '--:--';
+      return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function createDemoClockStart() {
+      const now = new Date();
+      now.setHours(6, 0, 0, 0);
+      return now.toISOString();
+    }
+
+    function getDemoActivity(activityId) {
+      return DEMO_ACTIVITY_BY_ID[activityId] || null;
+    }
+
+    function stopDemoAnimation() {
+      const pending = APP.demo.animationStopId;
+      if (pending && typeof pending === 'object' && !Array.isArray(pending)) {
+        if (Array.isArray(pending.timers)) {
+          pending.timers.forEach(handle => window.clearTimeout(handle));
+        }
+        if (pending.frameId) {
+          cancelAnimationFrame(pending.frameId);
+        }
+      } else if (Array.isArray(pending)) {
+        pending.forEach(handle => window.clearTimeout(handle));
+      } else if (pending) {
+        window.clearTimeout(pending);
+      }
+      APP.demo.animationStopId = null;
+      const packetLayer = DOM.demoLayout.querySelector('[data-demo-packets]');
+      if (packetLayer) packetLayer.innerHTML = '';
+    }
+
+    function captureDemoAppState() {
+      return safeParse(JSON.stringify({
+        uiLayer: APP.uiLayer,
+        mode: APP.mode,
+        model: APP.model,
+        aw: APP.aw,
+        rating: APP.rating,
+        recovery: {
+          activityId: APP.recovery.activityId,
+          logKind: APP.recovery.logKind,
+          theme: APP.recovery.theme,
+          plannedMin: APP.recovery.plannedMin,
+          startTs: APP.recovery.startTs,
+          mode: APP.recovery.mode,
+          toggleActive: APP.recovery.toggleActive
+        },
+        layer2: {
+          lastStepTs: APP.layer2.lastStepTs,
+          step: APP.layer2.step
+        }
+      }));
+    }
+
+    function restoreDemoAppState(snapshot) {
+      const saved = snapshot || {};
+      APP.uiLayer = typeof saved.uiLayer === 'number' ? saved.uiLayer : 0;
+      APP.mode = saved.mode || 'normal';
+      APP.model = {
+        online: Boolean(saved.model?.online),
+        stale: Boolean(saved.model?.stale),
+        payload: clonePayload(saved.model?.payload),
+        lastFetchAt: Number(saved.model?.lastFetchAt) || 0
+      };
+      APP.aw = {
+        online: Boolean(saved.aw?.online),
+        windowHours: Number(saved.aw?.windowHours) || 0.083,
+        buckets: saved.aw?.buckets ? { ...saved.aw.buckets } : { win: null, afk: null },
+        breakdown: saved.aw?.breakdown ? (safeParse(JSON.stringify(saved.aw.breakdown)) || {}) : {},
+        lastFetchAt: Number(saved.aw?.lastFetchAt) || 0,
+        fallbackBattery: typeof saved.aw?.fallbackBattery === 'number' ? saved.aw.fallbackBattery : null,
+        totalActMins: Number(saved.aw?.totalActMins) || 0
+      };
+      APP.rating = {
+        kind: saved.rating?.kind || 'energy_rating',
+        submitting: Boolean(saved.rating?.submitting)
+      };
+      APP.recovery = {
+        activityId: saved.recovery?.activityId ?? null,
+        logKind: saved.recovery?.logKind ?? null,
+        theme: saved.recovery?.theme ?? null,
+        plannedMin: Number(saved.recovery?.plannedMin) || 20,
+        startTs: Number(saved.recovery?.startTs) || 0,
+        timerId: 0,
+        mode: saved.recovery?.mode ?? null,
+        toggleActive: Boolean(saved.recovery?.toggleActive)
+      };
+      APP.layer2 = {
+        frameId: 0,
+        lastStepTs: Number(saved.layer2?.lastStepTs) || 0,
+        step: Number(saved.layer2?.step) || 0,
+        observer: APP.layer2.observer
+      };
+    }
+
+    function resetDemoState() {
+      APP.demo.enabled = false;
+      APP.demo.savedAppState = null;
+      APP.demo.E = 70;
+      APP.demo.S = 30;
+      APP.demo.simClock = null;
+      APP.demo.activity = null;
+      APP.demo.featureAccum = getDemoFeatureSeed();
+      APP.demo.animationStopId = null;
+      APP.demo.completedActivities = [];
+    }
+
+    function renderDemoMiniBattery(target, level) {
+      if (!target) return;
+      const rounded = Math.round(level);
+      const color = levelColor(level);
+      const full = Math.floor(level / 10);
+      const partial = (level / 10) - full;
+      let cells = '';
+      for (let index = 0; index < 10; index += 1) {
+        const width = index < full ? 10 : (index === full && partial > 0 ? Math.max(2, Math.round(10 * partial)) : 10);
+        const fill = index < full || (index === full && partial > 0) ? color : 'var(--px-surface-2)';
+        const opacity = index < full || (index === full && partial > 0) ? '1' : '0.45';
+        cells += `<rect x="${8 + (index * 11)}" y="8" width="${width}" height="26" fill="${fill}" opacity="${opacity}"></rect>`;
+      }
+      target.innerHTML = `
+        <svg data-demo-battery viewBox="0 0 132 42" aria-hidden="true">
+          <rect x="2" y="2" width="118" height="38" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
+          <rect x="122" y="12" width="8" height="18" fill="var(--px-border-2)"></rect>
+          ${cells}
+          <text x="60" y="27" text-anchor="middle" font-family="VT323, monospace" font-size="18" fill="${rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)'}">${rounded}%</text>
+        </svg>
+      `;
+    }
+
+    function syncDemoBatteryDisplays(level) {
+      const nextLevel = clamp(level, 0, 100);
+      renderBattery(nextLevel);
+      const miniBattery = DOM.demoLayout.querySelector('[data-demo-mini-battery]');
+      if (miniBattery) {
+        renderDemoMiniBattery(miniBattery, nextLevel);
+      }
+    }
+
+    function startDemoBatteryTween(activityId, handles, durationMs = 1700) {
+      const activity = APP.demo.activity;
+      if (!activity || activity.id !== activityId) return;
+      if (prefersReducedMotion()) {
+        APP.demo.activity.displayBattery = APP.demo.activity.afterBattery;
+        syncDemoBatteryDisplays(APP.demo.activity.displayBattery);
+        return;
+      }
+
+      const startValue = activity.beforeBattery;
+      const endValue = activity.afterBattery;
+      const startedAt = performance.now();
+      const tick = now => {
+        if (!APP.demo.activity || APP.demo.activity.id !== activityId) {
+          handles.frameId = 0;
+          return;
+        }
+
+        const progress = clamp((now - startedAt) / durationMs, 0, 1);
+        APP.demo.activity.displayBattery = Number((startValue + ((endValue - startValue) * progress)).toFixed(2));
+        syncDemoBatteryDisplays(APP.demo.activity.displayBattery);
+
+        if (progress >= 1) {
+          handles.frameId = 0;
+          return;
+        }
+        handles.frameId = requestAnimationFrame(tick);
+      };
+
+      handles.frameId = requestAnimationFrame(tick);
+    }
+
+    function getDemoStageLabel(step) {
+      switch (step) {
+        case 'scene': return 'Scene';
+        case 'features': return 'Feature packets';
+        case 'model': return 'Model B';
+        case 'battery': return 'Battery';
+        case 'done': return 'Complete';
+        default: return 'Menu';
+      }
+    }
+
+    function renderDemoLayout() {
+      if (!APP.demo.enabled) {
+        DOM.demoLayout.innerHTML = '';
+        return;
+      }
+
+      const activity = APP.demo.activity;
+      const featureLabelMap = getDemoFeatureLabelMap();
+      const menuRows = [
+        { label: 'Recovery', css: 'is-recovery', items: DEMO_ACTIVITIES.filter(item => item.kind === 'recovery') },
+        { label: 'Drain', css: 'is-drain', items: DEMO_ACTIVITIES.filter(item => item.kind === 'drain') }
+      ];
+
+      const topbar = `
+        <div class="demo-topbar">
+          <div class="demo-topbar-copy">
+            <span class="demo-badge">Demo mode</span>
+            <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
+          </div>
+          <div class="demo-topbar-actions">
+            <div class="demo-battery-mini" data-demo-mini-battery></div>
+            <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
+          </div>
+        </div>
+      `;
+
+      if (!activity) {
+        DOM.demoLayout.innerHTML = `
+          ${topbar}
+          <div class="demo-menu">
+            <div class="demo-menu-head">
+              <div class="demo-stage-label">Choose an activity to simulate the real Model B + D math.</div>
+            </div>
+            ${menuRows.map(row => `
+              <div class="demo-row-label ${row.css}">${row.label}</div>
+              <div class="demo-menu-row">
+                ${row.items.map(item => `
+                  <button type="button" class="demo-card" data-demo-activity="${item.id}" data-kind="${item.kind}">
+                    <div class="demo-card-top">
+                      <span class="demo-card-label">${item.label}</span>
+                      <span class="demo-card-duration">${item.durationMin} min</span>
+                    </div>
+                    <div class="demo-card-bottom">
+                      ${renderDemoSceneSvg(item.id)}
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        `;
+        renderDemoMiniBattery(DOM.demoLayout.querySelector('[data-demo-mini-battery]'), getDemoDisplayPercent());
+        return;
+      }
+
+      const showFinalBars = activity.step !== 'scene';
+      const rows = getDemoFeatureItems().map(item => {
+        const finalFill = activity.normalized[item.key] ?? 0;
+        const initialFill = activity.preNormalized?.[item.key] ?? 0;
+        const fill = activity.changedKeys.includes(item.key) ? (showFinalBars ? finalFill : initialFill) : finalFill;
+        const tone = item.kind === 'drain'
+          ? getPressureTone(fill)
+          : getFeatureTone('recovery', fill);
+        return `
+          <div class="demo-feature-row${activity.changedKeys.includes(item.key) && activity.step !== 'scene' ? ' is-active' : ''}" data-feature-key="${item.key}" style="--tone:${tone}">
+            <div class="demo-feature-label">${featureLabelMap[item.key] || item.key}</div>
+            <div class="demo-feature-bar">
+              <div class="demo-feature-fill" style="--fill:${fill};--tone:${tone}"></div>
+            </div>
+            <div class="demo-feature-value">${Math.round(fill * 100)}%</div>
+          </div>
+        `;
+      }).join('');
+
+      DOM.demoLayout.innerHTML = `
+        ${topbar}
+        <div class="demo-activity-view">
+          <div class="demo-scene-panel">
+            <div class="demo-scene-meta">
+              <div class="demo-scene-title">${activity.label}</div>
+              <div class="demo-stage-label">${getDemoStageLabel(activity.step)} · ${activity.durationMin} min</div>
+            </div>
+            <div class="demo-scene-frame is-entering is-${activity.kind}">
+              ${renderDemoSceneSvg(activity.id)}
+            </div>
+          </div>
+          <div class="demo-pipeline-panel">
+            <div class="demo-pipeline-head">
+              <div>
+                <div class="demo-stage-label">Pipeline</div>
+                <div class="demo-stage-value">${Math.round(activity.pressure * 100)}%</div>
+              </div>
+              <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
+            </div>
+            <div class="demo-kpis">
+              <div class="demo-kpi">
+                <div class="demo-kpi-label">Pressure</div>
+                <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
+              </div>
+              <div class="demo-kpi">
+                <div class="demo-kpi-label">E_rest</div>
+                <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
+              </div>
+              <div class="demo-kpi">
+                <div class="demo-kpi-label">Clock</div>
+                <div class="demo-kpi-value">${formatDemoClock(activity.afterClock)}</div>
+              </div>
+            </div>
+            <div class="demo-feature-list">${rows}</div>
+            <div class="demo-model-node${activity.step === 'model' || activity.step === 'battery' ? ' is-pulsing' : ''}" data-demo-model>
+              <div>
+                <div class="demo-model-label">Model node</div>
+                <div class="demo-model-title">Model B</div>
+              </div>
+              <div class="demo-model-deltas">
+                <div class="demo-delta ${activity.deltaE >= 0 ? 'is-pos' : 'is-neg'}">ΔE ${activity.deltaE >= 0 ? '+' : ''}${activity.deltaE.toFixed(1)}</div>
+                <div class="demo-delta ${activity.deltaS <= 0 ? 'is-pos' : 'is-neg'}">ΔS ${activity.deltaS >= 0 ? '+' : ''}${activity.deltaS.toFixed(1)}</div>
+              </div>
+            </div>
+            <div class="demo-packet-layer" data-demo-packets></div>
+          </div>
+        </div>
+        <div class="demo-back-wrap${activity.step === 'done' ? ' is-visible' : ''}">
+          <button type="button" class="demo-back-btn" data-demo-back>Back to menu</button>
+        </div>
+      `;
+
+      renderDemoMiniBattery(DOM.demoLayout.querySelector('[data-demo-mini-battery]'), getDemoDisplayPercent());
+      if (activity.step === 'features') {
+        requestAnimationFrame(() => animateDemoFeaturePackets());
+      } else if (activity.step === 'battery') {
+        requestAnimationFrame(() => animateDemoBatteryPacket());
+      }
+    }
+
+    function getRelativeCenter(targetRect, layerRect) {
+      return {
+        x: Math.round((targetRect.left + (targetRect.width / 2)) - layerRect.left),
+        y: Math.round((targetRect.top + (targetRect.height / 2)) - layerRect.top)
+      };
+    }
+
+    function createDemoPacket(layer, start, end, tone, delay = 0) {
+      const packet = document.createElementNS(SVG_NS, 'svg');
+      packet.setAttribute('class', 'demo-packet');
+      packet.setAttribute('viewBox', '0 0 10 10');
+      packet.setAttribute('aria-hidden', 'true');
+      packet.innerHTML = `<rect x="0" y="0" width="10" height="10" fill="${tone}" stroke="rgba(0,0,0,0.46)" stroke-width="2"></rect>`;
+      packet.style.setProperty('--tone', tone);
+      packet.style.setProperty('--x', `${start.x}px`);
+      packet.style.setProperty('--y', `${start.y}px`);
+      layer.appendChild(packet);
+
+      const run = () => {
+        packet.classList.add('is-visible');
+        if (prefersReducedMotion()) {
+          packet.style.transform = `translate(${end.x}px, ${end.y}px)`;
+          return;
+        }
+        packet.style.transition = 'transform 1700ms linear, opacity 120ms linear';
+        packet.style.transform = `translate(${end.x}px, ${end.y}px)`;
+      };
+
+      if (delay > 0 && !prefersReducedMotion()) {
+        window.setTimeout(run, delay);
+      } else {
+        run();
+      }
+    }
+
+    function animateDemoFeaturePackets() {
+      const activity = APP.demo.activity;
+      if (!activity) return;
+      const layer = DOM.demoLayout.querySelector('[data-demo-packets]');
+      const sceneFrame = DOM.demoLayout.querySelector('.demo-scene-frame');
+      if (!layer || !sceneFrame) return;
+      layer.innerHTML = '';
+      const layerRect = layer.getBoundingClientRect();
+      const origin = getRelativeCenter(sceneFrame.getBoundingClientRect(), layerRect);
+      const tones = activity.kind === 'recovery'
+        ? ['var(--px-good)', 'var(--px-accent)']
+        : ['var(--px-warn)', 'var(--px-critical)'];
+      activity.changedKeys.forEach((key, index) => {
+        const row = DOM.demoLayout.querySelector(`[data-feature-key="${key}"]`);
+        if (!row) return;
+        const target = getRelativeCenter(row.getBoundingClientRect(), layerRect);
+        createDemoPacket(layer, origin, target, tones[index % tones.length], index * 90);
+      });
+    }
+
+    function animateDemoBatteryPacket() {
+      const layer = DOM.demoLayout.querySelector('[data-demo-packets]');
+      const modelNode = DOM.demoLayout.querySelector('[data-demo-model]');
+      const battery = DOM.demoLayout.querySelector('[data-demo-battery]');
+      if (!layer || !modelNode || !battery) return;
+      layer.innerHTML = '';
+      const layerRect = layer.getBoundingClientRect();
+      const origin = getRelativeCenter(modelNode.getBoundingClientRect(), layerRect);
+      const target = getRelativeCenter(battery.getBoundingClientRect(), layerRect);
+      const tone = APP.demo.activity?.kind === 'recovery' ? 'var(--px-good)' : 'var(--px-critical)';
+      createDemoPacket(layer, origin, target, tone, 0);
+    }
+
+    function completeDemoActivityIfNeeded() {
+      const activity = APP.demo.activity;
+      if (!activity || activity.completed) return;
+      APP.demo.simClock = activity.afterClock;
+      APP.demo.activity.displayBattery = activity.afterBattery;
+      APP.demo.completedActivities.push({
+        id: activity.id,
+        simClockBefore: activity.beforeClock,
+        simClockAfter: activity.afterClock,
+        batteryBefore: Number(activity.beforeBattery.toFixed(2)),
+        batteryAfter: Number(activity.afterBattery.toFixed(2)),
+        kind: activity.kind
+      });
+      activity.completed = true;
+    }
+
+    function playDemoActivity(activityId) {
+      const activity = getDemoActivity(activityId);
+      if (!activity || !APP.demo.enabled) return;
+      stopDemoAnimation();
+
+      const beforeClock = APP.demo.simClock || createDemoClockStart();
+      const beforeBattery = APP.demo.E;
+      const beforeStress = APP.demo.S;
+      const nextFeatures = { ...APP.demo.featureAccum };
+      const preNormalized = getDemoFeatureItems().reduce((acc, item) => {
+        acc[item.key] = normalizeDemoFeature(item.key, nextFeatures[item.key]);
+        return acc;
+      }, {});
+
+      Object.entries(activity.deltas).forEach(([key, value]) => {
+        nextFeatures[key] = Number(((nextFeatures[key] || 0) + value).toFixed(4));
+      });
+
+      const normalized = getDemoFeatureItems().reduce((acc, item) => {
+        acc[item.key] = normalizeDemoFeature(item.key, nextFeatures[item.key]);
+        return acc;
+      }, {});
+
+      const chronotype = APP.demo.savedAppState?.model?.payload?.chronotype || 'intermediate';
+      const stepped = stepModelForward({
+        cursor: new Date(beforeClock),
+        energy: beforeBattery,
+        stress: beforeStress,
+        minutes: activity.durationMin,
+        features: nextFeatures,
+        chronotype,
+        featureProjector: projectDemoFeaturesToModel
+      });
+
+      APP.demo.featureAccum = nextFeatures;
+      APP.demo.E = stepped.energy;
+      APP.demo.S = stepped.stress;
+      APP.demo.activity = {
+        ...activity,
+        step: 'scene',
+        beforeClock,
+        afterClock: stepped.cursor.toISOString(),
+        beforeBattery,
+        afterBattery: stepped.energy,
+        displayBattery: beforeBattery,
+        deltaE: Number((stepped.energy - beforeBattery).toFixed(2)),
+        deltaS: Number((stepped.stress - beforeStress).toFixed(2)),
+        pressure: stepped.pressure,
+        eRest: stepped.eRest,
+        normalized,
+        preNormalized,
+        changedKeys: Object.keys(activity.deltas),
+        completed: false
+      };
+
+      const handles = { timers: [], frameId: 0 };
+      handles.timers = [
+        window.setTimeout(() => {
+          if (!APP.demo.activity || APP.demo.activity.id !== activityId) return;
+          APP.demo.activity.step = 'features';
+          renderApp();
+        }, prefersReducedMotion() ? 50 : 2000),
+        window.setTimeout(() => {
+          if (!APP.demo.activity || APP.demo.activity.id !== activityId) return;
+          APP.demo.activity.step = 'model';
+          renderApp();
+        }, prefersReducedMotion() ? 120 : 5000),
+        window.setTimeout(() => {
+          if (!APP.demo.activity || APP.demo.activity.id !== activityId) return;
+          APP.demo.activity.step = 'battery';
+          APP.demo.activity.displayBattery = APP.demo.activity.beforeBattery;
+          renderApp();
+          startDemoBatteryTween(activityId, handles);
+        }, prefersReducedMotion() ? 180 : 7000),
+        window.setTimeout(() => {
+          if (!APP.demo.activity || APP.demo.activity.id !== activityId) return;
+          APP.demo.activity.step = 'done';
+          completeDemoActivityIfNeeded();
+          renderApp();
+        }, prefersReducedMotion() ? 220 : 9000)
+      ];
+
+      APP.demo.animationStopId = handles;
+      renderApp();
+    }
+
+    function enterDemoMode() {
+      if (APP.demo.enabled) return;
+      APP.demo.savedAppState = captureDemoAppState();
+      stopPolling();
+      stopDemoAnimation();
+      if (APP.mode === 'screensaver') stopScreensaverLoop();
+      APP.demo.enabled = true;
+      APP.uiLayer = 0;
+      APP.mode = 'normal';
+      APP.demo.E = 70;
+      APP.demo.S = 30;
+      APP.demo.simClock = createDemoClockStart();
+      APP.demo.activity = null;
+      APP.demo.featureAccum = getDemoFeatureSeed();
+      APP.demo.animationStopId = null;
+      APP.demo.completedActivities = [];
+      renderApp();
+    }
+
+    function exitDemoMode() {
+      if (!APP.demo.enabled) return;
+      stopDemoAnimation();
+      const saved = APP.demo.savedAppState || null;
+      const resumeScreensaver = saved?.mode === 'screensaver';
+      restoreDemoAppState(saved);
+      resetDemoState();
+      startPolling();
+      if (resumeScreensaver) {
+        startScreensaver();
+      }
+      renderApp();
+      void refreshModelState({ allowCache: true });
+      if (APP.uiLayer >= 1) {
+        void refreshAwData({ reason: 'expand' });
+      }
     }
 
     function getModelTickDate(payload = getModelPayload()) {
@@ -3432,26 +4836,21 @@ P = drain - 0.5*recovery</pre>
       if (!payload) return false;
 
       const feats = { ...getLastFeats() };
-      const pressure = computePressure(feats);
       const chronotype = payload.chronotype || 'intermediate';
-      let cursor = getModelTickDate(payload);
-      let energy = clamp(Number(payload.E_internal) || 0, 0, 100);
-      let stress = clamp(Number(payload.S) || 0, 0, 100);
+      const stepped = stepModelForward({
+        cursor: getModelTickDate(payload),
+        energy: payload.E_internal,
+        stress: payload.S,
+        minutes: 60,
+        features: feats,
+        chronotype
+      });
 
-      for (let minute = 0; minute < 60; minute += 1) {
-        cursor = new Date(cursor.getTime() + 60_000);
-        const hour = cursor.getHours() + (cursor.getMinutes() / 60);
-        const eRest = computeERest(hour, chronotype);
-        energy = clamp(energy + ((-0.05 * pressure * energy) + ((eRest - energy) / 120)), 0, 100);
-        stress = clamp(stress + ((1.5 * pressure) - (stress / 4320)), 0, 100);
-      }
-
-      const nextHour = cursor.getHours() + (cursor.getMinutes() / 60);
-      payload.E_internal = Number(energy.toFixed(2));
-      payload.S = Number(stress.toFixed(2));
-      payload.E_rest_now = Number(computeERest(nextHour, chronotype).toFixed(2));
+      payload.E_internal = stepped.energy;
+      payload.S = stepped.stress;
+      payload.E_rest_now = stepped.eRest;
       payload.E_display = Number((payload.E_internal / 100).toFixed(4));
-      payload.last_tick_iso = cursor.toISOString();
+      payload.last_tick_iso = stepped.cursor.toISOString();
       payload.last_feats = feats;
 
       APP.model.payload = payload;
@@ -3482,6 +4881,12 @@ P = drain - 0.5*recovery</pre>
     }
 
     function renderConnectionPill() {
+      if (APP.demo.enabled) {
+        DOM.connectionPill.textContent = 'DEMO LOCAL';
+        DOM.connectionPill.style.color = 'var(--px-accent)';
+        DOM.connectionPill.title = 'Frontend-only demo. Backend polling and logging are disabled.';
+        return;
+      }
       const demo = getActiveDemoProfile();
       if (demo) {
         DOM.connectionPill.textContent = `◆ DEMO · ${demo.name.toUpperCase()}`;
@@ -3493,7 +4898,7 @@ P = drain - 0.5*recovery</pre>
       // Guide rule: errors name their system, name the user's recourse.
       let text = '✕ BACKEND :7070';
       let color = 'var(--critical)';
-      let tip  = 'Flask server at localhost:7070 is unreachable. Run `python -m integrations.models.main` or pick a demo profile.';
+      let tip  = 'Flask server at localhost:7070 is unreachable. Run `python -m integrations.models.main` or enable Demo mode.';
 
       if (APP.model.online && !APP.model.stale) {
         text = '● LIVE :7070';
@@ -3515,7 +4920,9 @@ P = drain - 0.5*recovery</pre>
       const payload = getModelPayload();
       const demo = getActiveDemoProfile();
 
-      if (demo) {
+      if (APP.demo.enabled) {
+        DOM.modelStatusText.textContent = 'Frontend-only demo mode';
+      } else if (demo) {
         DOM.modelStatusText.textContent = `Demo: ${demo.tagline}`;
       } else if (source === 'model') {
         DOM.modelStatusText.textContent = 'Flask :7070 · live';
@@ -3526,10 +4933,12 @@ P = drain - 0.5*recovery</pre>
           ? 'Flask :7070 offline — ActivityWatch fallback'
           : 'Flask :7070 offline — last ActivityWatch read';
       } else {
-        DOM.modelStatusText.textContent = 'No backend. Start Flask at :7070 or pick a demo.';
+        DOM.modelStatusText.textContent = 'No backend. Start Flask at :7070 or enable Demo mode.';
       }
 
-      if (payload?.last_tick_iso) {
+      if (APP.demo.enabled && APP.demo.simClock) {
+        DOM.lastTickText.textContent = `Sim clock ${formatDemoClock(APP.demo.simClock)}`;
+      } else if (payload?.last_tick_iso) {
         DOM.lastTickText.textContent = `Last tick ${formatTime(payload.last_tick_iso)}`;
       } else if (APP.aw.lastFetchAt) {
         DOM.lastTickText.textContent = `AW updated ${formatTime(APP.aw.lastFetchAt)}`;
@@ -3545,6 +4954,11 @@ P = drain - 0.5*recovery</pre>
       renderConnectionPill();
       renderBattery(getDisplayedBatteryPercent());
       renderMeta();
+      renderDemoLayout();
+      if (APP.demo.enabled) {
+        applyState();
+        return;
+      }
       renderMetrics();
       renderBreakdown(APP.aw.breakdown);
       renderLayer1();
@@ -3658,6 +5072,9 @@ P = drain - 0.5*recovery</pre>
     }
 
     async function postLog(payload) {
+      if (APP.demo.enabled) {
+        return true;
+      }
       // In demo mode we accept the log but never hit the backend.
       if (getActiveDemoProfile()) {
         console.info('[demo] skipped POST /log', payload);
@@ -4196,6 +5613,10 @@ P = drain - 0.5*recovery</pre>
 
     async function refreshModelState({ allowCache = true } = {}) {
       if (modelFetchInFlight) return;
+      if (APP.demo.enabled) {
+        renderApp();
+        return;
+      }
 
       // Demo mode: feed the UI from a synthetic profile and skip the network.
       const demo = getActiveDemoProfile();
@@ -4257,6 +5678,10 @@ P = drain - 0.5*recovery</pre>
 
     async function refreshAwData({ reason = 'poll' } = {}) {
       if (awFetchInFlight) return;
+      if (APP.demo.enabled) {
+        renderApp();
+        return;
+      }
       if (reason === 'poll' && APP.uiLayer < 1) return;
 
       // Demo mode: use the profile's pre-baked breakdown, no /aw calls.
@@ -4306,7 +5731,7 @@ P = drain - 0.5*recovery</pre>
     }
 
     function applyDemoModeBody() {
-      DOM.body.classList.toggle('is-demo', Boolean(getActiveDemoProfile()));
+      DOM.body.classList.toggle('is-demo', APP.demo.enabled);
     }
 
     // ── Theme ──
@@ -4348,6 +5773,35 @@ P = drain - 0.5*recovery</pre>
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && picker && picker.open) picker.open = false;
       });
+    }
+
+    let modelPollId = 0;
+    let awPollId = 0;
+
+    function stopPolling() {
+      if (modelPollId) {
+        window.clearInterval(modelPollId);
+        modelPollId = 0;
+      }
+      if (awPollId) {
+        window.clearInterval(awPollId);
+        awPollId = 0;
+      }
+    }
+
+    function startPolling() {
+      stopPolling();
+      modelPollId = window.setInterval(() => {
+        if (!document.hidden && !APP.demo.enabled) {
+          void refreshModelState({ allowCache: true });
+        }
+      }, MODEL_POLL_MS);
+
+      awPollId = window.setInterval(() => {
+        if (!document.hidden && !APP.demo.enabled && APP.uiLayer >= 1) {
+          void refreshAwData({ reason: 'poll' });
+        }
+      }, AW_POLL_MS);
     }
 
     function initUi() {
@@ -4394,6 +5848,43 @@ P = drain - 0.5*recovery</pre>
       DOM.demoSelect.value = getActiveDemoId();
       applyDemoModeBody();
       syncLayer2Motion();
+
+      DOM.brandHome.addEventListener('click', () => {
+        if (APP.demo.enabled) {
+          exitDemoMode();
+          return;
+        }
+        APP.uiLayer = 0;
+        APP.mode = 'normal';
+        applyState();
+      });
+
+      DOM.demoToggleBtn.addEventListener('click', () => {
+        if (APP.demo.enabled) {
+          exitDemoMode();
+        } else {
+          enterDemoMode();
+        }
+      });
+
+      DOM.demoLayout.addEventListener('click', event => {
+        const activityBtn = event.target.closest('[data-demo-activity]');
+        const exitBtn = event.target.closest('[data-demo-exit]');
+        const backBtn = event.target.closest('[data-demo-back]');
+        if (exitBtn) {
+          exitDemoMode();
+          return;
+        }
+        if (backBtn) {
+          stopDemoAnimation();
+          APP.demo.activity = null;
+          renderApp();
+          return;
+        }
+        if (activityBtn) {
+          playDemoActivity(activityBtn.dataset.demoActivity);
+        }
+      });
 
       DOM.demoSelect.addEventListener('change', event => {
         const id = event.target.value;
@@ -4581,8 +6072,10 @@ P = drain - 0.5*recovery</pre>
           return;
         }
         syncLayer2Motion();
-        void refreshModelState({ allowCache: true });
-        if (APP.uiLayer >= 1) {
+        if (!APP.demo.enabled) {
+          void refreshModelState({ allowCache: true });
+        }
+        if (!APP.demo.enabled && APP.uiLayer >= 1) {
           void refreshAwData({ reason: 'visible' });
         }
       });
@@ -4620,6 +6113,7 @@ P = drain - 0.5*recovery</pre>
           if (APP.mode === 'recovery-menu') { closeRecoverySheet(); return; }
           if (APP.mode === 'help') { closeHelp(); return; }
           if (APP.mode === 'screensaver') { void endScreensaver(); return; }
+          if (APP.demo.enabled) { exitDemoMode(); return; }
         }
 
         // While rating sheet open, 1–9 / 0 submit that value
@@ -4633,7 +6127,7 @@ P = drain - 0.5*recovery</pre>
           return;
         }
 
-        if (APP.mode !== 'normal') return;
+        if (APP.demo.enabled || APP.mode !== 'normal') return;
 
         const key = event.key.toLowerCase();
         if (key === 'e') {
@@ -4666,17 +6160,7 @@ P = drain - 0.5*recovery</pre>
         }
       });
 
-      window.setInterval(() => {
-        if (!document.hidden) {
-          void refreshModelState({ allowCache: true });
-        }
-      }, MODEL_POLL_MS);
-
-      window.setInterval(() => {
-        if (!document.hidden && APP.uiLayer >= 1) {
-          void refreshAwData({ reason: 'poll' });
-        }
-      }, AW_POLL_MS);
+      startPolling();
     }
 
     async function start() {
