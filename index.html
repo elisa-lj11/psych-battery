@@ -182,6 +182,7 @@
     ];
 
     const HIGH_DRAIN_CAP = 15.0; // max rate, used to set 0% threshold
+    const WINDOW_HOURS   = 4;    // must match server.py WINDOW_HOURS
 
     // ── State ─────────────────────────────────────────────────────────────────
     let windowHours  = 0.083; // 5 minutes
@@ -312,42 +313,43 @@
     async function update() {
       clearError();
       try {
-        if (!windowBucket) await findBuckets();
+        const now = new Date();
 
-        if (!windowBucket) {
-          showError('No window-watcher bucket found.<br>Make sure aw-watcher-window is running.');
-          return;
-        }
+        // Fetch pre-calculated battery from server (same source as the display)
+        const [stateRes, eventsData] = await Promise.all([
+          fetch('/state'),
+          (async () => {
+            if (!windowBucket) await findBuckets();
+            if (!windowBucket) return [];
+            return getEvents(windowBucket, sessionStart.toISOString(), now.toISOString());
+          })(),
+        ]);
 
-        const now   = new Date();
+        const state   = await stateRes.json();
+        const battery = state.battery_pct;
 
-        const windowEvents = await getEvents(windowBucket, sessionStart.toISOString(), now.toISOString());
-
-        const { battery, tally, totalActMins } = calculate(windowEvents, now);
+        const { tally, totalActMins } = calculate(eventsData, now);
 
         renderBattery(battery);
         renderBreakdown(tally);
 
-        const capacityLabel = windowHours < 1
-          ? `${Math.round(windowHours * 60)}min`
-          : `${windowHours}h`;
         document.getElementById('status').textContent =
-          `${totalActMins}m active since open · depletes in ${capacityLabel} at max drain`;
+          `${WINDOW_HOURS}h rolling window · ${totalActMins}m active`;
         document.getElementById('last-updated').textContent =
           `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       } catch (err) {
         showError(
-          `Could not reach ActivityWatch at <code>localhost:5600</code>.<br>` +
-          `Is it running? <small style="color:var(--muted)">${err.message}</small>`
+          `Could not reach server.<br>` +
+          `<small style="color:var(--muted)">${err.message}</small>`
         );
         console.error(err);
       }
     }
 
     document.getElementById('window-select').addEventListener('change', e => {
-      windowHours  = parseInt(e.target.value, 10);
-      windowBucket = null; // refetch buckets on next update to be safe
+      windowHours  = parseFloat(e.target.value);
+      windowBucket = null;
       update();
     });
 

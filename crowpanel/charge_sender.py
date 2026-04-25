@@ -23,7 +23,7 @@ import requests
 import serial
 import serial.tools.list_ports
 
-MODEL_URL   = "http://localhost:7070/state"
+MODEL_URL   = "http://localhost:3131/state"
 POLL_SEC    = 30
 BAUD_RATE   = 115200
 
@@ -47,7 +47,7 @@ def list_ports() -> None:
 
 def fetch_charge() -> int | None:
     try:
-        r = requests.get(MODEL_URL, timeout=3)
+        r = requests.get(MODEL_URL, timeout=15)
         r.raise_for_status()
         data = r.json()
         e_display = float(data.get("E_display", 0))
