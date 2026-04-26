@@ -294,7 +294,8 @@
     body.is-demo #layer-2,
     body.is-demo #collapse-btn,
     body.is-demo #self-log-dock,
-    body.is-demo #recovery-trigger {
+    body.is-demo #recovery-trigger,
+    body.is-demo #toggle-banner {
       display: none !important;
     }
 
@@ -677,11 +678,13 @@
       display: flex;
       justify-content: flex-end;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 280ms steps(4, end);
     }
 
     .demo-back-wrap.is-visible {
       opacity: 1;
+      pointer-events: auto;
     }
 
     @keyframes demo-scene-enter {
@@ -2946,7 +2949,8 @@ P = drain - 0.5*recovery</pre>
         activity: null,
         featureAccum: {},
         animationStopId: null,
-        completedActivities: []
+        completedActivities: [],
+        simClockStart: null
       }
     };
 
@@ -3986,7 +3990,18 @@ P = drain - 0.5*recovery</pre>
     function formatDemoClock(dateLike) {
       const date = new Date(dateLike);
       if (Number.isNaN(date.getTime())) return '--:--';
-      return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const startIso = APP.demo.simClockStart;
+      if (startIso) {
+        const start = new Date(startIso);
+        if (!Number.isNaN(start.getTime())) {
+          const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+          const thisDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+          const dayIndex = Math.round((thisDay - startDay) / 86400000) + 1;
+          if (dayIndex > 1) return `Day ${dayIndex} · ${time}`;
+        }
+      }
+      return time;
     }
 
     function createDemoClockStart() {
@@ -4311,7 +4326,7 @@ P = drain - 0.5*recovery</pre>
       };
     }
 
-    function createDemoPacket(layer, start, end, tone, delay = 0) {
+    function createDemoPacket(layer, start, end, tone, delay = 0, activityId = null) {
       const packet = document.createElementNS(SVG_NS, 'svg');
       packet.setAttribute('class', 'demo-packet');
       packet.setAttribute('viewBox', '0 0 10 10');
@@ -4323,6 +4338,8 @@ P = drain - 0.5*recovery</pre>
       layer.appendChild(packet);
 
       const run = () => {
+        if (activityId && (!APP.demo.activity || APP.demo.activity.id !== activityId)) return;
+        if (!packet.isConnected) return;
         packet.classList.add('is-visible');
         if (prefersReducedMotion()) {
           packet.style.transform = `translate(${end.x}px, ${end.y}px)`;
@@ -4355,7 +4372,7 @@ P = drain - 0.5*recovery</pre>
         const row = DOM.demoLayout.querySelector(`[data-feature-key="${key}"]`);
         if (!row) return;
         const target = getRelativeCenter(row.getBoundingClientRect(), layerRect);
-        createDemoPacket(layer, origin, target, tones[index % tones.length], index * 90);
+        createDemoPacket(layer, origin, target, tones[index % tones.length], index * 90, activity.id);
       });
     }
 
@@ -4369,7 +4386,7 @@ P = drain - 0.5*recovery</pre>
       const origin = getRelativeCenter(modelNode.getBoundingClientRect(), layerRect);
       const target = getRelativeCenter(battery.getBoundingClientRect(), layerRect);
       const tone = APP.demo.activity?.kind === 'recovery' ? 'var(--px-good)' : 'var(--px-critical)';
-      createDemoPacket(layer, origin, target, tone, 0);
+      createDemoPacket(layer, origin, target, tone, 0, APP.demo.activity?.id);
     }
 
     function completeDemoActivityIfNeeded() {
@@ -4486,10 +4503,12 @@ P = drain - 0.5*recovery</pre>
       APP.demo.E = 70;
       APP.demo.S = 30;
       APP.demo.simClock = createDemoClockStart();
+      APP.demo.simClockStart = APP.demo.simClock;
       APP.demo.activity = null;
       APP.demo.featureAccum = getDemoFeatureSeed();
       APP.demo.animationStopId = null;
       APP.demo.completedActivities = [];
+      renderToggleBanner();
       renderApp();
     }
 
@@ -4505,6 +4524,7 @@ P = drain - 0.5*recovery</pre>
         startScreensaver();
       }
       renderApp();
+      renderToggleBanner();
       void refreshModelState({ allowCache: true });
       if (APP.uiLayer >= 1) {
         void refreshAwData({ reason: 'expand' });
@@ -5153,6 +5173,7 @@ P = drain - 0.5*recovery</pre>
     }
 
     async function endToggleRecovery() {
+      if (APP.demo.enabled) return;
       if (!APP.recovery.toggleActive || !APP.recovery.startTs) return;
       const elapsed = Math.max(1, Math.round((Date.now() - APP.recovery.startTs) / 60000));
       const logKind = APP.recovery.logKind;
@@ -5876,7 +5897,9 @@ P = drain - 0.5*recovery</pre>
           return;
         }
         if (backBtn) {
+          if (APP.demo.activity && APP.demo.activity.step !== 'done') return;
           stopDemoAnimation();
+          completeDemoActivityIfNeeded();
           APP.demo.activity = null;
           renderApp();
           return;
