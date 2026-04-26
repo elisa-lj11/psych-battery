@@ -118,13 +118,13 @@
 
     #demo-toggle-btn,
     #demo-header-badge {
-      min-height: 48px;
+      min-height: 36px;
       padding: 0 12px;
       border: 2px solid var(--px-border);
       background: var(--surface);
       color: var(--text);
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 0.88rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       cursor: pointer;
@@ -409,6 +409,32 @@
       flex: 0 0 auto;
     }
 
+    .demo-battery-pair {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-batt-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .demo-batt-label {
+      font-family: var(--px-font-ui);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .demo-batt-svg {
+      width: 80px;
+      height: auto;
+      display: block;
+    }
+
     .demo-battery-mini svg,
     .demo-scene-svg {
       display: block;
@@ -484,6 +510,11 @@
       font-family: var(--px-font-mono, monospace);
       font-size: 12px;
       letter-spacing: 0.02em;
+    }
+
+    .demo-data-chip-icon {
+      margin-right: 5px;
+      font-size: 1em;
     }
 
     .demo-why {
@@ -848,6 +879,13 @@
       gap: 8px;
     }
 
+    .demo-feature-footnote {
+      font-size: 0.7rem;
+      color: var(--muted);
+      padding: 4px 0;
+      text-align: center;
+    }
+
     .demo-feature-row {
       display: grid;
       grid-template-columns: minmax(0, 120px) minmax(0, 1fr) auto;
@@ -964,9 +1002,140 @@
       pointer-events: auto;
     }
 
+    .demo-timeline-strip {
+      position: sticky;
+      bottom: 0;
+      width: 100%;
+      background: var(--surface);
+      border-top: 1px solid var(--px-border);
+      padding: 4px 8px 0;
+      box-sizing: border-box;
+    }
+
+    .demo-timeline-svg {
+      width: 100%;
+      height: 60px;
+      display: block;
+    }
+
+    .demo-timeline-legend {
+      display: flex;
+      gap: 12px;
+      padding: 2px 4px;
+      font-family: var(--px-font-ui);
+      font-size: 8px;
+    }
+
+    .demo-tl-e {
+      color: var(--px-good);
+    }
+
+    .demo-tl-s {
+      color: var(--px-accent);
+    }
+
+    .demo-scene-frame.animating[data-activity="go_outside"] .anim-sun {
+      animation: spin-slow 8s linear infinite;
+      transform-box: view-box;
+      transform-origin: 80px 40px;
+    }
+
+    .demo-scene-frame.animating[data-activity="go_outside"] .anim-cloud {
+      animation: drift-right 4s ease-in-out infinite alternate;
+    }
+
+    .demo-scene-frame.animating[data-activity="connect_people"] .anim-bubble {
+      animation: pulse-scale 1.2s ease-in-out infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam {
+      animation: steam-rise 1.5s ease-out infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam:nth-child(2),
+    .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam-2 {
+      animation-delay: 0.5s;
+    }
+
+    .demo-scene-frame.animating[data-activity="take_nap"] .anim-z {
+      animation: float-up 2s ease-in-out infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="take_nap"] .anim-z:nth-child(2),
+    .demo-scene-frame.animating[data-activity="take_nap"] .anim-z-2 {
+      animation-delay: 0.7s;
+    }
+
+    .demo-scene-frame.animating[data-activity="zoom_meeting"] .anim-eye {
+      animation: blink-opacity 3s linear infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="heavy_async"] .anim-badge {
+      animation: badge-bounce 1s ease-in-out infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="heavy_async"] .anim-badge:nth-child(2),
+    .demo-scene-frame.animating[data-activity="heavy_async"] .anim-badge-2 {
+      animation-delay: 0.35s;
+    }
+
+    .demo-scene-frame.animating[data-activity="deep_work"] .anim-cursor {
+      animation: cursor-blink 1s step-end infinite;
+    }
+
+    .demo-scene-frame.animating[data-activity="late_night_ai"] .anim-glow {
+      animation: glow-pulse 1.5s ease-in-out infinite;
+    }
+
     @keyframes demo-scene-enter {
       0% { opacity: 0; transform: translateY(8px); }
       100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin-slow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes drift-right {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(12px); }
+    }
+
+    @keyframes pulse-scale {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    @keyframes steam-rise {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-14px); opacity: 0; }
+    }
+
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+    }
+
+    @keyframes blink-opacity {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0.2; }
+    }
+
+    @keyframes badge-bounce {
+      0%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+      60% { transform: translateY(-2px); }
+    }
+
+    @keyframes cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
 
     @keyframes demo-leaf-fall {
@@ -1792,6 +1961,12 @@
       }
 
       .demo-scene-svg .scene-anim {
+        animation: none !important;
+      }
+
+      .demo-scene-frame.animating .anim-layer,
+      .demo-scene-frame.animating [class^="anim-"],
+      .demo-scene-frame.animating [class*=" anim-"] {
         animation: none !important;
       }
     }
@@ -3797,7 +3972,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[0, 0, 160, 80]], info)}
             ${pxRects([[0, 80, 160, 20]], good)}
             ${pxRects([[0, 100, 160, 60]], surface)}
-            ${pxRects([[120, 12, 20, 20], [126, 8, 8, 8]], warn)}
+            ${pxRects([[120, 12, 20, 20, 'anim-layer anim-sun'], [126, 8, 8, 8, 'anim-layer anim-sun']], warn)}
             ${pxRects([[14, 48, 10, 52], [14, 42, 28, 10], [18, 52, 22, 10]], 'var(--px-border)')}
             ${pxRects([[24, 50, 12, 2], [22, 54, 16, 2]], good)}
             ${pxRects([[104, 42, 10, 58], [104, 36, 30, 10], [108, 46, 26, 10]], 'var(--px-border)')}
@@ -3805,7 +3980,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[38, 100, 84, 10], [48, 110, 64, 8], [56, 118, 48, 8]], surface)}
             ${personGroup(62, 54, text, '')}
             ${leafGlyph(30, 22, warn, 'scene-leaf-a')}
-            ${leafGlyph(90, 16, accent, 'scene-leaf-b')}
+            ${leafGlyph(90, 16, accent, 'scene-leaf-b anim-layer anim-cloud')}
             ${leafGlyph(128, 28, low, 'scene-leaf-c')}
           `;
           break;
@@ -3815,8 +3990,8 @@ P = drain - 0.5*recovery</pre>
             ${floor}
             ${personGroup(22, 58, info, '')}
             ${personGroup(92, 58, good, '')}
-            ${bubbleGlyph(36, 22, text, 'scene-bubble-a')}
-            ${bubbleGlyph(104, 20, accent, 'scene-bubble-b')}
+            ${bubbleGlyph(36, 22, text, 'scene-bubble-a anim-layer anim-bubble')}
+            ${bubbleGlyph(104, 20, accent, 'scene-bubble-b anim-layer anim-bubble')}
             ${pxRects([[44, 28, 4, 2], [52, 28, 4, 2], [46, 34, 10, 2], [112, 26, 4, 2], [120, 26, 4, 2], [114, 32, 10, 2]], bg)}
             ${pxRects([[56, 80, 48, 4]], accent)}
             ${pxRects([[60, 84, 40, 4]], warn)}
@@ -3841,9 +4016,9 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[84, 94, 26, 2], [82, 98, 30, 4], [84, 102, 26, 4], [86, 106, 22, 2]], warn)}
             ${pxRects([[88, 96, 18, 2], [90, 100, 14, 2]], critical)}
             ${pxRects([[84, 90, 24, 2], [90, 114, 12, 2]], border)}
-            ${steamGlyph(90, 70, 'scene-steam-a')}
-            ${steamGlyph(100, 66, 'scene-steam-b')}
-            ${steamGlyph(110, 72, 'scene-steam-c')}
+            ${steamGlyph(90, 70, 'scene-steam-a anim-layer anim-steam')}
+            ${steamGlyph(100, 66, 'scene-steam-b anim-layer anim-steam anim-steam-2')}
+            ${steamGlyph(110, 72, 'scene-steam-c anim-layer anim-steam')}
             <g transform="translate(116 86)">
               <g class="scene-anim scene-fork" fill="${text}">
                 <rect x="0" y="0" width="14" height="2"></rect>
@@ -3883,9 +4058,9 @@ P = drain - 0.5*recovery</pre>
                 <rect x="8" y="8" width="14" height="2"></rect>
               </g>
             </g>
-            ${zGlyph(108, 68, 1, 'scene-z-a')}
-            ${zGlyph(122, 46, 0.8, 'scene-z-b')}
-            ${zGlyph(136, 28, 0.6, 'scene-z-c')}
+            ${zGlyph(108, 68, 1, 'scene-z-a anim-layer anim-z')}
+            ${zGlyph(122, 46, 0.8, 'scene-z-b anim-layer anim-z anim-z-2')}
+            ${zGlyph(136, 28, 0.6, 'scene-z-c anim-layer anim-z')}
           `;
           break;
         case 'zoom_meeting':
@@ -3916,7 +4091,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[106, 66, 8, 2]], info)}
             ${pxRects([[118, 65, 14, 4]], surface)}
             ${pxRects([[120, 66, 2, 4], [118, 68, 6, 2], [121, 70, 2, 4]], text)}
-            ${pxRects([[128, 65, 2, 2], [126, 67, 2, 2], [124, 69, 2, 2]], critical)}
+            ${pxRects([[128, 65, 2, 2, 'anim-layer anim-eye'], [126, 67, 2, 2, 'anim-layer anim-eye'], [124, 69, 2, 2, 'anim-layer anim-eye']], critical)}
             ${pxRects([[66, 72, 82, 10], [74, 82, 66, 8]], borderDark)}
             ${pxRects([[70, 74, 74, 6]], surface)}
             ${pxRects([[74, 76, 6, 2], [82, 76, 6, 2], [90, 76, 6, 2], [98, 76, 6, 2], [106, 76, 6, 2], [114, 76, 6, 2], [122, 76, 6, 2]], border)}
@@ -3939,7 +4114,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[72, 66, 12, 2]], bg)}
             ${pxRects([[64, 78, 28, 8]], good)}
             ${pxRects([[66, 82, 16, 2]], bg)}
-            ${pxRects([[18, 30, 24, 16], [112, 46, 26, 16], [20, 80, 30, 18]], low)}
+            ${pxRects([[18, 30, 24, 16, 'anim-layer anim-badge'], [112, 46, 26, 16, 'anim-layer anim-badge anim-badge-2'], [20, 80, 30, 18, 'anim-layer anim-badge']], low)}
             ${pxRects([[22, 34, 14, 2], [116, 50, 16, 2], [24, 84, 18, 2]], bg)}
             <g transform="translate(86 58)">
               <g class="scene-anim scene-thumb" fill="${low}">
@@ -3964,7 +4139,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[90, 36, 18, 2]], accent)}
             ${pxRects([[110, 36, 10, 2]], good)}
             ${pxRects([[90, 42, 16, 2]], info)}
-            ${pxRects([[108, 42, 4, 8, 'scene-anim scene-cursor']], warn)}
+            ${pxRects([[108, 42, 4, 8, 'scene-anim scene-cursor anim-layer anim-cursor']], warn)}
             ${pxRects([[82, 58, 50, 4], [94, 62, 24, 4]], border)}
             ${pxRects([[36, 38, 8, 8], [126, 38, 8, 8]], accent)}
           `;
@@ -3979,7 +4154,7 @@ P = drain - 0.5*recovery</pre>
             ${deskGroup(38, 92, borderDark)}
             ${personGroup(42, 48, text, '')}
             <g transform="translate(78 22)">
-              <g class="scene-anim scene-late-glow">
+              <g class="scene-anim scene-late-glow anim-layer anim-glow">
                 <rect x="0" y="0" width="48" height="28" fill="${critical}" opacity="0.18"></rect>
                 <rect x="6" y="6" width="14" height="2" fill="${warn}"></rect>
                 <rect x="22" y="10" width="18" height="2" fill="${info}"></rect>
@@ -4644,35 +4819,57 @@ P = drain - 0.5*recovery</pre>
       APP.demo.completedActivities = [];
     }
 
-    function renderDemoMiniBattery(target, level) {
-      if (!target) return;
-      const rounded = Math.round(level);
-      const color = levelColor(level);
-      const full = Math.floor(level / 10);
-      const partial = (level / 10) - full;
+    function buildBatterySvg(level, isStress) {
+      const hasValue = level != null && !Number.isNaN(Number(level));
+      const clamped = hasValue ? clamp(Number(level), 0, 100) : null;
+      const rounded = hasValue ? Math.round(clamped) : null;
+      const color = isStress ? stressColor(clamped ?? 0) : levelColor(clamped ?? 0);
+      const full = hasValue ? Math.floor(clamped / 10) : 0;
+      const partial = hasValue ? ((clamped / 10) - full) : 0;
       let cells = '';
       for (let index = 0; index < 10; index += 1) {
-        const width = index < full ? 10 : (index === full && partial > 0 ? Math.max(2, Math.round(10 * partial)) : 10);
-        const fill = index < full || (index === full && partial > 0) ? color : 'var(--px-surface-2)';
-        const opacity = index < full || (index === full && partial > 0) ? '1' : '0.45';
-        cells += `<rect x="${8 + (index * 11)}" y="8" width="${width}" height="26" fill="${fill}" opacity="${opacity}"></rect>`;
+        const filled = hasValue && (index < full || (index === full && partial > 0));
+        const width = filled && index === full && partial > 0
+          ? Math.max(2, Number((10 * partial).toFixed(2)))
+          : 10;
+        cells += `<rect x="${7 + (index * 11)}" y="7" width="${width}" height="20" fill="${filled ? color : 'var(--px-surface-2)'}" opacity="${filled ? '1' : '0.45'}"></rect>`;
       }
-      target.innerHTML = `
-        <svg data-demo-battery viewBox="0 0 132 42" aria-hidden="true">
-          <rect x="2" y="2" width="118" height="38" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
-          <rect x="122" y="12" width="8" height="18" fill="var(--px-border-2)"></rect>
+      return `
+        <svg class="demo-batt-svg" viewBox="0 0 132 34" aria-hidden="true" shape-rendering="crispEdges"${isStress ? '' : ' data-demo-battery'}>
+          <rect x="2" y="2" width="118" height="30" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
+          <rect x="122" y="10" width="8" height="14" fill="var(--px-border-2)"></rect>
           ${cells}
-          <text x="60" y="27" text-anchor="middle" font-family="VT323, monospace" font-size="18" fill="${rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)'}">${rounded}%</text>
+          <text x="60" y="21" text-anchor="middle" font-family="VT323, monospace" font-size="14" fill="${!isStress && rounded != null && rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)'}">${rounded == null ? '--' : rounded}%</text>
         </svg>
+      `;
+    }
+
+    function renderDemoMiniBattery(target, level) {
+      if (!target) return;
+      target.innerHTML = buildBatterySvg(level, false);
+    }
+
+    function renderDemoBatteryPair(target, energyLevel, stressLevel) {
+      if (!target) return;
+      target.innerHTML = `
+        <div class="demo-batt-wrap">
+          <div class="demo-batt-label">E</div>
+          ${buildBatterySvg(energyLevel, false)}
+        </div>
+        <div class="demo-batt-wrap">
+          <div class="demo-batt-label">S</div>
+          ${buildBatterySvg(stressLevel, true)}
+        </div>
       `;
     }
 
     function syncDemoBatteryDisplays(level) {
       const nextLevel = clamp(level, 0, 100);
       renderBattery(nextLevel);
-      const miniBattery = DOM.demoLayout.querySelector('[data-demo-mini-battery]');
-      if (miniBattery) {
-        renderDemoMiniBattery(miniBattery, nextLevel);
+      const batteryPair = DOM.demoLayout.querySelector('[data-demo-battery-pair]');
+      if (batteryPair) {
+        renderDemoBatteryPair(batteryPair, getDemoDisplayPercent(), APP.demo.S);
+        renderDemoTimeline();
       }
     }
 
@@ -4719,6 +4916,108 @@ P = drain - 0.5*recovery</pre>
       }
     }
 
+    function renderDemoTimeline() {
+      const target = DOM.demoLayout.querySelector('[data-demo-timeline]');
+      if (!target) return;
+      const startIso = APP.demo.simClockStart || new Date().toISOString();
+      const startDate = new Date(startIso);
+      const dayStart = Number.isNaN(startDate.getTime()) ? new Date() : startDate;
+      const dayStartMs = dayStart.getTime();
+      const DAY_MS = 24 * 60 * 60 * 1000;
+      const PAD_L = 8;
+      const PAD_R = 16;
+      const PAD_T = 12;
+      const PAD_B = 18;
+      const viewW = 400;
+      const viewH = 60;
+      const plotW = viewW - PAD_L - PAD_R;
+      const plotH = viewH - PAD_T - PAD_B;
+      const events = [...(APP.demo.completedActivities || [])].sort((a, b) => {
+        return new Date(a.simClockBefore).getTime() - new Date(b.simClockBefore).getTime();
+      });
+      const toX = iso => {
+        const value = new Date(iso);
+        const fraction = Number.isNaN(value.getTime()) ? 0 : clamp((value.getTime() - dayStartMs) / DAY_MS, 0, 1);
+        return Number((PAD_L + (fraction * plotW)).toFixed(2));
+      };
+      const toY = pct => {
+        return Number((PAD_T + ((1 - (clamp(Number(pct) || 0, 0, 100) / 100)) * plotH)).toFixed(2));
+      };
+      const formatTimelineLabel = date => {
+        const hour = date.getHours();
+        const hour12 = ((hour + 11) % 12) + 1;
+        return `${hour12}${hour >= 12 ? 'pm' : 'am'}`;
+      };
+      const iconMap = {
+        go_outside: '☀️',
+        connect_people: '💬',
+        eat_food: '🍽️',
+        take_nap: '😴',
+        zoom_meeting: '🎥',
+        heavy_async: '🔔',
+        deep_work: '💻',
+        late_night_ai: '🌙'
+      };
+      const tickLines = [];
+      const tickLabels = [];
+      for (let hour = 0; hour <= 24; hour += 3) {
+        const tickDate = new Date(dayStartMs + (hour * 60 * 60 * 1000));
+        const x = Number((PAD_L + ((hour / 24) * plotW)).toFixed(2));
+        tickLines.push(`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${PAD_T + plotH}" stroke="var(--px-border)" stroke-width="1" opacity="0.5"></line>`);
+        tickLabels.push(`<text x="${x}" y="${viewH - 5}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="7" fill="var(--px-muted)">${formatTimelineLabel(tickDate)}</text>`);
+      }
+      const energyPoints = [];
+      const stressPoints = [];
+      if (events.length) {
+        energyPoints.push(`${toX(events[0].simClockBefore)},${toY(events[0].batteryBefore)}`);
+        stressPoints.push(`${toX(events[0].simClockBefore)},${toY(events[0].stressBefore)}`);
+        events.forEach(event => {
+          energyPoints.push(`${toX(event.simClockAfter)},${toY(event.batteryAfter)}`);
+          stressPoints.push(`${toX(event.simClockAfter)},${toY(event.stressAfter)}`);
+        });
+      }
+      const icons = events.map(event => {
+        const x = toX(event.simClockAfter);
+        const icon = iconMap[event.id] || '•';
+        const y = PAD_T - 4;
+        return `<text x="${x}" y="${y}" text-anchor="middle" font-size="10">${icon}</text>`;
+      }).join('');
+      target.innerHTML = `
+        <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
+          <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border-2)" stroke-width="1"></rect>
+          ${tickLines.join('')}
+          ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2" points="${energyPoints.join(' ')}"></polyline>` : ''}
+          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" points="${stressPoints.join(' ')}"></polyline>` : ''}
+          ${icons}
+          ${tickLabels.join('')}
+        </svg>
+        <div class="demo-timeline-legend">
+          <span class="demo-tl-e">E Energy</span>
+          <span class="demo-tl-s">S Stress</span>
+        </div>
+      `;
+    }
+
+    function getDataSourceIcon(src) {
+      const value = String(src || '').toLowerCase();
+      if (value.includes('apple health') || value.includes('watch') || value.includes('hrv')) return '⌚';
+      if (value.includes('gps') || value.includes('location')) return '📍';
+      if (value.includes('daylight')) return '☀️';
+      if (value.includes('calendar')) return '📅';
+      if (value.includes('phone')) return '📞';
+      if (value.includes('zoom')) return '🎥';
+      if (value.includes('microphone')) return '🎤';
+      if (value.includes('slack') || value.includes('message') || value.includes('dm')) return '💬';
+      if (value.includes('github') || value.includes('pr comment')) return '💻';
+      if (value.includes('activitywatch') || value.includes('screen time') || value.includes('screen-lock')) return '🖥️';
+      if (value.includes('keystroke')) return '⌨️';
+      if (value.includes('notification')) return '🔕';
+      if (value.includes('clock') || value.includes('after-hours')) return '🕒';
+      if (value.includes('ibeacon')) return '📡';
+      if (value.includes('manual') || value.includes('log')) return '📝';
+      return '📊';
+    }
+
     function renderDemoLayout() {
       if (!APP.demo.enabled) {
         DOM.demoLayout.innerHTML = '';
@@ -4739,7 +5038,7 @@ P = drain - 0.5*recovery</pre>
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
-            <div class="demo-battery-mini" data-demo-mini-battery></div>
+            <div class="demo-battery-pair" data-demo-battery-pair></div>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
         </div>
@@ -4773,13 +5072,15 @@ P = drain - 0.5*recovery</pre>
               </div>
             `).join('')}
           </div>
+          <div class="demo-timeline-strip" data-demo-timeline></div>
         `;
-        renderDemoMiniBattery(DOM.demoLayout.querySelector('[data-demo-mini-battery]'), getDemoDisplayPercent());
+        renderDemoBatteryPair(DOM.demoLayout.querySelector('[data-demo-battery-pair]'), getDemoDisplayPercent(), APP.demo.S);
+        renderDemoTimeline();
         return;
       }
 
       const showFinalBars = activity.step !== 'scene';
-      const rows = getDemoFeatureItems().map(item => {
+      const rows = getDemoFeatureItems().filter(i => activity.changedKeys.includes(i.key)).map(item => {
         const finalFill = activity.normalized[item.key] ?? 0;
         const initialFill = activity.preNormalized?.[item.key] ?? 0;
         const fill = activity.changedKeys.includes(item.key) ? (showFinalBars ? finalFill : initialFill) : finalFill;
@@ -4808,8 +5109,9 @@ P = drain - 0.5*recovery</pre>
         ? 'Complete · battery updated'
         : `Step ${currentStepIdx + 1} of 4 · ${stepLabels[currentStepIdx]}`;
 
-      const dataChips = (activity.dataSources || []).map(src => `<span class="demo-data-chip">${src}</span>`).join('');
+      const dataChips = (activity.dataSources || []).map(src => `<span class="demo-data-chip"><span class="demo-data-chip-icon">${getDataSourceIcon(src)}</span>${src}</span>`).join('');
       const isDone = activity.step === 'done';
+      const unchangedFeatureCount = Math.max(0, getDemoFeatureItems().length - activity.changedKeys.length);
 
       DOM.demoLayout.innerHTML = `
         ${topbar}
@@ -4819,7 +5121,7 @@ P = drain - 0.5*recovery</pre>
               <div class="demo-scene-title">${activity.label}</div>
               <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === 'recovery' ? 'Recovery' : 'Drain'}</div>
             </div>
-            <div class="demo-scene-frame is-entering is-${activity.kind}">
+            <div class="demo-scene-frame is-entering is-${activity.kind}${activity.step !== 'done' ? ' animating' : ''}" data-activity="${activity.id}">
               ${renderDemoSceneSvg(activity.id)}
             </div>
             <div class="demo-step-indicator">
@@ -4862,6 +5164,7 @@ P = drain - 0.5*recovery</pre>
               </div>
             </div>
             <div class="demo-feature-list">${rows}</div>
+            ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ''}
             <div class="demo-model-node${activity.step === 'model' || activity.step === 'battery' ? ' is-pulsing' : ''}" data-demo-model>
               <div>
                 <div class="demo-model-label">Model node</div>
@@ -4878,9 +5181,11 @@ P = drain - 0.5*recovery</pre>
         <div class="demo-back-wrap is-visible">
           <button type="button" class="demo-continue-btn" data-demo-back>← Back to activities</button>
         </div>
+        <div class="demo-timeline-strip" data-demo-timeline></div>
       `;
 
-      renderDemoMiniBattery(DOM.demoLayout.querySelector('[data-demo-mini-battery]'), getDemoDisplayPercent());
+      renderDemoBatteryPair(DOM.demoLayout.querySelector('[data-demo-battery-pair]'), getDemoDisplayPercent(), APP.demo.S);
+      renderDemoTimeline();
       if (activity.step === 'features') {
         requestAnimationFrame(() => animateDemoFeaturePackets());
       } else if (activity.step === 'battery') {
@@ -4965,10 +5270,13 @@ P = drain - 0.5*recovery</pre>
       APP.demo.activity.displayBattery = activity.afterBattery;
       APP.demo.completedActivities.push({
         id: activity.id,
+        label: activity.label,
         simClockBefore: activity.beforeClock,
         simClockAfter: activity.afterClock,
         batteryBefore: Number(activity.beforeBattery.toFixed(2)),
         batteryAfter: Number(activity.afterBattery.toFixed(2)),
+        stressBefore: Number(activity.beforeStress.toFixed(2)),
+        stressAfter: Number((activity.afterStress ?? activity.beforeStress).toFixed(2)),
         kind: activity.kind
       });
       activity.completed = true;
