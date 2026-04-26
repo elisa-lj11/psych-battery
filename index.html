@@ -274,7 +274,23 @@
     }
 
     #demo-select {
+      min-height: 36px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      max-width: 220px;
       display: none;
+    }
+
+    body.is-backend-offline:not(.is-demo) #demo-select {
+      display: inline-flex;
+      align-items: center;
     }
 
     #demo-shell {
@@ -1706,6 +1722,7 @@
     .metric-label,
     .metric-unit,
     .tab-btn,
+    #demo-select,
     #demo-toggle-btn,
     #demo-header-badge,
     #connection-pill,
@@ -1748,6 +1765,7 @@
     .drain-row,
     .diag-row,
     #connection-pill,
+    #demo-select,
     #demo-toggle-btn,
     #demo-header-badge,
     #window-select,
@@ -1788,6 +1806,7 @@
     }
 
     #connection-pill,
+    #demo-select,
     #demo-toggle-btn,
     #demo-header-badge,
     #window-select,
@@ -2467,7 +2486,7 @@
         <option value="alex">Demo · Alex (isolated, unhealthy)</option>
         <option value="jordan">Demo · Jordan (tech, low AI)</option>
       </select>
-      <button id="demo-toggle-btn" type="button" aria-pressed="false">Demo mode</button>
+      <button id="demo-toggle-btn" type="button" aria-pressed="false">Interactive Demo</button>
       <span id="demo-header-badge" aria-live="polite">Demo mode</span>
       <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
     </div>
@@ -3727,7 +3746,7 @@ P = drain - 0.5*recovery</pre>
       DOM.demoShell.hidden = !APP.demo.enabled;
       DOM.demoShell.setAttribute('aria-hidden', APP.demo.enabled ? 'false' : 'true');
       DOM.demoToggleBtn.setAttribute('aria-pressed', APP.demo.enabled ? 'true' : 'false');
-      DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Exit demo' : 'Demo mode';
+      DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Exit demo' : 'Interactive Demo';
       DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
       DOM.openDiagnostics.disabled = APP.uiLayer === 2;
     }
@@ -4901,6 +4920,7 @@ P = drain - 0.5*recovery</pre>
     }
 
     function renderConnectionPill() {
+      DOM.body.classList.toggle('is-backend-offline', !APP.model.online && !APP.model.stale);
       if (APP.demo.enabled) {
         DOM.connectionPill.textContent = 'DEMO LOCAL';
         DOM.connectionPill.style.color = 'var(--px-accent)';
