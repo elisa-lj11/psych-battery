@@ -672,6 +672,7 @@
         linear-gradient(180deg, rgba(179, 136, 255, 0.08), transparent 34%),
         rgba(11, 11, 20, 0.96);
       overflow: hidden;
+      --scene-loop-offset: 0ms;
     }
 
     .demo-scene-frame.is-entering {
@@ -688,7 +689,7 @@
 
     .demo-scene-svg .scene-anim {
       animation-play-state: paused;
-      animation-fill-mode: both;
+      animation-fill-mode: none;
       transform-box: fill-box;
       transform-origin: center;
     }
@@ -703,35 +704,15 @@
       animation: demo-leaf-fall 2400ms steps(6, end) infinite;
     }
 
-    .demo-scene-svg .scene-leaf-b {
-      animation-delay: -800ms;
-    }
-
-    .demo-scene-svg .scene-leaf-c {
-      animation-delay: -1500ms;
-    }
-
     .demo-scene-svg .scene-bubble-a,
     .demo-scene-svg .scene-bubble-b {
       animation: demo-bubble-pulse 1500ms steps(4, end) infinite;
-    }
-
-    .demo-scene-svg .scene-bubble-b {
-      animation-delay: -700ms;
     }
 
     .demo-scene-svg .scene-steam-a,
     .demo-scene-svg .scene-steam-b,
     .demo-scene-svg .scene-steam-c {
       animation: demo-steam-rise 2200ms steps(6, end) infinite;
-    }
-
-    .demo-scene-svg .scene-steam-b {
-      animation-delay: -700ms;
-    }
-
-    .demo-scene-svg .scene-steam-c {
-      animation-delay: -1400ms;
     }
 
     .demo-scene-svg .scene-fork {
@@ -750,14 +731,6 @@
       animation: demo-z-rise 1900ms steps(6, end) infinite;
     }
 
-    .demo-scene-svg .scene-z-b {
-      animation-delay: -650ms;
-    }
-
-    .demo-scene-svg .scene-z-c {
-      animation-delay: -1200ms;
-    }
-
     .demo-scene-svg .scene-speaker {
       animation: demo-speaker-pulse 1000ms steps(4, end) infinite;
     }
@@ -770,26 +743,10 @@
       transform-origin: center;
     }
 
-    .demo-scene-svg .scene-blink-b {
-      animation-delay: -600ms;
-    }
-
-    .demo-scene-svg .scene-blink-c {
-      animation-delay: -1200ms;
-    }
-
-    .demo-scene-svg .scene-blink-d {
-      animation-delay: -1800ms;
-    }
-
     .demo-scene-svg .scene-talk-a,
     .demo-scene-svg .scene-talk-b {
       animation: demo-talk 800ms steps(2, end) infinite;
       transform-origin: center;
-    }
-
-    .demo-scene-svg .scene-talk-b {
-      animation-delay: -400ms;
     }
 
     .demo-scene-svg .scene-thumb {
@@ -805,6 +762,65 @@
       animation: demo-late-glow 1500ms steps(4, end) infinite;
     }
 
+    .demo-scene-svg .scene-leaf-a,
+    .demo-scene-svg .scene-bubble-a,
+    .demo-scene-svg .scene-steam-a,
+    .demo-scene-svg .scene-fork,
+    .demo-scene-svg .scene-breathe,
+    .demo-scene-svg .scene-z-a,
+    .demo-scene-svg .scene-speaker,
+    .demo-scene-svg .scene-blink-a,
+    .demo-scene-svg .scene-talk-a,
+    .demo-scene-svg .scene-thumb,
+    .demo-scene-svg .scene-cursor,
+    .demo-scene-svg .scene-late-glow {
+      animation-delay: var(--scene-loop-offset, 0ms);
+    }
+
+    .demo-scene-svg .scene-leaf-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 800ms);
+    }
+
+    .demo-scene-svg .scene-leaf-c {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 1500ms);
+    }
+
+    .demo-scene-svg .scene-bubble-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 700ms);
+    }
+
+    .demo-scene-svg .scene-steam-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 700ms);
+    }
+
+    .demo-scene-svg .scene-steam-c {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 1400ms);
+    }
+
+    .demo-scene-svg .scene-z-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 650ms);
+    }
+
+    .demo-scene-svg .scene-z-c {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 1200ms);
+    }
+
+    .demo-scene-svg .scene-blink-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 600ms);
+    }
+
+    .demo-scene-svg .scene-blink-c {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 1200ms);
+    }
+
+    .demo-scene-svg .scene-blink-d {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 1800ms);
+    }
+
+    .demo-scene-svg .scene-talk-b {
+      animation-delay: calc(var(--scene-loop-offset, 0ms) - 400ms);
+    }
+
     .demo-stage-value,
     .demo-kpi-value,
     .demo-model-value {
@@ -815,7 +831,7 @@
 
     .demo-kpis {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -3232,11 +3248,13 @@ P = drain - 0.5*recovery</pre>
     };
 
     function getActiveDemoId() {
-      return '';
+      const stored = localStorage.getItem(DEMO_KEY) || '';
+      return DEMO_PROFILES[stored] ? stored : '';
     }
 
     function getActiveDemoProfile() {
-      return null;
+      const id = getActiveDemoId();
+      return id ? DEMO_PROFILES[id] : null;
     }
 
     const APP = {
@@ -3741,8 +3759,11 @@ P = drain - 0.5*recovery</pre>
       const steamGlyph = (x, y, className) => `
         <g transform="translate(${x} ${y})">
           <g class="scene-anim ${className}" fill="${text}">
-            <rect x="0" y="0" width="2" height="8"></rect>
-            <rect x="2" y="2" width="2" height="2"></rect>
+            <rect x="1" y="0" width="2" height="6"></rect>
+            <rect x="0" y="2" width="1" height="2"></rect>
+            <rect x="3" y="4" width="1" height="2"></rect>
+            <rect x="1" y="6" width="2" height="4"></rect>
+            <rect x="2" y="10" width="1" height="2"></rect>
           </g>
         </g>
       `;
@@ -3757,131 +3778,149 @@ P = drain - 0.5*recovery</pre>
           </g>
         </g>
       `;
-      const participantTile = (x, y, tileFill, shirtFill, eyeClass = '', mouthClass = '') => `
-        ${pxRects([[x, y, 20, 14]], tileFill)}
-        ${pxRects([[x + 6, y + 2, 8, 6]], text)}
-        ${pxRects([[x + 7, y + 4, 2, 2, eyeClass], [x + 11, y + 4, 2, 2, eyeClass]], bg)}
-        ${pxRects([[x + 8, y + 8, 4, 1, mouthClass]], bg)}
-        ${pxRects([[x + 4, y + 10, 12, 3]], shirtFill)}
+      const participantTile = (x, y, tileFill, faceFill, shirtFill, hairFill, eyeClass = '', mouthClass = '') => `
+        ${pxRects([[x, y, 24, 18]], border)}
+        ${pxRects([[x + 1, y + 1, 22, 16]], tileFill)}
+        ${pxRects([[x + 5, y + 4, 14, 6]], faceFill)}
+        ${pxRects([[x + 5, y + 3, 14, 2], [x + 4, y + 5, 2, 2], [x + 19, y + 5, 2, 2]], hairFill)}
+        ${pxRects([[x + 8, y + 6, 2, 2, eyeClass], [x + 14, y + 6, 2, 2, eyeClass]], bg)}
+        ${pxRects([[x + 9, y + 9, 6, 1, mouthClass], [x + 10, y + 10, 4, 1]], bg)}
+        ${pxRects([[x + 6, y + 11, 12, 4]], shirtFill)}
+        ${pxRects([[x + 5, y + 15, 14, 1]], surface)}
       `;
       let art = '';
 
       switch (activityId) {
         case 'go_outside':
           art = `
-            ${pxRects([[0, 0, 160, 68]], bg)}
-            ${pxRects([[0, 68, 160, 24]], info)}
-            ${pxRects([[0, 92, 160, 18]], good)}
-            ${pxRects([[0, 110, 160, 50]], surface)}
-            ${pxRects([[118, 14, 16, 16], [122, 10, 8, 8]], warn)}
-            ${pxRects([[16, 50, 10, 60], [22, 44, 22, 10], [20, 56, 28, 10], [116, 46, 10, 64], [108, 40, 24, 10], [110, 52, 30, 10]], borderDark)}
-            ${pxRects([[30, 112, 100, 10], [42, 122, 76, 8], [54, 130, 52, 8]], low)}
-            ${personGroup(58, 52, text, '')}
-            ${leafGlyph(26, 24, warn, 'scene-leaf-a')}
-            ${leafGlyph(92, 18, low, 'scene-leaf-b')}
-            ${leafGlyph(122, 30, accent, 'scene-leaf-c')}
+            ${pxRects([[0, 0, 160, 80]], info)}
+            ${pxRects([[0, 80, 160, 20]], good)}
+            ${pxRects([[0, 100, 160, 60]], surface)}
+            ${pxRects([[120, 12, 20, 20], [126, 8, 8, 8]], warn)}
+            ${pxRects([[14, 48, 10, 52], [14, 42, 28, 10], [18, 52, 22, 10]], 'var(--px-border)')}
+            ${pxRects([[24, 50, 12, 2], [22, 54, 16, 2]], good)}
+            ${pxRects([[104, 42, 10, 58], [104, 36, 30, 10], [108, 46, 26, 10]], 'var(--px-border)')}
+            ${pxRects([[114, 44, 14, 2], [112, 48, 18, 2]], good)}
+            ${pxRects([[38, 100, 84, 10], [48, 110, 64, 8], [56, 118, 48, 8]], surface)}
+            ${personGroup(62, 54, text, '')}
+            ${leafGlyph(30, 22, warn, 'scene-leaf-a')}
+            ${leafGlyph(90, 16, accent, 'scene-leaf-b')}
+            ${leafGlyph(128, 28, low, 'scene-leaf-c')}
           `;
           break;
         case 'connect_people':
           art = `
             ${sky}
             ${floor}
-            ${pxRects([[0, 110, 160, 50]], surfaceDark)}
-            ${pxRects([[18, 112, 50, 8], [92, 112, 50, 8]], borderDark)}
-            ${personGroup(18, 58, info, '')}
-            ${personGroup(90, 58, good, '')}
-            ${bubbleGlyph(32, 24, text, 'scene-bubble-a')}
-            ${bubbleGlyph(102, 22, accent, 'scene-bubble-b')}
-            ${pxRects([[40, 30, 4, 2], [48, 30, 4, 2], [42, 36, 10, 2], [110, 28, 4, 2], [118, 28, 4, 2], [112, 34, 10, 2]], bg)}
+            ${personGroup(22, 58, info, '')}
+            ${personGroup(92, 58, good, '')}
+            ${bubbleGlyph(36, 22, text, 'scene-bubble-a')}
+            ${bubbleGlyph(104, 20, accent, 'scene-bubble-b')}
+            ${pxRects([[44, 28, 4, 2], [52, 28, 4, 2], [46, 34, 10, 2], [112, 26, 4, 2], [120, 26, 4, 2], [114, 32, 10, 2]], bg)}
+            ${pxRects([[56, 80, 48, 4]], accent)}
+            ${pxRects([[60, 84, 40, 4]], warn)}
           `;
           break;
         case 'eat_food':
           art = `
-            ${pxRects([[0, 0, 160, 78]], surfaceDark)}
-            ${pxRects([[0, 78, 160, 10]], borderDark)}
-            ${pxRects([[0, 88, 160, 10]], border)}
-            ${pxRects([[0, 98, 160, 10]], low)}
-            ${pxRects([[0, 108, 160, 52]], surface)}
-            ${pxRects([[18, 28, 22, 14], [22, 24, 14, 4], [18, 50, 28, 28]], accent)}
-            ${pxRects([[16, 42, 26, 8]], borderDark)}
-            ${pxRects([[44, 58, 14, 8], [54, 62, 12, 6]], text)}
-            ${pxRects([[76, 84, 40, 2], [72, 86, 48, 2], [70, 88, 52, 4], [68, 92, 56, 10], [70, 102, 52, 4], [72, 106, 48, 2], [76, 108, 40, 2]], text)}
-            ${pxRects([[78, 88, 36, 2], [74, 90, 44, 4], [72, 94, 48, 6], [74, 100, 44, 4], [78, 104, 36, 2]], surfaceDark)}
-            ${pxRects([[84, 92, 24, 4], [80, 96, 32, 8], [82, 104, 28, 4]], low)}
-            ${pxRects([[86, 94, 20, 2], [84, 98, 24, 4], [86, 102, 20, 2]], warn)}
-            ${pxRects([[122, 92, 4, 18], [118, 108, 12, 2]], text)}
-            ${pxRects([[134, 84, 10, 18], [136, 80, 6, 4]], info)}
-            ${steamGlyph(88, 72, 'scene-steam-a')}
-            ${steamGlyph(98, 68, 'scene-steam-b')}
-            ${steamGlyph(108, 74, 'scene-steam-c')}
-            <g transform="translate(120 88)">
+            ${pxRects([[0, 0, 160, 68]], surfaceDark)}
+            ${pxRects([[0, 68, 160, 8]], borderDark)}
+            ${pxRects([[0, 76, 160, 8]], border)}
+            ${pxRects([[0, 84, 160, 10]], low)}
+            ${pxRects([[0, 94, 160, 10]], warn)}
+            ${pxRects([[0, 104, 160, 56]], surface)}
+            ${pxRects([[18, 28, 22, 14]], warn)}
+            ${pxRects([[22, 24, 14, 4]], borderDark)}
+            ${pxRects([[24, 32, 2, 2], [32, 32, 2, 2], [28, 36, 4, 1]], bg)}
+            ${pxRects([[18, 50, 28, 30]], accent)}
+            ${pxRects([[44, 58, 16, 8], [56, 62, 12, 6]], warn)}
+            ${pxRects([[70, 82, 54, 2], [64, 84, 66, 4], [60, 88, 74, 4], [56, 92, 82, 10], [58, 102, 78, 8], [62, 110, 70, 6], [68, 116, 58, 4], [74, 120, 46, 2]], text)}
+            ${pxRects([[76, 88, 42, 2], [70, 90, 54, 4], [66, 94, 62, 8], [68, 102, 58, 8], [72, 110, 50, 4], [78, 114, 38, 2]], low)}
+            ${pxRects([[82, 92, 30, 2], [78, 94, 38, 6], [76, 100, 42, 8], [78, 108, 38, 4], [82, 112, 30, 2]], surfaceDark)}
+            ${pxRects([[84, 94, 26, 2], [82, 98, 30, 4], [84, 102, 26, 4], [86, 106, 22, 2]], warn)}
+            ${pxRects([[88, 96, 18, 2], [90, 100, 14, 2]], critical)}
+            ${pxRects([[84, 90, 24, 2], [90, 114, 12, 2]], border)}
+            ${steamGlyph(90, 70, 'scene-steam-a')}
+            ${steamGlyph(100, 66, 'scene-steam-b')}
+            ${steamGlyph(110, 72, 'scene-steam-c')}
+            <g transform="translate(116 86)">
               <g class="scene-anim scene-fork" fill="${text}">
-                <rect x="0" y="0" width="10" height="2"></rect>
+                <rect x="0" y="0" width="14" height="2"></rect>
                 <rect x="0" y="2" width="2" height="8"></rect>
                 <rect x="4" y="2" width="2" height="8"></rect>
                 <rect x="8" y="2" width="2" height="8"></rect>
-                <rect x="4" y="10" width="2" height="18"></rect>
+                <rect x="12" y="2" width="2" height="8"></rect>
+                <rect x="6" y="10" width="2" height="22"></rect>
               </g>
             </g>
+            ${pxRects([[134, 82, 4, 26], [132, 80, 8, 2], [132, 108, 8, 2]], text)}
+            ${pxRects([[130, 80, 12, 6], [132, 78, 8, 2]], info)}
+            ${pxRects([[133, 82, 6, 2]], low)}
           `;
           break;
         case 'take_nap':
           art = `
-            ${pxRects([[0, 0, 160, 160]], bg)}
-            ${pxRects([[0, 96, 160, 64]], surfaceDark)}
-            ${pxRects([[14, 70, 22, 6], [14, 76, 12, 48], [28, 76, 8, 8], [28, 116, 8, 8], [120, 92, 8, 28]], borderDark)}
-            ${pxRects([[24, 92, 100, 18]], text)}
-            ${pxRects([[28, 88, 28, 10]], text)}
-            ${pxRects([[32, 90, 4, 4], [40, 90, 4, 4], [48, 90, 4, 4], [36, 94, 4, 4], [44, 94, 4, 4]], accent)}
-            ${pxRects([[54, 88, 52, 4], [54, 92, 52, 4], [54, 96, 52, 4], [54, 100, 52, 4], [54, 104, 52, 4]], accent)}
-            ${pxRects([[54, 90, 52, 2], [54, 98, 52, 2], [54, 106, 52, 2]], info)}
-            ${pxRects([[34, 88, 14, 10], [36, 84, 10, 4]], text)}
-            ${pxRects([[32, 84, 18, 4]], borderDark)}
-            ${pxRects([[106, 18, 34, 34]], borderDark)}
-            ${pxRects([[110, 22, 12, 12], [124, 22, 12, 12], [110, 36, 12, 12], [124, 36, 12, 12]], info)}
-            ${pxRects([[118, 24, 8, 8], [122, 26, 4, 4], [116, 28, 4, 4]], warn)}
-            ${pxRects([[96, 54, 48, 4], [100, 58, 40, 4], [104, 62, 32, 4]], info)}
-            <g transform="translate(58 90)">
-              <g class="scene-anim scene-breathe" fill="${info}">
-                <rect x="0" y="0" width="20" height="4"></rect>
-                <rect x="4" y="4" width="18" height="4"></rect>
-                <rect x="8" y="8" width="12" height="2"></rect>
+            ${pxRects([[0, 0, 160, 160]], surfaceDark)}
+            ${pxRects([[0, 104, 160, 56]], surface)}
+            ${pxRects([[8, 60, 18, 10], [8, 70, 10, 54], [18, 70, 14, 8], [18, 116, 14, 8], [118, 88, 8, 28]], border)}
+            ${pxRects([[20, 88, 104, 22]], accent)}
+            ${pxRects([[20, 92, 104, 4], [20, 100, 104, 4]], info)}
+            ${pxRects([[24, 84, 22, 14]], warn)}
+            ${pxRects([[26, 86, 18, 10]], low)}
+            ${pxRects([[28, 88, 2, 2], [34, 88, 2, 2], [30, 92, 4, 1]], bg)}
+            ${pxRects([[46, 84, 68, 8], [48, 92, 64, 4]], text)}
+            ${pxRects([[50, 86, 60, 4]], surfaceDark)}
+            ${pxRects([[20, 110, 104, 4], [26, 114, 92, 4]], border)}
+            ${pxRects([[104, 8, 40, 40]], border)}
+            ${pxRects([[108, 12, 16, 16], [126, 12, 14, 14], [108, 30, 14, 14], [126, 30, 14, 14]], info)}
+            ${pxRects([[116, 16, 8, 8], [118, 18, 4, 4], [114, 20, 4, 4]], warn)}
+            ${pxRects([[92, 50, 56, 4], [88, 54, 60, 4], [84, 58, 64, 4]], info)}
+            <g transform="translate(52 88)">
+              <g class="scene-anim scene-breathe" fill="${low}">
+                <rect x="0" y="0" width="28" height="4"></rect>
+                <rect x="4" y="4" width="22" height="4"></rect>
+                <rect x="8" y="8" width="14" height="2"></rect>
               </g>
             </g>
-            ${zGlyph(112, 64, 1, 'scene-z-a')}
-            ${zGlyph(126, 42, 0.8, 'scene-z-b')}
-            ${zGlyph(138, 24, 0.6, 'scene-z-c')}
+            ${zGlyph(108, 68, 1, 'scene-z-a')}
+            ${zGlyph(122, 46, 0.8, 'scene-z-b')}
+            ${zGlyph(136, 28, 0.6, 'scene-z-c')}
           `;
           break;
         case 'zoom_meeting':
           art = `
-            ${sky}
+            ${pxRects([[0, 0, 160, 72]], surface)}
+            ${pxRects([[0, 72, 160, 26]], surfaceDark)}
             ${pxRects([[0, 98, 160, 62]], surface)}
-            ${pxRects([[0, 112, 160, 48]], surfaceDark)}
-            ${pxRects([[18, 118, 124, 8], [30, 126, 100, 8]], borderDark)}
+            ${pxRects([[18, 118, 124, 8], [30, 126, 100, 8]], border)}
             ${personGroup(18, 48, text, '')}
-            ${pxRects([[74, 18, 68, 52]], borderDark)}
-            ${pxRects([[78, 22, 60, 40]], surfaceDark)}
-            ${participantTile(82, 26, info, accent, 'scene-anim scene-blink-a', '')}
-            ${participantTile(108, 26, good, accent, 'scene-anim scene-blink-b', 'scene-anim scene-talk-a')}
-            ${participantTile(82, 44, low, info, 'scene-anim scene-blink-c', '')}
-            ${participantTile(108, 44, accent, good, 'scene-anim scene-blink-d', '')}
-            <g transform="translate(104 24)">
+            ${pxRects([[68, 12, 78, 60]], border)}
+            ${pxRects([[72, 16, 70, 52]], bg)}
+            ${pxRects([[104, 14, 6, 2]], low)}
+            ${participantTile(80, 26, info, warn, accent, borderDark, 'scene-anim scene-blink-a', '')}
+            ${participantTile(108, 26, good, low, warn, critical, 'scene-anim scene-blink-b', 'scene-anim scene-talk-a')}
+            ${participantTile(80, 46, low, warn, info, borderDark, 'scene-anim scene-blink-c', '')}
+            ${participantTile(108, 46, accent, good, low, borderDark, 'scene-anim scene-blink-d', '')}
+            <g transform="translate(110 28)">
               <g class="scene-anim scene-speaker" fill="${warn}">
-                <rect x="2" y="0" width="24" height="2"></rect>
-                <rect x="0" y="2" width="2" height="18"></rect>
-                <rect x="26" y="2" width="2" height="18"></rect>
-                <rect x="2" y="20" width="24" height="2"></rect>
+                <rect x="0" y="2" width="2" height="16"></rect>
+                <rect x="2" y="0" width="20" height="2"></rect>
+                <rect x="22" y="2" width="2" height="16"></rect>
+                <rect x="2" y="18" width="20" height="2"></rect>
               </g>
             </g>
-            ${pxRects([[80, 64, 56, 4]], border)}
-            ${pxRects([[84, 65, 6, 2]], good)}
-            ${pxRects([[94, 65, 6, 2]], accent)}
-            ${pxRects([[104, 65, 6, 2]], info)}
-            ${pxRects([[116, 64, 6, 4]], critical)}
-            ${pxRects([[118, 62, 2, 8]], text)}
-            ${pxRects([[74, 72, 68, 6], [84, 78, 48, 4]], borderDark)}
-            ${pxRects([[105, 73, 6, 6]], info)}
+            ${pxRects([[78, 64, 58, 6]], border)}
+            ${pxRects([[82, 66, 8, 2]], good)}
+            ${pxRects([[94, 66, 8, 2]], accent)}
+            ${pxRects([[106, 66, 8, 2]], info)}
+            ${pxRects([[118, 65, 14, 4]], surface)}
+            ${pxRects([[120, 66, 2, 4], [118, 68, 6, 2], [121, 70, 2, 4]], text)}
+            ${pxRects([[128, 65, 2, 2], [126, 67, 2, 2], [124, 69, 2, 2]], critical)}
+            ${pxRects([[66, 72, 82, 10], [74, 82, 66, 8]], borderDark)}
+            ${pxRects([[70, 74, 74, 6]], surface)}
+            ${pxRects([[74, 76, 6, 2], [82, 76, 6, 2], [90, 76, 6, 2], [98, 76, 6, 2], [106, 76, 6, 2], [114, 76, 6, 2], [122, 76, 6, 2]], border)}
+            ${pxRects([[98, 83, 12, 6]], info)}
+            ${pxRects([[102, 85, 4, 2]], accent)}
           `;
           break;
         case 'heavy_async':
@@ -3957,7 +3996,7 @@ P = drain - 0.5*recovery</pre>
           art = `${sky}${floor}`;
       }
 
-      return `<svg class="demo-scene-svg" viewBox="0 0 160 160" aria-hidden="true">${art}</svg>`;
+      return `<svg class="demo-scene-svg" viewBox="0 0 160 160" aria-hidden="true" shape-rendering="crispEdges">${art}</svg>`;
     }
 
     function getDemoFeatureItems() {
@@ -4805,16 +4844,20 @@ P = drain - 0.5*recovery</pre>
             </div>
             <div class="demo-kpis">
               <div class="demo-kpi">
-                <div class="demo-kpi-label">Pressure</div>
-                <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
+                <div class="demo-kpi-label">Energy</div>
+                <div class="demo-kpi-value">${Math.round(activity.step === 'done' ? (activity.beforeBattery + activity.deltaE) : activity.beforeBattery)}%</div>
+              </div>
+              <div class="demo-kpi">
+                <div class="demo-kpi-label">Stress</div>
+                <div class="demo-kpi-value">${Math.round(activity.step === 'done' ? (activity.beforeStress + activity.deltaS) : activity.beforeStress)}%</div>
               </div>
               <div class="demo-kpi">
                 <div class="demo-kpi-label">E_rest</div>
                 <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
               </div>
               <div class="demo-kpi">
-                <div class="demo-kpi-label">Clock</div>
-                <div class="demo-kpi-value">${formatDemoClock(activity.afterClock)}</div>
+                <div class="demo-kpi-label">Pressure</div>
+                <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
               </div>
             </div>
             <div class="demo-feature-list">${rows}</div>
@@ -4974,6 +5017,12 @@ P = drain - 0.5*recovery</pre>
       APP.demo.featureAccum = nextFeatures;
       APP.demo.E = finalEnergy;
       APP.demo.S = finalStress;
+      const nowMs = () => (
+        typeof performance !== 'undefined' && typeof performance.now === 'function'
+          ? performance.now()
+          : Date.now()
+      );
+      const sceneStartMs = nowMs();
       APP.demo.activity = {
         ...activity,
         step: 'scene',
@@ -5001,7 +5050,12 @@ P = drain - 0.5*recovery</pre>
         renderApp();
         const sceneFrame = DOM.demoLayout.querySelector('.demo-scene-frame');
         if (sceneFrame) {
+          const elapsedMs = Math.max(0, Math.round(nowMs() - sceneStartMs));
+          sceneFrame.style.setProperty('--scene-loop-offset', `-${elapsedMs}ms`);
           sceneFrame.classList.toggle('animating', step !== 'done');
+          if (step !== 'scene') {
+            sceneFrame.classList.remove('is-entering');
+          }
         }
         return true;
       };
