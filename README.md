@@ -21,9 +21,13 @@ ActivityWatch runs in the background and logs which apps and windows are in focu
 
 2. Make sure ActivityWatch is running — check by opening [http://localhost:5600](http://localhost:5600).
 
-3. Start the local server:
-   ```bash
-   python server.py
+3. Start everything with one command (PowerShell):
+   ```powershell
+   .\run.ps1
+   ```
+   This starts the local server and (if you have the CrowPanel) the display bridge. If PowerShell blocks the script, run this once first:
+   ```powershell
+   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
    ```
 
 4. Open [http://localhost:3131](http://localhost:3131) in your browser.
@@ -83,12 +87,12 @@ Find your COM port:
 python crowpanel/charge_sender.py --list
 ```
 
-Run the bridge (keep `server.py` running in a separate terminal):
-```bash
-python crowpanel/charge_sender.py --port COM5
+Update the port in `run.ps1` if yours isn't COM5, then run:
+```powershell
+.\run.ps1
 ```
 
-The bridge polls `http://localhost:3131/state` every 30 seconds and sends the current battery level to the display. The browser at `http://localhost:3131` and the physical display will always show the same value.
+This starts both the server and the bridge together. The bridge polls `http://localhost:3131/state` every 10 seconds and sends the current battery level to the display. The browser at `http://localhost:3131` and the physical display will always show the same value.
 
 ## Tuning drain rates
 

@@ -24,7 +24,7 @@ import serial
 import serial.tools.list_ports
 
 MODEL_URL   = "http://localhost:3131/state"
-POLL_SEC    = 30
+POLL_SEC    = 10
 BAUD_RATE   = 115200
 
 
@@ -45,14 +45,14 @@ def list_ports() -> None:
         print(f"  {p.device:20s} — {p.description}")
 
 
-def fetch_charge() -> int | None:
+def fetch_charge() -> tuple[int, str] | None:
     try:
         r = requests.get(MODEL_URL, timeout=15)
         r.raise_for_status()
         data = r.json()
         e_display = float(data.get("E_display", 0))
-        # E_display is 0-1 from the updated /state endpoint
-        return round(e_display * 100)
+        trend = data.get("trend", "flat")
+        return round(e_display * 100), trend
     except Exception as e:
         print(f"[model] fetch failed: {e}")
         return None
@@ -68,23 +68,26 @@ def run(port: str) -> None:
 
     time.sleep(1.5)  # let ESP32 boot/reset after Serial open
     print("Connected. Polling model server every", POLL_SEC, "seconds.")
-    last_sent = -1
+    last_sent  = -1
+    last_trend = ''
 
     while True:
-        charge = fetch_charge()
-        if charge is not None and charge != last_sent:
-            msg = f"{charge}\n".encode()
-            try:
-                ser.write(msg)
-                ser.flush()
-                # Read ACK (optional)
-                ack = ser.readline().decode(errors="replace").strip()
-                print(f"[{time.strftime('%H:%M:%S')}] Sent {charge}% → {ack or '(no ack)'}")
-                last_sent = charge
-            except Exception as e:
-                print(f"[serial] write failed: {e}")
-        elif charge == last_sent:
-            print(f"[{time.strftime('%H:%M:%S')}] {charge}% (no change, skipped)")
+        result = fetch_charge()
+        if result is not None:
+            charge, trend = result
+            if charge != last_sent or trend != last_trend:
+                msg = f"{charge} {trend}\n".encode()
+                try:
+                    ser.write(msg)
+                    ser.flush()
+                    ack = ser.readline().decode(errors="replace").strip()
+                    print(f"[{time.strftime('%H:%M:%S')}] Sent {charge}% {trend} → {ack or '(no ack)'}")
+                    last_sent  = charge
+                    last_trend = trend
+                except Exception as e:
+                    print(f"[serial] write failed: {e}")
+            else:
+                print(f"[{time.strftime('%H:%M:%S')}] {charge}% {trend} (no change, skipped)")
         time.sleep(POLL_SEC)
 
 
@@ -109,7 +112,7 @@ def main() -> None:
         try:
             ser = serial.Serial(port, BAUD_RATE, timeout=2)
             time.sleep(1.5)
-            ser.write(f"{args.test}\n".encode())
+            ser.write(f"{args.test} down\n".encode())
             ser.flush()
             ack = ser.readline().decode(errors="replace").strip()
             print(f"ACK: {ack or '(none)'}")

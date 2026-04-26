@@ -39,12 +39,6 @@
       margin-bottom: 0.75rem;
     }
 
-    #status {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-bottom: 2.5rem;
-    }
-
     .section-title {
       font-size: 0.7rem;
       letter-spacing: 0.18em;
@@ -90,18 +84,6 @@
       color: var(--muted);
     }
 
-    .controls label { display: flex; align-items: center; gap: 0.5rem; }
-
-    .controls select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      cursor: pointer;
-    }
-
     #error {
       color: #f87171;
       font-size: 0.82rem;
@@ -125,25 +107,12 @@
     </svg>
   </div>
 
-  <div id="status">Connecting to ActivityWatch…</div>
-
   <p class="section-title">Activity breakdown</p>
   <div class="breakdown">
     <div id="breakdown-list"></div>
   </div>
 
   <div class="controls">
-    <label>Window:
-      <select id="window-select">
-        <option value="0.033">2 min</option>
-        <option value="0.083" selected>5 min</option>
-        <option value="0.25">15 min</option>
-        <option value="1">1 hour</option>
-        <option value="2">2 hours</option>
-        <option value="4">4 hours</option>
-        <option value="8">8 hours</option>
-      </select>
-    </label>
     <span id="last-updated"></span>
   </div>
 
@@ -161,33 +130,33 @@
       // Title patterns catch browser-wrapped versions of these apps
       { patterns: ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'],        rate: 15.0, label: 'AI Tools' },
       { patterns: ['zoom', 'teams', 'webex', 'whereby', 'loom', 'meet -', '| meet', 'google meet', 'zoom meeting'],       rate: 15.0, label: 'Video Calls' },
-      { patterns: ['slack', 'discord', 'telegram', 'whatsapp', 'messenger', 'signal'],                                    rate: 12.5, label: 'Messaging' },
-      { patterns: ['twitter', 'x.com', '/ x', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],   rate: 12.5, label: 'Social Media' },
-      { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                             rate: 10.0, label: 'Email' },
+      { patterns: ['slack', 'discord', 'telegram', 'whatsapp', 'messenger', 'signal'],                                    rate: 14.0, label: 'Messaging' },
+      { patterns: ['twitter', 'x.com', '/ x', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],   rate: 14.0, label: 'Social Media' },
+      { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                             rate: 12.0, label: 'Email' },
 
       // ● Medium drain — focused work
-      { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],             rate: 7.5, label: 'Coding' },
-      { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                                   rate: 7.5, label: 'Design' },
-      { patterns: ['notion', 'obsidian', 'onenote', 'google docs', 'google sheets', 'google slides'],                     rate: 5.0, label: 'Documents' },
-      { patterns: ['word', 'excel', 'pages', 'numbers', 'powerpoint', 'keynote'],                                         rate: 5.0, label: 'Documents' },
-      { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                                       rate: 5.0, label: 'Browser' },
+      { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],             rate: 12.0, label: 'Coding' },
+      { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                                   rate: 12.0, label: 'Design' },
+      { patterns: ['notion', 'obsidian', 'onenote', 'google docs', 'google sheets', 'google slides'],                     rate: 10.0, label: 'Documents' },
+      { patterns: ['word', 'excel', 'pages', 'numbers', 'powerpoint', 'keynote'],                                         rate: 10.0, label: 'Documents' },
+      { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                                       rate: 10.0, label: 'Browser' },
 
       // ● Low drain — passive / ambient
-      { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                                  rate: 2.5, label: 'Video' },
-      { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                                         rate: 1.5, label: 'Music' },
-      { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                         rate: 1.5, label: 'System' },
+      { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                                  rate: 6.0, label: 'Video' },
+      { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                                         rate: 4.0, label: 'Music' },
+      { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                         rate: 4.0, label: 'System' },
 
       // ● Fallback
-      { patterns: [], rate: 4.0, label: 'Other' },
+      { patterns: [], rate: 8.0, label: 'Other' },
     ];
 
-    const HIGH_DRAIN_CAP = 15.0; // max rate, used to set 0% threshold
-    const WINDOW_HOURS   = 4;    // must match server.py WINDOW_HOURS
+    const HIGH_DRAIN_CAP = 15.0;
+    const WINDOW_MINS    = 2;
 
     // ── State ─────────────────────────────────────────────────────────────────
-    let windowHours  = 0.083; // 5 minutes
-    let windowBucket = null;
-    let afkBucket    = null;
+    const windowHours = WINDOW_MINS / 60;
+    let windowBucket  = null;
+    let afkBucket     = null;
     const sessionStart = new Date(); // battery always starts at 100% from here
 
     // ── API helpers ───────────────────────────────────────────────────────────
@@ -221,17 +190,15 @@
       return DRAIN_RULES[DRAIN_RULES.length - 1];
     }
 
-    function calculate(windowEvents, now) {
-      // Accumulate drain per category
+    function calculate(windowEvents, windowStart, now) {
       const tally = {};
       let totalDrain   = 0;
       let totalActMins = 0;
 
       for (const ev of windowEvents) {
-        // Clip event to [sessionStart, now] — AW may return events that started before page load
         const evStart = new Date(ev.timestamp).getTime();
         const evEnd   = evStart + ev.duration * 1000;
-        const clipped = (Math.min(evEnd, now.getTime()) - Math.max(evStart, sessionStart.getTime())) / 1000;
+        const clipped = (Math.min(evEnd, now.getTime()) - Math.max(evStart, windowStart.getTime())) / 1000;
         const mins = clipped / 60;
         if (mins < 0.1) continue;
         const rule = matchRule(ev);
@@ -265,15 +232,17 @@
       return '#4ade80';
     }
 
-    function renderBattery(level) {
+    function renderBattery(level, trend) {
       const W = 200, H = 90, pad = 6;
-      const color  = levelColor(level);
-      const fillW  = Math.max(0, (W - pad * 2) * (level / 100));
-      const isLow  = level < 20;
-      const textFill = level < 40 ? color : '#0f0f13';
+      const color     = levelColor(level);
+      const fillW     = Math.max(0, (W - pad * 2) * (level / 100));
+      const isLow     = level < 20;
+      const textFill  = level < 40 ? color : '#0f0f13';
+      const arrow     = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '';
+      const arrowColor = trend === 'up' ? '#4ade80' : '#f87171';
 
       document.getElementById('battery-wrap').innerHTML = `
-        <svg width="${W + 12}" height="${H}" viewBox="0 0 ${W + 12} ${H}">
+        <svg width="${W + 12}" height="${H + 22}" viewBox="0 0 ${W + 12} ${H + 22}">
           <rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="none" stroke="#2a2a3a" stroke-width="3"/>
           <rect x="${W + 2}" y="${(H - 30) / 2}" width="10" height="30" rx="3" fill="#2a2a3a"/>
           <rect x="${pad}" y="${pad}" width="${fillW}" height="${H - pad * 2}" rx="6"
@@ -281,6 +250,9 @@
           <text x="${W / 2}" y="${H / 2 + 8}" text-anchor="middle"
             font-family="system-ui,sans-serif" font-size="24" font-weight="700"
             fill="${textFill}">${level}%</text>
+          ${arrow ? `<text x="${W / 2}" y="${H + 18}" text-anchor="middle"
+            font-family="system-ui,sans-serif" font-size="16"
+            fill="${arrowColor}">${arrow}</text>` : ''}
         </svg>`;
     }
 
@@ -316,25 +288,28 @@
         const now = new Date();
 
         // Fetch pre-calculated battery from server (same source as the display)
+        const windowStart = new Date(Math.max(
+          sessionStart.getTime(),
+          now.getTime() - WINDOW_MINS * 60 * 1000
+        ));
         const [stateRes, eventsData] = await Promise.all([
           fetch('/state'),
           (async () => {
             if (!windowBucket) await findBuckets();
             if (!windowBucket) return [];
-            return getEvents(windowBucket, sessionStart.toISOString(), now.toISOString());
+            return getEvents(windowBucket, windowStart.toISOString(), now.toISOString());
           })(),
         ]);
 
         const state   = await stateRes.json();
         const battery = state.battery_pct;
+        const trend   = state.trend ?? 'flat';
 
-        const { tally, totalActMins } = calculate(eventsData, now);
+        const { tally, totalActMins } = calculate(eventsData, windowStart, now);
 
-        renderBattery(battery);
+        renderBattery(battery, trend);
         renderBreakdown(tally);
 
-        document.getElementById('status').textContent =
-          `${WINDOW_HOURS}h rolling window · ${totalActMins}m active`;
         document.getElementById('last-updated').textContent =
           `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -346,12 +321,6 @@
         console.error(err);
       }
     }
-
-    document.getElementById('window-select').addEventListener('change', e => {
-      windowHours  = parseFloat(e.target.value);
-      windowBucket = null;
-      update();
-    });
 
     update();
     setInterval(update, 10_000);
