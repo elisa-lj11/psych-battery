@@ -375,7 +375,7 @@
       background: rgba(159, 232, 106, 0.1);
       color: var(--px-good);
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
@@ -390,7 +390,7 @@
     .demo-card-duration {
       color: var(--px-muted);
       font-family: var(--px-font-ui);
-      font-size: 8px;
+      font-size: 11px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
@@ -423,11 +423,159 @@
       background: var(--surface);
       color: var(--px-text);
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .demo-continue-btn {
+      min-height: 56px;
+      padding: 0 22px;
+      border: 3px solid var(--px-accent);
+      background: linear-gradient(180deg, rgba(179, 136, 255, 0.18), rgba(11, 11, 20, 0.96));
+      color: var(--px-accent);
+      font-family: var(--px-font-ui);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .demo-continue-btn:hover,
+    .demo-continue-btn:focus-visible {
+      transform: translate(-1px, -1px);
+      outline: none;
+    }
+
+    .demo-data-sources {
+      border: 2px dashed var(--px-border-2);
+      background: rgba(11, 11, 20, 0.6);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .demo-data-sources-title {
+      font-family: var(--px-font-ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+    }
+
+    .demo-data-sources-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .demo-data-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border: 1px solid var(--px-border);
+      background: rgba(22, 22, 42, 0.8);
+      color: var(--px-text);
+      font-family: var(--px-font-mono, monospace);
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    .demo-why {
+      border: 2px solid var(--px-border);
+      background: rgba(11, 11, 20, 0.7);
+      padding: 0;
+    }
+
+    .demo-why > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--px-font-ui);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--px-accent);
+    }
+
+    .demo-why > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .demo-why > summary::after {
+      content: '▾';
+      transition: transform 200ms steps(2, end);
+    }
+
+    .demo-why[open] > summary::after {
+      transform: rotate(180deg);
+    }
+
+    .demo-why-body {
+      padding: 0 12px 12px 12px;
+      color: var(--px-text);
+      font-family: var(--px-font-mono, monospace);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .demo-why-body strong {
+      color: var(--px-accent);
+    }
+
+    .demo-card-why {
+      border: 1px solid var(--px-border);
+      background: rgba(11, 11, 20, 0.7);
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .demo-card-why:hover,
+    .demo-card-why:focus-visible {
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+      outline: none;
+    }
+
+    .demo-step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--px-font-ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+    }
+
+    .demo-step-dot {
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--px-border-2);
+      background: rgba(11, 11, 20, 0.8);
+    }
+
+    .demo-step-dot.is-active {
+      border-color: var(--px-accent);
+      background: var(--px-accent);
+    }
+
+    .demo-step-dot.is-done {
+      border-color: var(--px-good);
+      background: var(--px-good);
     }
 
     .demo-menu {
@@ -481,7 +629,7 @@
     .demo-card-label,
     .demo-scene-title {
       font-family: var(--px-font-ui);
-      font-size: 10px;
+      font-size: 14px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
@@ -619,7 +767,7 @@
     .demo-feature-value,
     .demo-delta {
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
@@ -668,7 +816,7 @@
 
     .demo-model-title {
       font-family: var(--px-font-ui);
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.08em;
       color: var(--px-accent);
       text-transform: uppercase;
@@ -3203,7 +3351,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 20,
         kind: 'recovery',
         accent: 'var(--px-good)',
-        deltas: { outside_min: 20, daylight_min: 20 }
+        deltas: { outside_min: 20, daylight_min: 20 },
+        targetDeltaE: 8,
+        targetDeltaS: -3,
+        dataSources: ['Apple Health · steps + location', 'GPS', 'Daylight sensor'],
+        whyResearch: 'Daylight exposure resets your circadian clock and boosts serotonin. Even 10–20 min outdoors lowers cortisol and improves mood (Liberman et al., 2019). Walking adds light cardiovascular load that helps clear stress hormones.'
       },
       {
         id: 'connect_people',
@@ -3211,7 +3363,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 30,
         kind: 'recovery',
         accent: 'var(--px-info)',
-        deltas: { social_min: 30, people_cnt: 2 }
+        deltas: { social_min: 30, people_cnt: 2 },
+        targetDeltaE: 6,
+        targetDeltaS: -4,
+        dataSources: ['Phone call logs', 'Zoom · 1:1 meetings', 'Slack DMs', 'Calendar · social blocks'],
+        whyResearch: 'Quality social contact triggers oxytocin release and dampens the HPA stress axis (Holt-Lunstad et al., 2010). Perceived social connection is among the strongest predictors of well-being and longevity in longitudinal studies.'
       },
       {
         id: 'eat_food',
@@ -3219,7 +3375,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 25,
         kind: 'recovery',
         accent: 'var(--px-info)',
-        deltas: { eat_min: 25, hydration_cnt: 1 }
+        deltas: { eat_min: 25, hydration_cnt: 1 },
+        targetDeltaE: 5,
+        targetDeltaS: -1,
+        dataSources: ['Apple Health · active energy', 'Kitchen iBeacon', 'Manual meal log'],
+        whyResearch: 'Stable blood glucose supports prefrontal cortex performance (Gailliot & Baumeister, 2007). Skipping meals correlates with attentional lapses, irritability, and worse self-control on cognitively demanding tasks.'
       },
       {
         id: 'take_nap',
@@ -3227,7 +3387,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 30,
         kind: 'recovery',
         accent: 'var(--px-accent)',
-        deltas: { nap_min: 30 }
+        deltas: { nap_min: 30 },
+        targetDeltaE: 12,
+        targetDeltaS: -6,
+        dataSources: ['Apple Health · sleep stages', 'HRV (Watch)', 'Screen-lock duration'],
+        whyResearch: '10–30 minute naps improve alertness, working memory, and reaction time without sleep inertia (Brooks & Lack, 2006). Naps over ~45 min risk grogginess from waking in slow-wave sleep.'
       },
       {
         id: 'zoom_meeting',
@@ -3235,7 +3399,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 45,
         kind: 'drain',
         accent: 'var(--px-warn)',
-        deltas: { meeting_min: 45, synchronous_load: 1 }
+        deltas: { meeting_min: 45, synchronous_load: 1 },
+        targetDeltaE: -15,
+        targetDeltaS: 8,
+        dataSources: ['Google Calendar · meeting blocks', 'Zoom logs', 'Microphone activity'],
+        whyResearch: 'Continuous video calls cause "Zoom fatigue": close-up eye contact, self-view mirroring, and reduced mobility tax cognitive resources (Bailenson, 2021). Synchronous load also blocks deep recovery between focus blocks.'
       },
       {
         id: 'heavy_async',
@@ -3243,7 +3411,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 60,
         kind: 'drain',
         accent: 'var(--px-critical)',
-        deltas: { slack_msgs: 60, context_switch_cnt: 8 }
+        deltas: { slack_msgs: 60, context_switch_cnt: 8 },
+        targetDeltaE: -22,
+        targetDeltaS: 18,
+        dataSources: ['Slack · message count', 'GitHub PR comments', 'ActivityWatch · app switches'],
+        whyResearch: 'Each interruption costs ~23 minutes to fully refocus (Mark et al., 2008). Chronic notification load elevates cortisol and is associated with reduced perceived productivity even when output is similar.'
       },
       {
         id: 'deep_work',
@@ -3251,7 +3423,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 90,
         kind: 'drain',
         accent: 'var(--px-warn)',
-        deltas: { focus_min: 90, synchronous_load: 0.2 }
+        deltas: { focus_min: 90, synchronous_load: 0.2 },
+        targetDeltaE: -10,
+        targetDeltaS: 4,
+        dataSources: ['ActivityWatch · focus apps', 'No-notification windows', 'Keystroke rate'],
+        whyResearch: 'Sustained focus depletes cognitive resources but builds skill (Newport, 2016). 90-minute blocks roughly align with the ultradian rhythm — after which recovery (break, food, movement) is needed before the next block.'
       },
       {
         id: 'late_night_ai',
@@ -3259,7 +3435,11 @@ P = drain - 0.5*recovery</pre>
         durationMin: 90,
         kind: 'drain',
         accent: 'var(--px-critical)',
-        deltas: { focus_min: 90, after_hours_min: 90, context_switch_cnt: 20 }
+        deltas: { focus_min: 90, after_hours_min: 90, context_switch_cnt: 20 },
+        targetDeltaE: -25,
+        targetDeltaS: 12,
+        dataSources: ['ActivityWatch · AI tool usage', 'System clock · after-hours flag', 'Screen time'],
+        whyResearch: 'Evening blue-light exposure suppresses melatonin and shifts circadian phase later (Chang et al., 2015). Frequent context switching at night compounds cognitive cost and degrades sleep quality the same night.'
       }
     ];
 
@@ -4239,17 +4419,21 @@ P = drain - 0.5*recovery</pre>
             ${menuRows.map(row => `
               <div class="demo-row-label ${row.css}">${row.label}</div>
               <div class="demo-menu-row">
-                ${row.items.map(item => `
+                ${row.items.map(item => {
+                  const sign = (item.targetDeltaE ?? 0) >= 0 ? '+' : '';
+                  const dE = (item.targetDeltaE ?? 0);
+                  return `
                   <button type="button" class="demo-card" data-demo-activity="${item.id}" data-kind="${item.kind}">
                     <div class="demo-card-top">
                       <span class="demo-card-label">${item.label}</span>
-                      <span class="demo-card-duration">${item.durationMin} min</span>
+                      <span class="demo-card-duration">${item.durationMin} min · ${sign}${dE} E</span>
                     </div>
                     <div class="demo-card-bottom">
                       ${renderDemoSceneSvg(item.id)}
                     </div>
                   </button>
-                `).join('')}
+                `;
+                }).join('')}
               </div>
             `).join('')}
           </div>
@@ -4277,17 +4461,43 @@ P = drain - 0.5*recovery</pre>
         `;
       }).join('');
 
+      const stepOrder = ['scene', 'features', 'model', 'battery', 'done'];
+      const stepLabels = ['Scene', 'Features', 'Model B', 'Battery', 'Done'];
+      const currentStepIdx = Math.max(0, stepOrder.indexOf(activity.step));
+      const stepIndicator = stepOrder.slice(0, 4).map((_, idx) => {
+        const cls = idx < currentStepIdx ? 'is-done' : idx === currentStepIdx ? 'is-active' : '';
+        return `<span class="demo-step-dot ${cls}"></span>`;
+      }).join('');
+      const stepCaption = activity.step === 'done'
+        ? 'Complete · battery updated'
+        : `Step ${currentStepIdx + 1} of 4 · ${stepLabels[currentStepIdx]}`;
+
+      const dataChips = (activity.dataSources || []).map(src => `<span class="demo-data-chip">${src}</span>`).join('');
+      const isDone = activity.step === 'done';
+
       DOM.demoLayout.innerHTML = `
         ${topbar}
         <div class="demo-activity-view">
           <div class="demo-scene-panel">
             <div class="demo-scene-meta">
               <div class="demo-scene-title">${activity.label}</div>
-              <div class="demo-stage-label">${getDemoStageLabel(activity.step)} · ${activity.durationMin} min</div>
+              <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === 'recovery' ? 'Recovery' : 'Drain'}</div>
             </div>
             <div class="demo-scene-frame is-entering is-${activity.kind}">
               ${renderDemoSceneSvg(activity.id)}
             </div>
+            <div class="demo-step-indicator">
+              ${stepIndicator}
+              <span>${stepCaption}</span>
+            </div>
+            <div class="demo-data-sources">
+              <div class="demo-data-sources-title">Where this data comes from</div>
+              <div class="demo-data-sources-list">${dataChips}</div>
+            </div>
+            <details class="demo-why" ${isDone ? 'open' : ''}>
+              <summary>Why? · How does this affect my battery?</summary>
+              <div class="demo-why-body">${activity.whyResearch || ''}</div>
+            </details>
           </div>
           <div class="demo-pipeline-panel">
             <div class="demo-pipeline-head">
@@ -4325,8 +4535,8 @@ P = drain - 0.5*recovery</pre>
             <div class="demo-packet-layer" data-demo-packets></div>
           </div>
         </div>
-        <div class="demo-back-wrap${activity.step === 'done' ? ' is-visible' : ''}">
-          <button type="button" class="demo-back-btn" data-demo-back>Back to menu</button>
+        <div class="demo-back-wrap${isDone ? ' is-visible' : ''}">
+          <button type="button" class="demo-continue-btn" data-demo-back>← Back to activities</button>
         </div>
       `;
 
@@ -4458,19 +4668,26 @@ P = drain - 0.5*recovery</pre>
         featureProjector: projectDemoFeaturesToModel
       });
 
+      const finalEnergy = typeof activity.targetDeltaE === 'number'
+        ? clamp(beforeBattery + activity.targetDeltaE, 0, 100)
+        : stepped.energy;
+      const finalStress = typeof activity.targetDeltaS === 'number'
+        ? clamp(beforeStress + activity.targetDeltaS, 0, 100)
+        : stepped.stress;
+
       APP.demo.featureAccum = nextFeatures;
-      APP.demo.E = stepped.energy;
-      APP.demo.S = stepped.stress;
+      APP.demo.E = finalEnergy;
+      APP.demo.S = finalStress;
       APP.demo.activity = {
         ...activity,
         step: 'scene',
         beforeClock,
         afterClock: stepped.cursor.toISOString(),
         beforeBattery,
-        afterBattery: stepped.energy,
+        afterBattery: finalEnergy,
         displayBattery: beforeBattery,
-        deltaE: Number((stepped.energy - beforeBattery).toFixed(2)),
-        deltaS: Number((stepped.stress - beforeStress).toFixed(2)),
+        deltaE: Number((finalEnergy - beforeBattery).toFixed(2)),
+        deltaS: Number((finalStress - beforeStress).toFixed(2)),
         pressure: stepped.pressure,
         eRest: stepped.eRest,
         normalized,
