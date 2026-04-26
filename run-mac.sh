@@ -26,6 +26,6 @@ fi
 echo ""
 echo "Psych Battery is running."
 echo "  Web app : http://localhost:3131"
-[ -n "$PORT" ] && echo "  Display : CrowPanel on $PORT (updates every 30s)"
+[ -n "$PORT" ] && echo "  Display : CrowPanel on $PORT (updates every 10s)"
 
 open "http://localhost:3131"

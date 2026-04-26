@@ -14,10 +14,12 @@ uint8_t ImageBW[27200];  // 800 * 272 / 8
 int    currentCharge = 100;
 String currentTrend  = "flat";
 bool   needsRedraw   = true;
+int    g_fillW       = 0;  // right-edge of fill; pixels at x >= (EPD_W - g_fillW) are black
 
 void drawBattery(int pct, const String& trend);
-void drawPercentRotatedCCW(int x, int y, int pct, uint16_t color);
-void drawTrendArrow(const String& trend, int x, int y, uint16_t color);
+void drawPercentRotatedCCW(int x, int y, int pct);
+void drawTrendArrow(const String& trend, int x, int y);
+void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW, char chr, uint16_t size);
 void fullRefresh();
 
 void setup() {
@@ -86,39 +88,29 @@ void fullRefresh() {
 void drawBattery(int pct, const String& trend) {
   pct = constrain(pct, 0, 100);
 
-  const int bx = 64;
-  const int by = 28;
-  const int bw = 672;
-  const int bh = 216;
-  const int nubW = 32;
-  const int pad = 10;
-
-  EPD_DrawRectangle(bx, by, bx + bw, by + bh, BLACK, 0);
-  EPD_DrawRectangle(bx - nubW, by + 64, bx, by + bh - 64, BLACK, 1);
-
-  int fillW = (bw - pad * 2) * pct / 100;
+  // Fill from right edge — drains left as pct decreases
+  int fillW = (long)EPD_W * pct / 100;
+  g_fillW = fillW;
   if (fillW > 0) {
-    EPD_DrawRectangle(bx + bw - pad - fillW, by + pad, bx + bw - pad, by + bh - pad, BLACK, 1);
+    EPD_DrawRectangle(EPD_W - fillW, 0, EPD_W, EPD_H, BLACK, 1);
   }
 
   char buf[4];
   snprintf(buf, sizeof(buf), "%d", pct);
-
   int numDigits = strlen(buf);
   int percentBlockH = numDigits * 24 + 12;
-  int textX = bx + bw / 2 - 48;
-  int textY = by + bh / 2 - percentBlockH / 2;
+  int textX = EPD_W / 2 - 48;
+  int textY = EPD_H / 2 - percentBlockH / 2;
 
-  drawPercentRotatedCCW(textX, textY, pct, BLACK);
-  drawTrendArrow(trend, textX + 96, by + bh / 2 - 24, BLACK);
+  drawPercentRotatedCCW(textX, textY, pct);
+  drawTrendArrow(trend, textX + 96, EPD_H / 2 - 24);
 }
 
-void drawTrendArrow(const String& trend, int x, int y, uint16_t color) {
-  if (trend == "up") {
-    EPD_ShowString(x, y, "<", 48, color);
-  } else if (trend == "down") {
-    EPD_ShowString(x, y, ">", 48, color);
-  }
+void drawTrendArrow(const String& trend, int x, int y) {
+  char ch = 0;
+  if (trend == "up") ch = '^';
+  else if (trend == "down") ch = 'V';
+  if (ch) drawCharRotatedCCW(x, y, 0, 0, 48, ch, 48);
 }
 
 uint16_t fontByte(char chr, uint16_t size, uint16_t idx) {
@@ -145,7 +137,7 @@ void setPixelSafe(int x, int y, uint16_t color) {
 }
 
 void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW,
-                        char chr, uint16_t size, uint16_t color) {
+                        char chr, uint16_t size) {
   uint16_t charW = size / 2;
   uint16_t byteCount = (size / 8 + ((size % 8) ? 1 : 0)) * charW;
 
@@ -160,13 +152,13 @@ void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW,
       int rx = dstX + py;
       int ry = dstY + blockW - 1 - px;
 
-      setPixelSafe(rx, ry, (temp & 0x01) ? color : !color);
+      if (temp & 0x01) setPixelSafe(rx, ry, (rx >= EPD_W - g_fillW) ? WHITE : BLACK);
       temp >>= 1;
     }
   }
 }
 
-void drawPercentRotatedCCW(int x, int y, int pct, uint16_t color) {
+void drawPercentRotatedCCW(int x, int y, int pct) {
   char num[4];
   snprintf(num, sizeof(num), "%d", pct);
 
@@ -176,7 +168,7 @@ void drawPercentRotatedCCW(int x, int y, int pct, uint16_t color) {
   int blockW = numW + unitW;
 
   for (int i = 0; i < numDigits; i++) {
-    drawCharRotatedCCW(x, y, i * 24, 0, blockW, num[i], 48, color);
+    drawCharRotatedCCW(x, y, i * 24, 0, blockW, num[i], 48);
   }
-  drawCharRotatedCCW(x, y, numW, 12, blockW, '%', 24, color);
+  drawCharRotatedCCW(x, y, numW, 12, blockW, '%', 24);
 }

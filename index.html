@@ -258,14 +258,14 @@
 
     function renderBreakdown(tally) {
       const rows = Object.entries(tally)
-        .filter(([, v]) => v.minutes >= 0.5)
+        .filter(([, v]) => v.minutes >= 0.05)
         .sort((a, b) => b[1].drain - a[1].drain);
 
       document.getElementById('breakdown-list').innerHTML =
         rows.map(([label, v]) => `
           <div class="drain-row">
             <span class="app-label">${label}</span>
-            <span class="mins">${Math.round(v.minutes)}m</span>
+            <span class="mins">${v.minutes < 1 ? Math.round(v.minutes * 60) + 's' : Math.round(v.minutes) + 'm'}</span>
             <span class="rate-badge" style="color:${rateColor(v.rate)}">×${v.rate.toFixed(1)}</span>
           </div>`).join('')
         || '<div style="color:var(--muted);font-size:0.82rem;padding:0.6rem 0">No activity in this window.</div>';

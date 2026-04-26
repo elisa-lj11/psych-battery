@@ -10,6 +10,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import json
+import time
 from datetime import datetime, timezone, timedelta
 
 AW_BASE      = 'http://localhost:5600/api/0'
@@ -47,10 +48,14 @@ def _match_rate(app: str, title: str) -> float:
 
 SERVER_START   = datetime.now(timezone.utc)
 _prev_battery  = 100
+_cache         = None   # (timestamp, battery, trend)
+CACHE_TTL      = 8      # seconds — both browser and display see the same value per cycle
 
 
 def compute_battery() -> tuple[int, str]:
-    global _prev_battery
+    global _prev_battery, _cache
+    if _cache and (time.monotonic() - _cache[0]) < CACHE_TTL:
+        return _cache[1], _cache[2]
     now   = datetime.now(timezone.utc)
     start = max(SERVER_START, now - timedelta(hours=WINDOW_HOURS))
 
@@ -94,6 +99,7 @@ def compute_battery() -> tuple[int, str]:
 
     trend = 'up' if battery > _prev_battery else ('down' if battery < _prev_battery else 'flat')
     _prev_battery = battery
+    _cache = (time.monotonic(), battery, trend)
     return battery, trend
 
 
