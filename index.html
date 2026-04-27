@@ -745,38 +745,38 @@
 
     .demo-card[data-kind="recovery"] {
       border-color: #4ade80;
-      background: linear-gradient(170deg, #2d7d4a 0%, #1e5c34 100%);
-      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.5), 0 0 12px 0 rgba(74,222,128,0.35);
+      background: #0c1a12;
+      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.6), 0 0 10px 0 rgba(74,222,128,0.25);
     }
 
     .demo-card[data-kind="recovery"] .demo-card-label {
-      color: #86efac;
+      color: #e8e8e8;
     }
 
     .demo-card[data-kind="recovery"] .demo-card-duration {
-      color: rgba(134, 239, 172, 0.75);
+      color: #86efac;
     }
 
     .demo-card[data-kind="recovery"] .demo-scene-svg {
-      filter: saturate(1.6) brightness(1.2);
+      filter: saturate(1.4) brightness(1.1);
     }
 
     .demo-card[data-kind="drain"] {
       border-color: #facc15;
-      background: linear-gradient(170deg, #8a5a0a 0%, #5e3d06 100%);
-      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.5), 0 0 12px 0 rgba(250,204,21,0.30);
+      background: #1a1408;
+      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.6), 0 0 10px 0 rgba(250,204,21,0.22);
     }
 
     .demo-card[data-kind="drain"] .demo-card-label {
-      color: #fde68a;
+      color: #e8e8e8;
     }
 
     .demo-card[data-kind="drain"] .demo-card-duration {
-      color: rgba(253, 230, 138, 0.75);
+      color: #fde68a;
     }
 
     .demo-card[data-kind="drain"] .demo-scene-svg {
-      filter: saturate(1.5) sepia(0.15) brightness(1.1);
+      filter: saturate(1.3) brightness(1.05);
     }
 
     .demo-card:hover,
@@ -4719,7 +4719,7 @@ P = drain - 0.5*recovery</pre>
           <rect class="bat-frame" x="2" y="2" width="220" height="86" fill="none" stroke-width="4"></rect>
           <rect class="bat-nub" x="228" y="28" width="14" height="34"></rect>
           <g id="battery-fill-group">${cellsSvg}</g>
-          <text id="battery-fill-text" class="bat-num" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400">--%</text>
+          <text id="battery-fill-text" class="bat-num" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400" stroke="var(--px-bg)" stroke-width="3" stroke-linejoin="round" paint-order="stroke fill">--%</text>
         </svg>
       `;
     }
@@ -4770,7 +4770,7 @@ P = drain - 0.5*recovery</pre>
       });
 
       fillText.textContent = `${rounded}%`;
-      fillText.style.fill = rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)';
+      fillText.style.fill = 'var(--px-text)';
       DOM.batteryPercent.textContent = `${rounded}%`;
     }
 
@@ -5097,7 +5097,7 @@ P = drain - 0.5*recovery</pre>
           <rect x="2" y="2" width="118" height="30" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
           <rect x="122" y="10" width="8" height="14" fill="var(--px-border-2)"></rect>
           ${cells}
-          <text x="60" y="21" text-anchor="middle" font-family="VT323, monospace" font-size="14" fill="${!isStress && rounded != null && rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)'}">${rounded == null ? '--' : rounded}%</text>
+          <text x="60" y="21" text-anchor="middle" font-family="VT323, monospace" font-size="14" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? '--' : rounded}%</text>
         </svg>
       `;
     }
