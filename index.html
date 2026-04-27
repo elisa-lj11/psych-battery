@@ -3394,6 +3394,73 @@
         min-height: 252px;
       }
     }
+
+    /* ── Model Viz ─────────────────────────────────── */
+    .model-viz-card { margin-top: 12px; }
+    .model-viz-header {
+      font-family: var(--px-font-ui); font-size: 11px; color: var(--px-accent);
+      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: baseline; gap: 10px;
+    }
+    .model-viz-subtitle { font-family: var(--px-font-mono); font-size: 13px; color: var(--px-muted); font-weight: normal; text-transform: none; letter-spacing: 0; }
+    .model-viz-body { display: flex; gap: 10px; align-items: stretch; }
+    .model-viz-side { flex: 0 0 112px; display: flex; flex-direction: column; gap: 4px; }
+    .model-viz-side-label {
+      font-family: var(--px-font-ui); font-size: 9px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .model-viz-side-label.drain { color: var(--px-critical); }
+    .model-viz-side-label.recov { color: var(--px-good); }
+    .model-viz-pill {
+      font-family: var(--px-font-mono); font-size: 12px; padding: 2px 6px;
+      border: 1px solid; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 110px; display: block;
+    }
+    .model-viz-pill.drain { color: var(--px-critical); border-color: var(--px-critical); background: rgba(248,113,113,0.08); }
+    .model-viz-pill.recov { color: var(--px-good); border-color: var(--px-good); background: rgba(74,222,128,0.08); }
+    .model-viz-pill.dim { opacity: 0.35; }
+    .model-viz-arrow-note { font-family: var(--px-font-mono); font-size: 12px; color: var(--px-muted); text-align: center; margin-top: 4px; }
+    .model-viz-tanks { flex: 1; display: flex; gap: 6px; align-items: stretch; }
+    .model-viz-tank-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .model-viz-tank {
+      width: 100%; flex: 1; min-height: 80px; position: relative;
+      border: 2px solid var(--px-border); overflow: hidden; background: var(--bg);
+    }
+    .model-viz-tank-fill {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      transition: height 1.4s cubic-bezier(0.25,0.1,0.25,1); opacity: 0.65;
+    }
+    .model-viz-tank-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      pointer-events: none; gap: 2px;
+    }
+    .model-viz-tank-val { font-family: var(--px-font-mono); font-size: 26px; line-height: 1; color: var(--px-text); text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+    .model-viz-tank-name { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .model-viz-tank-rate { font-family: var(--px-font-mono); font-size: 12px; text-align: center; }
+    .model-viz-sep {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 0 2px; flex-shrink: 0;
+    }
+    .model-viz-pressure-badge {
+      font-family: var(--px-font-ui); font-size: 9px; padding: 3px 5px;
+      border: 1px solid; text-align: center; letter-spacing: 0.05em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    .model-viz-couple { font-family: var(--px-font-mono); font-size: 18px; color: var(--px-muted); }
+    .model-viz-net {
+      margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--px-border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .model-viz-net-label { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); text-transform: uppercase; white-space: nowrap; }
+    .model-viz-net-status { font-family: var(--px-font-mono); font-size: 14px; }
+    @media (max-width: 600px) {
+      .model-viz-body { flex-direction: column; }
+      .model-viz-side { flex: 0 0 auto; flex-direction: row; flex-wrap: wrap; gap: 4px; align-items: center; }
+      .model-viz-side-label { margin-bottom: 0; }
+      .model-viz-tanks { min-height: 80px; }
+      .model-viz-sep { flex-direction: row; padding: 0; }
+    }
   </style>
 </head>
 <body data-layer="0" data-mode="normal">
@@ -3578,6 +3645,8 @@ P = drain - 0.5*recovery</pre>
 
           <div id="layer2-readout" class="layer2-readout"></div>
         </div>
+
+        <div id="model-viz-panel"></div>
 
         <details class="layer-legacy">
           <summary>Raw diagnostics</summary>
@@ -6085,6 +6154,107 @@ P = drain - 0.5*recovery</pre>
       renderFeatureRows(DOM.layer1RecoveryList, RECOVERY_FEATS, 'recovery');
     }
 
+    function renderModelViz() {
+      const vizEl = document.getElementById('model-viz-panel');
+      if (!vizEl) return;
+      const payload = getModelPayload();
+      const feats = getLastFeats();
+      const pressure = computePressure(feats);
+      const currentEnergy = clamp(Number(payload?.E_internal) || 0, 0, 100);
+      const currentStress  = clamp(Number(payload?.S) || 0, 0, 100);
+      const tickDate = getModelTickDate(payload);
+      const hour = tickDate.getHours() + (tickDate.getMinutes() / 60);
+      const chronotype = payload?.chronotype || 'intermediate';
+      const eRestNow = payload && typeof payload.E_rest_now === 'number'
+        ? Number(payload.E_rest_now)
+        : computeERest(hour, chronotype);
+      const dE = payload ? (-0.05 * pressure * currentEnergy) + ((eRestNow - currentEnergy) / 120) : 0;
+      const dS = payload ? (1.5 * pressure) - (currentStress / 4320) : 0;
+      const pressurePct = Math.round(pressure * 100);
+      const pressureColor = getPressureTone(pressure);
+      const eColor = levelColor(currentEnergy);
+      const sColor = stressColor(currentStress);
+
+      const topDrain = DRAIN_FEATS
+        .map(item => ({ label: item.label, norm: normalizeFeature(item.key, feats[item.key]) }))
+        .sort((a, b) => b.norm - a.norm)
+        .slice(0, 3);
+      const topRecov = RECOVERY_FEATS
+        .map(item => ({ label: item.label, norm: normalizeFeature(item.key, feats[item.key]) }))
+        .sort((a, b) => b.norm - a.norm)
+        .slice(0, 3);
+
+      let netIcon, netDesc, netColor;
+      if (dE > 0.01)       { netIcon = '▲'; netDesc = `recovering +${dE.toFixed(2)}/min`;  netColor = 'var(--px-good)'; }
+      else if (dE < -0.03) { netIcon = '▼'; netDesc = `draining ${dE.toFixed(2)}/min`;     netColor = 'var(--px-critical)'; }
+      else if (dE < -0.005){ netIcon = '↘'; netDesc = `slow drain ${dE.toFixed(3)}/min`;   netColor = 'var(--px-warn)'; }
+      else                  { netIcon = '→'; netDesc = `stable ${dE.toFixed(3)}/min`;       netColor = 'var(--px-muted)'; }
+
+      const drainPills = topDrain.map(d =>
+        `<span class="model-viz-pill drain${d.norm < 0.05 ? ' dim' : ''}">${d.label}</span>`
+      ).join('');
+      const recovPills = topRecov.map(r =>
+        `<span class="model-viz-pill recov${r.norm < 0.05 ? ' dim' : ''}">${r.label}</span>`
+      ).join('');
+
+      vizEl.innerHTML = `
+        <div class="layer-card model-viz-card">
+          <div class="model-viz-header">
+            Energy dynamics
+            <span class="model-viz-subtitle">live stock-and-flow view</span>
+          </div>
+          <div class="model-viz-body">
+            <div class="model-viz-side">
+              <div class="model-viz-side-label drain">Drain</div>
+              ${drainPills}
+              <div class="model-viz-arrow-note">↓ pressure</div>
+            </div>
+            <div class="model-viz-tanks">
+              <div class="model-viz-tank-wrap">
+                <div class="model-viz-tank">
+                  <div class="model-viz-tank-fill" style="height:${currentEnergy}%;background:${eColor}"></div>
+                  <div class="model-viz-tank-overlay">
+                    <div class="model-viz-tank-val">${payload ? currentEnergy.toFixed(0) : '--'}</div>
+                    <div class="model-viz-tank-name">Energy</div>
+                  </div>
+                </div>
+                <div class="model-viz-tank-rate" style="color:${dE < 0 ? 'var(--px-critical)' : 'var(--px-good)'}">
+                  ${payload ? (dE >= 0 ? '+' : '') + dE.toFixed(3) : '--'}/min
+                </div>
+              </div>
+              <div class="model-viz-sep">
+                <div class="model-viz-pressure-badge" style="color:${pressureColor};border-color:${pressureColor}">
+                  P<br>${pressurePct}%
+                </div>
+                <div class="model-viz-couple">⟷</div>
+              </div>
+              <div class="model-viz-tank-wrap">
+                <div class="model-viz-tank">
+                  <div class="model-viz-tank-fill" style="height:${currentStress}%;background:${sColor}"></div>
+                  <div class="model-viz-tank-overlay">
+                    <div class="model-viz-tank-val">${payload ? currentStress.toFixed(0) : '--'}</div>
+                    <div class="model-viz-tank-name">Stress</div>
+                  </div>
+                </div>
+                <div class="model-viz-tank-rate" style="color:${dS > 0 ? 'var(--px-critical)' : 'var(--px-good)'}">
+                  ${payload ? (dS >= 0 ? '+' : '') + dS.toFixed(4) : '--'}/min
+                </div>
+              </div>
+            </div>
+            <div class="model-viz-side">
+              <div class="model-viz-side-label recov">Recovery</div>
+              ${recovPills}
+              <div class="model-viz-arrow-note" style="color:var(--px-good)">↑ restores</div>
+            </div>
+          </div>
+          <div class="model-viz-net">
+            <span class="model-viz-net-label">Net:</span>
+            <span class="model-viz-net-status" style="color:${netColor}">${netIcon} ${netDesc}</span>
+          </div>
+        </div>
+      `;
+    }
+
     function renderLayer2Static() {
       const payload = getModelPayload();
       const feats = getLastFeats();
@@ -6251,6 +6421,8 @@ P = drain - 0.5*recovery</pre>
           </div>
         </div>
       `).join('');
+
+      renderModelViz();
     }
 
     function layer2AnimLoop(timestamp = 0) {
