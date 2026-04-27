@@ -427,32 +427,32 @@
     }
 
     .demo-battery-mini {
-      width: 120px;
+      width: 200px;
       flex: 0 0 auto;
     }
 
     .demo-battery-pair {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 8px;
     }
 
     .demo-batt-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
     }
 
     .demo-batt-label {
       font-family: var(--px-font-ui);
-      font-size: 11px;
+      font-size: 9px;
       color: var(--muted);
-      letter-spacing: 0.14em;
+      letter-spacing: 0.1em;
     }
 
     .demo-batt-svg {
-      width: 132px;
+      width: 80px;
       height: auto;
       display: block;
     }
@@ -1252,25 +1252,27 @@
     }
 
     .demo-timeline-strip {
+      position: sticky;
+      bottom: 0;
       width: 100%;
       background: var(--surface);
-      border-top: 2px solid var(--px-border);
-      padding: 8px 8px 4px;
+      border-top: 1px solid var(--px-border);
+      padding: 4px 8px 0;
       box-sizing: border-box;
     }
 
     .demo-timeline-svg {
       width: 100%;
-      height: 140px;
+      height: 60px;
       display: block;
     }
 
     .demo-timeline-legend {
       display: flex;
-      gap: 16px;
-      padding: 4px 6px;
+      gap: 12px;
+      padding: 2px 4px;
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 8px;
     }
 
     .demo-tl-e {
@@ -1281,22 +1283,27 @@
       color: var(--px-accent);
     }
 
+    .demo-scene-frame.animating .scene-anim {
+      animation: none;
+      animation-delay: 0s;
+    }
+
     .demo-scene-frame.animating[data-activity="go_outside"] .anim-sun {
-      animation: spin-slow 8s linear infinite;
+      animation: spin-slow 8s steps(8, end) infinite;
       transform-box: view-box;
       transform-origin: 80px 40px;
     }
 
     .demo-scene-frame.animating[data-activity="go_outside"] .anim-cloud {
-      animation: drift-right 4s ease-in-out infinite alternate;
+      animation: drift-right 4s steps(4, end) infinite alternate;
     }
 
     .demo-scene-frame.animating[data-activity="connect_people"] .anim-bubble {
-      animation: pulse-scale 1.2s ease-in-out infinite;
+      animation: pulse-scale 1.2s steps(3, end) infinite;
     }
 
     .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam {
-      animation: steam-rise 1.5s ease-out infinite;
+      animation: steam-rise 1.5s steps(5, end) infinite;
     }
 
     .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam:nth-child(2),
@@ -1305,7 +1312,7 @@
     }
 
     .demo-scene-frame.animating[data-activity="take_nap"] .anim-z {
-      animation: float-up 2s ease-in-out infinite;
+      animation: float-up 2s steps(6, end) infinite;
     }
 
     .demo-scene-frame.animating[data-activity="take_nap"] .anim-z:nth-child(2),
@@ -1314,11 +1321,11 @@
     }
 
     .demo-scene-frame.animating[data-activity="zoom_meeting"] .anim-eye {
-      animation: blink-opacity 3s linear infinite;
+      animation: blink-opacity 3s steps(4, end) infinite;
     }
 
     .demo-scene-frame.animating[data-activity="heavy_async"] .anim-badge {
-      animation: badge-bounce 1s ease-in-out infinite;
+      animation: badge-bounce 1s steps(4, end) infinite;
     }
 
     .demo-scene-frame.animating[data-activity="heavy_async"] .anim-badge:nth-child(2),
@@ -1331,8 +1338,135 @@
     }
 
     .demo-scene-frame.animating[data-activity="late_night_ai"] .anim-glow {
-      animation: glow-pulse 1.5s ease-in-out infinite;
+      animation: glow-pulse 1.5s steps(4, end) infinite;
     }
+
+    /* 8-bit character breathing — 2-frame asymmetric: 300ms up, 500ms hold */
+    .demo-scene-frame.animating .scene-person {
+      animation: person-breathe 1600ms steps(2, end) infinite;
+    }
+    @keyframes person-breathe {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-2px); }
+    }
+
+    /* Zoom meeting participant blink — JS-driven via startZoomBlinks(), CSS handles the frame */
+    .scene-blink-a,
+    .scene-blink-b,
+    .scene-blink-c,
+    .scene-blink-d {
+      transform-origin: center center;
+      transition: transform 80ms steps(1, end);
+    }
+
+    /* Talking mouth — JS drives .is-talking class */
+    .scene-talk-a {
+      transition: transform 80ms steps(1, end);
+    }
+    .scene-talk-a.is-closed { transform: scaleY(0.15); }
+
+    /* Tour button */
+    #tour-btn {
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 6px 10px;
+      min-height: 36px;
+      background: transparent;
+      border: 2px solid var(--px-border, #2a2a3a);
+      color: var(--px-muted, #6060a0);
+      cursor: pointer;
+    }
+    #tour-btn:hover,
+    #tour-btn:focus-visible {
+      border-color: var(--px-accent, #818cf8);
+      color: var(--px-accent, #818cf8);
+    }
+
+    /* Tour overlay */
+    #tour-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      pointer-events: none;
+    }
+    #tour-overlay:not([hidden]) { pointer-events: auto; }
+    #tour-spotlight {
+      position: fixed;
+      border: 3px solid var(--px-accent, #818cf8);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.72);
+      pointer-events: none;
+      z-index: 9001;
+      transition: left 120ms steps(4, end), top 120ms steps(4, end),
+                  width 120ms steps(4, end), height 120ms steps(4, end);
+    }
+    #tour-tooltip {
+      position: fixed;
+      background: var(--surface, #1a1a24);
+      border: 2px solid var(--px-accent, #818cf8);
+      padding: 16px;
+      max-width: 290px;
+      min-width: 200px;
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 12px;
+      color: var(--text, #e0e0f0);
+      z-index: 9002;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+    }
+    #tour-step-num {
+      font-size: 10px;
+      color: var(--muted, #6060a0);
+      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+    }
+    #tour-title {
+      font-size: 13px;
+      color: var(--px-accent, #818cf8);
+      margin-bottom: 8px;
+      letter-spacing: 0.08em;
+    }
+    #tour-body {
+      line-height: 1.55;
+      color: var(--text, #e0e0f0);
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+    }
+    #tour-controls {
+      display: flex;
+      gap: 6px;
+      margin-top: 14px;
+      align-items: center;
+    }
+    #tour-back, #tour-next {
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 11px;
+      padding: 6px 10px;
+      min-height: 36px;
+      border: 2px solid var(--px-border, #2a2a3a);
+      background: var(--surface-2, #22223a);
+      color: var(--text, #e0e0f0);
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+    #tour-next {
+      background: var(--px-accent, #818cf8);
+      border-color: var(--px-accent, #818cf8);
+      color: var(--bg, #0f0f13);
+      margin-left: auto;
+    }
+    #tour-back:hover { border-color: var(--px-accent, #818cf8); }
+    #tour-next:hover { opacity: 0.85; }
+    #tour-skip {
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 10px;
+      background: transparent;
+      border: none;
+      color: var(--muted, #6060a0);
+      cursor: pointer;
+      padding: 4px 6px;
+      letter-spacing: 0.06em;
+    }
+    #tour-skip:hover { color: var(--text, #e0e0f0); }
 
     @keyframes demo-scene-enter {
       0%   { opacity: 0; transform: scale(0.6) translateY(20px); filter: brightness(2.4); }
@@ -1385,6 +1519,14 @@
     @keyframes glow-pulse {
       0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .demo-scene-frame.animating .anim-layer,
+      .demo-scene-frame.animating [class^="anim-"],
+      .demo-scene-frame.animating [class*=" anim-"] {
+        animation: none !important;
+      }
     }
 
     @keyframes demo-leaf-fall {
@@ -1645,6 +1787,9 @@
 
     .diag-label {
       font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .diag-value {
@@ -3013,6 +3158,64 @@
       line-height: 1;
     }
 
+    @media (min-width: 960px) {
+      .layer2-readout-value { font-size: 2rem; }
+      .layer2-readout-label { font-size: 0.85rem; }
+      .layer2-readout-row { min-height: 90px; padding: 14px; }
+    }
+
+    .diag-help-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--px-border, #2a2a3a);
+      background: transparent;
+      color: var(--px-muted, #6060a0);
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 9px;
+      cursor: pointer;
+      margin-left: 5px;
+      vertical-align: middle;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .diag-help-btn:hover { border-color: var(--px-accent, #818cf8); color: var(--px-accent, #818cf8); }
+    .layer2-readout-label { display: flex; align-items: center; gap: 2px; }
+
+    .diag-popover {
+      position: fixed;
+      inset: unset;
+      background: var(--surface, #1a1a24);
+      border: 2px solid var(--px-accent, #818cf8);
+      padding: 14px;
+      max-width: 280px;
+      min-width: 200px;
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+      color: var(--text, #e0e0f0);
+      line-height: 1.4;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      z-index: 800;
+    }
+    .diag-popover strong {
+      display: block;
+      font-family: var(--px-font-ui, 'Silkscreen', monospace);
+      font-size: 11px;
+      color: var(--px-accent, #818cf8);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .diag-pop-formula {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--px-muted, #6060a0);
+      border-top: 1px solid var(--px-border, #2a2a3a);
+      padding-top: 6px;
+    }
+
     .layer2-current-dot {
       animation: layer2-dot-blink 1s steps(2) infinite;
       transform-origin: center;
@@ -3205,6 +3408,7 @@
         <option value="jordan">Demo · Jordan (tech, low AI)</option>
       </select>
       <button id="demo-toggle-btn" type="button" aria-pressed="false">Interactive Demo</button>
+      <button id="tour-btn" type="button" title="App tour">TOUR</button>
       <span id="demo-header-badge" aria-live="polite">Demo mode</span>
       <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
     </div>
@@ -4245,7 +4449,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[104, 42, 10, 58], [104, 36, 30, 10], [108, 46, 26, 10]], 'var(--px-border)')}
             ${pxRects([[114, 44, 14, 2], [112, 48, 18, 2]], good)}
             ${pxRects([[38, 100, 84, 10], [48, 110, 64, 8], [56, 118, 48, 8]], surface)}
-            ${personGroup(62, 54, text, '')}
+            ${personGroup(62, 54, text, 'scene-person')}
             ${leafGlyph(30, 22, warn, 'scene-leaf-a')}
             ${leafGlyph(90, 16, accent, 'scene-leaf-b anim-layer anim-cloud')}
             ${leafGlyph(128, 28, low, 'scene-leaf-c')}
@@ -4255,8 +4459,8 @@ P = drain - 0.5*recovery</pre>
           art = `
             ${sky}
             ${floor}
-            ${personGroup(22, 58, info, '')}
-            ${personGroup(92, 58, good, '')}
+            ${personGroup(22, 58, info, 'scene-person')}
+            ${personGroup(92, 58, good, 'scene-person')}
             ${bubbleGlyph(36, 22, text, 'scene-bubble-a anim-layer anim-bubble')}
             ${bubbleGlyph(104, 20, accent, 'scene-bubble-b anim-layer anim-bubble')}
             ${pxRects([[44, 28, 4, 2], [52, 28, 4, 2], [46, 34, 10, 2], [112, 26, 4, 2], [120, 26, 4, 2], [114, 32, 10, 2]], bg)}
@@ -4269,25 +4473,54 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[0, 0, 160, 68]], surfaceDark)}
             ${pxRects([[0, 68, 160, 8]], borderDark)}
             ${pxRects([[0, 76, 160, 8]], border)}
-            ${pxRects([[0, 84, 160, 10]], low)}
-            ${pxRects([[0, 94, 160, 10]], warn)}
+            ${pxRects([[0, 84, 160, 10]], '#7a5838')}
+            ${pxRects([[4, 86, 152, 6]], '#6a4828')}
+            ${pxRects([[0, 94, 160, 10]], '#6a4828')}
+            ${pxRects([[4, 96, 152, 6]], '#7a5838')}
             ${pxRects([[0, 104, 160, 56]], surface)}
-            ${pxRects([[18, 28, 22, 14]], warn)}
-            ${pxRects([[22, 24, 14, 4]], borderDark)}
+            ${pxRects([[18, 28, 22, 14]], '#d4b896')}
+            ${pxRects([[22, 24, 14, 4]], '#b89070')}
             ${pxRects([[24, 32, 2, 2], [32, 32, 2, 2], [28, 36, 4, 1]], bg)}
-            ${pxRects([[18, 50, 28, 30]], accent)}
-            ${pxRects([[44, 58, 16, 8], [56, 62, 12, 6]], warn)}
-            ${pxRects([[70, 82, 54, 2], [64, 84, 66, 4], [60, 88, 74, 4], [56, 92, 82, 10], [58, 102, 78, 8], [62, 110, 70, 6], [68, 116, 58, 4], [74, 120, 46, 2]], text)}
-            ${pxRects([[76, 88, 42, 2], [70, 90, 54, 4], [66, 94, 62, 8], [68, 102, 58, 8], [72, 110, 50, 4], [78, 114, 38, 2]], low)}
-            ${pxRects([[82, 92, 30, 2], [78, 94, 38, 6], [76, 100, 42, 8], [78, 108, 38, 4], [82, 112, 30, 2]], surfaceDark)}
-            ${pxRects([[84, 94, 26, 2], [82, 98, 30, 4], [84, 102, 26, 4], [86, 106, 22, 2]], warn)}
-            ${pxRects([[88, 96, 18, 2], [90, 100, 14, 2]], critical)}
-            ${pxRects([[84, 90, 24, 2], [90, 114, 12, 2]], border)}
-            ${steamGlyph(90, 70, 'scene-steam-a anim-layer anim-steam')}
-            ${steamGlyph(100, 66, 'scene-steam-b anim-layer anim-steam anim-steam-2')}
-            ${steamGlyph(110, 72, 'scene-steam-c anim-layer anim-steam')}
+            ${pxRects([[20, 42, 18, 4]], '#c8a060')}
+            ${pxRects([[18, 50, 28, 30]], '#5a3020')}
+            ${pxRects([[20, 52, 24, 26]], '#4a2818')}
+            ${pxRects([[22, 54, 10, 4]], '#c87840')}
+            ${pxRects([[44, 58, 16, 8], [56, 62, 12, 6]], '#5a3020')}
+            ${pxRects([[70, 82, 54, 2], [64, 84, 66, 4], [60, 88, 74, 4], [56, 92, 82, 10], [58, 102, 78, 8], [62, 110, 70, 6], [68, 116, 58, 4], [74, 120, 46, 2]], '#c0b898')}
+            ${pxRects([[76, 88, 42, 2], [70, 90, 54, 4], [66, 94, 62, 8], [68, 102, 58, 8], [72, 110, 50, 4], [78, 114, 38, 2]], '#c87d3a')}
+            ${pxRects([[82, 92, 30, 2], [78, 94, 38, 6], [76, 100, 42, 8], [78, 108, 38, 4], [82, 112, 30, 2]], '#7a3a1a')}
+            ${pxRects([[84, 94, 26, 2], [82, 98, 30, 4], [84, 102, 26, 4], [86, 106, 22, 2]], '#e8c060')}
+            ${pxRects([[88, 96, 18, 2], [90, 100, 14, 2]], '#b03030')}
+            ${pxRects([[84, 90, 24, 2], [90, 114, 12, 2]], '#c8a878')}
+            <g class="scene-anim scene-steam-a anim-layer anim-steam" transform="translate(90 70)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+                <rect x="2" y="10" width="1" height="2"></rect>
+              </g>
+            </g>
+            <g class="scene-anim scene-steam-b anim-layer anim-steam anim-steam-2" transform="translate(100 66)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+                <rect x="2" y="10" width="1" height="2"></rect>
+              </g>
+            </g>
+            <g class="scene-anim scene-steam-c anim-layer anim-steam" transform="translate(110 72)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+                <rect x="2" y="10" width="1" height="2"></rect>
+              </g>
+            </g>
             <g transform="translate(116 86)">
-              <g class="scene-anim scene-fork" fill="${text}">
+              <g class="scene-anim scene-fork" fill="#b0b8c0">
                 <rect x="0" y="0" width="14" height="2"></rect>
                 <rect x="0" y="2" width="2" height="8"></rect>
                 <rect x="4" y="2" width="2" height="8"></rect>
@@ -4296,9 +4529,9 @@ P = drain - 0.5*recovery</pre>
                 <rect x="6" y="10" width="2" height="22"></rect>
               </g>
             </g>
-            ${pxRects([[134, 82, 4, 26], [132, 80, 8, 2], [132, 108, 8, 2]], text)}
-            ${pxRects([[130, 80, 12, 6], [132, 78, 8, 2]], info)}
-            ${pxRects([[133, 82, 6, 2]], low)}
+            ${pxRects([[134, 82, 4, 26], [132, 80, 8, 2], [132, 108, 8, 2]], '#9a7048')}
+            ${pxRects([[130, 80, 12, 6], [132, 78, 8, 2]], '#88b8d0')}
+            ${pxRects([[133, 82, 6, 2]], '#d4a060')}
           `;
           break;
         case 'take_nap':
@@ -4336,7 +4569,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[0, 72, 160, 26]], surfaceDark)}
             ${pxRects([[0, 98, 160, 62]], surface)}
             ${pxRects([[18, 118, 124, 8], [30, 126, 100, 8]], border)}
-            ${personGroup(18, 48, text, '')}
+            ${personGroup(18, 48, text, 'scene-person')}
             ${pxRects([[68, 12, 78, 60]], border)}
             ${pxRects([[72, 16, 70, 52]], bg)}
             ${pxRects([[104, 14, 6, 2]], low)}
@@ -4398,7 +4631,7 @@ P = drain - 0.5*recovery</pre>
             ${sky}
             ${floor}
             ${deskGroup(42, 92, borderDark)}
-            ${personGroup(44, 48, text, '')}
+            ${personGroup(44, 48, text, 'scene-person')}
             ${pxRects([[82, 22, 50, 34]], borderDark)}
             ${pxRects([[86, 26, 42, 26]], bg)}
             ${pxRects([[90, 30, 10, 2]], good)}
@@ -4419,7 +4652,7 @@ P = drain - 0.5*recovery</pre>
             ${pxRects([[108, 12, 34, 40]], borderDark)}
             ${pxRects([[112, 16, 10, 10], [124, 16, 10, 10], [112, 28, 10, 10], [124, 28, 10, 10]], info)}
             ${deskGroup(38, 92, borderDark)}
-            ${personGroup(42, 48, text, '')}
+            ${personGroup(42, 48, text, 'scene-person')}
             <g transform="translate(78 22)">
               <g class="scene-anim scene-late-glow anim-layer anim-glow">
                 <rect x="0" y="0" width="48" height="28" fill="${critical}" opacity="0.18"></rect>
@@ -4501,6 +4734,27 @@ P = drain - 0.5*recovery</pre>
       { key: 'continuous_sleep_h', label: 'Continuous sleep', unit: 'h' },
       { key: 'hrv_z', label: 'HRV z-score', unit: 'z' }
     ];
+
+    const FEAT_HELP = {
+      meeting_video_min:      { title: 'Video Meetings', body: 'Total video call minutes detected this window. Each hour of video calls is one of the highest-drain signals — your brain gets no off-ramp from sustained eye contact and performance awareness.' },
+      meeting_f2f_min:        { title: 'Face-to-Face Meetings', body: 'In-person meeting time. Richer nonverbal cues make F2F less draining than video per minute, but sustained meeting load still accumulates fatigue.' },
+      context_switches:       { title: 'Context Switches', body: 'Detected app-switching events from ActivityWatch. High fragmentation keeps your brain in shallow-work mode and elevates baseline drain pressure throughout the day.' },
+      kpm_p95_over_base:      { title: 'Typing Intensity', body: 'Your 95th-percentile keystrokes-per-minute versus your personal baseline. Elevated typing signals either high-output cognitive work or anxiety-driven activity — both raise drain.' },
+      after_hours_frac:       { title: 'After-Hours Work', body: 'Fraction of active time outside your normal work hours. Consistently working late disrupts the circadian recovery window and compounds sleep debt over days.' },
+      sleep_debt_h:           { title: 'Sleep Debt', body: 'Estimated sleep deficit vs. your 8-hour target. Even 1 hour of debt measurably impairs working memory and stress regulation. This is the single highest-weight drain feature.' },
+      fragmentation_dev:      { title: 'Session Fragmentation', body: 'How fragmented your focus windows are compared to your personal baseline. High values mean many micro-interruptions preventing deep work — each context switch costs ~20 min of recovery time.' },
+      zoom_back_to_back_frac: { title: 'Back-to-Back Meetings', body: 'Fraction of meetings that start within 5 minutes of the previous one ending. No transition time means sustained cognitive load with zero decompression between high-demand sessions.' },
+      todoist_overdue_count:  { title: 'Overdue Tasks', body: 'Count of overdue Todoist items. Each unresolved task creates an open cognitive loop — Zeigarnik-effect mental overhead that persists even when you\'re not actively working.' },
+      focus_block_min:        { title: 'Focus Blocks', body: 'Uninterrupted focus windows of 25+ minutes detected by ActivityWatch. Deep work is one of the fastest energy restorers — each block counts as a mini-recharge against drain pressure.' },
+      walk_outside_min:       { title: 'Walk / Outside Time', body: 'Walking and outdoor exposure detected from sensors or logged. Dual recovery: physical movement plus natural light exposure both independently restore mental energy.' },
+      outside_log_min:        { title: 'Logged Outside Time', body: 'Outdoor time you\'ve manually logged via the Recovery sheet. Supplements sensor detection — useful when you step out without your devices.' },
+      afk_10plus_min:         { title: 'AFK Breaks (10+ min)', body: 'Away-from-keyboard breaks lasting 10 or more minutes. Micro-breaks (under 5 min) don\'t register — you need sustained physical separation from your screen to get genuine recovery.' },
+      social_voice_min:       { title: 'Social Voice Time', body: 'Voice conversation time across Zoom and in-person interactions. Positive social contact is restorative, unlike video-only calls. Low values over multiple days correlate with energy depletion.' },
+      with_people_min:        { title: 'With People', body: 'Physical co-presence time from location or calendar signals. Ambient social contact (even without active conversation) provides passive recovery — the "coffee shop effect."' },
+      detach_block_min:       { title: 'Detach Blocks', body: 'Logged detachment activities: walks, naps, meals away from desk, breathing sessions. Intentional separation from work tasks is the primary lever you can pull to raise energy quickly.' },
+      continuous_sleep_h:     { title: 'Continuous Sleep', body: 'Hours of uninterrupted sleep last night from Apple Health. Continuous sleep is more restorative than fragmented sleep of the same total duration — sleep architecture matters as much as total hours.' },
+      hrv_z:                  { title: 'HRV Z-Score', body: 'Heart rate variability compared to your 30-day rolling baseline. Positive = your autonomic nervous system is more recovered than usual; negative = physiological stress. The body\'s objective energy signal.' }
+    };
 
     let windowHours = 0.083;
     let windowBucket = null;
@@ -5091,6 +5345,7 @@ P = drain - 0.5*recovery</pre>
       const clamped = hasValue ? clamp(Number(level), 0, 100) : null;
       const rounded = hasValue ? Math.round(clamped) : null;
       const color = isStress ? stressColor(clamped ?? 0) : levelColor(clamped ?? 0);
+      const textFill = !isStress && rounded != null && rounded >= 60 ? 'var(--px-bg)' : 'var(--px-text)';
       const full = hasValue ? Math.floor(clamped / 10) : 0;
       const partial = hasValue ? ((clamped / 10) - full) : 0;
       let cells = '';
@@ -5106,7 +5361,7 @@ P = drain - 0.5*recovery</pre>
           <rect x="2" y="2" width="118" height="30" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
           <rect x="122" y="10" width="8" height="14" fill="var(--px-border-2)"></rect>
           ${cells}
-          <text x="60" y="21" text-anchor="middle" font-family="VT323, monospace" font-size="14" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? '--' : rounded}%</text>
+          <text x="60" y="21" text-anchor="middle" font-family="VT323, monospace" font-size="14" fill="${textFill}" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? '--' : rounded}%</text>
         </svg>
       `;
     }
@@ -5192,11 +5447,11 @@ P = drain - 0.5*recovery</pre>
       const dayStartMs = dayStart.getTime();
       const DAY_MS = 24 * 60 * 60 * 1000;
       const PAD_L = 8;
-      const PAD_R = 20;
-      const PAD_T = 22;
-      const PAD_B = 26;
+      const PAD_R = 16;
+      const PAD_T = 12;
+      const PAD_B = 18;
       const viewW = 400;
-      const viewH = 140;
+      const viewH = 60;
       const plotW = viewW - PAD_L - PAD_R;
       const plotH = viewH - PAD_T - PAD_B;
       const events = [...(APP.demo.completedActivities || [])].sort((a, b) => {
@@ -5210,8 +5465,7 @@ P = drain - 0.5*recovery</pre>
       const toY = pct => {
         return Number((PAD_T + ((1 - (clamp(Number(pct) || 0, 0, 100) / 100)) * plotH)).toFixed(2));
       };
-      const formatTimelineLabel = date => {
-        const hour = date.getHours();
+      const formatTimelineLabel = hour => {
         const hour12 = ((hour + 11) % 12) + 1;
         return `${hour12}${hour >= 12 ? 'pm' : 'am'}`;
       };
@@ -5228,10 +5482,10 @@ P = drain - 0.5*recovery</pre>
       const tickLines = [];
       const tickLabels = [];
       for (let hour = 0; hour <= 24; hour += 3) {
-        const tickDate = new Date(dayStartMs + (hour * 60 * 60 * 1000));
         const x = Number((PAD_L + ((hour / 24) * plotW)).toFixed(2));
+        const labelHour = (dayStart.getHours() + hour) % 24;
         tickLines.push(`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${PAD_T + plotH}" stroke="var(--px-border)" stroke-width="1" opacity="0.5"></line>`);
-        tickLabels.push(`<text x="${x}" y="${viewH - 5}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="7" fill="var(--px-muted)">${formatTimelineLabel(tickDate)}</text>`);
+        tickLabels.push(`<text x="${x}" y="${viewH - 4}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="7" fill="var(--px-muted)">${formatTimelineLabel(labelHour)}</text>`);
       }
       const energyPoints = [];
       const stressPoints = [];
@@ -5246,40 +5500,20 @@ P = drain - 0.5*recovery</pre>
       const icons = events.map(event => {
         const x = toX(event.simClockAfter);
         const icon = iconMap[event.id] || '•';
-        const y = PAD_T - 4;
-        return `<text x="${x}" y="${y}" text-anchor="middle" font-size="10">${icon}</text>`;
+        return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="9">${icon}</text>`;
       }).join('');
-      const lastEvent = events.length ? events[events.length - 1] : null;
-      const eEndX = lastEvent ? toX(lastEvent.simClockAfter) : PAD_L;
-      const eEndY = lastEvent ? toY(lastEvent.batteryAfter) : toY(50);
-      const sEndY = lastEvent ? toY(lastEvent.stressAfter) : toY(0);
-      const eVal = lastEvent ? Math.round(lastEvent.batteryAfter) : null;
-      const sVal = lastEvent ? Math.round(lastEvent.stressAfter) : null;
-      const inlineLegend = lastEvent ? `
-        <circle cx="${eEndX}" cy="${eEndY}" r="3" fill="var(--px-good)"></circle>
-        <text x="${eEndX + 6}" y="${eEndY + 3}" font-family="var(--px-font-ui)" font-size="8" fill="var(--px-good)">E ${eVal}</text>
-        <circle cx="${eEndX}" cy="${sEndY}" r="3" fill="var(--px-accent)"></circle>
-        <text x="${eEndX + 6}" y="${sEndY + 3}" font-family="var(--px-font-ui)" font-size="8" fill="var(--px-accent)">S ${sVal}</text>
-      ` : '';
-      const energyArea = energyPoints.length ? `M ${energyPoints[0]} L ${energyPoints.slice(1).join(' L ')} L ${eEndX},${PAD_T + plotH} L ${toX(events[0].simClockBefore)},${PAD_T + plotH} Z` : '';
-      const nowX = toX(APP.demo.simClock || startIso);
-      const nowCursor = `<line x1="${nowX}" y1="${PAD_T - 2}" x2="${nowX}" y2="${PAD_T + plotH + 2}" stroke="var(--px-accent)" stroke-width="1" opacity="0.6" stroke-dasharray="2 2"></line>`;
       target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 140" aria-hidden="true" shape-rendering="crispEdges">
-          <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="rgba(11, 11, 20, 0.6)" stroke="var(--px-border-2)" stroke-width="1"></rect>
+        <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
+          <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join('')}
-          ${energyArea ? `<path d="${energyArea}" fill="var(--px-good)" opacity="0.12"></path>` : ''}
-          ${nowCursor}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2" points="${energyPoints.join(' ')}"></polyline>` : ''}
-          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" stroke-dasharray="3 2" points="${stressPoints.join(' ')}"></polyline>` : ''}
-          ${inlineLegend}
+          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" points="${stressPoints.join(' ')}"></polyline>` : ''}
           ${icons}
           ${tickLabels.join('')}
         </svg>
         <div class="demo-timeline-legend">
-          <span class="demo-tl-e">━ E (Energy)</span>
-          <span class="demo-tl-s">┄ S (Stress)</span>
-          <span class="demo-tl-hint">Pick activities to fill the day →</span>
+          <span class="demo-tl-e">E</span>
+          <span class="demo-tl-s">S</span>
         </div>
       `;
     }
@@ -5965,18 +6199,56 @@ P = drain - 0.5*recovery</pre>
       }
 
       const readouts = [
-        { label: 'Pressure', value: payload ? `${Math.round(pressure * 100)}%` : '--%' },
-        { label: 'Energy', value: payload ? `${currentEnergy.toFixed(1)}%` : '--%' },
-        { label: 'Stress', value: payload ? `${currentStress.toFixed(1)}%` : '--%' },
-        { label: 'Erest', value: payload ? `${eRestNow.toFixed(1)}%` : '--%' },
-        { label: 'dE/min', value: payload ? dE.toFixed(2) : '--' },
-        { label: 'dS/min', value: payload ? dS.toFixed(3) : '--' }
+        {
+          id: 'pressure', label: 'Pressure', value: payload ? `${Math.round(pressure * 100)}%` : '--%',
+          popTitle: 'Drain Pressure',
+          popBody: 'Weighted aggregate of all active drain signals — meetings, context switches, sleep debt, after-hours work. 0% = restorative window; 100% = full drain load. This is the primary driver of how fast your energy falls.',
+          popFormula: 'Normalized weighted sum of drain features'
+        },
+        {
+          id: 'energy', label: 'Energy', value: payload ? `${currentEnergy.toFixed(1)}%` : '--%',
+          popTitle: 'Internal Energy (E)',
+          popBody: 'Your modeled mental energy tank, 0–100. This is what the battery displays. Below 30% = critical depletion; above 70% = well charged. Updated every 5 min from live signals.',
+          popFormula: 'E_internal from ODE tick'
+        },
+        {
+          id: 'stress', label: 'Stress', value: payload ? `${currentStress.toFixed(1)}%` : '--%',
+          popTitle: 'Stress State (S)',
+          popBody: 'Your modeled cognitive stress load, 0–100. High stress erodes energy faster via the ODE coupling term. Stress rises with sustained drain pressure and falls slowly during low-pressure periods.',
+          popFormula: 'dS/dt = 1.5 × Pressure − S / 4320'
+        },
+        {
+          id: 'erest', label: 'Erest', value: payload ? `${eRestNow.toFixed(1)}%` : '--%',
+          popTitle: 'Circadian Rest Energy',
+          popBody: 'What your energy "should" be at this time of day, based on your chronotype and the circadian model. If your actual E is below Erest, the model pulls energy upward (recovery). If above, it drains slightly.',
+          popFormula: 'computeERest(hour, chronotype)'
+        },
+        {
+          id: 'de', label: 'dE/min', value: payload ? dE.toFixed(2) : '--',
+          popTitle: 'Energy Rate of Change',
+          popBody: 'How fast your energy is changing right now, per minute. Negative = draining, positive = recovering. Near zero during rest. A value of −0.03 means losing ~2% energy per hour.',
+          popFormula: '−0.05 × P × E + (Erest − E) / 120'
+        },
+        {
+          id: 'ds', label: 'dS/min', value: payload ? dS.toFixed(3) : '--',
+          popTitle: 'Stress Rate of Change',
+          popBody: 'How fast your stress is changing per minute. Near zero = stable; strongly positive = escalating; negative = unwinding. Low pressure periods let stress decay naturally over hours.',
+          popFormula: '1.5 × Pressure − S / 4320'
+        }
       ];
 
       DOM.layer2Readout.innerHTML = readouts.map(item => `
         <div class="layer2-readout-row">
-          <div class="layer2-readout-label">${item.label}</div>
+          <div class="layer2-readout-label">
+            ${item.label}
+            <button class="diag-help-btn" popovertarget="pop-readout-${item.id}" aria-label="Explain ${item.label}">?</button>
+          </div>
           <div class="layer2-readout-value">${item.value}</div>
+          <div id="pop-readout-${item.id}" popover class="diag-popover">
+            <strong>${item.popTitle}</strong>
+            ${item.popBody}
+            <p class="diag-pop-formula">${item.popFormula}</p>
+          </div>
         </div>
       `).join('');
     }
@@ -6072,10 +6344,16 @@ P = drain - 0.5*recovery</pre>
       const feats = getLastFeats();
       target.innerHTML = items.map(item => {
         const { text, zero } = formatFeatureValue(item.key, item.unit, feats[item.key]);
+        const help = FEAT_HELP[item.key];
+        const popId = `pop-feat-${item.key.replace(/_/g, '-')}`;
         return `
           <div class="diag-row" style="opacity:${zero ? '0.35' : '1'}">
-            <span class="diag-label">${item.label}</span>
+            <span class="diag-label">
+              ${item.label}
+              ${help ? `<button class="diag-help-btn" popovertarget="${popId}" aria-label="Explain ${item.label}">?</button>` : ''}
+            </span>
             <span class="diag-value" style="color:var(--${tone})">${text}${item.unit ? `<span class="diag-unit">${item.unit}</span>` : ''}</span>
+            ${help ? `<div id="${popId}" popover class="diag-popover"><strong>${help.title}</strong>${help.body}</div>` : ''}
           </div>
         `;
       }).join('');
@@ -6161,31 +6439,8 @@ P = drain - 0.5*recovery</pre>
     }
 
     function startDemoSceneAnimator() {
-      if (APP.demoSceneAnim && APP.demoSceneAnim.frameId) return;
-      APP.demoSceneAnim = APP.demoSceneAnim || {};
-      // 8-bit stepped idle: pixel-snapped discrete frames, no smooth interpolation.
-      // Recovery: slow 4-frame bob (0 → -2 → -3 → -2 px), 320 ms/frame = 1.28 s cycle.
-      // Drain:    fast 4-frame jitter (0 → 1 → 0 → -1 px), 90 ms/frame = 360 ms cycle.
-      const RECOVERY_BOB   = [0, -2, -3, -2];
-      const DRAIN_JITTER   = [0,  1,  0, -1];
-      const RECOVERY_MS    = 320;
-      const DRAIN_MS       = 90;
-      const tick = (t) => {
-        const zoomers = document.querySelectorAll('.demo-scene-zoomer');
-        if (!zoomers.length) {
-          APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
-          return;
-        }
-        zoomers.forEach((el) => {
-          const isRecovery = el.classList.contains('is-recovery');
-          const frames = isRecovery ? RECOVERY_BOB : DRAIN_JITTER;
-          const ms     = isRecovery ? RECOVERY_MS  : DRAIN_MS;
-          const frame  = Math.floor(t / ms) % frames.length;
-          el.style.transform = `translateY(${frames[frame]}px)`;
-        });
-        APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
-      };
-      APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
+      // All scene animation driven by CSS @keyframes with steps() timing.
+      // Frame stays perfectly still; only SVG elements inside animate.
     }
 
     function stopDemoSceneAnimator() {
@@ -6193,6 +6448,7 @@ P = drain - 0.5*recovery</pre>
         cancelAnimationFrame(APP.demoSceneAnim.frameId);
         APP.demoSceneAnim.frameId = null;
       }
+      document.querySelectorAll('.demo-scene-zoomer').forEach(el => { el.style.transform = ''; });
     }
 
     function renderApp() {
@@ -7367,6 +7623,9 @@ P = drain - 0.5*recovery</pre>
       if (helpTrigger) helpTrigger.addEventListener('click', openHelp);
       if (helpClose) helpClose.addEventListener('click', closeHelp);
 
+      const tourBtn = document.getElementById('tour-btn');
+      if (tourBtn) tourBtn.addEventListener('click', startTour);
+
       document.addEventListener('keydown', event => {
         // Ignore if the user is typing in a form control
         const tag = (event.target && event.target.tagName) || '';
@@ -7375,6 +7634,8 @@ P = drain - 0.5*recovery</pre>
 
         // Esc handled everywhere
         if (event.key === 'Escape') {
+          const tourOverlay = document.getElementById('tour-overlay');
+          if (tourOverlay && !tourOverlay.hasAttribute('hidden')) { endTour(); return; }
           if (APP.mode === 'rating') { closeRatingSheet(); return; }
           if (APP.mode === 'recovery-menu') { closeRecoverySheet(); return; }
           if (APP.mode === 'help') { closeHelp(); return; }
@@ -7437,7 +7698,161 @@ P = drain - 0.5*recovery</pre>
       }
     }
 
+    // ── Tour system ───────────────────────────────────────────────────────────
+    const TOUR_STEPS = [
+      {
+        targetId: 'battery-card',
+        title: 'YOUR PSYCH BATTERY',
+        body: 'This pixel battery shows your current mental energy — calculated from sleep, meetings, focus time, and more. The number is your energy tank level (0–100%).',
+        pos: 'below'
+      },
+      {
+        targetId: 'battery-toggle',
+        title: 'TAP TO EXPAND',
+        body: 'Tap the battery to flip through three layers: battery only → metrics & drain bars → full diagnostics with the circadian model chart.',
+        pos: 'below'
+      },
+      {
+        targetId: 'energy-btn',
+        title: 'RATE YOUR ENERGY',
+        body: 'Log your felt energy 1–10 right now. Over time this trains the model to your personal baseline so predictions get sharper.',
+        pos: 'above'
+      },
+      {
+        targetId: 'recovery-trigger',
+        title: 'LOG RECOVERY',
+        body: 'Starting a walk, nap, or break? Log it here. The battery updates in real time as you recover — pick from 10 activity types.',
+        pos: 'above'
+      },
+      {
+        targetId: 'demo-toggle-btn',
+        title: 'INTERACTIVE DEMO',
+        body: 'No live data yet? Try demo mode — it simulates a full day of activity so you can explore every feature right now with four different user profiles.',
+        pos: 'below'
+      },
+      {
+        targetId: 'theme-picker',
+        title: 'COLOR THEMES',
+        body: 'Pick a visual theme — Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved in the browser.',
+        pos: 'below'
+      }
+    ];
+
+    let _tourIdx = 0;
+
+    function startTour() {
+      const overlay = document.getElementById('tour-overlay');
+      if (!overlay) return;
+      _tourIdx = 0;
+      overlay.removeAttribute('hidden');
+      showTourStep(0);
+    }
+
+    function showTourStep(idx) {
+      if (idx < 0 || idx >= TOUR_STEPS.length) { endTour(); return; }
+      _tourIdx = idx;
+      const step = TOUR_STEPS[idx];
+      const target = document.getElementById(step.targetId);
+      if (!target) { showTourStep(idx + 1); return; }
+
+      const rect = target.getBoundingClientRect();
+      const pad = 8;
+      const spotlight = document.getElementById('tour-spotlight');
+      spotlight.style.left   = (rect.left   - pad) + 'px';
+      spotlight.style.top    = (rect.top    - pad) + 'px';
+      spotlight.style.width  = (rect.width  + pad * 2) + 'px';
+      spotlight.style.height = (rect.height + pad * 2) + 'px';
+
+      document.getElementById('tour-step-num').textContent = `STEP ${idx + 1} / ${TOUR_STEPS.length}`;
+      document.getElementById('tour-title').textContent    = step.title;
+      document.getElementById('tour-body').textContent     = step.body;
+
+      const backBtn = document.getElementById('tour-back');
+      const nextBtn = document.getElementById('tour-next');
+      const skipBtn = document.getElementById('tour-skip');
+      backBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
+      nextBtn.textContent = idx === TOUR_STEPS.length - 1 ? 'DONE ✓' : 'NEXT ▶';
+      backBtn.onclick = () => showTourStep(idx - 1);
+      nextBtn.onclick = () => showTourStep(idx + 1);
+      skipBtn.onclick = endTour;
+
+      const tooltip = document.getElementById('tour-tooltip');
+      tooltip.style.left = '-9999px';
+      tooltip.style.top  = '-9999px';
+      requestAnimationFrame(() => {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const ttRect = tooltip.getBoundingClientRect();
+        const ttW = ttRect.width  || 290;
+        const ttH = ttRect.height || 160;
+        const GAP = 14;
+        let left = rect.left;
+        let top;
+        if (step.pos === 'above' || (rect.bottom + ttH + GAP > vh && rect.top - ttH - GAP >= 0)) {
+          top = rect.top - ttH - GAP;
+        } else {
+          top = rect.bottom + GAP;
+        }
+        if (left + ttW > vw - 8) left = vw - ttW - 8;
+        if (left < 8) left = 8;
+        if (top < 8) top = 8;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top  = top  + 'px';
+      });
+    }
+
+    function endTour() {
+      const overlay = document.getElementById('tour-overlay');
+      if (overlay) overlay.setAttribute('hidden', '');
+      localStorage.setItem('pb_tour_done', '1');
+    }
+
+    // Random-interval blinking for zoom_meeting participants
+    function startZoomBlinks() {
+      const seats = [
+        { cls: '.scene-blink-a', initDelay: 0 },
+        { cls: '.scene-blink-b', initDelay: 800 },
+        { cls: '.scene-blink-c', initDelay: 1700 },
+        { cls: '.scene-blink-d', initDelay: 300 }
+      ];
+      seats.forEach(({ cls, initDelay }) => {
+        function doBlink() {
+          document.querySelectorAll(`.demo-scene-frame[data-activity="zoom_meeting"] ${cls}`)
+            .forEach(el => {
+              el.style.transform = 'scaleY(0.1)';
+              setTimeout(() => { el.style.transform = ''; }, 120);
+            });
+          setTimeout(doBlink, 2500 + Math.random() * 3000);
+        }
+        setTimeout(doBlink, initDelay + Math.random() * 800);
+      });
+
+      // Talking mouth — participant B alternates
+      function doTalk() {
+        document.querySelectorAll(`.demo-scene-frame[data-activity="zoom_meeting"] .scene-talk-a`)
+          .forEach(el => { el.classList.toggle('is-closed'); });
+        setTimeout(doTalk, 200 + Math.random() * 300);
+      }
+      setTimeout(doTalk, 1200);
+    }
+
     start();
+    startZoomBlinks();
   </script>
+
+  <!-- Tour overlay -->
+  <div id="tour-overlay" hidden aria-modal="true" role="dialog" aria-label="App tour" aria-live="polite">
+    <div id="tour-spotlight" aria-hidden="true"></div>
+    <div id="tour-tooltip" role="document">
+      <div id="tour-step-num"></div>
+      <div id="tour-title"></div>
+      <div id="tour-body"></div>
+      <div id="tour-controls">
+        <button id="tour-back" type="button">◀ BACK</button>
+        <button id="tour-skip" type="button">SKIP TOUR</button>
+        <button id="tour-next" type="button">NEXT ▶</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
