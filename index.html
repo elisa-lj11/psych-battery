@@ -649,7 +649,7 @@
     }
 
     .demo-why > summary::after {
-      content: 'Ã¢â€“Â¾';
+      content: '▾';
       transition: transform 200ms steps(2, end);
     }
 
@@ -1341,7 +1341,7 @@
       animation: glow-pulse 1.5s steps(4, end) infinite;
     }
 
-    /* 8-bit character breathing Ã¢â‚¬â€ 2-frame asymmetric: 300ms up, 500ms hold */
+    /* 8-bit character breathing — 2-frame asymmetric: 300ms up, 500ms hold */
     .demo-scene-frame.animating .scene-person {
       animation: person-breathe 1600ms steps(2, end) infinite;
     }
@@ -1350,7 +1350,7 @@
       50%  { transform: translateY(-2px); }
     }
 
-    /* Zoom meeting participant blink Ã¢â‚¬â€ JS-driven via startZoomBlinks(), CSS handles the frame */
+    /* Zoom meeting participant blink — JS-driven via startZoomBlinks(), CSS handles the frame */
     .scene-blink-a,
     .scene-blink-b,
     .scene-blink-c,
@@ -1359,7 +1359,7 @@
       transition: transform 80ms steps(1, end);
     }
 
-    /* Talking mouth Ã¢â‚¬â€ JS drives .is-talking class */
+    /* Talking mouth — JS drives .is-talking class */
     .scene-talk-a {
       transition: transform 80ms steps(1, end);
     }
@@ -2102,7 +2102,7 @@
       padding: 2px 4px 8px;
     }
 
-    /* Persistent toggle banner (e.g. "AT HOME since 7:30 PM Ã‚Â· END").
+    /* Persistent toggle banner (e.g. "AT HOME since 7:30 PM · END").
        Sits at bottom-right above the self-log dock. */
     .toggle-banner {
       position: fixed;
@@ -2354,7 +2354,7 @@
       }
     }
 
-    /* Ã¢â€â‚¬Ã¢â€â‚¬ Pixel-art aesthetic override Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    /* ── Pixel-art aesthetic override ──────────────────────────────────────
        Restrained pixel-art skin: arcade palette, blocky borders, bitmap
        typography. Emoji/system type intentionally preserved in paragraph
        prose where readability matters; pixel fonts used for labels,
@@ -2400,7 +2400,7 @@
       --accent: var(--px-accent);
     }
 
-    /* Ã¢â€â‚¬Ã¢â€â‚¬ Theme variants Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    /* ── Theme variants ───────────────────────────────────────────────
        Default (no data-theme) = arcade, already defined above.
        Each theme overrides the --px-* variables so every downstream
        rule picks them up via var() with no per-rule changes. */
@@ -2461,8 +2461,8 @@
     #battery-visual svg .bat-nub   { fill:   var(--px-border-2); }
     #battery-visual svg .bat-num   { fill:   var(--px-text); }
 
-    /* Ã¢â€â‚¬Ã¢â€â‚¬ Theme picker Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
-    /* Theme picker Ã¢â‚¬â€ collapsed disclosure in the top-right chrome. Hidden by
+    /* ── Theme picker ─── */
+    /* Theme picker — collapsed disclosure in the top-right chrome. Hidden by
        default so it doesn't compete with the battery; expands on click. */
     #theme-picker {
       position: fixed;
@@ -2579,7 +2579,7 @@
       transition: background-color 200ms steps(3), color 200ms steps(3);
     }
 
-    /* Chrome typography Ã¢â‚¬â€ bitmap Silkscreen for all-caps labels */
+    /* Chrome typography — bitmap Silkscreen for all-caps labels */
     .eyebrow,
     .section-title,
     .metric-label,
@@ -2608,7 +2608,7 @@
       -webkit-font-smoothing: none;
     }
 
-    /* Display numerals Ã¢â‚¬â€ big VT323 */
+    /* Display numerals — big VT323 */
     #battery-percent,
     .metric-value,
     .diag-value,
@@ -2705,14 +2705,14 @@
 
     .tap-score { font-size: 1.6rem; }
 
-    /* Chunky pixel focus outline Ã¢â‚¬â€ guide rule: :focus-visible must signal care */
+    /* Chunky pixel focus outline — guide rule: :focus-visible must signal care */
     :focus-visible {
       outline: 3px solid var(--px-focus) !important;
       outline-offset: 2px !important;
       box-shadow: 0 0 0 1px #000 !important;
     }
 
-    /* Battery SVG rendering Ã¢â‚¬â€ keep strokes crisp */
+    /* Battery SVG rendering — keep strokes crisp */
     #battery-visual svg {
       image-rendering: pixelated;
       shape-rendering: crispEdges;
@@ -2818,7 +2818,7 @@
       #help-trigger { display: inline-flex; align-items: center; justify-content: center; }
     }
 
-    /* Empty state copy is important Ã¢â‚¬â€ guide says teach the next action */
+    /* Empty state copy is important — guide says teach the next action */
     .teaching-empty {
       padding: 14px;
       border: 2px dashed var(--px-border-2);
@@ -3153,34 +3153,6 @@
       gap: 8px;
     }
 
-    .model-viz { margin-top:16px; border:2px solid var(--px-border); background:rgba(10,10,20,0.6); padding:14px; }
-    .model-viz-head { font-family:var(--px-font-ui); font-size:10px; letter-spacing:0.12em; color:var(--px-muted); margin-bottom:12px; }
-    .model-viz-empty { font-family:var(--px-font-ui); font-size:11px; color:var(--px-muted); padding:16px 0; text-align:center; }
-    .model-viz-tanks { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-    .model-viz-tank-wrap { display:flex; flex-direction:column; gap:6px; }
-    .model-viz-tank-label { font-family:var(--px-font-ui); font-size:10px; letter-spacing:0.1em; color:var(--px-muted); }
-    .model-viz-tank { position:relative; height:80px; border:2px solid var(--px-border); background:var(--px-surface); overflow:hidden; }
-    .model-viz-tank-fill { position:absolute; bottom:0; left:0; right:0; top:var(--tank-empty); background:var(--tank-color); opacity:0.7; transition:top 600ms steps(6,end); }
-    .model-viz-tank-val { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--px-font-mono); font-size:28px; color:var(--px-text); }
-    .model-viz-rate { font-family:var(--px-font-ui); font-size:10px; letter-spacing:0.06em; text-align:center; }
-    .model-viz-rate-is-pos { color:var(--px-good); }
-    .model-viz-rate-is-neg { color:var(--px-critical); }
-    .model-viz-flows { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
-    .model-viz-flow-head { font-family:var(--px-font-ui); font-size:9px; letter-spacing:0.1em; color:var(--px-muted); margin-bottom:6px; }
-    .model-viz-pill { font-family:var(--px-font-ui); font-size:9px; padding:3px 6px; margin-bottom:4px; border:1px solid var(--px-border); }
-    .model-viz-pill-drain { color:var(--px-critical); border-color:var(--px-critical); }
-    .model-viz-pill-recov { color:var(--px-good); border-color:var(--px-good); }
-    .model-viz-pill-none { color:var(--px-muted); opacity:0.5; }
-    .model-viz-netbar-wrap { margin-top:4px; }
-    .model-viz-netbar-label { font-family:var(--px-font-ui); font-size:9px; letter-spacing:0.1em; color:var(--px-muted); margin-bottom:6px; }
-    .model-viz-netbar { position:relative; height:10px; background:linear-gradient(to right, rgba(248,113,113,0.3) 0%, rgba(30,30,50,0.2) 50%, rgba(74,222,128,0.3) 100%); border:1px solid var(--px-border); }
-    .model-viz-netbar-zone-drain,
-    .model-viz-netbar-zone-recov { position:absolute; top:0; bottom:0; width:50%; }
-    .model-viz-netbar-zone-drain { left:0; }
-    .model-viz-netbar-zone-recov { right:0; }
-    .model-viz-netbar-cursor { position:absolute; top:-3px; width:4px; height:16px; background:var(--px-accent); transform:translateX(-50%); transition:left 600ms steps(6,end); }
-    .model-viz-netbar-axis { display:flex; justify-content:space-between; font-family:var(--px-font-ui); font-size:8px; color:var(--px-muted); margin-top:4px; letter-spacing:0.06em; }
-
     .layer2-readout-value {
       font-size: 1.5rem;
       line-height: 1;
@@ -3422,7 +3394,74 @@
         min-height: 252px;
       }
     }
-    </style>
+
+    /* ── Model Viz ─────────────────────────────────── */
+    .model-viz-card { margin-top: 12px; }
+    .model-viz-header {
+      font-family: var(--px-font-ui); font-size: 11px; color: var(--px-accent);
+      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: baseline; gap: 10px;
+    }
+    .model-viz-subtitle { font-family: var(--px-font-mono); font-size: 13px; color: var(--px-muted); font-weight: normal; text-transform: none; letter-spacing: 0; }
+    .model-viz-body { display: flex; gap: 10px; align-items: stretch; }
+    .model-viz-side { flex: 0 0 112px; display: flex; flex-direction: column; gap: 4px; }
+    .model-viz-side-label {
+      font-family: var(--px-font-ui); font-size: 9px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .model-viz-side-label.drain { color: var(--px-critical); }
+    .model-viz-side-label.recov { color: var(--px-good); }
+    .model-viz-pill {
+      font-family: var(--px-font-mono); font-size: 12px; padding: 2px 6px;
+      border: 1px solid; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 110px; display: block;
+    }
+    .model-viz-pill.drain { color: var(--px-critical); border-color: var(--px-critical); background: rgba(248,113,113,0.08); }
+    .model-viz-pill.recov { color: var(--px-good); border-color: var(--px-good); background: rgba(74,222,128,0.08); }
+    .model-viz-pill.dim { opacity: 0.35; }
+    .model-viz-arrow-note { font-family: var(--px-font-mono); font-size: 12px; color: var(--px-muted); text-align: center; margin-top: 4px; }
+    .model-viz-tanks { flex: 1; display: flex; gap: 6px; align-items: stretch; }
+    .model-viz-tank-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .model-viz-tank {
+      width: 100%; flex: 1; min-height: 80px; position: relative;
+      border: 2px solid var(--px-border); overflow: hidden; background: var(--bg);
+    }
+    .model-viz-tank-fill {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      transition: height 1.4s cubic-bezier(0.25,0.1,0.25,1); opacity: 0.65;
+    }
+    .model-viz-tank-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      pointer-events: none; gap: 2px;
+    }
+    .model-viz-tank-val { font-family: var(--px-font-mono); font-size: 26px; line-height: 1; color: var(--px-text); text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+    .model-viz-tank-name { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .model-viz-tank-rate { font-family: var(--px-font-mono); font-size: 12px; text-align: center; }
+    .model-viz-sep {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 0 2px; flex-shrink: 0;
+    }
+    .model-viz-pressure-badge {
+      font-family: var(--px-font-ui); font-size: 9px; padding: 3px 5px;
+      border: 1px solid; text-align: center; letter-spacing: 0.05em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    .model-viz-couple { font-family: var(--px-font-mono); font-size: 18px; color: var(--px-muted); }
+    .model-viz-net {
+      margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--px-border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .model-viz-net-label { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); text-transform: uppercase; white-space: nowrap; }
+    .model-viz-net-status { font-family: var(--px-font-mono); font-size: 14px; }
+    @media (max-width: 600px) {
+      .model-viz-body { flex-direction: column; }
+      .model-viz-side { flex: 0 0 auto; flex-direction: row; flex-wrap: wrap; gap: 4px; align-items: center; }
+      .model-viz-side-label { margin-bottom: 0; }
+      .model-viz-tanks { min-height: 80px; }
+      .model-viz-sep { flex-direction: row; padding: 0; }
+    }
+  </style>
 </head>
 <body data-layer="0" data-mode="normal">
   <header id="app-header">
@@ -3430,15 +3469,15 @@
     <div id="header-controls">
       <select id="demo-select" aria-label="Demo profile">
         <option value="">Live data</option>
-        <option value="sam">Demo Ã‚Â· Sam (busy + AI)</option>
-        <option value="maya">Demo Ã‚Â· Maya (deep work, healthy)</option>
-        <option value="alex">Demo Ã‚Â· Alex (isolated, unhealthy)</option>
-        <option value="jordan">Demo Ã‚Â· Jordan (tech, low AI)</option>
+        <option value="sam">Demo · Sam (busy + AI)</option>
+        <option value="maya">Demo · Maya (deep work, healthy)</option>
+        <option value="alex">Demo · Alex (isolated, unhealthy)</option>
+        <option value="jordan">Demo · Jordan (tech, low AI)</option>
       </select>
       <button id="demo-toggle-btn" type="button" aria-pressed="false">Interactive Demo</button>
       <button id="tour-btn" type="button" title="App tour">TOUR</button>
       <span id="demo-header-badge" aria-live="polite">Demo mode</span>
-      <div id="connection-pill" role="status" aria-live="polite">Ã¢Å“â€¢ offline</div>
+      <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
     </div>
   </header>
 
@@ -3447,7 +3486,7 @@
       <span class="theme-toggle-dot" aria-hidden="true"></span>
       <span>THEME</span>
       <span data-theme-name>ARCADE</span>
-      <span class="theme-toggle-caret" aria-hidden="true">Ã¢â€“Â¾</span>
+      <span class="theme-toggle-caret" aria-hidden="true">▾</span>
     </summary>
     <div class="theme-panel" role="group" aria-label="Color theme options">
       <button type="button" class="theme-swatch" data-theme="arcade" aria-pressed="true" title="Arcade (default)">
@@ -3495,7 +3534,7 @@
       <div class="battery-copy">
         <div id="battery-percent">--%</div>
         <div id="battery-caption">Mental energy</div>
-        <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND Ã¢â€“Â¾</div>
+        <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND ▾</div>
       </div>
     </button>
 
@@ -3552,7 +3591,7 @@
             <div id="breakdown-list" aria-live="polite"></div>
           </div>
         </details>
-        <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics Ã¢â€ â€œ</button>
+        <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics ↓</button>
       </div>
     </section>
 
@@ -3607,6 +3646,8 @@ P = drain - 0.5*recovery</pre>
           <div id="layer2-readout" class="layer2-readout"></div>
         </div>
 
+        <div id="model-viz-panel"></div>
+
         <details class="layer-legacy">
           <summary>Raw diagnostics</summary>
           <div class="layer-legacy-body">
@@ -3623,18 +3664,17 @@ P = drain - 0.5*recovery</pre>
             <div id="diag-footer">Last tick: unavailable</div>
           </div>
         </details>
-        <div id="model-viz-panel" class="model-viz" aria-label="Dynamic energy model visualization"></div>
       </div>
     </section>
 
-    <button id="collapse-btn" type="button">Ã¢â€ â€˜</button>
+    <button id="collapse-btn" type="button">↑</button>
   </section>
 
   <div id="toggle-banner" class="toggle-banner" hidden aria-hidden="true" aria-live="polite"></div>
 
   <div id="self-log-dock">
-    <button id="energy-btn" type="button" data-kind="energy_rating">Ã¢Å¡Â¡ Energy</button>
-    <button id="stress-btn" type="button" data-kind="stress_rating">Ã°Å¸Å’â‚¬ Stress</button>
+    <button id="energy-btn" type="button" data-kind="energy_rating">⚡ Energy</button>
+    <button id="stress-btn" type="button" data-kind="stress_rating">🌀 Stress</button>
   </div>
 
   <button id="recovery-trigger" type="button">RECOVERY</button>
@@ -3648,7 +3688,7 @@ P = drain - 0.5*recovery</pre>
     <div class="help-row"><kbd>R</kbd><span>Open recovery menu</span></div>
     <div class="help-row"><kbd>Space</kbd><span>Expand / collapse battery</span></div>
     <div class="help-row"><kbd>D</kbd><span>Open full diagnostics</span></div>
-    <div class="help-row"><kbd>1 Ã¢â‚¬â€œ 0</kbd><span>Submit rating value (1Ã¢â‚¬â€œ10) when rating sheet is open</span></div>
+    <div class="help-row"><kbd>1 – 0</kbd><span>Submit rating value (1–10) when rating sheet is open</span></div>
     <div class="help-row"><kbd>Esc</kbd><span>Close any open sheet or screensaver</span></div>
     <div class="help-row"><kbd>?</kbd><span>This sheet</span></div>
     <button id="help-close" type="button">Close</button>
@@ -3662,21 +3702,21 @@ P = drain - 0.5*recovery</pre>
       <p>Your mental energy is modeled as two coupled tanks driven by what you actually do across the day. Six knobs explain almost everything you'll see.</p>
 
       <h3>Energy (E)</h3>
-      <p>The big number on the battery Ã¢â‚¬â€ how much capacity you have left. Recovery activities lift it; drains pull it down. It also leaks back toward your <em>resting baseline</em> over time.</p>
-      <div class="demo-help-eq">dE/dt = recovery Ã¢Ë†â€™ drain Ã¢Ë†â€™ kÃ‚Â·(E Ã¢Ë†â€™ E_rest)</div>
+      <p>The big number on the battery — how much capacity you have left. Recovery activities lift it; drains pull it down. It also leaks back toward your <em>resting baseline</em> over time.</p>
+      <div class="demo-help-eq">dE/dt = recovery − drain − k·(E − E_rest)</div>
 
       <h3>Stress (S)</h3>
       <p>A second tank that builds under cognitive pressure (deep work, meetings, late-night focus). High S accelerates drain on E and shortens its recovery half-life.</p>
-      <div class="demo-help-eq">dS/dt = pressure_in Ã¢Ë†â€™ decayÃ‚Â·S</div>
+      <div class="demo-help-eq">dS/dt = pressure_in − decay·S</div>
 
       <h3>Pressure</h3>
-      <p>The instantaneous load on you right now Ã¢â‚¬â€ meetings stacked, message volume, switching between tools. It's the input to <em>S</em>, not a tank itself. Think of it as "how loud the day is."</p>
+      <p>The instantaneous load on you right now — meetings stacked, message volume, switching between tools. It's the input to <em>S</em>, not a tank itself. Think of it as "how loud the day is."</p>
 
       <h3>E_rest (resting baseline)</h3>
-      <p>Where your battery would settle if nothing happened Ã¢â‚¬â€ circadian floor + chronotype + sleep debt. Updates slowly across the day. E always drifts toward E_rest when you idle.</p>
+      <p>Where your battery would settle if nothing happened — circadian floor + chronotype + sleep debt. Updates slowly across the day. E always drifts toward E_rest when you idle.</p>
 
       <h3>How activities change things</h3>
-      <p>Each activity card flips a small set of feature inputs (right-side panel). Those flow through the same Model B + D math the live app uses. The right panel only shows the features the activity actually moves Ã¢â‚¬â€ others stay neutral.</p>
+      <p>Each activity card flips a small set of feature inputs (right-side panel). Those flow through the same Model B + D math the live app uses. The right panel only shows the features the activity actually moves — others stay neutral.</p>
 
       <h3>The timeline</h3>
       <p>The strip across the bottom plots E (green) and S (purple) over the simulated 24h day. Each icon marks an activity you picked. Hover an icon to recall the moment.</p>
@@ -3724,12 +3764,12 @@ P = drain - 0.5*recovery</pre>
     const PREV_STATE_KEY = 'pb_prev_state';
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬ Synthetic demo profiles Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ── Synthetic demo profiles ───────────────────────────────────────────────
     // Each profile shapes the exact payload /state would return, plus a
     // pre-computed ActivityWatch "breakdown" tally the same shape that
     // calculate() produces. Selecting a profile short-circuits all fetches.
     //
-    // Sam vs Jordan are both tech-heavy (~60 active minutes) Ã¢â‚¬â€ the contrast is
+    // Sam vs Jordan are both tech-heavy (~60 active minutes) — the contrast is
     // in *what kind* of tech (AI + comms vs real coding) and in the recovery
     // side (sleep, walks, social, HRV). Maya and Alex are both "minimal tech,
     // high-value work" but diverge on sleep / outside / social / isolation.
@@ -3814,7 +3854,7 @@ P = drain - 0.5*recovery</pre>
           }
         },
         aw: {
-          // Maya spends lots of time AFK (paper, whiteboard) Ã¢â‚¬â€ active mins low.
+          // Maya spends lots of time AFK (paper, whiteboard) — active mins low.
           totalActMins: 39,
           breakdown: {
             'Documents':   { minutes: 22, drain: 110, rate: 5.0 },
@@ -3844,7 +3884,7 @@ P = drain - 0.5*recovery</pre>
             meeting_f2f_min: 0,
             context_switches: 8,
             kpm_p95_over_base: 1.3,
-            focus_block_min: 240, // one giant unbroken block Ã¢â‚¬â€ not a win
+            focus_block_min: 240, // one giant unbroken block — not a win
             walk_outside_min: 0,
             social_voice_min: 0,
             afk_10plus_min: 15,
@@ -4041,7 +4081,7 @@ P = drain - 0.5*recovery</pre>
       }
     };
 
-    // 10x10 pixel-art sprites Ã¢â‚¬â€ '.' empty, 'X' filled. Drawn with
+    // 10x10 pixel-art sprites — '.' empty, 'X' filled. Drawn with
     // shape-rendering:crispEdges so they stay chunky at any scale.
     const PIXEL_SPRITES = {
       outside: [
@@ -4188,8 +4228,8 @@ P = drain - 0.5*recovery</pre>
         deltas: { outside_min: 20, daylight_min: 20 },
         targetDeltaE: 8,
         targetDeltaS: -3,
-        dataSources: ['Apple Health Ã‚Â· steps + location', 'GPS', 'Daylight sensor'],
-        whyResearch: 'Daylight exposure resets your circadian clock and boosts serotonin. Even 10Ã¢â‚¬â€œ20 min outdoors lowers cortisol and improves mood (Liberman et al., 2019). Walking adds light cardiovascular load that helps clear stress hormones.'
+        dataSources: ['Apple Health · steps + location', 'GPS', 'Daylight sensor'],
+        whyResearch: 'Daylight exposure resets your circadian clock and boosts serotonin. Even 10–20 min outdoors lowers cortisol and improves mood (Liberman et al., 2019). Walking adds light cardiovascular load that helps clear stress hormones.'
       },
       {
         id: 'connect_people',
@@ -4200,7 +4240,7 @@ P = drain - 0.5*recovery</pre>
         deltas: { social_min: 30, people_cnt: 2 },
         targetDeltaE: 6,
         targetDeltaS: -4,
-        dataSources: ['Phone call logs', 'Zoom Ã‚Â· 1:1 meetings', 'Slack DMs', 'Calendar Ã‚Â· social blocks'],
+        dataSources: ['Phone call logs', 'Zoom · 1:1 meetings', 'Slack DMs', 'Calendar · social blocks'],
         whyResearch: 'Quality social contact triggers oxytocin release and dampens the HPA stress axis (Holt-Lunstad et al., 2010). Perceived social connection is among the strongest predictors of well-being and longevity in longitudinal studies.'
       },
       {
@@ -4212,7 +4252,7 @@ P = drain - 0.5*recovery</pre>
         deltas: { eat_min: 25, hydration_cnt: 1 },
         targetDeltaE: 5,
         targetDeltaS: -1,
-        dataSources: ['Apple Health Ã‚Â· active energy', 'Kitchen iBeacon', 'Manual meal log'],
+        dataSources: ['Apple Health · active energy', 'Kitchen iBeacon', 'Manual meal log'],
         whyResearch: 'Stable blood glucose supports prefrontal cortex performance (Gailliot & Baumeister, 2007). Skipping meals correlates with attentional lapses, irritability, and worse self-control on cognitively demanding tasks.'
       },
       {
@@ -4224,8 +4264,8 @@ P = drain - 0.5*recovery</pre>
         deltas: { nap_min: 30 },
         targetDeltaE: 12,
         targetDeltaS: -6,
-        dataSources: ['Apple Health Ã‚Â· sleep stages', 'HRV (Watch)', 'Screen-lock duration'],
-        whyResearch: '10Ã¢â‚¬â€œ30 minute naps improve alertness, working memory, and reaction time without sleep inertia (Brooks & Lack, 2006). Naps over ~45 min risk grogginess from waking in slow-wave sleep.'
+        dataSources: ['Apple Health · sleep stages', 'HRV (Watch)', 'Screen-lock duration'],
+        whyResearch: '10–30 minute naps improve alertness, working memory, and reaction time without sleep inertia (Brooks & Lack, 2006). Naps over ~45 min risk grogginess from waking in slow-wave sleep.'
       },
       {
         id: 'zoom_meeting',
@@ -4236,7 +4276,7 @@ P = drain - 0.5*recovery</pre>
         deltas: { meeting_min: 45, synchronous_load: 1 },
         targetDeltaE: -15,
         targetDeltaS: 8,
-        dataSources: ['Google Calendar Ã‚Â· meeting blocks', 'Zoom logs', 'Microphone activity'],
+        dataSources: ['Google Calendar · meeting blocks', 'Zoom logs', 'Microphone activity'],
         whyResearch: 'Continuous video calls cause "Zoom fatigue": close-up eye contact, self-view mirroring, and reduced mobility tax cognitive resources (Bailenson, 2021). Synchronous load also blocks deep recovery between focus blocks.'
       },
       {
@@ -4248,7 +4288,7 @@ P = drain - 0.5*recovery</pre>
         deltas: { slack_msgs: 60, context_switch_cnt: 8 },
         targetDeltaE: -22,
         targetDeltaS: 18,
-        dataSources: ['Slack Ã‚Â· message count', 'GitHub PR comments', 'ActivityWatch Ã‚Â· app switches'],
+        dataSources: ['Slack · message count', 'GitHub PR comments', 'ActivityWatch · app switches'],
         whyResearch: 'Each interruption costs ~23 minutes to fully refocus (Mark et al., 2008). Chronic notification load elevates cortisol and is associated with reduced perceived productivity even when output is similar.'
       },
       {
@@ -4260,8 +4300,8 @@ P = drain - 0.5*recovery</pre>
         deltas: { focus_min: 90, synchronous_load: 0.2 },
         targetDeltaE: -10,
         targetDeltaS: 4,
-        dataSources: ['ActivityWatch Ã‚Â· focus apps', 'No-notification windows', 'Keystroke rate'],
-        whyResearch: 'Sustained focus depletes cognitive resources but builds skill (Newport, 2016). 90-minute blocks roughly align with the ultradian rhythm Ã¢â‚¬â€ after which recovery (break, food, movement) is needed before the next block.'
+        dataSources: ['ActivityWatch · focus apps', 'No-notification windows', 'Keystroke rate'],
+        whyResearch: 'Sustained focus depletes cognitive resources but builds skill (Newport, 2016). 90-minute blocks roughly align with the ultradian rhythm — after which recovery (break, food, movement) is needed before the next block.'
       },
       {
         id: 'late_night_ai',
@@ -4272,7 +4312,7 @@ P = drain - 0.5*recovery</pre>
         deltas: { focus_min: 90, after_hours_min: 90, context_switch_cnt: 20 },
         targetDeltaE: -25,
         targetDeltaS: 12,
-        dataSources: ['ActivityWatch Ã‚Â· AI tool usage', 'System clock Ã‚Â· after-hours flag', 'Screen time'],
+        dataSources: ['ActivityWatch · AI tool usage', 'System clock · after-hours flag', 'Screen time'],
         whyResearch: 'Evening blue-light exposure suppresses melatonin and shifts circadian phase later (Chang et al., 2015). Frequent context switching at night compounds cognitive cost and degrades sleep quality the same night.'
       }
     ];
@@ -4708,6 +4748,7 @@ P = drain - 0.5*recovery</pre>
                 <rect x="6" y="44" width="10" height="2" fill="${info}"></rect>
               </g>
             </g>
+            ${pxRects([[92, 32, 2, 12], [100, 32, 2, 12], [94, 32, 6, 2], [94, 38, 6, 2], [108, 32, 8, 2], [111, 34, 2, 8], [108, 42, 8, 2]], warn)}
             ${pxRects([[18, 16, 2, 2], [30, 24, 2, 2], [96, 12, 2, 2], [146, 18, 2, 2]], warn)}
             ${pxRects([[70, 98, 10, 8], [80, 100, 2, 4]], '#7a5838')}
             ${pxRects([[72, 98, 6, 2]], '#c87840')}
@@ -4737,11 +4778,11 @@ P = drain - 0.5*recovery</pre>
     }
 
     // Recovery modes:
-    //   'timer'   Ã¢â‚¬â€ pick a duration, enter screensaver with countdown (default)
-    //   'toggle'  Ã¢â‚¬â€ enter persistent state (no timer, no screensaver); end when
+    //   'timer'   — pick a duration, enter screensaver with countdown (default)
+    //   'toggle'  — enter persistent state (no timer, no screensaver); end when
     //               user taps again. For "you're home for the rest of the
     //               evening," not a 20-min block.
-    //   'instant' Ã¢â‚¬â€ tap once, log immediately, close the sheet. For quick
+    //   'instant' — tap once, log immediately, close the sheet. For quick
     //               events like drinking water.
     const RECOVERY_ACTIVITIES = [
       { id: 'outside',  sprite: 'outside',  label: 'Go outside',        logKind: 'outside',     theme: 'outside',  accent: '#9FE86A', mode: 'timer'   },
@@ -4760,10 +4801,10 @@ P = drain - 0.5*recovery</pre>
       { key: 'meeting_video_min', label: 'Video meetings', unit: 'min' },
       { key: 'meeting_f2f_min', label: 'F2F meetings', unit: 'min' },
       { key: 'context_switches', label: 'Context switches', unit: '' },
-      { key: 'kpm_p95_over_base', label: 'Typing intensity', unit: 'Ãƒâ€”base' },
+      { key: 'kpm_p95_over_base', label: 'Typing intensity', unit: '×base' },
       { key: 'after_hours_frac', label: 'After-hours', unit: '%' },
       { key: 'sleep_debt_h', label: 'Sleep debt', unit: 'h' },
-      { key: 'fragmentation_dev', label: 'Fragmentation', unit: 'Ãƒâ€”base' },
+      { key: 'fragmentation_dev', label: 'Fragmentation', unit: '×base' },
       { key: 'zoom_back_to_back_frac', label: 'Back-to-back', unit: '%' },
       { key: 'todoist_overdue_count', label: 'Overdue tasks', unit: '' }
     ];
@@ -4781,23 +4822,23 @@ P = drain - 0.5*recovery</pre>
     ];
 
     const FEAT_HELP = {
-      meeting_video_min:      { title: 'Video Meetings', body: 'Total video call minutes detected this window. Each hour of video calls is one of the highest-drain signals Ã¢â‚¬â€ your brain gets no off-ramp from sustained eye contact and performance awareness.' },
+      meeting_video_min:      { title: 'Video Meetings', body: 'Total video call minutes detected this window. Each hour of video calls is one of the highest-drain signals — your brain gets no off-ramp from sustained eye contact and performance awareness.' },
       meeting_f2f_min:        { title: 'Face-to-Face Meetings', body: 'In-person meeting time. Richer nonverbal cues make F2F less draining than video per minute, but sustained meeting load still accumulates fatigue.' },
       context_switches:       { title: 'Context Switches', body: 'Detected app-switching events from ActivityWatch. High fragmentation keeps your brain in shallow-work mode and elevates baseline drain pressure throughout the day.' },
-      kpm_p95_over_base:      { title: 'Typing Intensity', body: 'Your 95th-percentile keystrokes-per-minute versus your personal baseline. Elevated typing signals either high-output cognitive work or anxiety-driven activity Ã¢â‚¬â€ both raise drain.' },
+      kpm_p95_over_base:      { title: 'Typing Intensity', body: 'Your 95th-percentile keystrokes-per-minute versus your personal baseline. Elevated typing signals either high-output cognitive work or anxiety-driven activity — both raise drain.' },
       after_hours_frac:       { title: 'After-Hours Work', body: 'Fraction of active time outside your normal work hours. Consistently working late disrupts the circadian recovery window and compounds sleep debt over days.' },
       sleep_debt_h:           { title: 'Sleep Debt', body: 'Estimated sleep deficit vs. your 8-hour target. Even 1 hour of debt measurably impairs working memory and stress regulation. This is the single highest-weight drain feature.' },
-      fragmentation_dev:      { title: 'Session Fragmentation', body: 'How fragmented your focus windows are compared to your personal baseline. High values mean many micro-interruptions preventing deep work Ã¢â‚¬â€ each context switch costs ~20 min of recovery time.' },
+      fragmentation_dev:      { title: 'Session Fragmentation', body: 'How fragmented your focus windows are compared to your personal baseline. High values mean many micro-interruptions preventing deep work — each context switch costs ~20 min of recovery time.' },
       zoom_back_to_back_frac: { title: 'Back-to-Back Meetings', body: 'Fraction of meetings that start within 5 minutes of the previous one ending. No transition time means sustained cognitive load with zero decompression between high-demand sessions.' },
-      todoist_overdue_count:  { title: 'Overdue Tasks', body: 'Count of overdue Todoist items. Each unresolved task creates an open cognitive loop Ã¢â‚¬â€ Zeigarnik-effect mental overhead that persists even when you\'re not actively working.' },
-      focus_block_min:        { title: 'Focus Blocks', body: 'Uninterrupted focus windows of 25+ minutes detected by ActivityWatch. Deep work is one of the fastest energy restorers Ã¢â‚¬â€ each block counts as a mini-recharge against drain pressure.' },
+      todoist_overdue_count:  { title: 'Overdue Tasks', body: 'Count of overdue Todoist items. Each unresolved task creates an open cognitive loop — Zeigarnik-effect mental overhead that persists even when you\'re not actively working.' },
+      focus_block_min:        { title: 'Focus Blocks', body: 'Uninterrupted focus windows of 25+ minutes detected by ActivityWatch. Deep work is one of the fastest energy restorers — each block counts as a mini-recharge against drain pressure.' },
       walk_outside_min:       { title: 'Walk / Outside Time', body: 'Walking and outdoor exposure detected from sensors or logged. Dual recovery: physical movement plus natural light exposure both independently restore mental energy.' },
-      outside_log_min:        { title: 'Logged Outside Time', body: 'Outdoor time you\'ve manually logged via the Recovery sheet. Supplements sensor detection Ã¢â‚¬â€ useful when you step out without your devices.' },
-      afk_10plus_min:         { title: 'AFK Breaks (10+ min)', body: 'Away-from-keyboard breaks lasting 10 or more minutes. Micro-breaks (under 5 min) don\'t register Ã¢â‚¬â€ you need sustained physical separation from your screen to get genuine recovery.' },
+      outside_log_min:        { title: 'Logged Outside Time', body: 'Outdoor time you\'ve manually logged via the Recovery sheet. Supplements sensor detection — useful when you step out without your devices.' },
+      afk_10plus_min:         { title: 'AFK Breaks (10+ min)', body: 'Away-from-keyboard breaks lasting 10 or more minutes. Micro-breaks (under 5 min) don\'t register — you need sustained physical separation from your screen to get genuine recovery.' },
       social_voice_min:       { title: 'Social Voice Time', body: 'Voice conversation time across Zoom and in-person interactions. Positive social contact is restorative, unlike video-only calls. Low values over multiple days correlate with energy depletion.' },
-      with_people_min:        { title: 'With People', body: 'Physical co-presence time from location or calendar signals. Ambient social contact (even without active conversation) provides passive recovery Ã¢â‚¬â€ the "coffee shop effect."' },
+      with_people_min:        { title: 'With People', body: 'Physical co-presence time from location or calendar signals. Ambient social contact (even without active conversation) provides passive recovery — the "coffee shop effect."' },
       detach_block_min:       { title: 'Detach Blocks', body: 'Logged detachment activities: walks, naps, meals away from desk, breathing sessions. Intentional separation from work tasks is the primary lever you can pull to raise energy quickly.' },
-      continuous_sleep_h:     { title: 'Continuous Sleep', body: 'Hours of uninterrupted sleep last night from Apple Health. Continuous sleep is more restorative than fragmented sleep of the same total duration Ã¢â‚¬â€ sleep architecture matters as much as total hours.' },
+      continuous_sleep_h:     { title: 'Continuous Sleep', body: 'Hours of uninterrupted sleep last night from Apple Health. Continuous sleep is more restorative than fragmented sleep of the same total duration — sleep architecture matters as much as total hours.' },
       hrv_z:                  { title: 'HRV Z-Score', body: 'Heart rate variability compared to your 30-day rolling baseline. Positive = your autonomic nervous system is more recovered than usual; negative = physiological stress. The body\'s objective energy signal.' }
     };
 
@@ -4813,12 +4854,12 @@ P = drain - 0.5*recovery</pre>
     let screensaverHeight = 0;
     let lastTimerText = '';
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬ Drain rules Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ── Drain rules ───────────────────────────────────────────────────────────
     // Patterns match app name OR window title (case-insensitive, substring).
     // First match wins. Rate = drain units per minute.
     // Negative rate = recharge (used for AFK below, but you can add low-stim apps here too).
     const DRAIN_RULES = [
-      // Ã¢â€”Â High drain Ã¢â‚¬â€ cognitive output + social stimulation + AI
+      // ● High drain — cognitive output + social stimulation + AI
       // Title patterns catch browser-wrapped versions of these apps
       { patterns: ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'],        rate: 15.0, label: 'AI Tools' },
       { patterns: ['zoom', 'teams', 'webex', 'whereby', 'loom', 'meet -', '| meet', 'google meet', 'zoom meeting'],       rate: 15.0, label: 'Video Calls' },
@@ -4826,19 +4867,19 @@ P = drain - 0.5*recovery</pre>
       { patterns: ['twitter', 'x.com', '/ x', 'reddit', 'instagram', 'tiktok', 'facebook', 'linkedin', 'hacker news'],   rate: 12.5, label: 'Social Media' },
       { patterns: ['outlook', 'gmail', 'mail', 'thunderbird'],                                                             rate: 10.0, label: 'Email' },
 
-      // Ã¢â€”Â Medium drain Ã¢â‚¬â€ focused work
+      // ● Medium drain — focused work
       { patterns: ['code', 'visual studio', 'intellij', 'pycharm', 'vim', 'nvim', 'emacs', 'sublime', 'zed'],             rate: 7.5, label: 'Coding' },
       { patterns: ['figma', 'sketch', 'photoshop', 'illustrator', 'affinity', 'canva'],                                   rate: 7.5, label: 'Design' },
       { patterns: ['notion', 'obsidian', 'onenote', 'google docs', 'google sheets', 'google slides'],                     rate: 5.0, label: 'Documents' },
       { patterns: ['word', 'excel', 'pages', 'numbers', 'powerpoint', 'keynote'],                                         rate: 5.0, label: 'Documents' },
       { patterns: ['chrome', 'firefox', 'safari', 'edge', 'brave', 'opera', 'arc'],                                       rate: 5.0, label: 'Browser' },
 
-      // Ã¢â€”Â Low drain Ã¢â‚¬â€ passive / ambient
+      // ● Low drain — passive / ambient
       { patterns: ['youtube', 'netflix', 'vlc', 'plex', 'hbo', 'prime video', 'twitch'],                                  rate: 2.5, label: 'Video' },
       { patterns: ['spotify', 'music', 'podcasts', 'apple music'],                                                         rate: 1.5, label: 'Music' },
       { patterns: ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                         rate: 1.5, label: 'System' },
 
-      // Ã¢â€”Â Fallback
+      // ● Fallback
       { patterns: [], rate: 4.0, label: 'Other' },
     ];
 
@@ -4926,7 +4967,7 @@ P = drain - 0.5*recovery</pre>
           <div class="drain-row">
             <span class="app-label">${label}</span>
             <span class="mins">${Math.round(v.minutes)}m</span>
-            <span class="rate-badge" style="color:${rateColor(v.rate)}">Ãƒâ€”${v.rate.toFixed(1)}</span>
+            <span class="rate-badge" style="color:${rateColor(v.rate)}">×${v.rate.toFixed(1)}</span>
           </div>`).join('')
         || `<div class="breakdown-empty">${emptyLabel}</div>`;
     }
@@ -5147,7 +5188,7 @@ P = drain - 0.5*recovery</pre>
 
     function formatFeatureValue(key, unit, raw) {
       if (raw == null || Number.isNaN(Number(raw))) {
-        return { text: 'Ã¢â‚¬â€', zero: true };
+        return { text: '—', zero: true };
       }
 
       let value = Number(raw);
@@ -5274,7 +5315,7 @@ P = drain - 0.5*recovery</pre>
           const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
           const thisDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
           const dayIndex = Math.round((thisDay - startDay) / 86400000) + 1;
-          if (dayIndex > 1) return `Day ${dayIndex} Ã‚Â· ${time}`;
+          if (dayIndex > 1) return `Day ${dayIndex} · ${time}`;
         }
       }
       return time;
@@ -5515,14 +5556,14 @@ P = drain - 0.5*recovery</pre>
         return `${hour12}${hour >= 12 ? 'pm' : 'am'}`;
       };
       const iconMap = {
-        go_outside: 'Ã¢Ëœâ‚¬Ã¯Â¸Â',
-        connect_people: 'Ã°Å¸â€™Â¬',
-        eat_food: 'Ã°Å¸ÂÂ½Ã¯Â¸Â',
-        take_nap: 'Ã°Å¸ËœÂ´',
-        zoom_meeting: 'Ã°Å¸Å½Â¥',
-        heavy_async: 'Ã°Å¸â€â€',
-        deep_work: 'Ã°Å¸â€™Â»',
-        late_night_ai: 'Ã°Å¸Å’â„¢'
+        go_outside: '☀️',
+        connect_people: '💬',
+        eat_food: '🍽️',
+        take_nap: '😴',
+        zoom_meeting: '🎥',
+        heavy_async: '🔔',
+        deep_work: '💻',
+        late_night_ai: '🌙'
       };
       const tickLines = [];
       const tickLabels = [];
@@ -5544,7 +5585,7 @@ P = drain - 0.5*recovery</pre>
       }
       const icons = events.map(event => {
         const x = toX(event.simClockAfter);
-        const icon = iconMap[event.id] || 'Ã¢â‚¬Â¢';
+        const icon = iconMap[event.id] || '•';
         return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="9">${icon}</text>`;
       }).join('');
       target.innerHTML = `
@@ -5565,22 +5606,22 @@ P = drain - 0.5*recovery</pre>
 
     function getDataSourceIcon(src) {
       const value = String(src || '').toLowerCase();
-      if (value.includes('apple health') || value.includes('watch') || value.includes('hrv')) return 'Ã¢Å’Å¡';
-      if (value.includes('gps') || value.includes('location')) return 'Ã°Å¸â€œÂ';
-      if (value.includes('daylight')) return 'Ã¢Ëœâ‚¬Ã¯Â¸Â';
-      if (value.includes('calendar')) return 'Ã°Å¸â€œâ€¦';
-      if (value.includes('phone')) return 'Ã°Å¸â€œÅ¾';
-      if (value.includes('zoom')) return 'Ã°Å¸Å½Â¥';
-      if (value.includes('microphone')) return 'Ã°Å¸Å½Â¤';
-      if (value.includes('slack') || value.includes('message') || value.includes('dm')) return 'Ã°Å¸â€™Â¬';
-      if (value.includes('github') || value.includes('pr comment')) return 'Ã°Å¸â€™Â»';
-      if (value.includes('activitywatch') || value.includes('screen time') || value.includes('screen-lock')) return 'Ã°Å¸â€“Â¥Ã¯Â¸Â';
-      if (value.includes('keystroke')) return 'Ã¢Å’Â¨Ã¯Â¸Â';
-      if (value.includes('notification')) return 'Ã°Å¸â€â€¢';
-      if (value.includes('clock') || value.includes('after-hours')) return 'Ã°Å¸â€¢â€™';
-      if (value.includes('ibeacon')) return 'Ã°Å¸â€œÂ¡';
-      if (value.includes('manual') || value.includes('log')) return 'Ã°Å¸â€œÂ';
-      return 'Ã°Å¸â€œÅ ';
+      if (value.includes('apple health') || value.includes('watch') || value.includes('hrv')) return '⌚';
+      if (value.includes('gps') || value.includes('location')) return '📍';
+      if (value.includes('daylight')) return '☀️';
+      if (value.includes('calendar')) return '📅';
+      if (value.includes('phone')) return '📞';
+      if (value.includes('zoom')) return '🎥';
+      if (value.includes('microphone')) return '🎤';
+      if (value.includes('slack') || value.includes('message') || value.includes('dm')) return '💬';
+      if (value.includes('github') || value.includes('pr comment')) return '💻';
+      if (value.includes('activitywatch') || value.includes('screen time') || value.includes('screen-lock')) return '🖥️';
+      if (value.includes('keystroke')) return '⌨️';
+      if (value.includes('notification')) return '🔕';
+      if (value.includes('clock') || value.includes('after-hours')) return '🕒';
+      if (value.includes('ibeacon')) return '📡';
+      if (value.includes('manual') || value.includes('log')) return '📝';
+      return '📊';
     }
 
     function renderDemoLayout() {
@@ -5627,7 +5668,7 @@ P = drain - 0.5*recovery</pre>
                   <button type="button" class="demo-card" data-demo-activity="${item.id}" data-kind="${item.kind}">
                     <div class="demo-card-top">
                       <span class="demo-card-label">${item.label}</span>
-                      <span class="demo-card-duration">${item.durationMin} min Ã‚Â· ${sign}${dE} E</span>
+                      <span class="demo-card-duration">${item.durationMin} min · ${sign}${dE} E</span>
                     </div>
                     <div class="demo-card-bottom">
                       ${renderDemoSceneSvg(item.id)}
@@ -5672,8 +5713,8 @@ P = drain - 0.5*recovery</pre>
         return `<span class="demo-step-dot ${cls}"></span>`;
       }).join('');
       const stepCaption = activity.step === 'done'
-        ? 'Complete Ã‚Â· battery updated'
-        : `Step ${currentStepIdx + 1} of 4 Ã‚Â· ${stepLabels[currentStepIdx]}`;
+        ? 'Complete · battery updated'
+        : `Step ${currentStepIdx + 1} of 4 · ${stepLabels[currentStepIdx]}`;
 
       const dataChips = (activity.dataSources || []).map(src => `<span class="demo-data-chip"><span class="demo-data-chip-icon">${getDataSourceIcon(src)}</span>${src}</span>`).join('');
       const isDone = activity.step === 'done';
@@ -5685,7 +5726,7 @@ P = drain - 0.5*recovery</pre>
           <div class="demo-scene-panel is-${activity.kind}">
             <div class="demo-scene-meta">
               <div class="demo-scene-title">${activity.label}</div>
-              <div class="demo-stage-label">${activity.durationMin} min Ã‚Â· ${activity.kind === 'recovery' ? 'Recovery' : 'Drain'}</div>
+              <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === 'recovery' ? 'Recovery' : 'Drain'}</div>
             </div>
             <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
               <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
@@ -5723,11 +5764,11 @@ P = drain - 0.5*recovery</pre>
             <div class="demo-model-node${activity.step === 'model' || activity.step === 'battery' ? ' is-pulsing' : ''}" data-demo-model>
               <div>
                 <div class="demo-model-label">Model B output</div>
-                <div class="demo-model-title">ÃŽâ€E &amp; ÃŽâ€S</div>
+                <div class="demo-model-title">ΔE &amp; ΔS</div>
               </div>
               <div class="demo-model-deltas">
-                <div class="demo-delta ${activity.deltaE >= 0 ? 'is-pos' : 'is-neg'}">ÃŽâ€E ${activity.deltaE >= 0 ? '+' : ''}${activity.deltaE.toFixed(1)}</div>
-                <div class="demo-delta ${activity.deltaS <= 0 ? 'is-pos' : 'is-neg'}">ÃŽâ€S ${activity.deltaS >= 0 ? '+' : ''}${activity.deltaS.toFixed(1)}</div>
+                <div class="demo-delta ${activity.deltaE >= 0 ? 'is-pos' : 'is-neg'}">ΔE ${activity.deltaE >= 0 ? '+' : ''}${activity.deltaE.toFixed(1)}</div>
+                <div class="demo-delta ${activity.deltaS <= 0 ? 'is-pos' : 'is-neg'}">ΔS ${activity.deltaS >= 0 ? '+' : ''}${activity.deltaS.toFixed(1)}</div>
               </div>
             </div>
             <div class="demo-data-sources">
@@ -5735,14 +5776,14 @@ P = drain - 0.5*recovery</pre>
               <div class="demo-data-sources-list">${dataChips}</div>
             </div>
             <details class="demo-why" ${isDone ? 'open' : ''}>
-              <summary>Why? Ã‚Â· How does this affect my battery?</summary>
+              <summary>Why? · How does this affect my battery?</summary>
               <div class="demo-why-body">${activity.whyResearch || ''}</div>
             </details>
             <div class="demo-packet-layer" data-demo-packets></div>
           </div>
         </div>
         <div class="demo-back-wrap is-visible">
-          <button type="button" class="demo-continue-btn" data-demo-back>Ã¢â€ Â Back to activities</button>
+          <button type="button" class="demo-continue-btn" data-demo-back>← Back to activities</button>
         </div>
         <div class="demo-timeline-strip" data-demo-timeline></div>
       `;
@@ -6134,82 +6175,98 @@ P = drain - 0.5*recovery</pre>
       const vizEl = document.getElementById('model-viz-panel');
       if (!vizEl) return;
       const payload = getModelPayload();
-      if (!payload) {
-        vizEl.innerHTML = '<div class="model-viz-empty">Connect backend to see live model flow.</div>';
-        return;
-      }
-      const currentEnergy = clamp(Number(payload.E_internal) || 0, 0, 100);
-      const currentStress = clamp(Number(payload.S) || 0, 0, 100);
       const feats = getLastFeats();
       const pressure = computePressure(feats);
+      const currentEnergy = clamp(Number(payload?.E_internal) || 0, 0, 100);
+      const currentStress  = clamp(Number(payload?.S) || 0, 0, 100);
       const tickDate = getModelTickDate(payload);
       const hour = tickDate.getHours() + (tickDate.getMinutes() / 60);
       const chronotype = payload?.chronotype || 'intermediate';
-      const eRestNow = clamp(Number(payload.E_rest_now) || computeERest(hour, chronotype), 0, 100);
-      const dE = (-0.05 * pressure * currentEnergy) + ((eRestNow - currentEnergy) / 120);
-      const dS = (1.5 * pressure) - (currentStress / 4320);
-      const eFill = Math.round(100 - currentEnergy);
-      const sFill = Math.round(100 - currentStress);
+      const eRestNow = payload && typeof payload.E_rest_now === 'number'
+        ? Number(payload.E_rest_now)
+        : computeERest(hour, chronotype);
+      const dE = payload ? (-0.05 * pressure * currentEnergy) + ((eRestNow - currentEnergy) / 120) : 0;
+      const dS = payload ? (1.5 * pressure) - (currentStress / 4320) : 0;
+      const pressurePct = Math.round(pressure * 100);
+      const pressureColor = getPressureTone(pressure);
       const eColor = levelColor(currentEnergy);
       const sColor = stressColor(currentStress);
-      const topDrainFeats = DRAIN_FEATS
-        .map(f => ({ ...f, val: feats[f.key] || 0 }))
-        .filter(f => f.val > 0).sort((a, b) => b.val - a.val).slice(0, 3);
-      const topRecovFeats = RECOVERY_FEATS
-        .map(f => ({ ...f, val: feats[f.key] || 0 }))
-        .filter(f => f.val > 0).sort((a, b) => b.val - a.val).slice(0, 3);
-      const dESign = dE >= 0 ? '+' : '';
-      const dSSign = dS >= 0 ? '+' : '';
-      const dEClass = dE >= 0 ? 'is-pos' : 'is-neg';
-      const dSClass = dS >= 0 ? 'is-neg' : 'is-pos';
-      const flowsHtml = topDrainFeats.length || topRecovFeats.length ? `
-        <div class="model-viz-flows">
-          <div>
-            <div class="model-viz-flow-head">&darr; DRAIN</div>
-            ${topDrainFeats.length
-              ? topDrainFeats.map(f => `<div class="model-viz-pill model-viz-pill-drain">${f.label}</div>`).join('')
-              : '<div class="model-viz-pill model-viz-pill-none">none active</div>'}
-          </div>
-          <div>
-            <div class="model-viz-flow-head">&uarr; RECOVERY</div>
-            ${topRecovFeats.length
-              ? topRecovFeats.map(f => `<div class="model-viz-pill model-viz-pill-recov">${f.label}</div>`).join('')
-              : '<div class="model-viz-pill model-viz-pill-none">none logged</div>'}
-          </div>
-        </div>
-      ` : '';
+
+      const topDrain = DRAIN_FEATS
+        .map(item => ({ label: item.label, norm: normalizeFeature(item.key, feats[item.key]) }))
+        .sort((a, b) => b.norm - a.norm)
+        .slice(0, 3);
+      const topRecov = RECOVERY_FEATS
+        .map(item => ({ label: item.label, norm: normalizeFeature(item.key, feats[item.key]) }))
+        .sort((a, b) => b.norm - a.norm)
+        .slice(0, 3);
+
+      let netIcon, netDesc, netColor;
+      if (dE > 0.01)       { netIcon = '▲'; netDesc = `recovering +${dE.toFixed(2)}/min`;  netColor = 'var(--px-good)'; }
+      else if (dE < -0.03) { netIcon = '▼'; netDesc = `draining ${dE.toFixed(2)}/min`;     netColor = 'var(--px-critical)'; }
+      else if (dE < -0.005){ netIcon = '↘'; netDesc = `slow drain ${dE.toFixed(3)}/min`;   netColor = 'var(--px-warn)'; }
+      else                  { netIcon = '→'; netDesc = `stable ${dE.toFixed(3)}/min`;       netColor = 'var(--px-muted)'; }
+
+      const drainPills = topDrain.map(d =>
+        `<span class="model-viz-pill drain${d.norm < 0.05 ? ' dim' : ''}">${d.label}</span>`
+      ).join('');
+      const recovPills = topRecov.map(r =>
+        `<span class="model-viz-pill recov${r.norm < 0.05 ? ' dim' : ''}">${r.label}</span>`
+      ).join('');
 
       vizEl.innerHTML = `
-        <div class="model-viz-head">ODE SYSTEM STATE</div>
-        <div class="model-viz-tanks">
-          <div class="model-viz-tank-wrap">
-            <div class="model-viz-tank-label">E ENERGY</div>
-            <div class="model-viz-tank" style="--tank-empty:${eFill}%; --tank-color:${eColor}">
-              <div class="model-viz-tank-fill"></div>
-              <div class="model-viz-tank-val">${currentEnergy.toFixed(0)}</div>
+        <div class="layer-card model-viz-card">
+          <div class="model-viz-header">
+            Energy dynamics
+            <span class="model-viz-subtitle">live stock-and-flow view</span>
+          </div>
+          <div class="model-viz-body">
+            <div class="model-viz-side">
+              <div class="model-viz-side-label drain">Drain</div>
+              ${drainPills}
+              <div class="model-viz-arrow-note">↓ pressure</div>
             </div>
-            <div class="model-viz-rate model-viz-rate-${dEClass}">${dESign}${dE.toFixed(2)}/min</div>
-          </div>
-          <div class="model-viz-tank-wrap">
-            <div class="model-viz-tank-label">S STRESS</div>
-            <div class="model-viz-tank" style="--tank-empty:${sFill}%; --tank-color:${sColor}">
-              <div class="model-viz-tank-fill"></div>
-              <div class="model-viz-tank-val">${currentStress.toFixed(0)}</div>
+            <div class="model-viz-tanks">
+              <div class="model-viz-tank-wrap">
+                <div class="model-viz-tank">
+                  <div class="model-viz-tank-fill" style="height:${currentEnergy}%;background:${eColor}"></div>
+                  <div class="model-viz-tank-overlay">
+                    <div class="model-viz-tank-val">${payload ? currentEnergy.toFixed(0) : '--'}</div>
+                    <div class="model-viz-tank-name">Energy</div>
+                  </div>
+                </div>
+                <div class="model-viz-tank-rate" style="color:${dE < 0 ? 'var(--px-critical)' : 'var(--px-good)'}">
+                  ${payload ? (dE >= 0 ? '+' : '') + dE.toFixed(3) : '--'}/min
+                </div>
+              </div>
+              <div class="model-viz-sep">
+                <div class="model-viz-pressure-badge" style="color:${pressureColor};border-color:${pressureColor}">
+                  P<br>${pressurePct}%
+                </div>
+                <div class="model-viz-couple">⟷</div>
+              </div>
+              <div class="model-viz-tank-wrap">
+                <div class="model-viz-tank">
+                  <div class="model-viz-tank-fill" style="height:${currentStress}%;background:${sColor}"></div>
+                  <div class="model-viz-tank-overlay">
+                    <div class="model-viz-tank-val">${payload ? currentStress.toFixed(0) : '--'}</div>
+                    <div class="model-viz-tank-name">Stress</div>
+                  </div>
+                </div>
+                <div class="model-viz-tank-rate" style="color:${dS > 0 ? 'var(--px-critical)' : 'var(--px-good)'}">
+                  ${payload ? (dS >= 0 ? '+' : '') + dS.toFixed(4) : '--'}/min
+                </div>
+              </div>
             </div>
-            <div class="model-viz-rate model-viz-rate-${dSClass}">${dSSign}${dS.toFixed(2)}/min</div>
+            <div class="model-viz-side">
+              <div class="model-viz-side-label recov">Recovery</div>
+              ${recovPills}
+              <div class="model-viz-arrow-note" style="color:var(--px-good)">↑ restores</div>
+            </div>
           </div>
-        </div>
-        ${flowsHtml}
-        <div class="model-viz-netbar-wrap">
-          <div class="model-viz-netbar-label">NET FLOW</div>
-          <div class="model-viz-netbar">
-            <div class="model-viz-netbar-zone-drain"></div>
-            <div class="model-viz-netbar-zone-recov"></div>
-            <div class="model-viz-netbar-cursor" style="left:${clamp(50 + (dE * 200), 4, 96)}%"></div>
-          </div>
-          <div class="model-viz-netbar-axis">
-            <span>&larr; DRAINING</span>
-            <span>RECOVERING &rarr;</span>
+          <div class="model-viz-net">
+            <span class="model-viz-net-label">Net:</span>
+            <span class="model-viz-net-status" style="color:${netColor}">${netIcon} ${netDesc}</span>
           </div>
         </div>
       `;
@@ -6232,7 +6289,7 @@ P = drain - 0.5*recovery</pre>
       const pressureTone = getPressureTone(pressure);
 
       DOM.layer2Clock.textContent = payload
-        ? `${hour.toFixed(1)}h Ã‚Â· ${chronotype}`
+        ? `${hour.toFixed(1)}h · ${chronotype}`
         : '--h';
       DOM.layer2PressureNode.innerHTML = `
         <span class="layer2-node-label">Pressure</span>
@@ -6332,20 +6389,20 @@ P = drain - 0.5*recovery</pre>
         {
           id: 'pressure', label: 'Pressure', value: payload ? `${Math.round(pressure * 100)}%` : '--%',
           popTitle: 'Drain Pressure',
-          popBody: 'Weighted aggregate of all active drain signals Ã¢â‚¬â€ meetings, context switches, sleep debt, after-hours work. 0% = restorative window; 100% = full drain load. This is the primary driver of how fast your energy falls.',
+          popBody: 'Weighted aggregate of all active drain signals — meetings, context switches, sleep debt, after-hours work. 0% = restorative window; 100% = full drain load. This is the primary driver of how fast your energy falls.',
           popFormula: 'Normalized weighted sum of drain features'
         },
         {
           id: 'energy', label: 'Energy', value: payload ? `${currentEnergy.toFixed(1)}%` : '--%',
           popTitle: 'Internal Energy (E)',
-          popBody: 'Your modeled mental energy tank, 0Ã¢â‚¬â€œ100. This is what the battery displays. Below 30% = critical depletion; above 70% = well charged. Updated every 5 min from live signals.',
+          popBody: 'Your modeled mental energy tank, 0–100. This is what the battery displays. Below 30% = critical depletion; above 70% = well charged. Updated every 5 min from live signals.',
           popFormula: 'E_internal from ODE tick'
         },
         {
           id: 'stress', label: 'Stress', value: payload ? `${currentStress.toFixed(1)}%` : '--%',
           popTitle: 'Stress State (S)',
-          popBody: 'Your modeled cognitive stress load, 0Ã¢â‚¬â€œ100. High stress erodes energy faster via the ODE coupling term. Stress rises with sustained drain pressure and falls slowly during low-pressure periods.',
-          popFormula: 'dS/dt = 1.5 Ãƒâ€” Pressure Ã¢Ë†â€™ S / 4320'
+          popBody: 'Your modeled cognitive stress load, 0–100. High stress erodes energy faster via the ODE coupling term. Stress rises with sustained drain pressure and falls slowly during low-pressure periods.',
+          popFormula: 'dS/dt = 1.5 × Pressure − S / 4320'
         },
         {
           id: 'erest', label: 'Erest', value: payload ? `${eRestNow.toFixed(1)}%` : '--%',
@@ -6356,14 +6413,14 @@ P = drain - 0.5*recovery</pre>
         {
           id: 'de', label: 'dE/min', value: payload ? dE.toFixed(2) : '--',
           popTitle: 'Energy Rate of Change',
-          popBody: 'How fast your energy is changing right now, per minute. Negative = draining, positive = recovering. Near zero during rest. A value of Ã¢Ë†â€™0.03 means losing ~2% energy per hour.',
-          popFormula: 'Ã¢Ë†â€™0.05 Ãƒâ€” P Ãƒâ€” E + (Erest Ã¢Ë†â€™ E) / 120'
+          popBody: 'How fast your energy is changing right now, per minute. Negative = draining, positive = recovering. Near zero during rest. A value of −0.03 means losing ~2% energy per hour.',
+          popFormula: '−0.05 × P × E + (Erest − E) / 120'
         },
         {
           id: 'ds', label: 'dS/min', value: payload ? dS.toFixed(3) : '--',
           popTitle: 'Stress Rate of Change',
           popBody: 'How fast your stress is changing per minute. Near zero = stable; strongly positive = escalating; negative = unwinding. Low pressure periods let stress decay naturally over hours.',
-          popFormula: '1.5 Ãƒâ€” Pressure Ã¢Ë†â€™ S / 4320'
+          popFormula: '1.5 × Pressure − S / 4320'
         }
       ];
 
@@ -6509,23 +6566,23 @@ P = drain - 0.5*recovery</pre>
       }
       const demo = getActiveDemoProfile();
       if (demo) {
-        DOM.connectionPill.textContent = `Ã¢â€”â€  DEMO Ã‚Â· ${demo.name.toUpperCase()}`;
+        DOM.connectionPill.textContent = `◆ DEMO · ${demo.name.toUpperCase()}`;
         DOM.connectionPill.style.color = demo.accent;
         DOM.connectionPill.title = `Demo profile: ${demo.tagline}. Not real data.`;
         return;
       }
 
       // Guide rule: errors name their system, name the user's recourse.
-      let text = 'Ã¢Å“â€¢ BACKEND :7070';
+      let text = '✕ BACKEND :7070';
       let color = 'var(--critical)';
       let tip  = 'Flask server at localhost:7070 is unreachable. Run `python -m integrations.models.main` or enable Demo mode.';
 
       if (APP.model.online && !APP.model.stale) {
-        text = 'Ã¢â€”Â LIVE :7070';
+        text = '● LIVE :7070';
         color = 'var(--good)';
         tip  = 'Connected to Flask backend at localhost:7070.';
       } else if (APP.model.stale) {
-        text = 'Ã¢â€”Â CACHED';
+        text = '◐ CACHED';
         color = 'var(--warn)';
         tip  = 'Backend unreachable. Showing the last cached tick.';
       }
@@ -6545,13 +6602,13 @@ P = drain - 0.5*recovery</pre>
       } else if (demo) {
         DOM.modelStatusText.textContent = `Demo: ${demo.tagline}`;
       } else if (source === 'model') {
-        DOM.modelStatusText.textContent = 'Flask :7070 Ã‚Â· live';
+        DOM.modelStatusText.textContent = 'Flask :7070 · live';
       } else if (source === 'cached-model') {
-        DOM.modelStatusText.textContent = 'Flask :7070 unreachable Ã¢â‚¬â€ showing cached values';
+        DOM.modelStatusText.textContent = 'Flask :7070 unreachable — showing cached values';
       } else if (source === 'aw') {
         DOM.modelStatusText.textContent = APP.aw.online
-          ? 'Flask :7070 offline Ã¢â‚¬â€ ActivityWatch fallback'
-          : 'Flask :7070 offline Ã¢â‚¬â€ last ActivityWatch read';
+          ? 'Flask :7070 offline — ActivityWatch fallback'
+          : 'Flask :7070 offline — last ActivityWatch read';
       } else {
         DOM.modelStatusText.textContent = 'No backend. Start Flask at :7070 or enable Demo mode.';
       }
@@ -6627,7 +6684,7 @@ P = drain - 0.5*recovery</pre>
 
     function recoveryMetaLabel(activity, selected) {
       if (activity.mode === 'instant') return 'Tap to log';
-      if (activity.mode === 'toggle')  return selected ? 'Start Ã¢â€ â€™' : 'Toggle';
+      if (activity.mode === 'toggle')  return selected ? 'Start →' : 'Toggle';
       return selected ? `${APP.recovery.plannedMin} min` : 'Select';
     }
 
@@ -6655,15 +6712,15 @@ P = drain - 0.5*recovery</pre>
             ${showStepper ? `
               <div class="stepper-wrap">
                 <div class="stepper-controls">
-                  <button type="button" class="stepper-btn" data-step="-5">Ã¢â€ Â 5</button>
+                  <button type="button" class="stepper-btn" data-step="-5">← 5</button>
                   <div class="stepper-display">${APP.recovery.plannedMin} min</div>
-                  <button type="button" class="stepper-btn" data-step="5">5 Ã¢â€ â€™</button>
+                  <button type="button" class="stepper-btn" data-step="5">5 →</button>
                 </div>
                 <button type="button" class="start-btn" data-action="start">Start</button>
               </div>` : ''}
             ${showToggleStart ? `
               <div class="stepper-wrap">
-                <div class="toggle-hint">No timer Ã¢â‚¬â€ you toggle it off when you're back.</div>
+                <div class="toggle-hint">No timer — you toggle it off when you're back.</div>
                 <button type="button" class="start-btn" data-action="start">Start</button>
               </div>` : ''}
           </div>
@@ -6742,7 +6799,7 @@ P = drain - 0.5*recovery</pre>
         showToast('Logged!');
         void refreshModelState({ allowCache: true });
       } else {
-        showToast('Backend offline Ã¢â‚¬â€ rating not saved', 'error');
+        showToast('Backend offline — rating not saved', 'error');
       }
       APP.rating.submitting = false;
     }
@@ -6761,9 +6818,9 @@ P = drain - 0.5*recovery</pre>
       renderRecoverySheet();
     }
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬ Instant + toggle recovery modes Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ── Instant + toggle recovery modes ─────────────────────────────────────
     // "Instant" logs a tiny event and dismisses the sheet (e.g. hydrate).
-    // "Toggle" enters a persistent state with no timer and no screensaver Ã¢â‚¬â€
+    // "Toggle" enters a persistent state with no timer and no screensaver —
     // a banner at the bottom-right lets you end it whenever you come back.
     async function instantLogRecovery(activity) {
       closeRecoverySheet();
@@ -6772,7 +6829,7 @@ P = drain - 0.5*recovery</pre>
         showToast(`Logged: ${activity.label}`);
         void refreshModelState({ allowCache: true });
       } else {
-        showToast('Backend offline Ã¢â‚¬â€ not saved', 'error');
+        showToast('Backend offline — not saved', 'error');
       }
     }
 
@@ -6801,10 +6858,10 @@ P = drain - 0.5*recovery</pre>
       const saved = await postLog({ kind: logKind, minutes: elapsed });
       if (saved) {
         const hrs = elapsed >= 60 ? `${(elapsed / 60).toFixed(1)}h` : `${elapsed}m`;
-        showToast(`Logged Ã‚Â· ${hrs}`);
+        showToast(`Logged · ${hrs}`);
         void refreshModelState({ allowCache: true });
       } else {
-        showToast('Backend offline Ã¢â‚¬â€ not saved', 'error');
+        showToast('Backend offline — not saved', 'error');
       }
     }
 
@@ -6867,7 +6924,7 @@ P = drain - 0.5*recovery</pre>
         return;
       }
       if (theme === 'nap') {
-        // Sparse starfield Ã¢â‚¬â€ 60 slow-drifting dots
+        // Sparse starfield — 60 slow-drifting dots
         const stars = [];
         for (let i = 0; i < 60; i++) {
           stars.push({
@@ -7054,7 +7111,7 @@ P = drain - 0.5*recovery</pre>
       const phase = currentBreathPhase(time);
       const r = maxR * phase.scale;
 
-      // Outer pixel-ring halo Ã¢â‚¬â€ quantize to chunky blocks for the 8-bit feel.
+      // Outer pixel-ring halo — quantize to chunky blocks for the 8-bit feel.
       const ring = screensaverCtx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r);
       ring.addColorStop(0, 'rgba(179,136,255,0.55)');
       ring.addColorStop(1, 'rgba(179,136,255,0)');
@@ -7069,14 +7126,14 @@ P = drain - 0.5*recovery</pre>
       screensaverCtx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
       screensaverCtx.fill();
 
-      // Phase cue label Ã¢â‚¬â€ monospace pixel font.
+      // Phase cue label — monospace pixel font.
       screensaverCtx.fillStyle = '#eaeaff';
       screensaverCtx.font = '32px "VT323", monospace';
       screensaverCtx.textAlign = 'center';
       screensaverCtx.textBaseline = 'middle';
       screensaverCtx.fillText(phase.name.toUpperCase(), cx, cy - maxR - 40);
 
-      // Count helper Ã¢â‚¬â€ seconds remaining in current phase (4-3-2-1).
+      // Count helper — seconds remaining in current phase (4-3-2-1).
       const phaseElapsed = ((time % BREATH_CYCLE) + BREATH_CYCLE) % BREATH_CYCLE;
       let acc = 0;
       let secondsLeft = 4;
@@ -7092,12 +7149,12 @@ P = drain - 0.5*recovery</pre>
       screensaverCtx.fillText(String(secondsLeft), cx, cy);
     }
 
-    // Minimal pulse-beat visual for exercise Ã¢â‚¬â€ steady "heartbeat" rings.
+    // Minimal pulse-beat visual for exercise — steady "heartbeat" rings.
     function drawExercise(time) {
       drawBackground('#0e0708', '#080508');
       const cx = screensaverWidth / 2;
       const cy = screensaverHeight / 2;
-      const beatPeriod = 900; // ~67 bpm Ã¢â‚¬â€ relaxed exercise rest
+      const beatPeriod = 900; // ~67 bpm — relaxed exercise rest
       for (let i = 0; i < 3; i++) {
         const t = ((time + i * beatPeriod / 3) % beatPeriod) / beatPeriod;
         const r = 40 + t * Math.min(screensaverWidth, screensaverHeight) * 0.35;
@@ -7242,7 +7299,7 @@ P = drain - 0.5*recovery</pre>
         showToast(`Recovery logged: ${elapsed}m`);
         void refreshModelState({ allowCache: true });
       } else {
-        showToast('Backend offline Ã¢â‚¬â€ recovery not saved', 'error');
+        showToast('Backend offline — recovery not saved', 'error');
       }
       APP.recovery.startTs = 0;
     }
@@ -7370,7 +7427,7 @@ P = drain - 0.5*recovery</pre>
       DOM.body.classList.toggle('is-demo', APP.demo.enabled);
     }
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬ Theme Ã¢â€â‚¬Ã¢â€â‚¬
+    // ── Theme ──
     const THEME_KEY = 'pb_theme';
     const VALID_THEMES = ['arcade', 'gameboy', 'amber', 'phosphor'];
 
@@ -7664,12 +7721,12 @@ P = drain - 0.5*recovery</pre>
           const id = activityButton.dataset.activityId;
           const activity = recoveryActivityById(id);
           if (!activity) return;
-          // Instant Ã¢â€ â€™ log & close immediately (no selection state).
+          // Instant → log & close immediately (no selection state).
           if (activity.mode === 'instant') {
             void instantLogRecovery(activity);
             return;
           }
-          // Timer + toggle Ã¢â€ â€™ select (to reveal Start / stepper).
+          // Timer + toggle → select (to reveal Start / stepper).
           selectRecoveryActivity(id, activity.logKind, activity.theme);
           return;
         }
@@ -7775,7 +7832,7 @@ P = drain - 0.5*recovery</pre>
           if (APP.demo.enabled) { exitDemoMode(); return; }
         }
 
-        // While rating sheet open, 1Ã¢â‚¬â€œ9 / 0 submit that value
+        // While rating sheet open, 1–9 / 0 submit that value
         if (APP.mode === 'rating') {
           const digit = event.key === '0' ? 10 : (event.key.match(/^[1-9]$/) ? Number(event.key) : null);
           if (digit != null) {
@@ -7830,42 +7887,42 @@ P = drain - 0.5*recovery</pre>
       }
     }
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬ Tour system Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ── Tour system ───────────────────────────────────────────────────────────
     const TOUR_STEPS = [
       {
         targetId: 'battery-card',
         title: 'YOUR PSYCH BATTERY',
-        body: 'This pixel battery shows your current mental energy Ã¢â‚¬â€ calculated from sleep, meetings, focus time, and more. The number is your energy tank level (0Ã¢â‚¬â€œ100%).',
+        body: 'This pixel battery shows your current mental energy — calculated from sleep, meetings, focus time, and more. The number is your energy tank level (0–100%).',
         pos: 'below'
       },
       {
         targetId: 'battery-toggle',
         title: 'TAP TO EXPAND',
-        body: 'Tap the battery to flip through three layers: battery only Ã¢â€ â€™ metrics & drain bars Ã¢â€ â€™ full diagnostics with the circadian model chart.',
+        body: 'Tap the battery to flip through three layers: battery only → metrics & drain bars → full diagnostics with the circadian model chart.',
         pos: 'below'
       },
       {
         targetId: 'energy-btn',
         title: 'RATE YOUR ENERGY',
-        body: 'Log your felt energy 1Ã¢â‚¬â€œ10 right now. Over time this trains the model to your personal baseline so predictions get sharper.',
+        body: 'Log your felt energy 1–10 right now. Over time this trains the model to your personal baseline so predictions get sharper.',
         pos: 'above'
       },
       {
         targetId: 'recovery-trigger',
         title: 'LOG RECOVERY',
-        body: 'Starting a walk, nap, or break? Log it here. The battery updates in real time as you recover Ã¢â‚¬â€ pick from 10 activity types.',
+        body: 'Starting a walk, nap, or break? Log it here. The battery updates in real time as you recover — pick from 10 activity types.',
         pos: 'above'
       },
       {
         targetId: 'demo-toggle-btn',
         title: 'INTERACTIVE DEMO',
-        body: 'No live data yet? Try demo mode Ã¢â‚¬â€ it simulates a full day of activity so you can explore every feature right now with four different user profiles.',
+        body: 'No live data yet? Try demo mode — it simulates a full day of activity so you can explore every feature right now with four different user profiles.',
         pos: 'below'
       },
       {
         targetId: 'theme-picker',
         title: 'COLOR THEMES',
-        body: 'Pick a visual theme Ã¢â‚¬â€ Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved in the browser.',
+        body: 'Pick a visual theme — Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved in the browser.',
         pos: 'below'
       }
     ];
@@ -7903,7 +7960,7 @@ P = drain - 0.5*recovery</pre>
       const nextBtn = document.getElementById('tour-next');
       const skipBtn = document.getElementById('tour-skip');
       backBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
-      nextBtn.textContent = idx === TOUR_STEPS.length - 1 ? 'DONE Ã¢Å“â€œ' : 'NEXT Ã¢â€“Â¶';
+      nextBtn.textContent = idx === TOUR_STEPS.length - 1 ? 'DONE ✓' : 'NEXT ▶';
       backBtn.onclick = () => showTourStep(idx - 1);
       nextBtn.onclick = () => showTourStep(idx + 1);
       skipBtn.onclick = endTour;
@@ -7959,7 +8016,7 @@ P = drain - 0.5*recovery</pre>
         setTimeout(doBlink, initDelay + Math.random() * 800);
       });
 
-      // Talking mouth Ã¢â‚¬â€ participant B alternates
+      // Talking mouth — participant B alternates
       function doTalk() {
         document.querySelectorAll(`.demo-scene-frame[data-activity="zoom_meeting"] .scene-talk-a`)
           .forEach(el => { el.classList.toggle('is-closed'); });
@@ -7980,9 +8037,9 @@ P = drain - 0.5*recovery</pre>
       <div id="tour-title"></div>
       <div id="tour-body"></div>
       <div id="tour-controls">
-        <button id="tour-back" type="button">Ã¢â€”â‚¬ BACK</button>
+        <button id="tour-back" type="button">◀ BACK</button>
         <button id="tour-skip" type="button">SKIP TOUR</button>
-        <button id="tour-next" type="button">NEXT Ã¢â€“Â¶</button>
+        <button id="tour-next" type="button">NEXT ▶</button>
       </div>
     </div>
   </div>
