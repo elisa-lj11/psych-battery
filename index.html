@@ -5685,6 +5685,7 @@ P = drain - 0.5*recovery</pre>
       stopDemoAnimation();
       if (APP.mode === 'screensaver') stopScreensaverLoop();
       APP.demo.enabled = true;
+      APP.model.stale = false;
       APP.uiLayer = 0;
       APP.mode = 'normal';
       APP.demo.E = 70;
@@ -6155,7 +6156,7 @@ P = drain - 0.5*recovery</pre>
         DOM.lastTickText.textContent = 'No recent tick';
       }
 
-      const staleBattery = APP.model.stale || (!APP.model.online && !payload);
+      const staleBattery = !APP.demo.enabled && (APP.model.stale || (!APP.model.online && !payload));
       DOM.batteryCard.classList.toggle('is-stale', staleBattery);
     }
 
