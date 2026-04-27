@@ -3422,42 +3422,6 @@
         min-height: 252px;
       }
     }
-
-    /* == Model Viz == */
-    .model-viz-card { margin-top: 12px; }
-    .model-viz-header { font-family: var(--px-font-ui); font-size: 11px; color: var(--px-accent); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: baseline; gap: 10px; }
-    .model-viz-subtitle { font-family: var(--px-font-mono); font-size: 13px; color: var(--px-muted); font-weight: normal; text-transform: none; letter-spacing: 0; }
-    .model-viz-body { display: flex; gap: 10px; align-items: stretch; }
-    .model-viz-side { flex: 0 0 112px; display: flex; flex-direction: column; gap: 4px; }
-    .model-viz-side-label { font-family: var(--px-font-ui); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
-    .model-viz-side-label.drain { color: var(--px-critical); }
-    .model-viz-side-label.recov { color: var(--px-good); }
-    .model-viz-pill { font-family: var(--px-font-mono); font-size: 12px; padding: 2px 6px; border: 1px solid; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; display: block; }
-    .model-viz-pill.drain { color: var(--px-critical); border-color: var(--px-critical); background: rgba(248,113,113,0.08); }
-    .model-viz-pill.recov { color: var(--px-good); border-color: var(--px-good); background: rgba(74,222,128,0.08); }
-    .model-viz-pill.dim { opacity: 0.35; }
-    .model-viz-arrow-note { font-family: var(--px-font-mono); font-size: 12px; color: var(--px-muted); text-align: center; margin-top: 4px; }
-    .model-viz-tanks { flex: 1; display: flex; gap: 6px; align-items: stretch; }
-    .model-viz-tank-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .model-viz-tank { width: 100%; flex: 1; min-height: 80px; position: relative; border: 2px solid var(--px-border); overflow: hidden; background: var(--bg); }
-    .model-viz-tank-fill { position: absolute; bottom: 0; left: 0; right: 0; transition: height 1.4s cubic-bezier(0.25,0.1,0.25,1); opacity: 0.65; }
-    .model-viz-tank-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; gap: 2px; }
-    .model-viz-tank-val { font-family: var(--px-font-mono); font-size: 26px; line-height: 1; color: var(--px-text); text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
-    .model-viz-tank-name { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); letter-spacing: 0.1em; text-transform: uppercase; }
-    .model-viz-tank-rate { font-family: var(--px-font-mono); font-size: 12px; text-align: center; }
-    .model-viz-sep { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0 2px; flex-shrink: 0; }
-    .model-viz-pressure-badge { font-family: var(--px-font-ui); font-size: 9px; padding: 3px 5px; border: 1px solid; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
-    .model-viz-couple { font-family: var(--px-font-mono); font-size: 18px; color: var(--px-muted); }
-    .model-viz-net { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--px-border); display: flex; align-items: center; gap: 8px; }
-    .model-viz-net-label { font-family: var(--px-font-ui); font-size: 9px; color: var(--px-muted); text-transform: uppercase; white-space: nowrap; }
-    .model-viz-net-status { font-family: var(--px-font-mono); font-size: 14px; }
-    @media (max-width: 600px) {
-      .model-viz-body { flex-direction: column; }
-      .model-viz-side { flex: 0 0 auto; flex-direction: row; flex-wrap: wrap; gap: 4px; align-items: center; }
-      .model-viz-side-label { margin-bottom: 0; }
-      .model-viz-tanks { min-height: 80px; }
-      .model-viz-sep { flex-direction: row; padding: 0; }
-    }
     </style>
 </head>
 <body data-layer="0" data-mode="normal">
