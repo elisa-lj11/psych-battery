@@ -801,6 +801,27 @@
       animation: demo-scene-enter 400ms steps(4, end) both;
     }
 
+    .demo-scene-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, var(--px-accent) 0%, transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 5;
+    }
+
+    .demo-scene-frame.is-entering::after {
+      animation: demo-scene-flash 520ms ease-out 1;
+    }
+
+    @keyframes demo-scene-flash {
+      0%   { opacity: 0; transform: scale(0.4); }
+      30%  { opacity: 0.55; }
+      100% { opacity: 0; transform: scale(2.2); }
+    }
+
     .demo-scene-frame.is-recovery {
       box-shadow: inset 0 0 0 2px rgba(106, 198, 234, 0.22);
     }
@@ -5115,18 +5136,34 @@ P = drain - 0.5*recovery</pre>
         const y = PAD_T - 4;
         return `<text x="${x}" y="${y}" text-anchor="middle" font-size="10">${icon}</text>`;
       }).join('');
+      const lastEvent = events.length ? events[events.length - 1] : null;
+      const eEndX = lastEvent ? toX(lastEvent.simClockAfter) : PAD_L;
+      const eEndY = lastEvent ? toY(lastEvent.batteryAfter) : toY(50);
+      const sEndY = lastEvent ? toY(lastEvent.stressAfter) : toY(0);
+      const eVal = lastEvent ? Math.round(lastEvent.batteryAfter) : null;
+      const sVal = lastEvent ? Math.round(lastEvent.stressAfter) : null;
+      const inlineLegend = lastEvent ? `
+        <circle cx="${eEndX}" cy="${eEndY}" r="3" fill="var(--px-good)"></circle>
+        <text x="${eEndX + 6}" y="${eEndY + 3}" font-family="var(--px-font-ui)" font-size="8" fill="var(--px-good)">E ${eVal}</text>
+        <circle cx="${eEndX}" cy="${sEndY}" r="3" fill="var(--px-accent)"></circle>
+        <text x="${eEndX + 6}" y="${sEndY + 3}" font-family="var(--px-font-ui)" font-size="8" fill="var(--px-accent)">S ${sVal}</text>
+      ` : '';
+      const energyArea = energyPoints.length ? `M ${energyPoints[0]} L ${energyPoints.slice(1).join(' L ')} L ${eEndX},${PAD_T + plotH} L ${toX(events[0].simClockBefore)},${PAD_T + plotH} Z` : '';
       target.innerHTML = `
         <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
-          <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border-2)" stroke-width="1"></rect>
+          <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="rgba(11, 11, 20, 0.6)" stroke="var(--px-border-2)" stroke-width="1"></rect>
           ${tickLines.join('')}
+          ${energyArea ? `<path d="${energyArea}" fill="var(--px-good)" opacity="0.12"></path>` : ''}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2" points="${energyPoints.join(' ')}"></polyline>` : ''}
-          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" points="${stressPoints.join(' ')}"></polyline>` : ''}
+          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" stroke-dasharray="3 2" points="${stressPoints.join(' ')}"></polyline>` : ''}
+          ${inlineLegend}
           ${icons}
           ${tickLabels.join('')}
         </svg>
         <div class="demo-timeline-legend">
-          <span class="demo-tl-e">E Energy</span>
-          <span class="demo-tl-s">S Stress</span>
+          <span class="demo-tl-e">━ E (Energy)</span>
+          <span class="demo-tl-s">┄ S (Stress)</span>
+          <span class="demo-tl-hint">Pick activities to fill the day →</span>
         </div>
       `;
     }
