@@ -687,11 +687,18 @@
     .demo-step-dot.is-active {
       border-color: var(--px-accent);
       background: var(--px-accent);
+      animation: demo-step-pulse 900ms ease-in-out infinite;
+      box-shadow: 0 0 0 0 var(--px-accent);
     }
 
     .demo-step-dot.is-done {
       border-color: var(--px-good);
       background: var(--px-good);
+    }
+
+    @keyframes demo-step-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.6); }
+      50%      { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(129, 140, 248, 0); }
     }
 
     .demo-menu {
@@ -731,7 +738,13 @@
     .demo-card:focus-visible {
       border-color: var(--px-accent);
       outline: none;
-      transform: translate(-1px, -1px);
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.6), 0 0 0 1px var(--px-accent);
+    }
+
+    .demo-card:active {
+      transform: translate(1px, 1px) scale(0.98);
+      box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.6);
     }
 
     .demo-card-top,
@@ -1224,8 +1237,10 @@
     }
 
     @keyframes demo-scene-enter {
-      0% { opacity: 0; transform: translateY(8px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0%   { opacity: 0; transform: scale(0.6) translateY(20px); filter: brightness(2.4); }
+      40%  { opacity: 1; transform: scale(1.08) translateY(0);   filter: brightness(1.6); }
+      70%  { transform: scale(0.97); filter: brightness(1.0); }
+      100% { opacity: 1; transform: scale(1.0) translateY(0); filter: brightness(1.0); }
     }
 
     @keyframes spin-slow {
@@ -5546,19 +5561,19 @@ P = drain - 0.5*recovery</pre>
       handles.timers = [
         window.setTimeout(() => {
           renderActivityStep('features');
-        }, prefersReducedMotion() ? 50 : 2000),
+        }, prefersReducedMotion() ? 50 : 900),
         window.setTimeout(() => {
           renderActivityStep('model');
-        }, prefersReducedMotion() ? 120 : 5000),
+        }, prefersReducedMotion() ? 120 : 1900),
         window.setTimeout(() => {
           if (!renderActivityStep('battery', APP.demo.activity?.beforeBattery ?? beforeBattery)) return;
-          startDemoBatteryTween(activityId, handles);
-        }, prefersReducedMotion() ? 180 : 7000),
+          startDemoBatteryTween(activityId, handles, 1100);
+        }, prefersReducedMotion() ? 180 : 2800),
         window.setTimeout(() => {
           if (!APP.demo.activity || APP.demo.activity.id !== activityId) return;
           completeDemoActivityIfNeeded();
           renderActivityStep('done');
-        }, prefersReducedMotion() ? 220 : 9000)
+        }, prefersReducedMotion() ? 220 : 4000)
       ];
 
       APP.demo.animationStopId = handles;
