@@ -412,25 +412,25 @@
     .demo-battery-pair {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 14px;
     }
 
     .demo-batt-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
     }
 
     .demo-batt-label {
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 11px;
       color: var(--muted);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.14em;
     }
 
     .demo-batt-svg {
-      width: 80px;
+      width: 132px;
       height: auto;
       display: block;
     }
@@ -455,6 +455,90 @@
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .demo-help-btn {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-accent);
+      font-family: var(--px-font-ui);
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-help-btn:hover { background: var(--surface-2); }
+
+    .demo-help-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 12, 0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .demo-help-modal.is-open { display: flex; }
+
+    .demo-help-modal-card {
+      max-width: 640px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      padding: 24px;
+      box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+      font-family: var(--px-font-ui);
+      color: var(--px-text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .demo-help-modal-card h2 {
+      font-size: 18px;
+      margin: 0 0 12px 0;
+      color: var(--px-accent);
+      letter-spacing: 0.08em;
+    }
+
+    .demo-help-modal-card h3 {
+      font-size: 14px;
+      margin: 18px 0 6px 0;
+      color: var(--px-good);
+      letter-spacing: 0.08em;
+    }
+
+    .demo-help-modal-card p {
+      margin: 6px 0 10px 0;
+    }
+
+    .demo-help-modal-card .demo-help-eq {
+      font-family: var(--px-font-mono);
+      background: rgba(11, 11, 20, 0.7);
+      padding: 6px 10px;
+      border-left: 3px solid var(--px-accent);
+      margin: 6px 0 10px 0;
+      font-size: 13px;
+    }
+
+    .demo-help-modal-card .demo-help-close {
+      margin-top: 18px;
+      padding: 8px 16px;
+      border: 2px solid var(--px-border);
+      background: var(--surface-2);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .demo-continue-btn {
@@ -673,9 +757,15 @@
 
     .demo-activity-view {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
       gap: 14px;
       align-items: stretch;
+    }
+
+    @media (max-width: 720px) {
+      .demo-activity-view {
+        grid-template-columns: 1fr;
+      }
     }
 
     .demo-scene-panel,
@@ -698,7 +788,7 @@
       position: relative;
       display: grid;
       place-items: center;
-      min-height: 220px;
+      min-height: 360px;
       border: 2px solid var(--px-border-2);
       background:
         linear-gradient(180deg, rgba(179, 136, 255, 0.08), transparent 34%),
@@ -719,15 +809,40 @@
       box-shadow: inset 0 0 0 2px rgba(255, 200, 87, 0.22);
     }
 
-    .demo-scene-svg .scene-anim {
-      animation-play-state: paused;
-      animation-fill-mode: none;
-      transform-box: fill-box;
-      transform-origin: center;
+    .demo-scene-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    .demo-scene-frame.animating .scene-anim {
+    .demo-scene-zoomer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    @keyframes demo-scene-zoom {
+      0%   { transform: scale(1.00) translate(0, 0); }
+      25%  { transform: scale(1.08) translate(-3%, 1%); }
+      50%  { transform: scale(1.12) translate(2%, -2%); }
+      75%  { transform: scale(1.06) translate(3%, 2%); }
+      100% { transform: scale(1.10) translate(-2%, -1%); }
+    }
+
+    @keyframes demo-scene-zoom-recovery {
+      0%   { transform: scale(1.00) translate(0, 0); }
+      50%  { transform: scale(1.06) translate(0, -1.5%); }
+      100% { transform: scale(1.00) translate(0, 0); }
+    }
+
+    .demo-scene-svg .scene-anim {
       animation-play-state: running;
+      transform-box: fill-box;
+      transform-origin: center;
     }
 
     .demo-scene-svg .scene-leaf-a,
@@ -1955,18 +2070,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-
-      .demo-scene-svg .scene-anim {
-        animation: none !important;
-      }
-
-      .demo-scene-frame.animating .anim-layer,
-      .demo-scene-frame.animating [class^="anim-"],
-      .demo-scene-frame.animating [class*=" anim-"] {
+      .pixel-particle-field {
         animation: none !important;
       }
     }
@@ -3184,6 +3288,35 @@ P = drain - 0.5*recovery</pre>
   </section>
 
   <div id="backdrop" hidden></div>
+
+  <div class="demo-help-modal" id="demo-help-modal" role="dialog" aria-modal="true" aria-labelledby="demo-help-title">
+    <div class="demo-help-modal-card">
+      <h2 id="demo-help-title">How the Psych Battery model works</h2>
+      <p>Your mental energy is modeled as two coupled tanks driven by what you actually do across the day. Six knobs explain almost everything you'll see.</p>
+
+      <h3>Energy (E)</h3>
+      <p>The big number on the battery — how much capacity you have left. Recovery activities lift it; drains pull it down. It also leaks back toward your <em>resting baseline</em> over time.</p>
+      <div class="demo-help-eq">dE/dt = recovery − drain − k·(E − E_rest)</div>
+
+      <h3>Stress (S)</h3>
+      <p>A second tank that builds under cognitive pressure (deep work, meetings, late-night focus). High S accelerates drain on E and shortens its recovery half-life.</p>
+      <div class="demo-help-eq">dS/dt = pressure_in − decay·S</div>
+
+      <h3>Pressure</h3>
+      <p>The instantaneous load on you right now — meetings stacked, message volume, switching between tools. It's the input to <em>S</em>, not a tank itself. Think of it as "how loud the day is."</p>
+
+      <h3>E_rest (resting baseline)</h3>
+      <p>Where your battery would settle if nothing happened — circadian floor + chronotype + sleep debt. Updates slowly across the day. E always drifts toward E_rest when you idle.</p>
+
+      <h3>How activities change things</h3>
+      <p>Each activity card flips a small set of feature inputs (right-side panel). Those flow through the same Model B + D math the live app uses. The right panel only shows the features the activity actually moves — others stay neutral.</p>
+
+      <h3>The timeline</h3>
+      <p>The strip across the bottom plots E (green) and S (purple) over the simulated 24h day. Each icon marks an activity you picked. Hover an icon to recall the moment.</p>
+
+      <button type="button" class="demo-help-close" data-demo-help-close>Close</button>
+    </div>
+  </div>
 
   <section id="rating-sheet" class="bottom-sheet" hidden aria-hidden="true" aria-label="Rating sheet">
     <div class="sheet-head">
@@ -5039,6 +5172,7 @@ P = drain - 0.5*recovery</pre>
           </div>
           <div class="demo-topbar-actions">
             <div class="demo-battery-pair" data-demo-battery-pair></div>
+            <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
         </div>
@@ -5121,8 +5255,8 @@ P = drain - 0.5*recovery</pre>
               <div class="demo-scene-title">${activity.label}</div>
               <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === 'recovery' ? 'Recovery' : 'Drain'}</div>
             </div>
-            <div class="demo-scene-frame is-entering is-${activity.kind}${activity.step !== 'done' ? ' animating' : ''}" data-activity="${activity.id}">
-              ${renderDemoSceneSvg(activity.id)}
+            <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
+              <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
             </div>
             <div class="demo-step-indicator">
               ${stepIndicator}
@@ -5363,7 +5497,7 @@ P = drain - 0.5*recovery</pre>
         if (sceneFrame) {
           const elapsedMs = Math.max(0, Math.round(nowMs() - sceneStartMs));
           sceneFrame.style.setProperty('--scene-loop-offset', `-${elapsedMs}ms`);
-          sceneFrame.classList.toggle('animating', step !== 'done');
+          sceneFrame.classList.add('animating');
           if (step !== 'scene') {
             sceneFrame.classList.remove('is-entering');
           }
@@ -5875,15 +6009,57 @@ P = drain - 0.5*recovery</pre>
       DOM.batteryCard.classList.toggle('is-stale', staleBattery);
     }
 
+    function startDemoSceneAnimator() {
+      if (APP.demoSceneAnim && APP.demoSceneAnim.frameId) return;
+      APP.demoSceneAnim = APP.demoSceneAnim || {};
+      const start = performance.now();
+      const tick = (t) => {
+        const zoomers = document.querySelectorAll('.demo-scene-zoomer');
+        if (!zoomers.length) {
+          APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
+          return;
+        }
+        const elapsed = (t - start) / 1000;
+        zoomers.forEach((el) => {
+          const isRecovery = el.classList.contains('is-recovery');
+          const period = isRecovery ? 4.2 : 5.2;
+          const phase = (elapsed % period) / period;
+          const tau = phase * Math.PI * 2;
+          let scale, tx, ty;
+          if (isRecovery) {
+            scale = 1.0 + 0.05 * (0.5 - 0.5 * Math.cos(tau));
+            tx = 0;
+            ty = -1.2 * Math.sin(tau);
+          } else {
+            scale = 1.04 + 0.06 * Math.sin(tau);
+            tx = 2.5 * Math.sin(tau * 1.3);
+            ty = 1.8 * Math.cos(tau * 0.9);
+          }
+          el.style.transform = `translate3d(${tx.toFixed(2)}%, ${ty.toFixed(2)}%, 0) scale(${scale.toFixed(4)})`;
+        });
+        APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
+      };
+      APP.demoSceneAnim.frameId = requestAnimationFrame(tick);
+    }
+
+    function stopDemoSceneAnimator() {
+      if (APP.demoSceneAnim && APP.demoSceneAnim.frameId) {
+        cancelAnimationFrame(APP.demoSceneAnim.frameId);
+        APP.demoSceneAnim.frameId = null;
+      }
+    }
+
     function renderApp() {
       renderConnectionPill();
       renderBattery(getDisplayedBatteryPercent());
       renderMeta();
       renderDemoLayout();
       if (APP.demo.enabled) {
+        startDemoSceneAnimator();
         applyState();
         return;
       }
+      stopDemoSceneAnimator();
       renderMetrics();
       renderBreakdown(APP.aw.breakdown);
       renderLayer1();
@@ -6797,6 +6973,12 @@ P = drain - 0.5*recovery</pre>
         const activityBtn = event.target.closest('[data-demo-activity]');
         const exitBtn = event.target.closest('[data-demo-exit]');
         const backBtn = event.target.closest('[data-demo-back]');
+        const helpBtn = event.target.closest('[data-demo-help]');
+        if (helpBtn) {
+          const modal = document.getElementById('demo-help-modal');
+          if (modal) modal.classList.add('is-open');
+          return;
+        }
         if (exitBtn) {
           exitDemoMode();
           return;
@@ -6814,6 +6996,15 @@ P = drain - 0.5*recovery</pre>
           playDemoActivity(activityBtn.dataset.demoActivity);
         }
       });
+
+      const demoHelpModal = document.getElementById('demo-help-modal');
+      if (demoHelpModal) {
+        demoHelpModal.addEventListener('click', event => {
+          if (event.target === demoHelpModal || event.target.closest('[data-demo-help-close]')) {
+            demoHelpModal.classList.remove('is-open');
+          }
+        });
+      }
 
       DOM.demoSelect.addEventListener('change', event => {
         const id = event.target.value;
