@@ -348,7 +348,15 @@
       outline: none;
     }
 
-    .demo-topbar,
+    .demo-topbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
     .demo-topbar-copy,
     .demo-topbar-actions,
     .demo-menu-head,
@@ -361,7 +369,6 @@
       flex-wrap: wrap;
     }
 
-    .demo-topbar,
     .demo-menu-head,
     .demo-model-summary {
       justify-content: space-between;
@@ -727,11 +734,13 @@
     }
 
     .demo-card[data-kind="recovery"] {
-      background: linear-gradient(180deg, rgba(106, 198, 234, 0.16), rgba(159, 232, 106, 0.08) 100%);
+      border-color: rgba(74, 222, 128, 0.35);
+      background: linear-gradient(160deg, rgba(74, 222, 128, 0.12), rgba(16, 185, 129, 0.05) 100%);
     }
 
     .demo-card[data-kind="drain"] {
-      background: linear-gradient(180deg, rgba(255, 200, 87, 0.16), rgba(232, 97, 90, 0.08) 100%);
+      border-color: rgba(250, 204, 21, 0.3);
+      background: linear-gradient(160deg, rgba(250, 204, 21, 0.10), rgba(248, 113, 113, 0.06) 100%);
     }
 
     .demo-card:hover,
@@ -794,14 +803,14 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      justify-content: space-between;
     }
 
     .demo-scene-frame {
       position: relative;
       display: grid;
       place-items: center;
-      min-height: 360px;
+      flex: 1;
+      min-height: 380px;
       border: 2px solid var(--px-border-2);
       background:
         linear-gradient(180deg, rgba(179, 136, 255, 0.08), transparent 34%),
@@ -836,11 +845,13 @@
     }
 
     .demo-scene-frame.is-recovery {
-      box-shadow: inset 0 0 0 2px rgba(106, 198, 234, 0.22);
+      border-color: rgba(74, 222, 128, 0.5);
+      box-shadow: inset 0 0 24px 0 rgba(74, 222, 128, 0.08), 0 0 0 1px rgba(74, 222, 128, 0.18);
     }
 
     .demo-scene-frame.is-drain {
-      box-shadow: inset 0 0 0 2px rgba(255, 200, 87, 0.22);
+      border-color: rgba(250, 204, 21, 0.45);
+      box-shadow: inset 0 0 24px 0 rgba(250, 204, 21, 0.08), 0 0 0 1px rgba(250, 204, 21, 0.18);
     }
 
     .demo-scene-svg {
@@ -1014,6 +1025,9 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--px-border);
     }
 
     .demo-kpi {
@@ -1158,27 +1172,25 @@
     }
 
     .demo-timeline-strip {
-      position: sticky;
-      bottom: 0;
       width: 100%;
       background: var(--surface);
-      border-top: 1px solid var(--px-border);
-      padding: 4px 8px 0;
+      border-top: 2px solid var(--px-border);
+      padding: 8px 8px 4px;
       box-sizing: border-box;
     }
 
     .demo-timeline-svg {
       width: 100%;
-      height: 60px;
+      height: 140px;
       display: block;
     }
 
     .demo-timeline-legend {
       display: flex;
-      gap: 12px;
-      padding: 2px 4px;
+      gap: 16px;
+      padding: 4px 6px;
       font-family: var(--px-font-ui);
-      font-size: 8px;
+      font-size: 9px;
     }
 
     .demo-tl-e {
@@ -5100,11 +5112,11 @@ P = drain - 0.5*recovery</pre>
       const dayStartMs = dayStart.getTime();
       const DAY_MS = 24 * 60 * 60 * 1000;
       const PAD_L = 8;
-      const PAD_R = 16;
-      const PAD_T = 12;
-      const PAD_B = 18;
+      const PAD_R = 20;
+      const PAD_T = 22;
+      const PAD_B = 26;
       const viewW = 400;
-      const viewH = 60;
+      const viewH = 140;
       const plotW = viewW - PAD_L - PAD_R;
       const plotH = viewH - PAD_T - PAD_B;
       const events = [...(APP.demo.completedActivities || [])].sort((a, b) => {
@@ -5173,7 +5185,7 @@ P = drain - 0.5*recovery</pre>
       const nowX = toX(APP.demo.simClock || startIso);
       const nowCursor = `<line x1="${nowX}" y1="${PAD_T - 2}" x2="${nowX}" y2="${PAD_T + plotH + 2}" stroke="var(--px-accent)" stroke-width="1" opacity="0.6" stroke-dasharray="2 2"></line>`;
       target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 400 140" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="rgba(11, 11, 20, 0.6)" stroke="var(--px-border-2)" stroke-width="1"></rect>
           ${tickLines.join('')}
           ${energyArea ? `<path d="${energyArea}" fill="var(--px-good)" opacity="0.12"></path>` : ''}
@@ -5323,21 +5335,10 @@ P = drain - 0.5*recovery</pre>
               ${stepIndicator}
               <span>${stepCaption}</span>
             </div>
-            <div class="demo-data-sources">
-              <div class="demo-data-sources-title">Where this data comes from</div>
-              <div class="demo-data-sources-list">${dataChips}</div>
-            </div>
-            <details class="demo-why" ${isDone ? 'open' : ''}>
-              <summary>Why? · How does this affect my battery?</summary>
-              <div class="demo-why-body">${activity.whyResearch || ''}</div>
-            </details>
           </div>
           <div class="demo-pipeline-panel">
             <div class="demo-pipeline-head">
-              <div>
-                <div class="demo-stage-label">Pipeline</div>
-                <div class="demo-stage-value">${Math.round(activity.pressure * 100)}%</div>
-              </div>
+              <div class="demo-stage-label">Diagnostics</div>
               <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
             </div>
             <div class="demo-kpis">
@@ -5353,7 +5354,7 @@ P = drain - 0.5*recovery</pre>
                 <div class="demo-kpi-label">E_rest</div>
                 <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
               </div>
-              <div class="demo-kpi">
+              <div class="demo-kpi" title="Drain pressure: weighted sum of active drain inputs (0% = no load)">
                 <div class="demo-kpi-label">Pressure</div>
                 <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
               </div>
@@ -5362,14 +5363,22 @@ P = drain - 0.5*recovery</pre>
             ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ''}
             <div class="demo-model-node${activity.step === 'model' || activity.step === 'battery' ? ' is-pulsing' : ''}" data-demo-model>
               <div>
-                <div class="demo-model-label">Model node</div>
-                <div class="demo-model-title">Model B</div>
+                <div class="demo-model-label">Model B output</div>
+                <div class="demo-model-title">ΔE &amp; ΔS</div>
               </div>
               <div class="demo-model-deltas">
                 <div class="demo-delta ${activity.deltaE >= 0 ? 'is-pos' : 'is-neg'}">ΔE ${activity.deltaE >= 0 ? '+' : ''}${activity.deltaE.toFixed(1)}</div>
                 <div class="demo-delta ${activity.deltaS <= 0 ? 'is-pos' : 'is-neg'}">ΔS ${activity.deltaS >= 0 ? '+' : ''}${activity.deltaS.toFixed(1)}</div>
               </div>
             </div>
+            <div class="demo-data-sources">
+              <div class="demo-data-sources-title">Where this data comes from</div>
+              <div class="demo-data-sources-list">${dataChips}</div>
+            </div>
+            <details class="demo-why" ${isDone ? 'open' : ''}>
+              <summary>Why? · How does this affect my battery?</summary>
+              <div class="demo-why-body">${activity.whyResearch || ''}</div>
+            </details>
             <div class="demo-packet-layer" data-demo-packets></div>
           </div>
         </div>
