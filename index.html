@@ -1048,6 +1048,12 @@
     .demo-feature-row.is-active {
       border-color: var(--tone, var(--px-accent));
       box-shadow: inset 0 0 0 1px var(--tone, var(--px-accent));
+      animation: demo-feature-glow 1100ms ease-out 1;
+    }
+
+    @keyframes demo-feature-glow {
+      0%   { box-shadow: inset 0 0 0 1px var(--tone, var(--px-accent)), 0 0 14px 0 var(--tone, var(--px-accent)); }
+      100% { box-shadow: inset 0 0 0 1px var(--tone, var(--px-accent)), 0 0 0 0 transparent; }
     }
 
     .demo-feature-bar {
@@ -5164,11 +5170,14 @@ P = drain - 0.5*recovery</pre>
         <text x="${eEndX + 6}" y="${sEndY + 3}" font-family="var(--px-font-ui)" font-size="8" fill="var(--px-accent)">S ${sVal}</text>
       ` : '';
       const energyArea = energyPoints.length ? `M ${energyPoints[0]} L ${energyPoints.slice(1).join(' L ')} L ${eEndX},${PAD_T + plotH} L ${toX(events[0].simClockBefore)},${PAD_T + plotH} Z` : '';
+      const nowX = toX(APP.demo.simClock || startIso);
+      const nowCursor = `<line x1="${nowX}" y1="${PAD_T - 2}" x2="${nowX}" y2="${PAD_T + plotH + 2}" stroke="var(--px-accent)" stroke-width="1" opacity="0.6" stroke-dasharray="2 2"></line>`;
       target.innerHTML = `
         <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="rgba(11, 11, 20, 0.6)" stroke="var(--px-border-2)" stroke-width="1"></rect>
           ${tickLines.join('')}
           ${energyArea ? `<path d="${energyArea}" fill="var(--px-good)" opacity="0.12"></path>` : ''}
+          ${nowCursor}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2" points="${energyPoints.join(' ')}"></polyline>` : ''}
           ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" stroke-dasharray="3 2" points="${stressPoints.join(' ')}"></polyline>` : ''}
           ${inlineLegend}
