@@ -113,7 +113,7 @@
 
     @media (min-width: 720px) {
       #header-controls {
-        padding-right: 72px;
+        padding-right: 240px;
       }
     }
 
@@ -243,13 +243,22 @@
 
     .battery-expand-hint {
       display: none;
-      margin-top: 6px;
-      color: var(--px-muted);
+      margin-top: 10px;
+      color: var(--px-accent);
       font-family: var(--px-font-ui);
-      font-size: 9px;
-      letter-spacing: 0.08em;
+      font-size: 14px;
+      letter-spacing: 0.12em;
       text-align: center;
       animation: battery-hint-blink 2s steps(2, end) infinite;
+    }
+    .battery-expand-hint .pix-arrow {
+      display: inline-block;
+      margin-left: 6px;
+      font-family: monospace;
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 0;
+      transform: translateY(1px);
     }
 
     body[data-layer="0"] .battery-expand-hint {
@@ -340,9 +349,9 @@
       border: none;
       background: transparent;
       padding: 0;
-      color: var(--px-muted);
+      color: var(--px-text);
       font-family: var(--px-font-ui);
-      font-size: 10px;
+      font-size: 18px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
@@ -357,14 +366,22 @@
     .demo-topbar {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 16px;
       flex-wrap: nowrap;
       justify-content: space-between;
       min-height: 44px;
     }
 
+    .demo-topbar-actions {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      flex: 1 1 0;
+      min-width: 0;
+      justify-content: flex-end;
+    }
+
     .demo-topbar-copy,
-    .demo-topbar-actions,
     .demo-menu-head,
     .demo-scene-meta,
     .demo-pipeline-head,
@@ -434,27 +451,80 @@
     .demo-battery-pair {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
+      flex: 1 1 0;
+      min-width: 0;
     }
 
     .demo-batt-wrap {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 2px;
+      gap: 8px;
+      flex: 1 1 0;
+      min-width: 0;
     }
 
     .demo-batt-label {
       font-family: var(--px-font-ui);
-      font-size: 9px;
-      color: var(--muted);
+      font-size: 16px;
+      color: var(--px-text);
       letter-spacing: 0.1em;
+      flex: 0 0 auto;
     }
 
     .demo-batt-svg {
-      width: 80px;
-      height: auto;
+      width: 100%;
+      height: 40px;
       display: block;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    /* -------- Hide rules per latest direction (Apr 2026) -------- */
+    .layer-card-pressure,
+    #legacy-breakdown,
+    #layer-2 details.layer-legacy,
+    #layer2-pressure-node,
+    .demo-kpi.is-erest,
+    .demo-kpi.is-pressure {
+      display: none !important;
+    }
+
+    /* -------- Top back-to-battery button on layer 1 & 2 -------- */
+    .layer-back-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      margin: 0 0 14px 0;
+      min-height: 40px;
+      border: 2px solid var(--px-border, var(--border-light));
+      background: var(--surface-2);
+      color: var(--px-text, var(--text));
+      font-family: var(--px-font-ui);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+    .layer-back-top:hover { background: var(--surface-2); border-color: var(--px-accent); color: var(--px-accent); }
+    .layer-back-arrow {
+      font-family: monospace;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .pix-arrow-down,
+    .pix-arrow-up {
+      display: inline-block;
+      margin: 0 4px;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1;
+      color: var(--px-accent);
+      transform: translateY(1px);
     }
 
     .demo-battery-mini svg,
@@ -467,31 +537,34 @@
 
     .demo-exit-btn,
     .demo-back-btn {
-      padding: 0 14px;
+      padding: 0 16px;
+      min-height: 44px;
       border: 2px solid var(--px-border);
       background: var(--surface);
       color: var(--px-text);
       font-family: var(--px-font-ui);
-      font-size: 12px;
+      font-size: 14px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+      flex: 0 0 auto;
     }
 
     .demo-help-btn {
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       border: 2px solid var(--px-border);
       background: var(--surface);
       color: var(--px-accent);
       font-family: var(--px-font-ui);
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
       box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex: 0 0 auto;
     }
 
     .demo-help-btn:hover { background: var(--surface-2); }
@@ -510,18 +583,18 @@
     .demo-help-modal.is-open { display: flex; }
 
     .demo-help-modal-card {
-      max-width: 640px;
+      max-width: 760px;
       width: 100%;
-      max-height: 88vh;
+      max-height: 90vh;
       overflow-y: auto;
       border: 2px solid var(--px-border);
       background: var(--surface);
-      padding: 24px;
+      padding: 32px 36px;
       box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
       font-family: var(--px-font-ui);
       color: var(--px-text);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 1.7;
     }
 
     .demo-help-modal-card h2 {
@@ -750,7 +823,7 @@
     .demo-big-batt-head .bbp { font-size: 32px; }
 
     .demo-big-batt-row.is-energy .demo-big-batt-head { color: var(--px-good); }
-    .demo-big-batt-row.is-stress .demo-big-batt-head { color: var(--px-accent); }
+    .demo-big-batt-row.is-stress .demo-big-batt-head { color: var(--px-critical); }
 
     .demo-big-batt-track {
       width: 100%;
@@ -770,7 +843,7 @@
     }
 
     .demo-big-batt-row.is-energy .demo-big-batt-fill { background: var(--px-good); }
-    .demo-big-batt-row.is-stress .demo-big-batt-fill { background: var(--px-accent); }
+    .demo-big-batt-row.is-stress .demo-big-batt-fill { background: var(--px-critical); }
 
     .demo-menu {
       display: flex;
@@ -1419,6 +1492,177 @@
     .scene-talk-a.is-closed { transform: scaleY(0.15); }
 
     /* Tour button */
+    #calib-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-good);
+      font-family: var(--px-font-ui);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+      text-transform: uppercase;
+    }
+    #calib-btn:hover, #calib-btn:focus-visible {
+      border-color: var(--px-good);
+      color: var(--px-good);
+      outline: none;
+    }
+    body.is-calibrated #calib-btn { border-color: var(--px-good); }
+
+    /* MCTQ modal */
+    .calib-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 12, 0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .calib-modal.is-open { display: flex; }
+    .calib-card {
+      max-width: 640px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      padding: 28px;
+      box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+      font-family: var(--px-font-ui);
+      color: var(--px-text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .calib-card h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--px-accent);
+      text-transform: uppercase;
+    }
+    .calib-intro { color: var(--px-muted); margin: 0 0 18px; font-size: 14px; }
+    .calib-q {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 10px 14px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--px-border);
+    }
+    .calib-q:last-of-type { border-bottom: none; }
+    .calib-q label { font-size: 14px; line-height: 1.3; }
+    .calib-q input[type="time"] {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 8px;
+      box-sizing: border-box;
+      background: var(--bg);
+      color: var(--px-text);
+      border: 2px solid var(--px-border);
+      font-family: var(--px-font-mono);
+      font-size: 16px;
+    }
+    .calib-q .calib-yesno {
+      display: flex;
+      gap: 8px;
+    }
+    .calib-q .calib-yesno button {
+      flex: 1;
+      min-height: 40px;
+      padding: 0 12px;
+      background: var(--bg);
+      color: var(--px-text);
+      border: 2px solid var(--px-border);
+      font-family: var(--px-font-ui);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .calib-q .calib-yesno button.is-on {
+      background: var(--surface-2);
+      border-color: var(--px-accent);
+      color: var(--px-accent);
+    }
+    .calib-result {
+      margin-top: 18px;
+      padding: 14px;
+      border: 2px solid var(--px-good);
+      background: rgba(74, 222, 128, 0.08);
+      color: var(--px-good);
+      font-size: 14px;
+      display: none;
+    }
+    .calib-result.is-shown { display: block; }
+    .calib-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .calib-actions button {
+      padding: 0 18px;
+      min-height: 44px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+    .calib-actions .calib-submit {
+      border-color: var(--px-good);
+      color: var(--px-good);
+    }
+    .calib-actions button:hover { border-color: var(--px-accent); color: var(--px-accent); }
+
+    /* Layer-1 feature ?-button */
+    .layer-feature-help-btn {
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      margin-left: 6px;
+      border: 1px solid var(--px-border);
+      background: var(--surface);
+      color: var(--px-accent);
+      font-family: var(--px-font-ui);
+      font-size: 13px;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .layer-feature-help-btn:hover { background: var(--surface-2); border-color: var(--px-accent); }
+    .layer-feature-popover {
+      position: absolute;
+      max-width: 320px;
+      padding: 14px 16px;
+      border: 2px solid var(--px-accent);
+      background: var(--surface);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 13px;
+      line-height: 1.5;
+      box-shadow: 4px 4px 0 0 rgba(0,0,0,0.7);
+      z-index: 9999;
+      inset: unset;
+    }
+    .layer-feature-popover h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--px-accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .layer-feature-popover p { margin: 0; }
+
     #tour-btn {
       font-family: var(--px-font-ui, 'Silkscreen', monospace);
       font-size: 11px;
@@ -1520,6 +1764,410 @@
       letter-spacing: 0.06em;
     }
     #tour-skip:hover { color: var(--text, #e0e0f0); }
+
+    /* ── Onboarding #2: First-visit splash ─────────────────────────── */
+    #intro-splash {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 8, 14, 0.92);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+    #intro-splash:not([hidden]) { display: flex; }
+    .intro-splash-card {
+      width: 100%;
+      max-width: 460px;
+      border: 3px solid var(--px-accent, #818cf8);
+      background: var(--px-surface, #1a1a24);
+      box-shadow: 6px 6px 0 0 #000;
+      padding: 28px 26px 22px;
+      text-align: center;
+      font-family: var(--px-font-body, system-ui);
+      color: var(--px-text, #e0e0f0);
+      animation: intro-pop 320ms steps(4, end) both;
+    }
+    @keyframes intro-pop {
+      0%   { transform: translateY(8px) scale(0.96); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .intro-splash-icon {
+      display: block;
+      margin: 0 auto 14px;
+      image-rendering: pixelated;
+    }
+    .intro-splash-title {
+      font-family: var(--px-font-ui, monospace);
+      font-size: 22px;
+      letter-spacing: 0.18em;
+      color: var(--px-accent, #818cf8);
+      margin: 0 0 4px;
+    }
+    .intro-splash-sub {
+      font-family: var(--px-font-ui, monospace);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--px-muted, #6060a0);
+      text-transform: uppercase;
+      margin: 0 0 18px;
+    }
+    .intro-splash-lines {
+      display: grid;
+      gap: 10px;
+      text-align: left;
+      margin: 0 0 22px;
+      padding: 14px 16px;
+      background: var(--px-surface-2, #22223a);
+      border: 2px dashed var(--px-border, #2a2a3a);
+    }
+    .intro-splash-line {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .intro-splash-line strong {
+      font-family: var(--px-font-ui, monospace);
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      color: var(--px-accent, #818cf8);
+      align-self: start;
+      padding-top: 2px;
+    }
+    .intro-splash-line span { color: var(--px-text, #e0e0f0); }
+    .intro-splash-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .intro-splash-btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 16px;
+      font-family: var(--px-font-ui, monospace);
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 0 #000;
+      border: 2px solid var(--px-border, #2a2a3a);
+      background: var(--px-surface-2, #22223a);
+      color: var(--px-text, #e0e0f0);
+    }
+    .intro-splash-btn.is-primary {
+      background: var(--px-accent, #818cf8);
+      color: #0b0b14;
+      border-color: var(--px-accent, #818cf8);
+    }
+    .intro-splash-btn.is-primary:hover { filter: brightness(1.1); }
+    .intro-splash-btn.is-ghost:hover { border-color: var(--px-accent, #818cf8); color: var(--px-accent, #818cf8); }
+    .intro-splash-skip {
+      margin: 14px 0 0;
+      background: none;
+      border: none;
+      color: var(--px-muted, #6060a0);
+      font-family: var(--px-font-ui, monospace);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .intro-splash-skip:hover { color: var(--px-text, #e0e0f0); }
+
+    /* ── Onboarding #3: First-visit demo banner ────────────────────── */
+    #first-visit-banner {
+      position: fixed;
+      left: 50%;
+      bottom: max(env(safe-area-inset-bottom, 0px), 14px);
+      transform: translateX(-50%);
+      z-index: 90;
+      max-width: calc(100% - 28px);
+      padding: 10px 14px 10px 16px;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      background: var(--px-surface, #1a1a24);
+      border: 2px solid var(--px-accent, #818cf8);
+      box-shadow: 3px 3px 0 0 #000;
+      font-family: var(--px-font-body, system-ui);
+      font-size: 13px;
+      color: var(--px-text, #e0e0f0);
+      animation: first-visit-slide 360ms steps(4, end) both;
+    }
+    #first-visit-banner.is-shown { display: inline-flex; }
+    @keyframes first-visit-slide {
+      0%   { transform: translate(-50%, 16px); opacity: 0; }
+      100% { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .fvb-emoji {
+      font-size: 20px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+    .fvb-text strong {
+      font-family: var(--px-font-ui, monospace);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--px-accent, #818cf8);
+      text-transform: uppercase;
+      display: block;
+    }
+    .fvb-text span { color: var(--px-text, #e0e0f0); }
+    .fvb-switch {
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 0 10px;
+      font-family: var(--px-font-ui, monospace);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 2px solid var(--px-border, #2a2a3a);
+      background: var(--px-surface-2, #22223a);
+      color: var(--px-text, #e0e0f0);
+      box-shadow: 2px 2px 0 0 #000;
+    }
+    .fvb-switch:hover { border-color: var(--px-accent, #818cf8); color: var(--px-accent, #818cf8); }
+    .fvb-close {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--px-border, #2a2a3a);
+      background: var(--px-surface-2, #22223a);
+      color: var(--px-text, #e0e0f0);
+      font-family: var(--px-font-ui, monospace);
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000;
+    }
+    .fvb-close:hover { border-color: var(--px-critical, #f87171); color: var(--px-critical, #f87171); }
+
+    @media (max-width: 520px) {
+      #first-visit-banner {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        transform: none;
+        max-width: none;
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        gap: 8px;
+      }
+      #first-visit-banner.is-shown { transform: none; display: flex; }
+      #first-visit-banner .fvb-emoji { font-size: 18px; }
+      #first-visit-banner .fvb-text { flex: 1 1 100%; min-width: 0; order: 1; }
+      #first-visit-banner .fvb-switch { order: 2; flex: 1 1 auto; }
+      #first-visit-banner .fvb-close { order: 3; flex: 0 0 auto; }
+      @keyframes first-visit-slide {
+        0%   { transform: translateY(16px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+    }
+
+    /* ── Onboarding #4: Auto-tooltip on first layer expansion ─────── */
+    .auto-hint-tooltip {
+      position: absolute;
+      z-index: 75;
+      max-width: 300px;
+      padding: 12px 14px 12px 16px;
+      background: var(--px-surface, #1a1a24);
+      border: 2px solid var(--px-accent, #818cf8);
+      box-shadow: 3px 3px 0 0 #000;
+      font-family: var(--px-font-body, system-ui);
+      color: var(--px-text, #e0e0f0);
+      font-size: 13px;
+      line-height: 1.4;
+      animation: auto-hint-pop 280ms steps(4, end) both;
+    }
+    @keyframes auto-hint-pop {
+      0%   { transform: translateY(-6px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .auto-hint-tooltip strong {
+      display: block;
+      font-family: var(--px-font-ui, monospace);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--px-accent, #818cf8);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .auto-hint-tooltip .auto-hint-close {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--px-border, #2a2a3a);
+      background: var(--px-surface-2, #22223a);
+      color: var(--px-text, #e0e0f0);
+      font-family: var(--px-font-ui, monospace);
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 1px 1px 0 0 #000;
+      line-height: 1;
+    }
+    .auto-hint-tooltip .auto-hint-close:hover {
+      border-color: var(--px-critical, #f87171);
+      color: var(--px-critical, #f87171);
+    }
+    .auto-hint-tooltip::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 24px;
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 10px solid var(--px-accent, #818cf8);
+    }
+    .auto-hint-tooltip.is-above::before {
+      top: auto;
+      bottom: -10px;
+      border-bottom: none;
+      border-top: 10px solid var(--px-accent, #818cf8);
+    }
+
+    /* Story Mode overlay */
+    #story-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      background: rgba(5, 5, 12, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      font-family: var(--px-font-body);
+    }
+    #story-overlay:not([hidden]) { display: flex; }
+
+    #story-card {
+      width: min(100%, 520px);
+      max-height: 92vh;
+      overflow-y: auto;
+      border: 2px solid var(--px-accent);
+      background: var(--px-surface);
+      box-shadow: 4px 4px 0 0 #000;
+      padding: 18px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    #story-step-num {
+      font-family: var(--px-font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      color: var(--px-muted);
+    }
+    #story-title {
+      font-family: var(--px-font-ui);
+      font-size: 1.05rem;
+      letter-spacing: 0.14em;
+      color: var(--px-accent);
+      text-transform: uppercase;
+    }
+    #story-battery {
+      width: min(100%, 320px);
+      image-rendering: pixelated;
+    }
+    #story-battery svg { width: 100%; height: auto; display: block; shape-rendering: crispEdges; }
+    #story-battery .story-bat-cell { transition: fill 600ms ease, width 700ms ease; }
+    #story-ode {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-family: var(--px-font-ui);
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ode-term {
+      padding: 4px 8px;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      color: var(--px-muted);
+      transition: color 200ms ease, border-color 200ms ease;
+    }
+    .ode-op { color: var(--px-muted); }
+    .ode-term.is-lit.ode-circadian { color: var(--px-warn);     border-color: var(--px-warn);     animation: story-glow 1.4s steps(8, end) 1; }
+    .ode-term.is-lit.ode-recovery  { color: var(--px-good);     border-color: var(--px-good);     animation: story-glow 1.4s steps(8, end) 1; }
+    .ode-term.is-lit.ode-drain     { color: var(--px-critical); border-color: var(--px-critical); animation: story-glow 1.4s steps(8, end) 1; }
+    @keyframes story-glow {
+      0%, 100% { transform: scale(1.0); filter: brightness(1); }
+      50%      { transform: scale(1.08); filter: brightness(1.6); }
+    }
+    #story-body {
+      margin: 0;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.45;
+      color: var(--px-text);
+      min-height: 3.6em;
+    }
+    #story-controls {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    #story-back, #story-skip, #story-next {
+      min-height: 44px;
+      padding: 0 12px;
+      border: 2px solid var(--px-border-2);
+      background: var(--px-surface-2);
+      color: var(--px-text);
+      font-family: var(--px-font-ui);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000;
+    }
+    #story-next { background: var(--px-accent); border-color: var(--px-accent); color: #0b0b14; margin-left: auto; }
+    #story-back:hover, #story-skip:hover { border-color: var(--px-accent); color: var(--px-accent); }
+    #story-skip { background: transparent; border-color: transparent; box-shadow: none; color: var(--px-muted); }
+    #story-try {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 6px;
+      border: 2px solid var(--px-good);
+      background: var(--px-good);
+      color: #0b0b14;
+      font-family: var(--px-font-ui);
+      font-size: 0.92rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000;
+      animation: story-glow 1.6s steps(8, end) infinite;
+    }
+    #story-btn {
+      font-family: var(--px-font-ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 6px 10px;
+      min-height: 36px;
+      background: transparent;
+      border: 2px solid var(--px-border);
+      color: var(--px-accent);
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+    }
+    #story-btn:hover, #story-btn:focus-visible {
+      border-color: var(--px-accent);
+      outline: none;
+      filter: brightness(1.2);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #story-battery .story-bat-cell { transition: none; }
+      .ode-term.is-lit { animation: none; }
+      #story-try { animation: none; }
+    }
 
     @keyframes demo-scene-enter {
       0%   { opacity: 0; transform: scale(0.6) translateY(20px); filter: brightness(2.4); }
@@ -2528,12 +3176,14 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
+      padding: 0 12px;
+      min-height: 40px;
+      box-sizing: border-box;
       border: 2px solid var(--px-border);
       background: var(--surface);
       color: var(--px-text);
       font-family: var(--px-font-ui);
-      font-size: 9px;
+      font-size: 11px;
       letter-spacing: 0.1em;
       cursor: pointer;
       box-shadow: 2px 2px 0 0 rgba(0,0,0,0.6);
@@ -2811,7 +3461,7 @@
       display: none;
       font-family: var(--px-font-body);
     }
-    body[data-mode="help"] #help-sheet { display: block; }
+    body[data-mode="help"] #help-sheet { display: flex; }
     body[data-mode="help"] #backdrop { opacity: 1; pointer-events: auto; }
 
     #help-sheet h2 {
@@ -2839,6 +3489,92 @@
       box-shadow: 2px 2px 0 0 #000;
       color: var(--px-text);
     }
+    /* Help sheet — tabbed layout */
+    #help-sheet {
+      max-height: min(80vh, 640px);
+      flex-direction: column;
+      gap: 8px;
+    }
+    #help-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--px-border-2);
+      margin: -4px -4px 6px;
+      padding: 0 4px;
+    }
+    .help-tab {
+      flex: 1 1 0;
+      min-height: 44px;
+      padding: 8px 6px 10px;
+      border: 2px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--px-muted);
+      font-family: var(--px-font-ui);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      text-align: center;
+    }
+    .help-tab:hover,
+    .help-tab:focus-visible { color: var(--px-text); outline: none; }
+    .help-tab.is-active {
+      color: var(--px-accent);
+      background: var(--px-surface-2);
+      border-color: var(--px-border-2);
+    }
+    .help-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -2px;
+      height: 4px;
+      background: var(--px-accent);
+      image-rendering: pixelated;
+    }
+    .help-panels {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 4px;
+    }
+    .help-panel { display: none; }
+    .help-panel.is-active { display: block; }
+    .help-glossary { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .gloss-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--px-border);
+    }
+    .gloss-row dt {
+      font-family: var(--px-font-ui);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--px-accent);
+    }
+    .gloss-row dd {
+      margin: 0;
+      font-family: var(--px-font-body);
+      font-size: 1.05rem;
+      line-height: 1.4;
+      color: var(--px-text);
+    }
+    .help-howitworks {
+      margin: 0;
+      padding-left: 22px;
+      font-family: var(--px-font-body);
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: var(--px-text);
+    }
+    .help-howitworks li { margin-bottom: 10px; }
+    @media (min-width: 520px) {
+      .gloss-row { grid-template-columns: 140px 1fr; gap: 12px; align-items: baseline; }
+    }
     #help-close {
       margin-top: 12px;
       width: 100%;
@@ -2854,19 +3590,23 @@
     #help-trigger {
       position: fixed;
       top: 10px;
-      right: 170px;
-      width: 36px;
-      height: 36px;
-      border: 2px solid var(--px-border-2);
-      background: var(--px-surface-2);
+      right: 180px;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--px-border);
+      background: var(--surface);
       color: var(--px-text);
       font-family: var(--px-font-ui);
-      font-size: 0.9rem;
+      font-size: 18px;
+      line-height: 1;
       cursor: pointer;
-      box-shadow: 2px 2px 0 0 #000;
-      z-index: 10;
-      display: none;  /* shown only on desktop widths */
+      box-shadow: 2px 2px 0 0 rgba(0,0,0,0.6);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
+    #help-trigger:hover { border-color: var(--px-accent); color: var(--px-accent); }
     @media (min-width: 720px) {
       #help-trigger { display: inline-flex; align-items: center; justify-content: center; }
     }
@@ -3529,8 +4269,10 @@
       </select>
       <button id="demo-toggle-btn" type="button" aria-pressed="false">Interactive Demo</button>
       <button id="tour-btn" type="button" title="App tour">TOUR</button>
+      <button id="story-btn" type="button" title="5-scene day-in-the-life walkthrough">STORY &#9654;</button>
+      <button id="calib-btn" type="button" title="Personal calibration (5 questions)">CALIBRATE</button>
       <span id="demo-header-badge" aria-live="polite">Demo mode</span>
-      <div id="connection-pill" role="status" aria-live="polite">✕ offline</div>
+      <div id="connection-pill" role="status" aria-live="polite">○ no live data</div>
     </div>
   </header>
 
@@ -3587,7 +4329,7 @@
       <div class="battery-copy">
         <div id="battery-percent">--%</div>
         <div id="battery-caption">Mental energy</div>
-        <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND ▾</div>
+        <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND<span class="pix-arrow">&#9660;</span></div>
       </div>
     </button>
 
@@ -3602,6 +4344,9 @@
 
     <section id="layer-1" class="panel" aria-hidden="true">
       <div class="layer-panel-block layer-panel-block-v2">
+        <button type="button" class="layer-back-top" data-layer-back aria-label="Collapse to battery">
+          <span class="layer-back-arrow">&#9664;</span><span>Back to battery</span>
+        </button>
         <div class="layer-card layer-card-pressure">
           <div class="layer1-pressure-head">
             <div class="layer-copy-stack">
@@ -3644,12 +4389,15 @@
             <div id="breakdown-list" aria-live="polite"></div>
           </div>
         </details>
-        <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics ↓</button>
+        <button id="open-diagnostics" class="panel-link" type="button">Show full diagnostics <span class="pix-arrow-down">&#9660;</span></button>
       </div>
     </section>
 
     <section id="layer-2" class="panel" aria-hidden="true">
       <div class="layer-panel-block layer-panel-block-v2">
+        <button type="button" class="layer-back-top" data-layer-back aria-label="Collapse to battery">
+          <span class="layer-back-arrow">&#9664;</span><span>Back to battery</span>
+        </button>
         <div class="layer2-top layer2-top-v2">
           <div class="layer-card layer2-chart-wrap layer2-chart-card">
             <div class="layer2-action-row">
@@ -3720,7 +4468,7 @@ P = drain - 0.5*recovery</pre>
       </div>
     </section>
 
-    <button id="collapse-btn" type="button">↑</button>
+    <button id="collapse-btn" type="button"><span class="pix-arrow-up">&#9650;</span> Collapse</button>
   </section>
 
   <div id="toggle-banner" class="toggle-banner" hidden aria-hidden="true" aria-live="polite"></div>
@@ -3732,22 +4480,141 @@ P = drain - 0.5*recovery</pre>
 
   <button id="recovery-trigger" type="button">RECOVERY</button>
 
-  <button id="help-trigger" type="button" aria-label="Keyboard shortcuts (press ? key)">?</button>
+  <button id="help-trigger" type="button" aria-label="Keyboard shortcuts (press ? key)" title="Keyboard shortcuts">&#9000;</button>
 
-  <section id="help-sheet" aria-hidden="true" aria-label="Keyboard shortcuts">
-    <h2>Keyboard shortcuts</h2>
-    <div class="help-row"><kbd>E</kbd><span>Log energy rating</span></div>
-    <div class="help-row"><kbd>S</kbd><span>Log stress rating</span></div>
-    <div class="help-row"><kbd>R</kbd><span>Open recovery menu</span></div>
-    <div class="help-row"><kbd>Space</kbd><span>Expand / collapse battery</span></div>
-    <div class="help-row"><kbd>D</kbd><span>Open full diagnostics</span></div>
-    <div class="help-row"><kbd>1 – 0</kbd><span>Submit rating value (1–10) when rating sheet is open</span></div>
-    <div class="help-row"><kbd>Esc</kbd><span>Close any open sheet or screensaver</span></div>
-    <div class="help-row"><kbd>?</kbd><span>This sheet</span></div>
+  <section id="help-sheet" aria-hidden="true" aria-label="Help">
+    <div id="help-tabs" role="tablist" aria-label="Help sections">
+      <button type="button" role="tab" id="help-tab-shortcuts" class="help-tab is-active" data-help-tab="shortcuts" aria-selected="true" aria-controls="help-panel-shortcuts">SHORTCUTS</button>
+      <button type="button" role="tab" id="help-tab-glossary"  class="help-tab"            data-help-tab="glossary"  aria-selected="false" aria-controls="help-panel-glossary">GLOSSARY</button>
+      <button type="button" role="tab" id="help-tab-howitworks" class="help-tab"           data-help-tab="howitworks" aria-selected="false" aria-controls="help-panel-howitworks">HOW IT WORKS</button>
+    </div>
+
+    <div class="help-panels">
+      <div class="help-panel is-active" role="tabpanel" id="help-panel-shortcuts" aria-labelledby="help-tab-shortcuts">
+        <h2>Keyboard shortcuts</h2>
+        <div class="help-row"><kbd>E</kbd><span>Log energy rating</span></div>
+        <div class="help-row"><kbd>S</kbd><span>Log stress rating</span></div>
+        <div class="help-row"><kbd>R</kbd><span>Open recovery menu</span></div>
+        <div class="help-row"><kbd>Space</kbd><span>Expand / collapse battery</span></div>
+        <div class="help-row"><kbd>D</kbd><span>Open full diagnostics</span></div>
+        <div class="help-row"><kbd>1 – 0</kbd><span>Submit rating value (1–10) when rating sheet is open</span></div>
+        <div class="help-row"><kbd>Esc</kbd><span>Close any open sheet or screensaver</span></div>
+        <div class="help-row"><kbd>?</kbd><span>This sheet</span></div>
+        <div class="help-row"><kbd>← →</kbd><span>Switch help tabs</span></div>
+      </div>
+
+      <div class="help-panel" role="tabpanel" id="help-panel-glossary" aria-labelledby="help-tab-glossary" hidden>
+        <h2>Glossary</h2>
+        <dl class="help-glossary">
+          <div class="gloss-row"><dt>E (Energy)</dt><dd>Your mental fuel tank, 0–100%. Drains as the day progresses, refills with sleep, walks, food, and people.</dd></div>
+          <div class="gloss-row"><dt>S (Stress)</dt><dd>A second tank that builds under cognitive load — back-to-back meetings, late-night work, heavy multitasking. High S makes E drain faster.</dd></div>
+          <div class="gloss-row"><dt>Pressure</dt><dd>The instantaneous load on you right now (meeting density, message volume, app switching). Pressure is what feeds the Stress tank.</dd></div>
+          <div class="gloss-row"><dt>Chronotype</dt><dd>Your natural body-clock type: lark (early), intermediate, or owl (late). Sets when your circadian baseline peaks.</dd></div>
+          <div class="gloss-row"><dt>MSF_sc</dt><dd>Sleep-corrected mid-sleep on free days, from the Munich Chronotype Questionnaire (Roenneberg et al., 2003). The number we use to pick your chronotype curve.</dd></div>
+          <div class="gloss-row"><dt>Peak cognition</dt><dd>The window where your circadian baseline is highest — usually 2–4 hours after wake for larks, late afternoon for owls. Best time for hard thinking.</dd></div>
+          <div class="gloss-row"><dt>Recovery</dt><dd>Anything that adds energy back: outside time, exercise, social contact, food, rest. Each activity has a different lift.</dd></div>
+          <div class="gloss-row"><dt>Drain</dt><dd>Anything that pulls energy out: video meetings, deep focus, context switching, late hours, high keystroke rate.</dd></div>
+          <div class="gloss-row"><dt>ActivityWatch</dt><dd>Open-source local time tracker that watches your active windows. We read it (read-only, on your machine) to know how much you actually meet, focus, and switch.</dd></div>
+          <div class="gloss-row"><dt>Model B</dt><dd>The two-tank ODE: dE/dt = recovery − drain − k·(E − E_rest); dS/dt = pressure − decay·S. The math behind every battery tick.</dd></div>
+          <div class="gloss-row"><dt>Model D</dt><dd>The circadian baseline E_rest — a smooth curve over 24h that says "what you'd feel rested at this hour, given your chronotype."</dd></div>
+          <div class="gloss-row"><dt>Demo mode</dt><dd>Frontend-only simulation. No backend, no logs sent. Pick activities and watch the model tanks move in real time.</dd></div>
+        </dl>
+      </div>
+
+      <div class="help-panel" role="tabpanel" id="help-panel-howitworks" aria-labelledby="help-tab-howitworks" hidden>
+        <h2>How it works</h2>
+        <ol class="help-howitworks">
+          <li>Your energy is a battery: it drains during the day from things you do, and recharges from rest, walks, food, and people.</li>
+          <li>A second tank tracks stress — back-to-back meetings and long focus sessions fill it, and a full stress tank makes the energy battery drain faster.</li>
+          <li>On top of all that, your body has a natural daily rhythm — your circadian baseline — that quietly lifts or lowers what "rested" means at this hour.</li>
+          <li>Every five minutes the app reads what you actually did (meetings, focus blocks, walks, sleep) and updates both tanks a little.</li>
+          <li>The percentage you see is the energy tank, smoothed; the diagnostics layer shows the math underneath if you want to look.</li>
+        </ol>
+      </div>
+    </div>
+
     <button id="help-close" type="button">Close</button>
   </section>
 
+  <!-- Onboarding #2: first-visit splash -->
+  <div id="intro-splash" hidden role="dialog" aria-modal="true" aria-labelledby="intro-splash-title">
+    <div class="intro-splash-card">
+      <svg class="intro-splash-icon" width="120" height="56" viewBox="0 0 60 28" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="0" y="2" width="54" height="24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--px-accent, #818cf8)"/>
+        <rect x="54" y="9" width="4" height="10" fill="currentColor" style="color: var(--px-accent, #818cf8)"/>
+        <rect x="3" y="5" width="6" height="18" fill="var(--px-good, #9FE86A)"/>
+        <rect x="11" y="5" width="6" height="18" fill="var(--px-good, #9FE86A)"/>
+        <rect x="19" y="5" width="6" height="18" fill="var(--px-good, #9FE86A)"/>
+        <rect x="27" y="5" width="6" height="18" fill="var(--px-warn, #FFC857)"/>
+        <rect x="35" y="5" width="6" height="18" fill="var(--px-warn, #FFC857)"/>
+      </svg>
+      <h2 id="intro-splash-title" class="intro-splash-title">Psych Battery</h2>
+      <p class="intro-splash-sub">UC Berkeley · Mental energy, modeled.</p>
+
+      <div class="intro-splash-lines">
+        <div class="intro-splash-line"><strong>WHAT</strong><span>A pixel-art battery showing your mental energy across the day.</span></div>
+        <div class="intro-splash-line"><strong>HOW</strong><span>Two coupled equations turn your real activity into Energy + Stress.</span></div>
+        <div class="intro-splash-line"><strong>TRY</strong><span>The interactive demo simulates a full day so you can play with every feature now.</span></div>
+      </div>
+
+      <div class="intro-splash-actions">
+        <button type="button" class="intro-splash-btn is-primary" data-intro-action="demo">Try the demo &#9654;</button>
+        <button type="button" class="intro-splash-btn is-ghost" data-intro-action="live">Use live data</button>
+      </div>
+      <button type="button" class="intro-splash-skip" data-intro-action="skip">Skip intro</button>
+    </div>
+  </div>
+
+  <!-- Onboarding #3: dismissible first-visit demo banner -->
+  <aside id="first-visit-banner" role="status" aria-live="polite">
+    <span class="fvb-emoji" aria-hidden="true">&#128075;</span>
+    <div class="fvb-text">
+      <strong>First time?</strong>
+      <span>Click any activity below to see how energy and stress respond.</span>
+    </div>
+    <button type="button" class="fvb-switch" data-fvb-action="live">Switch to live</button>
+    <button type="button" class="fvb-close" aria-label="Dismiss" data-fvb-action="dismiss">&times;</button>
+  </aside>
+
   <div id="backdrop" hidden></div>
+
+  <div class="calib-modal" id="calib-modal" role="dialog" aria-modal="true" aria-labelledby="calib-title">
+    <div class="calib-card">
+      <h2 id="calib-title">Personal Calibration</h2>
+      <p class="calib-intro">5 quick questions about your sleep schedule. We use the Munich Chronotype Questionnaire (MCTQ) to compute your chronotype — lark, intermediate, or owl — which sets your circadian baseline curve.</p>
+
+      <div class="calib-q">
+        <label for="calib-bed-w">On work days, what time do you usually fall asleep?</label>
+        <input id="calib-bed-w" type="time" value="23:30" />
+      </div>
+      <div class="calib-q">
+        <label for="calib-wake-w">On work days, what time do you wake up?</label>
+        <input id="calib-wake-w" type="time" value="07:00" />
+      </div>
+      <div class="calib-q">
+        <label for="calib-bed-f">On work-free days, what time do you usually fall asleep?</label>
+        <input id="calib-bed-f" type="time" value="00:30" />
+      </div>
+      <div class="calib-q">
+        <label for="calib-wake-f">On work-free days, what time do you wake up?</label>
+        <input id="calib-wake-f" type="time" value="08:30" />
+      </div>
+      <div class="calib-q">
+        <label>On work-free days, do you use an alarm?</label>
+        <div class="calib-yesno" data-calib-alarm>
+          <button type="button" data-val="yes">Yes</button>
+          <button type="button" data-val="no" class="is-on">No</button>
+        </div>
+      </div>
+
+      <div class="calib-result" id="calib-result"></div>
+
+      <div class="calib-actions">
+        <button type="button" data-calib-close>Cancel</button>
+        <button type="button" class="calib-submit" data-calib-submit>Calculate</button>
+      </div>
+    </div>
+  </div>
 
   <div class="demo-help-modal" id="demo-help-modal" role="dialog" aria-modal="true" aria-labelledby="demo-help-title">
     <div class="demo-help-modal-card">
@@ -3765,14 +4632,13 @@ P = drain - 0.5*recovery</pre>
       <h3>Pressure</h3>
       <p>The instantaneous load on you right now — meetings stacked, message volume, switching between tools. It's the input to <em>S</em>, not a tank itself. Think of it as "how loud the day is."</p>
 
-      <h3>E_rest (resting baseline)</h3>
-      <p>Where your battery would settle if nothing happened — circadian floor + chronotype + sleep debt. Updates slowly across the day. E always drifts toward E_rest when you idle.</p>
+
 
       <h3>How activities change things</h3>
       <p>Each activity card flips a small set of feature inputs (right-side panel). Those flow through the same Model B + D math the live app uses. The right panel only shows the features the activity actually moves — others stay neutral.</p>
 
       <h3>The timeline</h3>
-      <p>The strip across the bottom plots E (green) and S (purple) over the simulated 24h day. Each icon marks an activity you picked. Hover an icon to recall the moment.</p>
+      <p>The strip across the bottom plots E (green) and S (red) over the simulated 24h day. Each icon marks an activity you picked. Hover an icon to recall the moment.</p>
 
       <button type="button" class="demo-help-close" data-demo-help-close>Close</button>
     </div>
@@ -5100,6 +5966,8 @@ P = drain - 0.5*recovery</pre>
       DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Exit demo' : 'Interactive Demo';
       DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
       DOM.openDiagnostics.disabled = APP.uiLayer === 2;
+      if (APP.uiLayer === 0) dismissActiveLayerHint();
+      else if (typeof maybeShowLayerHint === 'function') maybeShowLayerHint();
     }
 
     // Pixel-art battery: 10 discrete cells + a partial last cell that reflects
@@ -5177,10 +6045,8 @@ P = drain - 0.5*recovery</pre>
     }
 
     function stressColor(value) {
-      const stress = clamp(value, 0, 100);
-      if (stress < 35) return 'var(--px-good)';
-      if (stress < 60) return 'var(--px-warn)';
-      if (stress < 80) return 'var(--px-low)';
+      // User direction: stress always renders red. Level shown by fill amount only.
+      clamp(value, 0, 100);
       return 'var(--px-critical)';
     }
 
@@ -5203,12 +6069,12 @@ P = drain - 0.5*recovery</pre>
           unit: '',
           color: modelUnavailable ? 'var(--text)' : stressColor(Math.round(payload.S))
         },
-        {
+        ...(false ? [{
           label: 'Circadian',
           value: modelUnavailable ? '--%' : `${Math.round(payload.E_rest_now)}%`,
           unit: 'Expected now',
           color: modelUnavailable ? 'var(--text)' : levelColor(Math.round(payload.E_rest_now))
-        },
+        }] : []),
         {
           label: 'Video meetings',
           value: modelUnavailable ? '--' : `${Math.round(feats.meeting_video_min || 0)}m`,
@@ -5496,7 +6362,7 @@ P = drain - 0.5*recovery</pre>
         cells += `<rect x="${7 + (index * 11)}" y="7" width="${width}" height="20" fill="${filled ? color : 'var(--px-surface-2)'}" opacity="${filled ? '1' : '0.45'}"></rect>`;
       }
       return `
-        <svg class="demo-batt-svg" viewBox="0 0 132 34" aria-hidden="true" shape-rendering="crispEdges"${isStress ? '' : ' data-demo-battery'}>
+        <svg class="demo-batt-svg" viewBox="0 0 132 34" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges"${isStress ? '' : ' data-demo-battery'}>
           <rect x="2" y="2" width="118" height="30" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
           <rect x="122" y="10" width="8" height="14" fill="var(--px-border-2)"></rect>
           ${cells}
@@ -5709,7 +6575,7 @@ P = drain - 0.5*recovery</pre>
           ${topbar}
           <div class="demo-menu">
             <div class="demo-menu-head">
-              <div class="demo-stage-label">Choose an activity to simulate the real Model B + D math.</div>
+              <div class="demo-stage-label">Choose an activity to see how the battery responds.</div>
             </div>
             ${menuRows.map(row => `
               <div class="demo-row-label ${row.css}">${row.label}</div>
@@ -6228,7 +7094,7 @@ P = drain - 0.5*recovery</pre>
           return `
             <div class="layer-feature-row${zero ? ' is-zero' : ''}">
               <div class="layer-feature-head">
-                <span class="layer-feature-label">${item.label}</span>
+                <span class="layer-feature-label">${item.label}<button type="button" class="layer-feature-help-btn" data-feature-key="${item.key}" aria-label="Explain ${item.label}">?</button></span>
                 <span class="layer-feature-value" style="color:${toneColor}">${text}${item.unit ? item.unit : ''}</span>
               </div>
               <div class="layer-feature-bar" style="--layer-tone:${toneColor}">
@@ -6632,9 +7498,9 @@ P = drain - 0.5*recovery</pre>
       DOM.body.classList.toggle('is-backend-offline', !APP.model.online && !APP.model.stale);
       DOM.body.classList.toggle('has-demo-profile', !!getActiveDemoProfile());
       if (APP.demo.enabled) {
-        DOM.connectionPill.textContent = 'DEMO LOCAL';
+        DOM.connectionPill.textContent = '◆ DEMO MODE';
         DOM.connectionPill.style.color = 'var(--px-accent)';
-        DOM.connectionPill.title = 'Frontend-only demo. Backend polling and logging are disabled.';
+        DOM.connectionPill.title = 'You are inside the interactive demo. Live backend polling is paused.';
         return;
       }
       const demo = getActiveDemoProfile();
@@ -6645,19 +7511,19 @@ P = drain - 0.5*recovery</pre>
         return;
       }
 
-      // Guide rule: errors name their system, name the user's recourse.
-      let text = '✕ BACKEND :7070';
-      let color = 'var(--critical)';
-      let tip  = 'Flask server at localhost:7070 is unreachable. Run `python -m integrations.models.main` or enable Demo mode.';
+      // Friendly first-visitor copy. Researchers can hover to see the technical detail.
+      let text = '○ NO LIVE DATA';
+      let color = 'var(--muted)';
+      let tip  = 'Not connected to a live backend. Try the interactive demo or run the Flask server at localhost:7070.';
 
       if (APP.model.online && !APP.model.stale) {
-        text = '● LIVE :7070';
+        text = '● LIVE DATA';
         color = 'var(--good)';
-        tip  = 'Connected to Flask backend at localhost:7070.';
+        tip  = 'Connected to your Flask backend at localhost:7070.';
       } else if (APP.model.stale) {
         text = '◐ CACHED';
         color = 'var(--warn)';
-        tip  = 'Backend unreachable. Showing the last cached tick.';
+        tip  = 'Backend offline. Showing your last saved tick from this browser.';
       }
 
       DOM.connectionPill.textContent = text;
@@ -6675,15 +7541,15 @@ P = drain - 0.5*recovery</pre>
       } else if (demo) {
         DOM.modelStatusText.textContent = `Demo: ${demo.tagline}`;
       } else if (source === 'model') {
-        DOM.modelStatusText.textContent = 'Flask :7070 · live';
+        DOM.modelStatusText.textContent = 'Live data · model ticking';
       } else if (source === 'cached-model') {
-        DOM.modelStatusText.textContent = 'Flask :7070 unreachable — showing cached values';
+        DOM.modelStatusText.textContent = 'Backend offline — showing your last known values';
       } else if (source === 'aw') {
         DOM.modelStatusText.textContent = APP.aw.online
-          ? 'Flask :7070 offline — ActivityWatch fallback'
-          : 'Flask :7070 offline — last ActivityWatch read';
+          ? 'Backend offline — using ActivityWatch directly'
+          : 'Backend offline — last ActivityWatch read';
       } else {
-        DOM.modelStatusText.textContent = 'No backend. Start Flask at :7070 or enable Demo mode.';
+        DOM.modelStatusText.textContent = 'No live data yet — try the interactive demo to see the model.';
       }
 
       if (APP.demo.enabled && APP.demo.simClock) {
@@ -7722,6 +8588,13 @@ P = drain - 0.5*recovery</pre>
         applyState();
       });
 
+      document.querySelectorAll('[data-layer-back]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          APP.uiLayer = 0;
+          applyState();
+        });
+      });
+
       DOM.energyBtn.addEventListener('click', () => {
         APP.rating.kind = 'energy_rating';
         openRatingSheet('energy_rating');
@@ -7870,6 +8743,8 @@ P = drain - 0.5*recovery</pre>
       const helpClose = document.getElementById('help-close');
 
       function openHelp() {
+        const saved = (() => { try { return localStorage.getItem('pb_help_tab'); } catch (_) { return null; } })();
+        if (typeof setHelpTab === 'function') setHelpTab(saved || 'shortcuts');
         APP.mode = 'help';
         applyState();
         if (helpSheet) helpSheet.setAttribute('aria-hidden', 'false');
@@ -7885,8 +8760,174 @@ P = drain - 0.5*recovery</pre>
       if (helpTrigger) helpTrigger.addEventListener('click', openHelp);
       if (helpClose) helpClose.addEventListener('click', closeHelp);
 
+      const HELP_TABS = ['shortcuts', 'glossary', 'howitworks'];
+      function setHelpTab(name) {
+        if (!HELP_TABS.includes(name)) name = 'shortcuts';
+        document.querySelectorAll('.help-tab').forEach(btn => {
+          const on = btn.dataset.helpTab === name;
+          btn.classList.toggle('is-active', on);
+          btn.setAttribute('aria-selected', on ? 'true' : 'false');
+          btn.tabIndex = on ? 0 : -1;
+        });
+        document.querySelectorAll('.help-panel').forEach(p => {
+          const on = p.id === 'help-panel-' + name;
+          p.classList.toggle('is-active', on);
+          if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+        });
+        try { localStorage.setItem('pb_help_tab', name); } catch (_) {}
+      }
+      document.querySelectorAll('.help-tab').forEach(btn => {
+        btn.addEventListener('click', () => setHelpTab(btn.dataset.helpTab));
+      });
+      // Keyboard navigation: Left/Right cycles tabs while help sheet is open
+      document.addEventListener('keydown', (e) => {
+        if (APP.mode !== 'help') return;
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        let current = 'shortcuts';
+        try { current = localStorage.getItem('pb_help_tab') || 'shortcuts'; } catch (_) {}
+        const cur = HELP_TABS.indexOf(current);
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = (cur + dir + HELP_TABS.length) % HELP_TABS.length;
+        setHelpTab(HELP_TABS[next]);
+      });
+
+      // ─── MCTQ Calibration ───────────────────────────────────────────
+      const calibBtn = document.getElementById('calib-btn');
+      const calibModal = document.getElementById('calib-modal');
+      const calibResult = document.getElementById('calib-result');
+      const yesnoEl = calibModal && calibModal.querySelector('[data-calib-alarm]');
+
+      function timeToHours(timeStr, isBed) {
+        // Returns hours-since-midnight 0–24. For bed times, 18:00–23:59 stays 18–23.99,
+        // 00:00–05:59 wraps to 24–29.99 so SD calculations are always positive.
+        if (!timeStr) return 0;
+        const [h, m] = timeStr.split(':').map(Number);
+        let hours = h + m / 60;
+        if (isBed && hours < 12) hours += 24;
+        return hours;
+      }
+
+      function computeMSFsc({ bedW, wakeW, bedF, wakeF, alarmFree }) {
+        const bw = timeToHours(bedW, true);
+        const ww = timeToHours(wakeW, false) + (timeToHours(wakeW, false) < 12 ? 0 : 0);
+        const wwAdj = ww < bw - 24 ? ww + 24 : ww; // ensure wake > bed
+        const sdW = (wwAdj < bw ? wwAdj + 24 : wwAdj) - bw;
+
+        const bf = timeToHours(bedF, true);
+        const wf = timeToHours(wakeF, false);
+        const wfAdj = wf < bf - 24 ? wf + 24 : wf;
+        const sdF = (wfAdj < bf ? wfAdj + 24 : wfAdj) - bf;
+
+        const sdAvg = (5 * sdW + 2 * sdF) / 7;
+        let msf = bf + sdF / 2;
+        // Wrap to 0–24
+        msf = ((msf % 24) + 24) % 24;
+
+        let msfSc = msf;
+        if (alarmFree && sdF > sdAvg) {
+          msfSc = msf - (sdF - sdAvg) / 2;
+          msfSc = ((msfSc % 24) + 24) % 24;
+        }
+
+        let chronotype;
+        if (msfSc < 3.5) chronotype = 'lark';
+        else if (msfSc < 5.5) chronotype = 'intermediate';
+        else chronotype = 'owl';
+
+        return { msfSc, chronotype, sdW, sdF, sdAvg };
+      }
+
+      function fmtHM(h) {
+        const hh = Math.floor(h);
+        const mm = Math.round((h - hh) * 60);
+        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+      }
+
+      function openCalibModal() {
+        if (!calibModal) return;
+        calibModal.classList.add('is-open');
+        if (calibResult) { calibResult.classList.remove('is-shown'); calibResult.textContent = ''; }
+      }
+      function closeCalibModal() {
+        if (!calibModal) return;
+        calibModal.classList.remove('is-open');
+      }
+
+      if (calibBtn) calibBtn.addEventListener('click', openCalibModal);
+      if (calibModal) {
+        calibModal.addEventListener('click', (e) => {
+          if (e.target === calibModal || e.target.closest('[data-calib-close]')) closeCalibModal();
+        });
+        const submit = calibModal.querySelector('[data-calib-submit]');
+        if (submit) submit.addEventListener('click', () => {
+          const bedW  = document.getElementById('calib-bed-w').value;
+          const wakeW = document.getElementById('calib-wake-w').value;
+          const bedF  = document.getElementById('calib-bed-f').value;
+          const wakeF = document.getElementById('calib-wake-f').value;
+          const alarmBtn = yesnoEl && yesnoEl.querySelector('button.is-on');
+          const alarmFree = alarmBtn && alarmBtn.dataset.val === 'no';
+
+          const { msfSc, chronotype } = computeMSFsc({ bedW, wakeW, bedF, wakeF, alarmFree });
+          try {
+            localStorage.setItem('pb_chronotype', chronotype);
+            localStorage.setItem('pb_msf_sc', String(msfSc.toFixed(2)));
+          } catch (_) { /* private mode */ }
+
+          document.body.classList.add('is-calibrated');
+
+          const peak = chronotype === 'lark' ? '13:52' : chronotype === 'intermediate' ? '16:00' : '20:59';
+          calibResult.innerHTML = `Chronotype: <strong>${chronotype.toUpperCase()}</strong><br>MSF<sub>sc</sub> = ${msfSc.toFixed(2)} h (${fmtHM(msfSc)})<br>Peak cognition ≈ ${peak}`;
+          calibResult.classList.add('is-shown');
+        });
+        if (yesnoEl) {
+          yesnoEl.addEventListener('click', (e) => {
+            const b = e.target.closest('button[data-val]');
+            if (!b) return;
+            yesnoEl.querySelectorAll('button').forEach(x => x.classList.remove('is-on'));
+            b.classList.add('is-on');
+          });
+        }
+      }
+      // Restore state on load
+      try {
+        if (localStorage.getItem('pb_chronotype')) document.body.classList.add('is-calibrated');
+      } catch (_) { /* private mode */ }
+
+      // ─── Layer-1 feature ?-popovers ───────────────────────────────────
+      let activeFeaturePopover = null;
+      function closeFeaturePopover() {
+        if (activeFeaturePopover) {
+          activeFeaturePopover.remove();
+          activeFeaturePopover = null;
+        }
+      }
+      document.addEventListener('click', (e) => {
+        const helpBtn = e.target.closest('.layer-feature-help-btn');
+        if (helpBtn) {
+          e.stopPropagation();
+          const key = helpBtn.dataset.featureKey;
+          const meta = (typeof FEAT_HELP !== 'undefined' && FEAT_HELP[key]) || null;
+          if (!meta) return;
+          closeFeaturePopover();
+          const pop = document.createElement('div');
+          pop.className = 'layer-feature-popover';
+          pop.innerHTML = `<h4>${meta.title}</h4><p>${meta.body}</p>`;
+          document.body.appendChild(pop);
+          const r = helpBtn.getBoundingClientRect();
+          pop.style.top = (window.scrollY + r.bottom + 6) + 'px';
+          pop.style.left = Math.max(8, Math.min(window.innerWidth - 340, window.scrollX + r.left - 8)) + 'px';
+          activeFeaturePopover = pop;
+          return;
+        }
+        if (activeFeaturePopover && !e.target.closest('.layer-feature-popover')) closeFeaturePopover();
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeFeaturePopover(); closeCalibModal(); } });
+
       const tourBtn = document.getElementById('tour-btn');
       if (tourBtn) tourBtn.addEventListener('click', startTour);
+      const storyBtn = document.getElementById('story-btn');
+      if (storyBtn) storyBtn.addEventListener('click', startStoryMode);
 
       document.addEventListener('keydown', event => {
         // Ignore if the user is typing in a form control
@@ -7896,6 +8937,8 @@ P = drain - 0.5*recovery</pre>
 
         // Esc handled everywhere
         if (event.key === 'Escape') {
+          const storyOverlay = document.getElementById('story-overlay');
+          if (storyOverlay && !storyOverlay.hasAttribute('hidden')) { endStoryMode(); return; }
           const tourOverlay = document.getElementById('tour-overlay');
           if (tourOverlay && !tourOverlay.hasAttribute('hidden')) { endTour(); return; }
           if (APP.mode === 'rating') { closeRatingSheet(); return; }
@@ -7954,10 +8997,134 @@ P = drain - 0.5*recovery</pre>
 
     async function start() {
       initUi();
+      maybeShowIntroSplash();
       await refreshModelState({ allowCache: true });
       if (!APP.model.payload) {
         await refreshAwData({ reason: 'fallback' });
       }
+    }
+
+    // ── Onboarding #4: Auto-tooltip on first layer expansion ────────────
+    const LAYER_HINTS = {
+      1: {
+        targetId: 'layer1-drain-list',
+        title: 'METRICS LAYER',
+        body: 'Each row is a real-time signal pulled from your activity. Hover the ? buttons for what each one means.',
+        flag: 'pb_seen_layer_1',
+      },
+      2: {
+        targetId: 'layer2-circadian',
+        title: 'DIAGNOSTICS LAYER',
+        body: 'The curve is your circadian baseline — where energy wants to be. Your battery drifts toward it whenever you idle.',
+        flag: 'pb_seen_layer_2',
+      },
+    };
+    let _activeLayerHint = null;
+    function dismissActiveLayerHint() {
+      if (_activeLayerHint && _activeLayerHint.parentNode) {
+        _activeLayerHint.parentNode.removeChild(_activeLayerHint);
+      }
+      _activeLayerHint = null;
+    }
+    function maybeShowLayerHint() {
+      // Don't show during demo, screensaver, rating, recovery menu, or intro splash.
+      if (APP && APP.demo && APP.demo.enabled) return;
+      if (APP && APP.mode && APP.mode !== 'normal') return;
+      const splash = document.getElementById('intro-splash');
+      if (splash && !splash.hasAttribute('hidden')) return;
+
+      const meta = LAYER_HINTS[APP.uiLayer];
+      if (!meta) { dismissActiveLayerHint(); return; }
+      try { if (localStorage.getItem(meta.flag) === '1') return; } catch (_) {}
+
+      // Defer to next frame so layer panels are visible/measured.
+      requestAnimationFrame(() => {
+        if (APP.uiLayer !== Number(Object.keys(LAYER_HINTS).find(k => LAYER_HINTS[k] === meta))) return;
+        const target = document.getElementById(meta.targetId);
+        if (!target) return;
+        if (_activeLayerHint) return; // already shown
+
+        const tip = document.createElement('div');
+        tip.className = 'auto-hint-tooltip';
+        tip.innerHTML = '<button type="button" class="auto-hint-close" aria-label="Dismiss">&times;</button>' +
+          '<strong>' + meta.title + '</strong>' +
+          '<span>' + meta.body + '</span>';
+        document.body.appendChild(tip);
+
+        const r = target.getBoundingClientRect();
+        const tipRect = tip.getBoundingClientRect();
+        const GAP = 12;
+        let top = window.scrollY + r.bottom + GAP;
+        let left = window.scrollX + Math.max(8, r.left + 8);
+        // If would overflow bottom, place above target instead.
+        if (top + tipRect.height + 8 > window.scrollY + window.innerHeight) {
+          top = window.scrollY + r.top - tipRect.height - GAP;
+          tip.classList.add('is-above');
+        }
+        // Clamp horizontally.
+        const maxLeft = window.scrollX + window.innerWidth - tipRect.width - 8;
+        if (left > maxLeft) left = maxLeft;
+        if (left < window.scrollX + 8) left = window.scrollX + 8;
+        tip.style.top = top + 'px';
+        tip.style.left = left + 'px';
+
+        _activeLayerHint = tip;
+
+        const closeBtn = tip.querySelector('.auto-hint-close');
+        const dismiss = () => {
+          try { localStorage.setItem(meta.flag, '1'); } catch (_) {}
+          dismissActiveLayerHint();
+        };
+        closeBtn.addEventListener('click', dismiss);
+        // Auto-dismiss after 12s if user hasn't engaged.
+        setTimeout(() => { if (_activeLayerHint === tip) dismiss(); }, 12000);
+      });
+    }
+
+    // ── Onboarding #2 + #3: first-visit splash and demo banner ────────────
+    function hasSeenIntro() {
+      try { return localStorage.getItem('pb_seen_intro') === '1'; } catch (_) { return false; }
+    }
+    function markIntroSeen(choice) {
+      try {
+        localStorage.setItem('pb_seen_intro', '1');
+        if (choice) localStorage.setItem('pb_intro_choice', choice);
+      } catch (_) { /* private mode */ }
+    }
+    function maybeShowIntroSplash() {
+      if (hasSeenIntro()) return;
+      const splash = document.getElementById('intro-splash');
+      if (!splash) return;
+      splash.removeAttribute('hidden');
+      splash.querySelectorAll('[data-intro-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.currentTarget.dataset.introAction;
+          splash.setAttribute('hidden', '');
+          markIntroSeen(action);
+          if (action === 'demo') {
+            try { enterDemoMode(); } catch (_) { /* enterDemoMode may not exist if HTML moved */ }
+            showFirstVisitBanner();
+          }
+        });
+      });
+    }
+    function showFirstVisitBanner() {
+      const banner = document.getElementById('first-visit-banner');
+      if (!banner) return;
+      try {
+        if (localStorage.getItem('pb_seen_demo_banner') === '1') return;
+      } catch (_) { /* */ }
+      banner.classList.add('is-shown');
+      banner.querySelectorAll('[data-fvb-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.currentTarget.dataset.fvbAction;
+          banner.classList.remove('is-shown');
+          try { localStorage.setItem('pb_seen_demo_banner', '1'); } catch (_) {}
+          if (action === 'live') {
+            try { exitDemoMode(); } catch (_) {}
+          }
+        });
+      });
     }
 
     // ── Tour system ───────────────────────────────────────────────────────────
@@ -8069,6 +9236,154 @@ P = drain - 0.5*recovery</pre>
       localStorage.setItem('pb_tour_done', '1');
     }
 
+    // ── Story Mode walkthrough ────────────────────────────────────────────
+    const STORY_STEPS = [
+      {
+        title: 'MORNING',
+        body: 'Your day starts near peak — your circadian curve has lifted you.',
+        batteryPct: 85,
+        highlight: 'circadian'
+      },
+      {
+        title: 'TWO ZOOM MEETINGS',
+        body: 'Each video meeting drains energy and stacks pressure.',
+        batteryPct: 62,
+        highlight: 'drain'
+      },
+      {
+        title: 'LUNCH + WALK',
+        body: 'Outside time + people + a meal lift you back up.',
+        batteryPct: 74,
+        highlight: 'recovery'
+      },
+      {
+        title: 'DEEP WORK AFTERNOON',
+        body: 'Focus is sustainable when stress stays low.',
+        batteryPct: 58,
+        highlight: 'drain'
+      },
+      {
+        title: 'EVENING REST',
+        body: 'By bedtime, recovery has restored most of the day\'s drain.',
+        batteryPct: 78,
+        highlight: 'recovery'
+      }
+    ];
+
+    let _storyIdx = 0;
+
+    function ensureStoryBatterySvg() {
+      const host = document.getElementById('story-battery');
+      if (!host || host.querySelector('svg')) return;
+      const CELL_W = 22, CELL_H = 80, CELL_X0 = 14, CELL_Y = 14, CELL_GAP = 3;
+      let cells = '';
+      for (let i = 0; i < 10; i++) {
+        const x = CELL_X0 + i * (CELL_W + CELL_GAP);
+        cells += '<rect class="story-bat-cell" data-idx="' + i + '" x="' + x + '" y="' + CELL_Y + '" width="' + CELL_W + '" height="' + CELL_H + '" fill="#2a2a3a" opacity="0.35"></rect>';
+      }
+      host.innerHTML =
+        '<svg width="280" height="108" viewBox="0 0 296 108" role="img" aria-hidden="true" shape-rendering="crispEdges">' +
+        '<rect x="2" y="2" width="262" height="104" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>' +
+        '<rect x="270" y="34" width="16" height="40" fill="var(--px-border-2)"></rect>' +
+        '<g>' + cells + '</g>' +
+        '<text id="story-bat-pct" x="148" y="68" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="36" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="3" paint-order="stroke fill">--%</text>' +
+        '</svg>';
+    }
+
+    function renderStoryBattery(pct) {
+      ensureStoryBatterySvg();
+      const cells = document.querySelectorAll('#story-battery .story-bat-cell');
+      const txt = document.getElementById('story-bat-pct');
+      const color =
+        pct >= 70 ? 'var(--px-good)' :
+        pct >= 40 ? 'var(--px-warn)' :
+        pct >= 20 ? 'var(--low, #fb923c)' : 'var(--px-critical)';
+      const full = Math.floor(pct / 10);
+      const partial = (pct / 10) - full;
+      const CELL_W = 22;
+      cells.forEach((cell, i) => {
+        if (i < full) {
+          cell.setAttribute('width', CELL_W);
+          cell.style.fill = color;
+          cell.setAttribute('opacity', '1');
+        } else if (i === full && partial > 0) {
+          cell.setAttribute('width', Math.max(2, CELL_W * partial).toFixed(2));
+          cell.style.fill = color;
+          cell.setAttribute('opacity', '1');
+        } else {
+          cell.setAttribute('width', CELL_W);
+          cell.style.fill = 'var(--px-surface-2)';
+          cell.setAttribute('opacity', '0.5');
+        }
+      });
+      if (txt) txt.textContent = Math.round(pct) + '%';
+    }
+
+    function startStoryMode() {
+      const overlay = document.getElementById('story-overlay');
+      if (!overlay) return;
+      _storyIdx = 0;
+      overlay.removeAttribute('hidden');
+      ensureStoryBatterySvg();
+      renderStoryBattery(0);
+      requestAnimationFrame(() => showStoryStep(0));
+    }
+
+    function showStoryStep(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= STORY_STEPS.length) { showStoryFinale(); return; }
+      _storyIdx = idx;
+      const step = STORY_STEPS[idx];
+
+      document.getElementById('story-step-num').textContent = 'SCENE ' + (idx + 1) + ' / ' + STORY_STEPS.length;
+      document.getElementById('story-title').textContent = step.title;
+      document.getElementById('story-body').textContent = step.body;
+
+      document.querySelectorAll('#story-ode .ode-term').forEach(el => {
+        el.classList.remove('is-lit');
+        if (el.dataset.ode === step.highlight) {
+          void el.offsetWidth;
+          el.classList.add('is-lit');
+        }
+      });
+
+      renderStoryBattery(step.batteryPct);
+
+      const back = document.getElementById('story-back');
+      const next = document.getElementById('story-next');
+      const skip = document.getElementById('story-skip');
+      const tryBtn = document.getElementById('story-try');
+      back.style.visibility = idx === 0 ? 'hidden' : 'visible';
+      next.textContent = idx === STORY_STEPS.length - 1 ? 'FINISH \u2713' : 'NEXT \u25B6';
+      tryBtn.hidden = true;
+      back.onclick = () => showStoryStep(idx - 1);
+      next.onclick = () => showStoryStep(idx + 1);
+      skip.onclick = endStoryMode;
+    }
+
+    function showStoryFinale() {
+      document.getElementById('story-step-num').textContent = 'COMPLETE';
+      document.getElementById('story-title').textContent = 'YOU HAVE THE PATTERN';
+      document.getElementById('story-body').textContent = 'Push, recover, push, recover. The model does the bookkeeping.';
+      document.querySelectorAll('#story-ode .ode-term').forEach(el => el.classList.remove('is-lit'));
+      document.getElementById('story-back').style.visibility = 'visible';
+      const next = document.getElementById('story-next');
+      next.textContent = 'CLOSE \u2715';
+      next.onclick = endStoryMode;
+      const tryBtn = document.getElementById('story-try');
+      tryBtn.hidden = false;
+      tryBtn.onclick = () => {
+        endStoryMode();
+        if (typeof enterDemoMode === 'function') enterDemoMode();
+      };
+      try { localStorage.setItem('pb_story_done', '1'); } catch (_) {}
+    }
+
+    function endStoryMode() {
+      const overlay = document.getElementById('story-overlay');
+      if (overlay) overlay.setAttribute('hidden', '');
+    }
+
     // Random-interval blinking for zoom_meeting participants
     function startZoomBlinks() {
       const seats = [
@@ -8103,6 +9418,28 @@ P = drain - 0.5*recovery</pre>
   </script>
 
   <!-- Tour overlay -->
+  <div id="story-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="story-title" aria-live="polite">
+    <div id="story-card">
+      <div id="story-step-num" aria-hidden="false">SCENE 1 / 5</div>
+      <div id="story-title">MORNING</div>
+      <div id="story-battery" aria-hidden="true"></div>
+      <div id="story-ode">
+        <span class="ode-term ode-circadian" data-ode="circadian">+circadian</span>
+        <span class="ode-op">·</span>
+        <span class="ode-term ode-recovery"  data-ode="recovery">+recovery</span>
+        <span class="ode-op">·</span>
+        <span class="ode-term ode-drain"     data-ode="drain">&minus;drain</span>
+      </div>
+      <p id="story-body"></p>
+      <div id="story-controls">
+        <button id="story-back" type="button">&#9664; BACK</button>
+        <button id="story-skip" type="button">SKIP</button>
+        <button id="story-next" type="button">NEXT &#9654;</button>
+      </div>
+      <button id="story-try" type="button" hidden>TRY IT YOURSELF &#9654;</button>
+    </div>
+  </div>
+
   <div id="tour-overlay" hidden aria-modal="true" role="dialog" aria-label="App tour" aria-live="polite">
     <div id="tour-spotlight" aria-hidden="true"></div>
     <div id="tour-tooltip" role="document">
