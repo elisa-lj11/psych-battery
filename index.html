@@ -723,6 +723,55 @@
       50%      { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(129, 140, 248, 0); }
     }
 
+    .demo-big-batt-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .demo-big-batt-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .demo-big-batt-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--px-font-ui);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .demo-big-batt-head .bbl { font-size: 13px; }
+    .demo-big-batt-head .bbp { font-size: 32px; }
+
+    .demo-big-batt-row.is-energy .demo-big-batt-head { color: var(--px-good); }
+    .demo-big-batt-row.is-stress .demo-big-batt-head { color: var(--px-accent); }
+
+    .demo-big-batt-track {
+      width: 100%;
+      height: 22px;
+      background: var(--bg);
+      border: 2px solid var(--px-border);
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-big-batt-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      transition: width 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      opacity: 0.9;
+    }
+
+    .demo-big-batt-row.is-energy .demo-big-batt-fill { background: var(--px-good); }
+    .demo-big-batt-row.is-stress .demo-big-batt-fill { background: var(--px-accent); }
+
     .demo-menu {
       display: flex;
       flex-direction: column;
@@ -923,6 +972,14 @@
 
     .demo-scene-frame.is-drain .demo-scene-zoomer {
       filter: saturate(1.4) sepia(0.15) brightness(1.05);
+    }
+
+    .demo-scene-frame.animating .demo-scene-zoomer.is-drain {
+      animation: demo-scene-zoom 22s ease-in-out infinite alternate;
+    }
+
+    .demo-scene-frame.animating .demo-scene-zoomer.is-recovery {
+      animation: demo-scene-zoom-recovery 18s ease-in-out infinite;
     }
 
     .demo-scene-svg {
@@ -1256,23 +1313,24 @@
       bottom: 0;
       width: 100%;
       background: var(--surface);
-      border-top: 1px solid var(--px-border);
-      padding: 4px 8px 0;
+      border-top: 2px solid var(--px-border);
+      padding: 10px 0 0;
       box-sizing: border-box;
     }
 
     .demo-timeline-svg {
       width: 100%;
-      height: 60px;
+      height: 140px;
       display: block;
     }
 
     .demo-timeline-legend {
       display: flex;
-      gap: 12px;
-      padding: 2px 4px;
+      gap: 16px;
+      padding: 4px 8px;
       font-family: var(--px-font-ui);
-      font-size: 8px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
     }
 
     .demo-tl-e {
@@ -1281,11 +1339,6 @@
 
     .demo-tl-s {
       color: var(--px-accent);
-    }
-
-    .demo-scene-frame.animating .scene-anim {
-      animation: none;
-      animation-delay: 0s;
     }
 
     .demo-scene-frame.animating[data-activity="go_outside"] .anim-sun {
@@ -5532,12 +5585,12 @@ P = drain - 0.5*recovery</pre>
       const dayStart = Number.isNaN(startDate.getTime()) ? new Date() : startDate;
       const dayStartMs = dayStart.getTime();
       const DAY_MS = 24 * 60 * 60 * 1000;
-      const PAD_L = 8;
-      const PAD_R = 16;
-      const PAD_T = 12;
-      const PAD_B = 18;
+      const PAD_L = 4;
+      const PAD_R = 4;
+      const PAD_T = 22;
+      const PAD_B = 32;
       const viewW = 400;
-      const viewH = 60;
+      const viewH = 140;
       const plotW = viewW - PAD_L - PAD_R;
       const plotH = viewH - PAD_T - PAD_B;
       const events = [...(APP.demo.completedActivities || [])].sort((a, b) => {
@@ -5571,7 +5624,7 @@ P = drain - 0.5*recovery</pre>
         const x = Number((PAD_L + ((hour / 24) * plotW)).toFixed(2));
         const labelHour = (dayStart.getHours() + hour) % 24;
         tickLines.push(`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${PAD_T + plotH}" stroke="var(--px-border)" stroke-width="1" opacity="0.5"></line>`);
-        tickLabels.push(`<text x="${x}" y="${viewH - 4}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="7" fill="var(--px-muted)">${formatTimelineLabel(labelHour)}</text>`);
+        tickLabels.push(`<text x="${x}" y="${viewH - 4}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" fill="var(--px-muted)">${formatTimelineLabel(labelHour)}</text>`);
       }
       const energyPoints = [];
       const stressPoints = [];
@@ -5586,14 +5639,14 @@ P = drain - 0.5*recovery</pre>
       const icons = events.map(event => {
         const x = toX(event.simClockAfter);
         const icon = iconMap[event.id] || '•';
-        return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="9">${icon}</text>`;
+        return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="14">${icon}</text>`;
       }).join('');
       target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 60" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 400 140" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join('')}
-          ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2" points="${energyPoints.join(' ')}"></polyline>` : ''}
-          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2" points="${stressPoints.join(' ')}"></polyline>` : ''}
+          ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(' ')}"></polyline>` : ''}
+          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="3" points="${stressPoints.join(' ')}"></polyline>` : ''}
           ${icons}
           ${tickLabels.join('')}
         </svg>
@@ -5740,6 +5793,26 @@ P = drain - 0.5*recovery</pre>
             <div class="demo-pipeline-head">
               <div class="demo-stage-label">Diagnostics</div>
               <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
+            </div>
+            <div class="demo-big-batt-section">
+              <div class="demo-big-batt-row is-energy">
+                <div class="demo-big-batt-head">
+                  <span class="bbl">Energy</span>
+                  <span class="bbp">${Math.round(activity.step === 'done' ? (activity.beforeBattery + activity.deltaE) : activity.beforeBattery)}%</span>
+                </div>
+                <div class="demo-big-batt-track">
+                  <div class="demo-big-batt-fill" style="width:${Math.min(100,Math.max(0,Math.round(activity.step === 'done' ? (activity.beforeBattery + activity.deltaE) : activity.beforeBattery)))}%"></div>
+                </div>
+              </div>
+              <div class="demo-big-batt-row is-stress">
+                <div class="demo-big-batt-head">
+                  <span class="bbl">Stress</span>
+                  <span class="bbp">${Math.round(activity.step === 'done' ? (activity.beforeStress + activity.deltaS) : activity.beforeStress)}%</span>
+                </div>
+                <div class="demo-big-batt-track">
+                  <div class="demo-big-batt-fill" style="width:${Math.min(100,Math.max(0,Math.round(activity.step === 'done' ? (activity.beforeStress + activity.deltaS) : activity.beforeStress)))}%"></div>
+                </div>
+              </div>
             </div>
             <div class="demo-kpis">
               <div class="demo-kpi is-energy">
