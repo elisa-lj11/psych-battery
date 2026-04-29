@@ -2,7 +2,7 @@
 
 (Formerly "Psych Battery" — the repo URL still uses the old slug.)
 
-Visualizes your cognitive energy as a depleting battery based on screen activity tracked by [ActivityWatch](https://activitywatch.net/). Optionally displays on an [Elecrow CrowPanel 5.79" e-ink display](https://www.elecrow.com/crowpanel-esp32-e-paper-hmi-display-5-79-inch.html).
+Visualizes your cognitive energy as a depleting battery based on screen activity tracked by [ActivityWatch](https://activitywatch.net/). Optionally displays on an [Elecrow CrowPanel 5.79" e-ink display](https://www.elecrow.com/wiki/CrowPanel_ESP32_E-paper_5.79-inch_HMI_Display.html).
 
 ## How it works
 
