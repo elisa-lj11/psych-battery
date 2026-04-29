@@ -2136,14 +2136,14 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
         cursor: pointer;
-        border: 2px solid var(--px-accent, #818cf8);
-        background: var(--px-accent, #818cf8);
-        color: var(--px-bg, #0b0b14);
+        border: 2px solid var(--px-accent);
+        background: var(--px-accent);
+        color: var(--px-bg);
         box-shadow: 2px 2px 0 0 var(--px-border);
       }
       .fvb-switch:hover,
       .fvb-switch:focus-visible {
-        color: var(--px-bg, #0b0b14);
+        color: var(--px-bg);
         filter: brightness(1.05);
       }
       .fvb-close {
@@ -9992,8 +9992,16 @@ P = drain - 0.5*recovery</pre
 
         const payload = getModelPayload();
         const eRestNow = clamp(Number(payload?.E_rest_now ?? 60), 0, 100);
-        const currentEnergy = clamp(Number(payload?.E_internal ?? 50), 0, 100);
-        const currentStress = clamp(Number(payload?.S ?? 50), 0, 100);
+        const energyValue = Number(payload?.E_internal);
+        const stressValue = Number(payload?.S);
+        const hasLivePosition =
+          Number.isFinite(energyValue) && Number.isFinite(stressValue);
+        const currentEnergy = hasLivePosition
+          ? clamp(energyValue, 0, 100)
+          : null;
+        const currentStress = hasLivePosition
+          ? clamp(stressValue, 0, 100)
+          : null;
         const energyNullclineE = clamp(eRestNow - 4, 0, 100);
         const stressNullclineS = clamp(0.2 / 0.02, 0, 100);
 
@@ -10169,21 +10177,14 @@ P = drain - 0.5*recovery</pre
         restPoint.style.fill = "var(--px-accent)";
         svg.appendChild(restPoint);
 
-        const youDot = document.createElementNS(SVG_NS, "circle");
-        youDot.setAttribute("cx", String(scaleX(currentEnergy)));
-        youDot.setAttribute("cy", String(scaleY(currentStress)));
-        youDot.setAttribute("r", "5");
-        youDot.style.fill = "var(--px-accent)";
-        svg.appendChild(youDot);
-
-        const attractorRing = document.createElementNS(SVG_NS, "circle");
-        attractorRing.setAttribute("cx", String(scaleX(eRestNow)));
-        attractorRing.setAttribute("cy", String(scaleY(0)));
-        attractorRing.setAttribute("r", "6");
-        attractorRing.style.fill = "none";
-        attractorRing.style.stroke = "var(--px-accent)";
-        attractorRing.style.strokeWidth = "2";
-        svg.appendChild(attractorRing);
+        if (hasLivePosition) {
+          const youDot = document.createElementNS(SVG_NS, "circle");
+          youDot.setAttribute("cx", String(scaleX(currentEnergy)));
+          youDot.setAttribute("cy", String(scaleY(currentStress)));
+          youDot.setAttribute("r", "5");
+          youDot.style.fill = "var(--px-accent)";
+          svg.appendChild(youDot);
+        }
 
         const frame = document.createElement("div");
         frame.className = "phase-portrait-frame";
