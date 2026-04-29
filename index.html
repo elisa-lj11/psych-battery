@@ -8,7 +8,7 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0f13'/%3E%3Crect x='3' y='10' width='24' height='12' rx='2' stroke='%234ade80' stroke-width='2' fill='none'/%3E%3Crect x='27' y='13' width='3' height='6' rx='1' fill='%234ade80' opacity='0.7'/%3E%3Crect x='5' y='12' width='14' height='8' rx='1' fill='%234ade80'/%3E%3C/svg%3E"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Psych Battery</title>
+    <title>Mental Meter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -255,13 +255,6 @@
         flex-direction: column;
         gap: 4px;
         min-width: 0;
-      }
-
-      #battery-percent {
-        font-size: clamp(2rem, 7vw, 3.5rem);
-        line-height: 1;
-        font-weight: 800;
-        letter-spacing: -0.04em;
       }
 
       #battery-caption {
@@ -2086,16 +2079,18 @@
         bottom: max(env(safe-area-inset-bottom, 0px), 14px);
         transform: translateX(-50%);
         z-index: 90;
-        max-width: calc(100% - 28px);
-        padding: 10px 14px 10px 16px;
+        width: calc(100% - 28px);
+        min-width: 480px;
+        max-width: 720px;
+        padding: 18px 22px;
         display: none;
         align-items: center;
-        gap: 14px;
+        gap: 18px;
         background: var(--px-surface, #1a1a24);
         border: 2px solid var(--px-accent, #818cf8);
         box-shadow: 3px 3px 0 0 #000;
         font-family: var(--px-font-body, system-ui);
-        font-size: 13px;
+        font-size: 17px;
         color: var(--px-text, #e0e0f0);
         animation: first-visit-slide 360ms steps(4, end) both;
       }
@@ -2113,48 +2108,53 @@
         }
       }
       .fvb-emoji {
-        font-size: 20px;
+        font-size: 26px;
         line-height: 1;
         flex: 0 0 auto;
       }
       .fvb-text strong {
         font-family: var(--px-font-ui, monospace);
-        font-size: 11px;
+        font-size: 15px;
         letter-spacing: 0.12em;
         color: var(--px-accent, #818cf8);
         text-transform: uppercase;
         display: block;
+        margin-bottom: 4px;
       }
       .fvb-text span {
         color: var(--px-text, #e0e0f0);
+        display: block;
+        font-size: 17px;
+        line-height: 1.4;
       }
       .fvb-switch {
         flex: 0 0 auto;
-        min-height: 32px;
-        padding: 0 10px;
+        min-height: 48px;
+        padding: 0 16px;
         font-family: var(--px-font-ui, monospace);
-        font-size: 10px;
+        font-size: 14px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         cursor: pointer;
-        border: 2px solid var(--px-border, #2a2a3a);
-        background: var(--px-surface-2, #22223a);
-        color: var(--px-text, #e0e0f0);
-        box-shadow: 2px 2px 0 0 #000;
+        border: 2px solid var(--px-accent);
+        background: var(--px-accent);
+        color: var(--px-bg);
+        box-shadow: 2px 2px 0 0 var(--px-border);
       }
-      .fvb-switch:hover {
-        border-color: var(--px-accent, #818cf8);
-        color: var(--px-accent, #818cf8);
+      .fvb-switch:hover,
+      .fvb-switch:focus-visible {
+        color: var(--px-bg);
+        filter: brightness(1.05);
       }
       .fvb-close {
         flex: 0 0 auto;
-        width: 28px;
-        height: 28px;
+        width: 48px;
+        height: 48px;
         border: 2px solid var(--px-border, #2a2a3a);
         background: var(--px-surface-2, #22223a);
         color: var(--px-text, #e0e0f0);
         font-family: var(--px-font-ui, monospace);
-        font-size: 14px;
+        font-size: 18px;
         cursor: pointer;
         box-shadow: 2px 2px 0 0 #000;
       }
@@ -2169,17 +2169,19 @@
           right: 14px;
           bottom: 14px;
           transform: none;
+          width: auto;
+          min-width: 0;
           max-width: none;
           flex-wrap: wrap;
-          padding: 10px 12px;
-          gap: 8px;
+          padding: 16px 18px;
+          gap: 10px;
         }
         #first-visit-banner.is-shown {
           transform: none;
           display: flex;
         }
         #first-visit-banner .fvb-emoji {
-          font-size: 18px;
+          font-size: 22px;
         }
         #first-visit-banner .fvb-text {
           flex: 1 1 100%;
@@ -3808,7 +3810,6 @@
       }
 
       /* Display numerals — big VT323 */
-      #battery-percent,
       .metric-value,
       .diag-value,
       .tap-score,
@@ -4753,6 +4754,73 @@
         min-height: 52px;
       }
 
+      .phase-portrait-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #phase-portrait {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .phase-portrait-frame {
+        width: min(100%, 280px);
+        aspect-ratio: 1;
+        border: 2px solid var(--px-border);
+        background: var(--px-surface-2);
+        box-shadow: inset 0 0 0 1px var(--px-border);
+      }
+
+      .phase-portrait-frame svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        shape-rendering: crispEdges;
+        image-rendering: pixelated;
+      }
+
+      .phase-portrait-legend {
+        width: min(100%, 360px);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 14px;
+      }
+
+      .phase-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 24px;
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .phase-legend-line {
+        width: 18px;
+        height: 0;
+        border-top: 3px solid var(--phase-color, var(--px-muted));
+        flex: 0 0 auto;
+      }
+
+      .phase-legend-square,
+      .phase-legend-dot {
+        width: 12px;
+        height: 12px;
+        flex: 0 0 auto;
+        background: var(--px-accent);
+      }
+
+      .phase-legend-dot {
+        border-radius: 999px;
+      }
+
       @media (max-width: 860px) {
         .layer2-system {
           min-height: 252px;
@@ -5067,8 +5135,8 @@
       #first-visit-banner {
         flex-wrap: wrap;
         row-gap: 10px;
-        padding: 12px 16px;
-        font-size: 15px;
+        padding: 18px 22px;
+        font-size: 17px;
       }
 
       .fvb-text {
@@ -5077,19 +5145,19 @@
       }
 
       .fvb-text strong {
-        font-size: 13px;
+        font-size: 15px;
       }
 
       .fvb-switch {
-        min-height: 44px;
-        padding: 0 14px;
+        min-height: 48px;
+        padding: 0 16px;
         font-size: 15px;
       }
 
       .fvb-close {
-        width: 44px;
-        height: 44px;
-        font-size: 15px;
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
       }
 
       .demo-topbar {
@@ -5401,6 +5469,14 @@
         .demo-timeline-meter-row {
           padding: 10px 10px 0;
         }
+
+        .phase-portrait-frame {
+          width: min(100%, 240px);
+        }
+
+        .phase-portrait-legend {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (min-width: 1100px) {
@@ -5437,7 +5513,7 @@
   <body data-layer="0" data-mode="normal">
     <header id="app-header">
       <button id="brand-home" class="brand-home" type="button">
-        Psych Battery
+        Mental Meter
       </button>
       <div id="header-controls">
         <select id="demo-select" aria-label="Demo profile">
@@ -5713,6 +5789,10 @@ P = drain - 0.5*recovery</pre
           </div>
 
           <div id="model-viz-panel"></div>
+          <div class="layer-card phase-portrait-card">
+            <div class="section-title">Phase portrait</div>
+            <div id="phase-portrait" aria-live="polite"></div>
+          </div>
 
           <details class="layer-legacy">
             <summary>Raw diagnostics</summary>
@@ -5817,7 +5897,7 @@ P = drain - 0.5*recovery</pre
             <kbd>R</kbd><span>Open recovery menu</span>
           </div>
           <div class="help-row">
-            <kbd>Space</kbd><span>Expand / collapse battery</span>
+            <kbd>Space</kbd><span>Expand / collapse the meter</span>
           </div>
           <div class="help-row">
             <kbd>D</kbd><span>Open full diagnostics</span>
@@ -5847,8 +5927,9 @@ P = drain - 0.5*recovery</pre
             <div class="gloss-row">
               <dt>E (Energy)</dt>
               <dd>
-                Your mental fuel tank, 0–100%. Drains as the day progresses,
-                refills with sleep, walks, food, and people.
+                Your mental fuel tank, tracked on a 0-100 scale. Lower energy
+                means a smaller meter fill; sleep, walks, food, and people raise
+                it.
               </dd>
             </div>
             <div class="gloss-row">
@@ -5916,7 +5997,7 @@ P = drain - 0.5*recovery</pre
               <dt>Model B</dt>
               <dd>
                 The two-tank ODE: dE/dt = recovery − drain − k·(E − E_rest);
-                dS/dt = pressure − decay·S. The math behind every battery tick.
+                dS/dt = pressure − decay·S. The math behind every meter update.
               </dd>
             </div>
             <div class="gloss-row">
@@ -5947,13 +6028,13 @@ P = drain - 0.5*recovery</pre
           <h2>How it works</h2>
           <ol class="help-howitworks">
             <li>
-              Your energy is a battery: it drains during the day from things you
-              do, and recharges from rest, walks, food, and people.
+              Your energy level rises and falls through the day: drains pull it
+              down, while rest, walks, food, and people refill the meter.
             </li>
             <li>
               A second tank tracks stress — back-to-back meetings and long focus
-              sessions fill it, and a full stress tank makes the energy battery
-              drain faster.
+              sessions fill it, and a full stress tank makes energy drain
+              faster.
             </li>
             <li>
               On top of all that, your body has a natural daily rhythm — your
@@ -5965,7 +6046,7 @@ P = drain - 0.5*recovery</pre
               focus blocks, walks, sleep) and updates both tanks a little.
             </li>
             <li>
-              The percentage you see is the energy tank, smoothed; the
+              The meter fill shows your current energy level, smoothed; the
               diagnostics layer shows the math underneath if you want to look.
             </li>
           </ol>
@@ -6046,16 +6127,14 @@ P = drain - 0.5*recovery</pre
             fill="var(--px-warn, #FFC857)"
           />
         </svg>
-        <h2 id="intro-splash-title" class="intro-splash-title">
-          Psych Battery
-        </h2>
+        <h2 id="intro-splash-title" class="intro-splash-title">Mental Meter</h2>
         <p class="intro-splash-sub">UC Berkeley · Mental energy, modeled.</p>
 
         <div class="intro-splash-lines">
           <div class="intro-splash-line">
             <strong>WHAT</strong
             ><span
-              >A pixel-art battery showing your mental energy across the
+              >A pixel-art meter showing your mental energy across the
               day.</span
             >
           </div>
@@ -6107,7 +6186,8 @@ P = drain - 0.5*recovery</pre
       <div class="fvb-text">
         <strong>First time?</strong>
         <span
-          >Click any activity below to see how energy and stress respond.</span
+          >Tap any activity below to see the meter fill, energy, and stress
+          respond.</span
         >
       </div>
       <button type="button" class="fvb-switch" data-fvb-action="live">
@@ -6191,7 +6271,7 @@ P = drain - 0.5*recovery</pre
       aria-labelledby="demo-help-title"
     >
       <div class="demo-help-modal-card">
-        <h2 id="demo-help-title">How the Psych Battery model works</h2>
+        <h2 id="demo-help-title">How the Mental Meter model works</h2>
         <p>
           Your mental energy is modeled as two coupled tanks driven by what you
           actually do across the day. Six knobs explain almost everything you'll
@@ -6200,9 +6280,9 @@ P = drain - 0.5*recovery</pre
 
         <h3>Energy (E)</h3>
         <p>
-          The big number on the battery — how much capacity you have left.
-          Recovery activities lift it; drains pull it down. It also leaks back
-          toward your <em>resting baseline</em> over time.
+          The main meter fill shows how much capacity you have left. Recovery
+          activities lift it; drains pull it down. It also drifts back toward
+          your <em>resting baseline</em> over time.
         </p>
         <div class="demo-help-eq">
           dE/dt = recovery − drain − k·(E − E_rest)
@@ -6233,9 +6313,9 @@ P = drain - 0.5*recovery</pre
 
         <h3>The timeline</h3>
         <p>
-          The strip across the bottom plots E (green) and S (red) over the
-          simulated 24h day. Each icon marks an activity you picked. Hover an
-          icon to recall the moment.
+          The strip across the bottom starts with live E and S meters, then
+          plots E (green) and S (red) across the simulated 24h day. Each icon
+          marks an activity you picked.
         </p>
 
         <button type="button" class="demo-help-close" data-demo-help-close>
@@ -6588,6 +6668,7 @@ P = drain - 0.5*recovery</pre
         layer2StressCells: document.getElementById("layer2-stress-cells"),
         layer2ParticleField: document.getElementById("layer2-particle-field"),
         layer2Readout: document.getElementById("layer2-readout"),
+        phasePortrait: document.getElementById("phase-portrait"),
         btnReplayTick: document.getElementById("btn-replay-tick"),
         btnRunHour: document.getElementById("btn-run-hour"),
         collapseBtn: document.getElementById("collapse-btn"),
@@ -8471,7 +8552,7 @@ P = drain - 0.5*recovery</pre
         return "none";
       }
 
-      function getDisplayedBatteryPercent() {
+      function getDisplayedMeterLevel() {
         if (APP.demo.enabled) {
           return getDemoDisplayPercent();
         }
@@ -8530,6 +8611,8 @@ P = drain - 0.5*recovery</pre
           : "Interactive Demo";
         DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
         DOM.openDiagnostics.disabled = APP.uiLayer === 2;
+        // Keep the live dot in #phase-portrait aligned with the latest model state.
+        renderPhasePortrait();
         if (APP.uiLayer === 0) dismissActiveLayerHint();
         else if (typeof maybeShowLayerHint === "function") maybeShowLayerHint();
       }
@@ -9278,7 +9361,6 @@ P = drain - 0.5*recovery</pre
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
-            <div class="demo-battery-pair" data-demo-battery-pair></div>
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
@@ -9290,7 +9372,7 @@ P = drain - 0.5*recovery</pre
           ${topbar}
           <div class="demo-menu">
             <div class="demo-menu-head">
-              <div class="demo-stage-label">Choose an activity to see how the battery responds.</div>
+              <div class="demo-stage-label">Choose an activity to see how the meter fill responds.</div>
             </div>
             ${menuRows
               .map(
@@ -9319,7 +9401,12 @@ P = drain - 0.5*recovery</pre
               )
               .join("")}
           </div>
-          <div class="demo-timeline-strip" data-demo-timeline></div>
+          <div class="demo-timeline-strip">
+            <div class="demo-timeline-meter-row">
+              <div class="demo-battery-pair" data-demo-battery-pair></div>
+            </div>
+            <div data-demo-timeline></div>
+          </div>
         `;
           renderDemoBatteryPair(
             DOM.demoLayout.querySelector("[data-demo-battery-pair]"),
@@ -9374,7 +9461,7 @@ P = drain - 0.5*recovery</pre
           .join("");
         const stepCaption =
           activity.step === "done"
-            ? "Complete · battery updated"
+            ? "Complete · meter updated"
             : `Step ${currentStepIdx + 1} of 4 · ${stepLabels[currentStepIdx]}`;
 
         const dataChips = (activity.dataSources || [])
@@ -9465,7 +9552,7 @@ P = drain - 0.5*recovery</pre
               <div class="demo-data-sources-list">${dataChips}</div>
             </div>
             <details class="demo-why" ${isDone ? "open" : ""}>
-              <summary>Why? · How does this affect my battery?</summary>
+              <summary>Why? · How does this affect my energy level?</summary>
               <div class="demo-why-body">${activity.whyResearch || ""}</div>
             </details>
             <div class="demo-packet-layer" data-demo-packets></div>
@@ -9474,7 +9561,12 @@ P = drain - 0.5*recovery</pre
         <div class="demo-back-wrap is-visible">
           <button type="button" class="demo-continue-btn" data-demo-back>← Back to activities</button>
         </div>
-        <div class="demo-timeline-strip" data-demo-timeline></div>
+        <div class="demo-timeline-strip">
+          <div class="demo-timeline-meter-row">
+            <div class="demo-battery-pair" data-demo-battery-pair></div>
+          </div>
+          <div data-demo-timeline></div>
+        </div>
       `;
 
         renderDemoBatteryPair(
@@ -9895,6 +9987,221 @@ P = drain - 0.5*recovery</pre
         return el;
       }
 
+      function renderPhasePortrait() {
+        if (!DOM.phasePortrait) return;
+
+        const payload = getModelPayload();
+        const eRestNow = clamp(Number(payload?.E_rest_now ?? 60), 0, 100);
+        const energyValue = Number(payload?.E_internal);
+        const stressValue = Number(payload?.S);
+        const hasLivePosition =
+          Number.isFinite(energyValue) && Number.isFinite(stressValue);
+        const currentEnergy = hasLivePosition
+          ? clamp(energyValue, 0, 100)
+          : null;
+        const currentStress = hasLivePosition
+          ? clamp(stressValue, 0, 100)
+          : null;
+        const energyNullclineE = clamp(eRestNow - 4, 0, 100);
+        const stressNullclineS = clamp(0.2 / 0.02, 0, 100);
+
+        const width = 280;
+        const height = 280;
+        const margin = { top: 18, right: 18, bottom: 34, left: 34 };
+        const plotSize = Math.min(
+          width - margin.left - margin.right,
+          height - margin.top - margin.bottom,
+        );
+        const plotLeft = margin.left;
+        const plotTop = margin.top;
+        const plotRight = plotLeft + plotSize;
+        const plotBottom = plotTop + plotSize;
+        const scaleX = (value) =>
+          plotLeft + (clamp(Number(value) || 0, 0, 100) / 100) * plotSize;
+        const scaleY = (value) =>
+          plotTop +
+          ((100 - clamp(Number(value) || 0, 0, 100)) / 100) * plotSize;
+
+        const svg = buildSvgRoot(width, height, `0 0 ${width} ${height}`);
+        const plotRect = document.createElementNS(SVG_NS, "rect");
+        plotRect.setAttribute("x", String(plotLeft));
+        plotRect.setAttribute("y", String(plotTop));
+        plotRect.setAttribute("width", String(plotSize));
+        plotRect.setAttribute("height", String(plotSize));
+        plotRect.style.fill = "var(--px-surface-2)";
+        plotRect.style.stroke = "var(--px-border)";
+        plotRect.style.strokeWidth = "2";
+        svg.appendChild(plotRect);
+
+        [0, 25, 50, 75, 100].forEach((tickValue) => {
+          const x = scaleX(tickValue);
+          const y = scaleY(tickValue);
+
+          const vGrid = document.createElementNS(SVG_NS, "line");
+          vGrid.setAttribute("x1", String(x));
+          vGrid.setAttribute("x2", String(x));
+          vGrid.setAttribute("y1", String(plotTop));
+          vGrid.setAttribute("y2", String(plotBottom));
+          vGrid.style.stroke = "var(--px-border)";
+          vGrid.style.strokeWidth = "1";
+          vGrid.style.opacity = "0.18";
+          svg.appendChild(vGrid);
+
+          const hGrid = document.createElementNS(SVG_NS, "line");
+          hGrid.setAttribute("x1", String(plotLeft));
+          hGrid.setAttribute("x2", String(plotRight));
+          hGrid.setAttribute("y1", String(y));
+          hGrid.setAttribute("y2", String(y));
+          hGrid.style.stroke = "var(--px-border)";
+          hGrid.style.strokeWidth = "1";
+          hGrid.style.opacity = "0.18";
+          svg.appendChild(hGrid);
+
+          const xTick = document.createElementNS(SVG_NS, "line");
+          xTick.setAttribute("x1", String(x));
+          xTick.setAttribute("x2", String(x));
+          xTick.setAttribute("y1", String(plotBottom));
+          xTick.setAttribute("y2", String(plotBottom + 6));
+          xTick.style.stroke = "var(--px-text)";
+          xTick.style.strokeWidth = "2";
+          svg.appendChild(xTick);
+
+          const yTick = document.createElementNS(SVG_NS, "line");
+          yTick.setAttribute("x1", String(plotLeft - 6));
+          yTick.setAttribute("x2", String(plotLeft));
+          yTick.setAttribute("y1", String(y));
+          yTick.setAttribute("y2", String(y));
+          yTick.style.stroke = "var(--px-text)";
+          yTick.style.strokeWidth = "2";
+          svg.appendChild(yTick);
+
+          appendSvgText(svg, x, plotBottom + 18, String(tickValue), {
+            anchor: "middle",
+            fill: "var(--px-text)",
+            fontSize: "9px",
+          });
+          appendSvgText(svg, plotLeft - 10, y + 3, String(tickValue), {
+            anchor: "end",
+            fill: "var(--px-text)",
+            fontSize: "9px",
+          });
+        });
+
+        appendSvgText(svg, plotRight + 6, plotBottom + 18, "E", {
+          fill: "var(--px-text)",
+          fontSize: "10px",
+        });
+        appendSvgText(svg, 8, plotTop + 10, "S", {
+          fill: "var(--px-text)",
+          fontSize: "10px",
+        });
+
+        const vectorGroup = document.createElementNS(SVG_NS, "g");
+        const gridValues = Array.from(
+          { length: 7 },
+          (_, index) => (index * 100) / 6,
+        );
+        gridValues.forEach((sampleStress) => {
+          gridValues.forEach((sampleEnergy) => {
+            // Viz-only approximation for the phase portrait, intentionally simpler than the live ODE.
+            // dE_dt = 0.3 - 0.5 - 0.05*(E - E_rest_now)
+            // dS_dt = 0.2 - 0.02*S
+            const dE_dt = 0.3 - 0.5 - 0.05 * (sampleEnergy - eRestNow);
+            const dS_dt = 0.2 - 0.02 * sampleStress;
+            const mag = Math.hypot(dE_dt, dS_dt) || 1;
+            const svgDx = dE_dt / mag;
+            const svgDy = -(dS_dt / mag);
+            const centerX = scaleX(sampleEnergy);
+            const centerY = scaleY(sampleStress);
+            const shaftHalf = 6;
+            const tipX = centerX + svgDx * shaftHalf;
+            const tipY = centerY + svgDy * shaftHalf;
+            const tailX = centerX - svgDx * shaftHalf;
+            const tailY = centerY - svgDy * shaftHalf;
+            const perpX = -svgDy;
+            const perpY = svgDx;
+            const headBaseX = tipX - svgDx * 3.5;
+            const headBaseY = tipY - svgDy * 3.5;
+
+            const shaft = document.createElementNS(SVG_NS, "line");
+            shaft.setAttribute("x1", tailX.toFixed(2));
+            shaft.setAttribute("y1", tailY.toFixed(2));
+            shaft.setAttribute("x2", tipX.toFixed(2));
+            shaft.setAttribute("y2", tipY.toFixed(2));
+            shaft.style.stroke = "var(--px-muted)";
+            shaft.style.strokeWidth = "1.5";
+            shaft.style.opacity = "0.4";
+            vectorGroup.appendChild(shaft);
+
+            const head = document.createElementNS(SVG_NS, "polygon");
+            head.setAttribute(
+              "points",
+              [
+                `${tipX.toFixed(2)},${tipY.toFixed(2)}`,
+                `${(headBaseX + perpX * 2.2).toFixed(2)},${(headBaseY + perpY * 2.2).toFixed(2)}`,
+                `${(headBaseX - perpX * 2.2).toFixed(2)},${(headBaseY - perpY * 2.2).toFixed(2)}`,
+              ].join(" "),
+            );
+            head.style.fill = "var(--px-muted)";
+            head.style.opacity = "0.4";
+            vectorGroup.appendChild(head);
+          });
+        });
+        svg.appendChild(vectorGroup);
+
+        const energyNullcline = document.createElementNS(SVG_NS, "path");
+        energyNullcline.setAttribute(
+          "d",
+          `M ${scaleX(energyNullclineE)} ${plotBottom} L ${scaleX(energyNullclineE)} ${plotTop}`,
+        );
+        energyNullcline.style.fill = "none";
+        energyNullcline.style.stroke = "var(--px-good)";
+        energyNullcline.style.strokeWidth = "3";
+        svg.appendChild(energyNullcline);
+
+        const stressNullcline = document.createElementNS(SVG_NS, "path");
+        stressNullcline.setAttribute(
+          "d",
+          `M ${plotLeft} ${scaleY(stressNullclineS)} L ${plotRight} ${scaleY(stressNullclineS)}`,
+        );
+        stressNullcline.style.fill = "none";
+        stressNullcline.style.stroke = "var(--px-critical)";
+        stressNullcline.style.strokeWidth = "3";
+        svg.appendChild(stressNullcline);
+
+        const restPoint = document.createElementNS(SVG_NS, "rect");
+        restPoint.setAttribute("x", String(scaleX(energyNullclineE) - 4));
+        restPoint.setAttribute("y", String(scaleY(stressNullclineS) - 4));
+        restPoint.setAttribute("width", "8");
+        restPoint.setAttribute("height", "8");
+        restPoint.style.fill = "var(--px-accent)";
+        svg.appendChild(restPoint);
+
+        if (hasLivePosition) {
+          const youDot = document.createElementNS(SVG_NS, "circle");
+          youDot.setAttribute("cx", String(scaleX(currentEnergy)));
+          youDot.setAttribute("cy", String(scaleY(currentStress)));
+          youDot.setAttribute("r", "5");
+          youDot.style.fill = "var(--px-accent)";
+          svg.appendChild(youDot);
+        }
+
+        const frame = document.createElement("div");
+        frame.className = "phase-portrait-frame";
+        frame.appendChild(svg);
+
+        const legend = document.createElement("div");
+        legend.className = "phase-portrait-legend";
+        legend.innerHTML = `
+        <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-good)"></span><span>ENERGY NULLCLINE</span></div>
+        <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-critical)"></span><span>STRESS NULLCLINE</span></div>
+        <div class="phase-legend-item"><span class="phase-legend-square"></span><span>REST POINT</span></div>
+        <div class="phase-legend-item"><span class="phase-legend-dot"></span><span>YOU</span></div>
+      `;
+
+        DOM.phasePortrait.replaceChildren(frame, legend);
+      }
+
       function renderLayer1() {
         const payload = getModelPayload();
         const feats = getLastFeats();
@@ -10249,7 +10556,7 @@ P = drain - 0.5*recovery</pre
             value: payload ? `${currentEnergy.toFixed(1)}%` : "--%",
             popTitle: "Internal Energy (E)",
             popBody:
-              "Your modeled mental energy tank, 0–100. This is what the battery displays. Below 30% = critical depletion; above 70% = well charged. Updated every 5 min from live signals.",
+              "Your modeled mental energy tank, tracked on a 0-100 scale. This drives the meter fill. Lower values mean depletion; higher values mean more usable energy. Updated every 5 min from live signals.",
             popFormula: "E_internal from ODE tick",
           },
           {
@@ -10309,6 +10616,7 @@ P = drain - 0.5*recovery</pre
           )
           .join("");
 
+        renderPhasePortrait();
         renderModelViz();
       }
 
@@ -10551,7 +10859,7 @@ P = drain - 0.5*recovery</pre
 
       function renderApp() {
         renderConnectionPill();
-        renderBattery(getDisplayedBatteryPercent());
+        renderBattery(getDisplayedMeterLevel());
         renderMeta();
         renderDemoLayout();
         if (APP.demo.enabled) {
@@ -12147,7 +12455,7 @@ P = drain - 0.5*recovery</pre
         2: {
           targetId: "layer2-circadian",
           title: "DIAGNOSTICS LAYER",
-          body: "The curve is your circadian baseline — where energy wants to be. Your battery drifts toward it whenever you idle.",
+          body: "The curve is your circadian baseline — where energy wants to be. Your energy level drifts toward it whenever you idle.",
           flag: "pb_seen_layer_2",
         },
       };
@@ -12300,14 +12608,14 @@ P = drain - 0.5*recovery</pre
       const TOUR_STEPS = [
         {
           targetId: "battery-card",
-          title: "YOUR PSYCH BATTERY",
-          body: "This pixel battery shows your current mental energy — calculated from sleep, meetings, focus time, and more. The number is your energy tank level (0–100%).",
+          title: "YOUR MENTAL METER",
+          body: "This pixel meter shows your current mental energy — calculated from sleep, meetings, focus time, and more. The fill reflects your energy level on a 0-100 scale.",
           pos: "below",
         },
         {
           targetId: "battery-toggle",
           title: "TAP TO EXPAND",
-          body: "Tap the battery to flip through three layers: battery only → metrics & drain bars → full diagnostics with the circadian model chart.",
+          body: "Tap the meter to flip through three layers: meter only → metrics & drain bars → full diagnostics with the circadian model chart and phase portrait.",
           pos: "below",
         },
         {
@@ -12319,13 +12627,13 @@ P = drain - 0.5*recovery</pre
         {
           targetId: "recovery-trigger",
           title: "LOG RECOVERY",
-          body: "Starting a walk, nap, or break? Log it here. The battery updates in real time as you recover — pick from 10 activity types.",
+          body: "Starting a walk, nap, or break? Log it here. The meter fill updates in real time as you recover — pick from 10 activity types.",
           pos: "above",
         },
         {
           targetId: "demo-toggle-btn",
           title: "INTERACTIVE DEMO",
-          body: "No live data yet? Try demo mode — it simulates a full day of activity so you can explore every feature right now with four different user profiles.",
+          body: "No live data yet? Try demo mode — it simulates a full day of activity so you can explore every feature right now and watch the meter fill react across four different user profiles.",
           pos: "below",
         },
         {
@@ -12420,31 +12728,31 @@ P = drain - 0.5*recovery</pre
       const STORY_STEPS = [
         {
           title: "MORNING",
-          body: "Your day starts near peak — your circadian curve has lifted you.",
+          body: "Your day starts near peak — the meter fill opens high because your circadian curve has lifted you.",
           batteryPct: 85,
           highlight: "circadian",
         },
         {
           title: "TWO ZOOM MEETINGS",
-          body: "Each video meeting drains energy and stacks pressure.",
+          body: "Each video meeting cuts the fill and stacks pressure.",
           batteryPct: 62,
           highlight: "drain",
         },
         {
           title: "LUNCH + WALK",
-          body: "Outside time + people + a meal lift you back up.",
+          body: "Outside time, people, and a meal lift the fill back up.",
           batteryPct: 74,
           highlight: "recovery",
         },
         {
           title: "DEEP WORK AFTERNOON",
-          body: "Focus is sustainable when stress stays low.",
+          body: "Focus is sustainable when stress stays low and the fill comes down gradually.",
           batteryPct: 58,
           highlight: "drain",
         },
         {
           title: "EVENING REST",
-          body: "By bedtime, recovery has restored most of the day's drain.",
+          body: "By bedtime, recovery has restored most of the day's drain and the fill steadies again.",
           batteryPct: 78,
           highlight: "recovery",
         },
@@ -12577,7 +12885,7 @@ P = drain - 0.5*recovery</pre
         document.getElementById("story-title").textContent =
           "YOU HAVE THE PATTERN";
         document.getElementById("story-body").textContent =
-          "Push, recover, push, recover. The model does the bookkeeping.";
+          "Push, recover, push, recover. The Mental Meter keeps the bookkeeping.";
         document
           .querySelectorAll("#story-ode .ode-term")
           .forEach((el) => el.classList.remove("is-lit"));
