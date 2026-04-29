@@ -16,6 +16,30 @@ String currentTrend  = "flat";
 bool   needsRedraw   = true;
 int    g_fillW       = 0;  // right-edge of fill; pixels at x >= (EPD_W - g_fillW) are black
 
+#define LED_R 15
+#define LED_G 17
+#define LED_B 21
+
+void setLED(int pct) {
+  // Map pct 100→0 to hue 270→0 (purple→blue→cyan→green→yellow→orange→red)
+  int h = 270 * pct / 100;
+  int sector = h / 60;
+  int f = (h % 60) * 255 / 60;
+  int q = 255 - f;
+  int r, g, b;
+  switch (sector) {
+    case 0: r=255; g=f;   b=0;   break;
+    case 1: r=q;   g=255; b=0;   break;
+    case 2: r=0;   g=255; b=f;   break;
+    case 3: r=0;   g=q;   b=255; break;
+    case 4: r=f;   g=0;   b=255; break;
+    default: r=255; g=0;  b=0;   break;
+  }
+  analogWrite(LED_R, r);
+  analogWrite(LED_G, g);
+  analogWrite(LED_B, b);
+}
+
 void drawBattery(int pct, const String& trend);
 void drawPercentRotatedCCW(int x, int y, int pct);
 void drawTrendArrow(const String& trend, int x, int y);
@@ -24,6 +48,16 @@ void fullRefresh();
 
 void setup() {
   Serial.begin(115200);
+
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
+
+  // Startup test: cycle R → G → B
+  analogWrite(LED_R, 255); analogWrite(LED_G, 0);   analogWrite(LED_B, 0);   delay(500);
+  analogWrite(LED_R, 0);   analogWrite(LED_G, 255); analogWrite(LED_B, 0);   delay(500);
+  analogWrite(LED_R, 0);   analogWrite(LED_G, 0);   analogWrite(LED_B, 255); delay(500);
+  analogWrite(LED_R, 0);   analogWrite(LED_G, 0);   analogWrite(LED_B, 0);
 
   pinMode(7, OUTPUT);
   digitalWrite(7, HIGH);
@@ -36,6 +70,7 @@ void setup() {
   EPD_Display_Clear();
   EPD_Update();
 
+  setLED(currentCharge);
   drawBattery(currentCharge, currentTrend);
   fullRefresh();
   needsRedraw = false;
@@ -70,6 +105,7 @@ void loop() {
   }
 
   if (needsRedraw) {
+    setLED(currentCharge);
     Paint_Clear(WHITE);
     drawBattery(currentCharge, currentTrend);
     fullRefresh();
