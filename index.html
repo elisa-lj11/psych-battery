@@ -4254,6 +4254,477 @@
       .model-viz-tanks { min-height: 80px; }
       .model-viz-sep { flex-direction: row; padding: 0; }
     }
+
+    /* UI legibility + timeline meter pass */
+    body.is-demo #demo-toggle-btn {
+      display: none;
+    }
+
+    #battery-card {
+      padding: 22px;
+    }
+
+    #battery-toggle {
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 20px;
+      min-height: 148px;
+      align-items: center;
+    }
+
+    #battery-visual {
+      width: min(100%, 320px);
+    }
+
+    .battery-copy {
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #battery-caption {
+      color: var(--px-text);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .battery-expand-hint {
+      margin-top: 12px;
+      font-size: 15px;
+    }
+
+    .battery-expand-hint .pix-arrow {
+      font-size: 18px;
+    }
+
+    #battery-meta {
+      gap: 12px 20px;
+      color: var(--px-text);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    #model-status-text,
+    #last-tick-text {
+      color: var(--px-text);
+    }
+
+    #connection-pill,
+    #demo-select,
+    #demo-toggle-btn,
+    #demo-header-badge,
+    #tour-btn,
+    #story-btn,
+    #calib-btn {
+      min-height: 44px;
+      padding-inline: 14px;
+      font-size: 15px;
+    }
+
+    #help-trigger,
+    .demo-help-btn {
+      width: 44px;
+      height: 44px;
+    }
+
+    .layer-back-top {
+      min-height: 44px;
+      padding: 10px 16px;
+      font-size: 15px;
+    }
+
+    #intro-splash-sub {
+      font-size: 13px;
+    }
+
+    .intro-splash-line {
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .intro-splash-line strong {
+      font-size: 13px;
+    }
+
+    .intro-splash-btn {
+      min-height: 52px;
+      padding: 0 18px;
+      font-size: 15px;
+    }
+
+    .intro-splash-skip {
+      min-height: 44px;
+      padding-top: 8px;
+      font-size: 15px;
+    }
+
+    #first-visit-banner {
+      flex-wrap: wrap;
+      row-gap: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+    }
+
+    .fvb-text {
+      flex: 1 1 240px;
+      min-width: 220px;
+    }
+
+    .fvb-text strong {
+      font-size: 13px;
+    }
+
+    .fvb-switch {
+      min-height: 44px;
+      padding: 0 14px;
+      font-size: 15px;
+    }
+
+    .fvb-close {
+      width: 44px;
+      height: 44px;
+      font-size: 15px;
+    }
+
+    .demo-topbar {
+      min-height: 56px;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .demo-topbar-actions {
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .demo-badge {
+      min-height: 34px;
+      font-size: 13px;
+    }
+
+    .demo-clock,
+    .demo-row-label,
+    .demo-stage-label,
+    .demo-kpi-label,
+    .demo-feature-label,
+    .demo-model-label,
+    .demo-card-duration,
+    .demo-data-sources-title,
+    .demo-step-indicator,
+    .layer1-pressure-meta,
+    .layer-feature-hint,
+    .layer2-mini,
+    .layer2-readout-label,
+    .layer2-node,
+    .layer2-tank-title,
+    .layer2-tank-code,
+    .demo-feature-value,
+    .demo-delta {
+      font-size: 13px;
+    }
+
+    .demo-card-label,
+    .demo-scene-title,
+    .demo-model-title {
+      font-size: 15px;
+    }
+
+    .demo-help-modal-card h3 {
+      font-size: 15px;
+    }
+
+    .demo-help-modal-card .demo-help-eq,
+    .demo-why-body {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .demo-help-modal-card .demo-help-close,
+    .demo-continue-btn,
+    .demo-exit-btn {
+      min-height: 48px;
+      padding: 10px 20px;
+      font-size: 15px;
+    }
+
+    .demo-exit-btn {
+      background: var(--px-accent);
+      color: var(--px-bg);
+      border-color: var(--px-accent);
+    }
+
+    .demo-exit-btn:hover,
+    .demo-exit-btn:focus-visible {
+      color: var(--px-bg);
+      border-color: var(--px-accent);
+      filter: brightness(1.05);
+      outline: none;
+    }
+
+    .demo-data-chip {
+      font-size: 13px;
+    }
+
+    .demo-why > summary {
+      min-height: 44px;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .demo-big-batt-head .bbl {
+      font-size: 15px;
+    }
+
+    .demo-big-batt-head .bbp {
+      font-size: 36px;
+    }
+
+    .demo-big-batt-track {
+      height: 28px;
+    }
+
+    .demo-feature-footnote {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    #demo-layout {
+      min-height: 520px;
+      padding: 18px;
+      gap: 18px;
+    }
+
+    .demo-scene-frame {
+      min-height: 420px;
+    }
+
+    .demo-timeline-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      margin-top: auto;
+    }
+
+    .demo-timeline-meter-row {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      padding: 12px 12px 0;
+    }
+
+    .demo-battery-pair {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .demo-batt-wrap {
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      min-height: 72px;
+      border: 2px solid var(--px-border);
+      background: var(--px-surface-2);
+    }
+
+    .demo-batt-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 78px;
+    }
+
+    .demo-batt-label {
+      font-size: 15px;
+      color: var(--px-text);
+    }
+
+    .demo-batt-readout {
+      font-family: var(--px-font-body);
+      font-size: 20px;
+      line-height: 1;
+      color: var(--px-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .demo-batt-status {
+      font-family: var(--px-font-ui);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+    }
+
+    .demo-batt-svg {
+      height: 48px;
+    }
+
+    .demo-timeline-svg {
+      height: 168px;
+    }
+
+    .demo-timeline-legend {
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 12px 10px;
+      font-size: 13px;
+    }
+
+    .demo-tl-s {
+      color: var(--px-critical);
+    }
+
+    #story-step-num,
+    #story-ode {
+      font-size: 13px;
+    }
+
+    #story-body {
+      font-size: 1.2rem;
+    }
+
+    #story-back,
+    #story-skip,
+    #story-next {
+      min-height: 44px;
+      padding: 0 16px;
+      font-size: 15px;
+    }
+
+    #story-try {
+      min-height: 52px;
+      font-size: 15px;
+    }
+
+    .sheet-subtitle,
+    #rating-hint,
+    .activity-label,
+    .activity-meta,
+    .toggle-hint {
+      font-size: 15px;
+    }
+
+    .tab-btn {
+      min-height: 52px;
+      font-size: 15px;
+    }
+
+    .tap-score {
+      min-width: 48px;
+      min-height: 56px;
+      font-size: 1.7rem;
+    }
+
+    .stepper-btn,
+    .start-btn {
+      min-height: 52px;
+      font-size: 15px;
+    }
+
+    .stepper-display {
+      min-height: 52px;
+      font-size: 18px;
+    }
+
+    .toggle-banner {
+      gap: 12px;
+      padding: 10px 12px 10px 10px;
+      font-size: 13px;
+    }
+
+    .toggle-banner-since {
+      font-size: 13px;
+    }
+
+    .toggle-banner-end {
+      padding: 10px 14px;
+      font-size: 15px;
+    }
+
+    #screensaver-done,
+    #help-close {
+      min-height: 44px;
+      font-size: 15px;
+    }
+
+    .help-tab {
+      font-size: 15px;
+    }
+
+    .help-row {
+      padding: 8px 0;
+      font-size: 15px;
+    }
+
+    .help-row kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      font-size: 13px;
+    }
+
+    .gloss-row dt {
+      font-size: 13px;
+    }
+
+    .gloss-row dd,
+    .help-howitworks {
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 720px) {
+      .demo-topbar {
+        flex-wrap: wrap;
+      }
+
+      .demo-topbar-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .demo-battery-pair {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .demo-timeline-meter-row {
+        padding: 10px 10px 0;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      #battery-toggle {
+        grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+        gap: 24px;
+        min-height: 160px;
+      }
+
+      #battery-visual {
+        width: min(100%, 340px);
+      }
+
+      #demo-layout {
+        min-height: 580px;
+        padding: 20px 20px 12px;
+      }
+
+      .demo-activity-view {
+        grid-template-columns: minmax(0, 3.2fr) minmax(360px, 2fr);
+        gap: 18px;
+      }
+
+      .demo-scene-frame {
+        min-height: 450px;
+      }
+
+      .demo-timeline-svg {
+        height: 184px;
+      }
+    }
   </style>
 </head>
 <body data-layer="0" data-mode="normal">
@@ -4323,11 +4794,10 @@
     </div>
   </details>
 
-  <section id="battery-card" aria-labelledby="battery-percent">
+  <section id="battery-card" aria-labelledby="battery-caption model-status-text">
     <button id="battery-toggle" type="button" aria-expanded="false">
       <div id="battery-visual" aria-hidden="true"></div>
       <div class="battery-copy">
-        <div id="battery-percent">--%</div>
         <div id="battery-caption">Mental energy</div>
         <div class="battery-expand-hint" aria-hidden="true">TAP TO EXPAND<span class="pix-arrow">&#9660;</span></div>
       </div>
@@ -4924,7 +5394,6 @@ P = drain - 0.5*recovery</pre>
       batteryCard: document.getElementById('battery-card'),
       batteryToggle: document.getElementById('battery-toggle'),
       batteryVisual: document.getElementById('battery-visual'),
-      batteryPercent: document.getElementById('battery-percent'),
       modelStatusText: document.getElementById('model-status-text'),
       lastTickText: document.getElementById('last-tick-text'),
       demoShell: document.getElementById('demo-shell'),
@@ -5963,7 +6432,8 @@ P = drain - 0.5*recovery</pre>
       DOM.demoShell.hidden = !APP.demo.enabled;
       DOM.demoShell.setAttribute('aria-hidden', APP.demo.enabled ? 'false' : 'true');
       DOM.demoToggleBtn.setAttribute('aria-pressed', APP.demo.enabled ? 'true' : 'false');
-      DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Exit demo' : 'Interactive Demo';
+      DOM.demoToggleBtn.disabled = APP.demo.enabled;
+      DOM.demoToggleBtn.textContent = APP.demo.enabled ? 'Demo mode active' : 'Interactive Demo';
       DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
       DOM.openDiagnostics.disabled = APP.uiLayer === 2;
       if (APP.uiLayer === 0) dismissActiveLayerHint();
@@ -5989,7 +6459,6 @@ P = drain - 0.5*recovery</pre>
           <rect class="bat-frame" x="2" y="2" width="220" height="86" fill="none" stroke-width="4"></rect>
           <rect class="bat-nub" x="228" y="28" width="14" height="34"></rect>
           <g id="battery-fill-group">${cellsSvg}</g>
-          <text id="battery-fill-text" class="bat-num" x="112" y="58" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="30" font-weight="400" stroke="var(--px-bg)" stroke-width="3" stroke-linejoin="round" paint-order="stroke fill">--%</text>
         </svg>
       `;
     }
@@ -5997,7 +6466,6 @@ P = drain - 0.5*recovery</pre>
     function renderBattery(level) {
       ensureBatterySvg();
       const cells = DOM.batteryVisual.querySelectorAll('.bat-cell');
-      const fillText = document.getElementById('battery-fill-text');
 
       if (level == null) {
         cells.forEach(cell => {
@@ -6005,9 +6473,6 @@ P = drain - 0.5*recovery</pre>
           cell.style.fill = 'var(--px-surface-2)';
           cell.setAttribute('opacity', '0.5');
         });
-        fillText.textContent = '--%';
-        fillText.style.fill = 'var(--px-muted)';
-        DOM.batteryPercent.textContent = '--%';
         return;
       }
 
@@ -6038,10 +6503,6 @@ P = drain - 0.5*recovery</pre>
       cells.forEach((cell, i) => {
         cell.classList.toggle('is-low', isLow && i === Math.max(0, full));
       });
-
-      fillText.textContent = `${rounded}%`;
-      fillText.style.fill = 'var(--px-text)';
-      DOM.batteryPercent.textContent = `${rounded}%`;
     }
 
     function stressColor(value) {
