@@ -1,2 +1,10 @@
+.vercel
+.claude/
+.vercel/
+node_modules/
+screenshots/
+# Google OAuth credentials — stored in ~/.config/psych-battery/, not the repo
+credentials.json
+token.json
 __pycache__/
-*.py[cod]
+*.pyc
