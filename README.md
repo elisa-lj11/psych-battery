@@ -4,11 +4,7 @@ Visualizes your cognitive energy as a depleting battery based on screen activity
 
 ## How it works
 
-ActivityWatch runs in the background and logs which apps and windows are in focus. Psych Battery pulls that data via ActivityWatch's local API, scores each app by cognitive drain, and renders a battery that depletes over a 2-minute rolling window. A local server calculates the current level and serves both the browser UI and the e-ink display so they always show the same value.
-
-- **Draining:** the battery depletes while you're actively using apps, at a rate determined by the app category.
-- **Recharging:** the battery recharges during AFK periods detected by ActivityWatch (mouse/keyboard idle).
-- **Trend arrows:** ↑ if the battery went up since the last reading, ↓ if it went down.
+ActivityWatch runs in the background and logs which apps and windows are in focus. Psych Battery pulls that data via ActivityWatch's local API, scores each app by cognitive drain, and renders a battery that depletes over a 4-hour rolling window. A local server calculates the current level and serves both the browser UI and the e-ink display.
 
 ## Prerequisites
 
@@ -25,20 +21,13 @@ ActivityWatch runs in the background and logs which apps and windows are in focu
 
 2. Make sure ActivityWatch is running — check by opening [http://localhost:5600](http://localhost:5600).
 
-3. Start everything with one command:
-
-   **Windows (PowerShell):**
+3. Start everything with one command (PowerShell):
    ```powershell
    .\run.ps1
    ```
-   If PowerShell blocks the script, run this once first:
+   This starts the local server and (if you have the CrowPanel) the display bridge. If PowerShell blocks the script, run this once first:
    ```powershell
    Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-   ```
-
-   **Mac:**
-   ```bash
-   bash run-mac.sh
    ```
 
 4. Open [http://localhost:3131](http://localhost:3131) in your browser.
@@ -48,8 +37,6 @@ ActivityWatch runs in the background and logs which apps and windows are in focu
 ## E-ink display setup (optional)
 
 Hardware: **Elecrow CrowPanel ESP32-S3 5.79" E-Paper Display** — one USB-C cable, no soldering.
-
-The display shows the battery level as a full-screen black fill that drains from right to left. The percentage number and trend arrow (^ up, V down) are drawn in white on black or black on white, checked pixel-by-pixel against the fill.
 
 ### 1. Arduino IDE board settings
 
@@ -84,9 +71,9 @@ The `psych_battery_crowpanel.ino` is already in that folder.
 1. Plug the CrowPanel in via USB-C.
 2. In Arduino IDE: Tools → Port → select the COM port that appeared.
 3. Open `crowpanel/psych_battery_crowpanel/psych_battery_crowpanel.ino` and click Upload.
-4. The display should show 100% (fully black) on boot.
+4. The display should show a full battery on boot.
 
-**Smoke test:** Open Serial Monitor (115200 baud, Newline line ending), type `75 down`, press Enter. Display should update to 75% fill and print `ACK 75`.
+**Smoke test:** Open Serial Monitor (115200 baud, Newline line ending), type `75`, press Enter. Display should update and print `ACK 75`.
 
 ### 4. Connect the display to the web app
 
@@ -105,15 +92,13 @@ Update the port in `run.ps1` if yours isn't COM5, then run:
 .\run.ps1
 ```
 
-This starts both the server and the bridge together. The bridge polls `http://localhost:3131/state` every 10 seconds and sends the current battery level and trend to the display. The server caches the computed value for 8 seconds so the browser and the physical display always show the same reading.
+This starts both the server and the bridge together. The bridge polls `http://localhost:3131/state` every 10 seconds and sends the current battery level to the display. The browser at `http://localhost:3131` and the physical display will always show the same value.
 
 ## Tuning drain rates
 
-`DRAIN_RULES` in both `index.html` and `server.py` maps app names and window titles to drain rates. The two files must be kept in sync — rates run from 15.0 (AI tools, video calls) down to 4.0 (music, system tools). Edit the patterns or rates to match your usage.
+`DRAIN_RULES` in both `index.html` and `server.py` maps app names and window titles to drain rates. The two files must be kept in sync — rates run from 15.0 (AI tools, video calls) down to 1.5 (music, system tools). Edit the patterns or rates to match your usage.
 
-The rolling window is 2 minutes by default. Change `WINDOW_HOURS` in `server.py` and `WINDOW_MINS` in `index.html` to adjust.
-
-AFK recharge rate is controlled by `AFK_RECHARGE` in `server.py` (default 7.5 drain units per minute).
+The rolling window is 4 hours by default. Change `WINDOW_HOURS` in `server.py` to adjust.
 
 ## Browser extension (optional)
 
