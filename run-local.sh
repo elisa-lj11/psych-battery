@@ -43,7 +43,7 @@ trap cleanup SIGINT SIGTERM
 
 echo ""
 echo "================================================"
-echo " Psych Battery - Local Launcher"
+echo " Mental Meter - Local Launcher"
 echo "================================================"
 echo ""
 
@@ -97,7 +97,7 @@ fi
 
 echo ""
 echo "================================================"
-echo " Psych Battery is running at http://localhost:3131"
+echo " Mental Meter is running at http://localhost:3131"
 echo " Press Ctrl+C to stop both servers."
 echo "================================================"
 echo ""

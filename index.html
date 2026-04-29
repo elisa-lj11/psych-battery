@@ -31,6 +31,16 @@
         --drain: #f87171;
         --recover: #4ade80;
         --accent: #818cf8;
+        --fs-chrome: 11px;
+        --fs-label: 13px;
+        --fs-body: 18px;
+        --fs-numeric: 20px;
+        --fs-hero: 32px;
+        --panel-border: 2px solid var(--px-border, #2a2a3a);
+        --panel-shadow: 4px 4px 0 #000;
+        --panel-pad: 16px;
+        --panel-gap: 12px;
+        --panel-radius: 0;
       }
 
       * {
@@ -96,7 +106,7 @@
 
       .eyebrow,
       .section-title {
-        font-size: 0.76rem;
+        font-size: var(--fs-label);
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
@@ -116,6 +126,102 @@
         white-space: nowrap;
         color: var(--critical);
         backdrop-filter: blur(10px);
+        position: relative;
+        cursor: help;
+      }
+      #connection-pill:focus-visible {
+        outline: 2px solid var(--px-accent, #818cf8);
+        outline-offset: 2px;
+      }
+      .conn-pill-popover {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        min-width: 280px;
+        max-width: 320px;
+        padding: 12px 14px;
+        background: var(--px-surface, #1a1a24);
+        border: 2px solid var(--px-accent, #818cf8);
+        box-shadow: 3px 3px 0 0 #000;
+        font-family: var(--px-font-body, system-ui);
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--px-text, #e0e0f0);
+        text-transform: none;
+        letter-spacing: 0;
+        white-space: normal;
+        text-align: left;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px);
+        transition:
+          opacity 120ms ease,
+          transform 120ms ease;
+        z-index: 80;
+      }
+      #connection-pill:hover .conn-pill-popover,
+      #connection-pill:focus-within .conn-pill-popover,
+      #connection-pill.is-pinned .conn-pill-popover {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      .conn-pill-popover::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        right: 18px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 10px solid var(--px-accent, #818cf8);
+      }
+      .conn-pill-popover .cpp-current {
+        font-family: var(--px-font-ui, monospace);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--px-accent, #818cf8);
+        margin-bottom: 4px;
+      }
+      .conn-pill-popover .cpp-detail {
+        margin: 0 0 10px 0;
+      }
+      .conn-pill-popover .cpp-legend {
+        list-style: none;
+        margin: 0;
+        padding: 8px 0 0 0;
+        border-top: 1px solid var(--px-border, #2a2a3a);
+        display: grid;
+        gap: 6px;
+      }
+      .conn-pill-popover .cpp-legend li {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 8px;
+        align-items: baseline;
+        font-size: 12px;
+      }
+      .conn-pill-popover .cpp-legend li .cpp-key {
+        font-family: var(--px-font-ui, monospace);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .conn-pill-popover .cpp-legend li.is-active .cpp-key {
+        color: var(--px-accent, #818cf8);
+      }
+      .conn-pill-popover .cpp-legend li:not(.is-active) {
+        opacity: 0.65;
+      }
+      .conn-pill-popover .cpp-hint {
+        margin: 8px 0 0 0;
+        padding-top: 8px;
+        border-top: 1px solid var(--px-border, #2a2a3a);
+        font-size: 11px;
+        opacity: 0.75;
       }
 
       #header-controls {
@@ -124,12 +230,6 @@
         gap: 8px;
         flex-wrap: wrap;
         justify-content: flex-end;
-      }
-
-      @media (min-width: 720px) {
-        #header-controls {
-          padding-right: 240px;
-        }
       }
 
       #demo-toggle-btn,
@@ -177,6 +277,234 @@
       body.is-demo #connection-pill {
         color: var(--px-accent);
         border-color: var(--px-accent);
+      }
+
+      #app-header {
+        display: grid;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      #header-top-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 10px;
+      }
+
+      #header-controls {
+        width: min(100%, 520px);
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      #header-bottom-row {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      #brand-home {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      #connection-pill {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+      }
+
+      #demo-toggle-btn {
+        grid-column: 1;
+        grid-row: 2;
+        justify-self: start;
+      }
+
+      #header-more {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: end;
+      }
+
+      #header-top-row > #demo-select,
+      #header-top-row > #tour-btn,
+      #header-top-row > #story-btn,
+      #header-top-row > #calib-btn,
+      #header-top-row > #demo-header-badge {
+        display: none;
+      }
+
+      @media (min-width: 720px) {
+        #header-controls {
+          padding-right: 0;
+        }
+      }
+
+      @media (max-width: 720px) {
+        #header-top-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        #header-controls {
+          width: 100%;
+          margin-left: 0;
+        }
+
+        #header-bottom-row {
+          justify-content: flex-start;
+        }
+      }
+
+      #connection-pill {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2px;
+        min-height: 44px;
+        padding: 6px 10px;
+        white-space: normal;
+        text-align: left;
+        line-height: 1.1;
+      }
+
+      .conn-pill-status,
+      .conn-pill-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--fs-label);
+      }
+
+      .conn-pill-subtitle {
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.04em;
+        line-height: 1.2;
+        opacity: 0.82;
+      }
+
+      #header-more {
+        position: relative;
+      }
+
+      #header-more > summary {
+        list-style: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 44px;
+        min-width: 124px;
+        padding: 0 14px;
+        border: 2px solid var(--px-border);
+        background: var(--surface);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 #000;
+      }
+
+      #header-more > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      #header-more > summary::after {
+        content: "▾";
+        font-size: var(--fs-chrome);
+        transition: transform 150ms steps(3);
+      }
+
+      #header-more[open] > summary {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+      }
+
+      #header-more[open] > summary::after {
+        transform: rotate(180deg);
+      }
+
+      #header-more-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        z-index: 70;
+        width: min(320px, calc(100vw - 32px));
+        display: none;
+        gap: 10px;
+        padding: 12px;
+        border: var(--panel-border);
+        border-radius: var(--panel-radius);
+        background: var(--surface);
+        box-shadow: var(--panel-shadow);
+      }
+
+      #header-more[open] #header-more-menu {
+        display: grid;
+      }
+
+      #demo-profile-wrap {
+        display: none;
+        gap: 6px;
+      }
+
+      body.is-backend-offline:not(.is-demo) #demo-profile-wrap,
+      body.has-demo-profile:not(.is-demo) #demo-profile-wrap {
+        display: grid;
+      }
+
+      #header-more-menu #demo-select {
+        display: inline-flex;
+        width: 100%;
+        max-width: none;
+      }
+
+      .header-more-label {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+      }
+
+      #header-more-menu > button,
+      #header-more-menu > details,
+      #header-more-menu > #help-trigger {
+        width: 100%;
+      }
+
+      #tour-btn,
+      #story-btn,
+      #calib-btn,
+      #help-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 2px solid var(--px-border);
+        background: var(--surface);
+        color: var(--px-text);
+        box-shadow: 2px 2px 0 0 #000;
+      }
+
+      #tour-btn:hover,
+      #tour-btn:focus-visible,
+      #story-btn:hover,
+      #story-btn:focus-visible,
+      #calib-btn:hover,
+      #calib-btn:focus-visible,
+      #help-trigger:hover,
+      #help-trigger:focus-visible {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+        outline: none;
       }
 
       #battery-card {
@@ -304,6 +632,48 @@
         font-size: 0.92rem;
       }
 
+      #today-signal-strip {
+        width: min(100%, 1300px);
+        margin-inline: auto;
+        display: none;
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
+        gap: 12px;
+      }
+
+      @media (min-width: 721px) {
+        body[data-layer="0"] #today-signal-strip {
+          display: grid;
+        }
+      }
+
+      .today-signal-tile {
+        min-height: 64px;
+        padding: 10px 12px;
+        border: var(--panel-border);
+        border-radius: var(--panel-radius);
+        background: var(--surface);
+        box-shadow: var(--panel-shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .today-signal-label {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+      }
+
+      .today-signal-value {
+        font-family: var(--px-font-body);
+        font-size: var(--fs-numeric);
+        line-height: 1;
+        color: var(--px-text);
+      }
+
       #demo-select {
         min-height: 36px;
         padding: 0 10px;
@@ -372,7 +742,7 @@
         padding: 0;
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 18px;
+        font-size: var(--fs-body);
         letter-spacing: 0.12em;
         text-transform: uppercase;
         cursor: pointer;
@@ -444,7 +814,7 @@
       .demo-card-duration {
         color: var(--px-muted);
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
@@ -456,13 +826,13 @@
 
       .demo-row-label.is-recovery {
         color: #4ade80;
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.1em;
       }
 
       .demo-row-label.is-drain {
         color: #facc15;
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.1em;
       }
 
@@ -526,7 +896,7 @@
         background: var(--surface-2);
         color: var(--px-text, var(--text));
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
@@ -539,7 +909,7 @@
       }
       .layer-back-arrow {
         font-family: monospace;
-        font-size: 18px;
+        font-size: var(--fs-body);
         line-height: 1;
         letter-spacing: 0;
       }
@@ -585,7 +955,7 @@
         background: var(--surface);
         color: var(--px-accent);
         font-family: var(--px-font-ui);
-        font-size: 18px;
+        font-size: var(--fs-body);
         cursor: pointer;
         box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
         display: inline-flex;
@@ -629,7 +999,7 @@
       }
 
       .demo-help-modal-card h2 {
-        font-size: 18px;
+        font-size: var(--fs-body);
         margin: 0 0 12px 0;
         color: var(--px-accent);
         letter-spacing: 0.08em;
@@ -652,7 +1022,7 @@
         padding: 6px 10px;
         border-left: 3px solid var(--px-accent);
         margin: 6px 0 10px 0;
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .demo-help-modal-card .demo-help-close {
@@ -702,7 +1072,7 @@
 
       .demo-data-sources-title {
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--px-muted);
@@ -801,7 +1171,7 @@
         align-items: center;
         gap: 6px;
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--px-muted);
@@ -862,10 +1232,10 @@
       }
 
       .demo-big-batt-head .bbl {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
       .demo-big-batt-head .bbp {
-        font-size: 32px;
+        font-size: var(--fs-hero);
       }
 
       .demo-big-batt-row.is-energy .demo-big-batt-head {
@@ -1534,7 +1904,7 @@
         gap: 16px;
         padding: 4px 8px;
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.08em;
       }
 
@@ -1676,19 +2046,23 @@
         width: 100%;
         max-height: 88vh;
         overflow-y: auto;
-        border: 2px solid var(--px-border);
+        border: var(--panel-border);
         background: var(--surface);
-        padding: 28px;
-        box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+        padding: var(--panel-pad);
+        box-shadow: var(--panel-shadow);
         font-family: var(--px-font-ui);
         color: var(--px-text);
         font-size: 14px;
         line-height: 1.6;
+        border-radius: var(--panel-radius);
+        display: flex;
+        flex-direction: column;
+        gap: var(--panel-gap);
       }
       .calib-card h2 {
-        margin: 0 0 8px;
-        font-size: 22px;
-        letter-spacing: 0.1em;
+        margin: 0;
+        font-size: var(--fs-label);
+        letter-spacing: 0.12em;
         color: var(--px-accent);
         text-transform: uppercase;
       }
@@ -1735,7 +2109,7 @@
         color: var(--px-text);
         border: 2px solid var(--px-border);
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
@@ -1770,7 +2144,7 @@
         background: var(--surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 14px;
+        font-size: var(--fs-label);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
@@ -1795,7 +2169,7 @@
         background: var(--surface);
         color: var(--px-accent);
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         cursor: pointer;
         vertical-align: middle;
       }
@@ -1811,7 +2185,7 @@
         background: var(--surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         line-height: 1.5;
         box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
         z-index: 9999;
@@ -1830,7 +2204,7 @@
 
       #tour-btn {
         font-family: var(--px-font-ui, "Silkscreen", monospace);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.08em;
         padding: 6px 10px;
         min-height: 36px;
@@ -1887,7 +2261,7 @@
         letter-spacing: 0.1em;
       }
       #tour-title {
-        font-size: 13px;
+        font-size: var(--fs-label);
         color: var(--px-accent, #818cf8);
         margin-bottom: 8px;
         letter-spacing: 0.08em;
@@ -2299,27 +2673,29 @@
         width: min(100%, 520px);
         max-height: 92vh;
         overflow-y: auto;
-        border: 2px solid var(--px-accent);
+        border: var(--panel-border);
         background: var(--px-surface);
-        box-shadow: 4px 4px 0 0 #000;
-        padding: 18px 18px 14px;
+        box-shadow: var(--panel-shadow);
+        padding: var(--panel-pad);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: var(--panel-gap);
+        border-radius: var(--panel-radius);
       }
       #story-step-num {
         font-family: var(--px-font-ui);
-        font-size: 0.72rem;
+        font-size: var(--fs-label);
         letter-spacing: 0.16em;
         color: var(--px-muted);
       }
       #story-title {
         font-family: var(--px-font-ui);
-        font-size: 1.05rem;
-        letter-spacing: 0.14em;
+        font-size: var(--fs-label);
+        letter-spacing: 0.12em;
         color: var(--px-accent);
         text-transform: uppercase;
+        text-align: center;
       }
       #story-battery {
         width: min(100%, 320px);
@@ -2341,7 +2717,7 @@
         gap: 6px;
         align-items: center;
         font-family: var(--px-font-ui);
-        font-size: 0.74rem;
+        font-size: var(--fs-label);
         letter-spacing: 0.06em;
         flex-wrap: wrap;
         justify-content: center;
@@ -3054,16 +3430,17 @@
         right: 0;
         bottom: 0;
         z-index: 50;
-        border-radius: 16px 16px 0 0;
-        border: 1px solid var(--border-light);
+        border-radius: var(--panel-radius) var(--panel-radius) 0 0;
+        border: var(--panel-border);
         border-bottom: none;
         background:
           linear-gradient(180deg, rgba(129, 140, 248, 0.12), transparent 28%),
           var(--surface);
         transform: translateY(100%);
         transition: transform 220ms ease;
-        padding: 18px 16px calc(env(safe-area-inset-bottom, 16px) + 16px);
-        box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.36);
+        padding: var(--panel-pad) var(--panel-pad)
+          calc(env(safe-area-inset-bottom, 16px) + var(--panel-pad));
+        box-shadow: var(--panel-shadow);
         pointer-events: none;
         visibility: hidden;
       }
@@ -3081,6 +3458,29 @@
         justify-content: space-between;
         gap: 12px;
         margin-bottom: 12px;
+      }
+
+      .sheet-close-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 10px;
+        background: var(--surface);
+        border: 2px solid var(--border-light, #2a2a3a);
+        color: var(--text);
+        font-family: var(--px-font-ui);
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 #000;
+      }
+      .sheet-close-btn:hover,
+      .sheet-close-btn:focus-visible {
+        border-color: var(--critical);
+        color: var(--critical);
+        outline: none;
       }
 
       .sheet-subtitle {
@@ -3562,6 +3962,7 @@
 
         --px-font-ui: "Silkscreen", ui-monospace, "Courier New", monospace;
         --px-font-body: "VT323", ui-monospace, "Courier New", monospace;
+        --px-font-mono: "VT323", ui-monospace, "Courier New", monospace;
       }
 
       /* Palette remap */
@@ -3653,16 +4054,17 @@
       /* Theme picker — collapsed disclosure in the top-right chrome. Hidden by
        default so it doesn't compete with the battery; expands on click. */
       #theme-picker {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 50;
+        position: static;
+        z-index: auto;
+        width: 100%;
       }
       .theme-toggle {
         list-style: none;
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        justify-content: space-between;
+        width: 100%;
         padding: 0 12px;
         min-height: 40px;
         box-sizing: border-box;
@@ -3670,7 +4072,7 @@
         background: var(--surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.1em;
         cursor: pointer;
         box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
@@ -3692,9 +4094,10 @@
         image-rendering: pixelated;
       }
       .theme-toggle-caret {
-        font-size: 9px;
-        color: var(--px-muted);
+        font-size: 14px;
+        color: var(--px-text);
         transition: transform 150ms steps(3);
+        margin-left: 2px;
       }
       #theme-picker[open] .theme-toggle {
         border-color: var(--px-accent);
@@ -3704,17 +4107,17 @@
         transform: rotate(180deg);
       }
       .theme-panel {
-        position: absolute;
-        top: calc(100% + 6px);
-        right: 0;
+        position: static;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;
+        margin-top: 8px;
         padding: 8px;
         background: var(--surface);
         border: 2px solid var(--px-border-2);
         box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
-        min-width: 196px;
+        min-width: 0;
+        width: 100%;
       }
       .theme-swatch {
         display: grid;
@@ -3767,6 +4170,21 @@
       #stress-btn {
         border-color: var(--px-border);
         color: var(--px-text);
+      }
+      /* Emoji icons in self-log buttons follow the active theme accent
+         instead of the OS-default colored emoji glyph. Using
+         text-shadow as a tint so the actual character stays a glyph. */
+      .dock-icon {
+        display: inline-block;
+        font-size: 1.05em;
+        margin-right: 4px;
+        filter: grayscale(1) brightness(1.4);
+      }
+      .dock-icon-energy {
+        color: var(--px-warn, #facc15);
+      }
+      .dock-icon-stress {
+        color: var(--px-critical, #f87171);
       }
 
       body {
@@ -3968,13 +4386,14 @@
         inset: auto 16px 16px 16px;
         max-width: 560px;
         margin-inline: auto;
-        padding: 16px;
+        padding: var(--panel-pad);
         background: var(--px-surface);
-        border: 2px solid var(--px-border-2);
-        box-shadow: 4px 4px 0 0 #000;
+        border: var(--panel-border);
+        box-shadow: var(--panel-shadow);
         z-index: 60;
         display: none;
         font-family: var(--px-font-body);
+        border-radius: var(--panel-radius);
       }
       body[data-mode="help"] #help-sheet {
         display: flex;
@@ -3986,7 +4405,7 @@
 
       #help-sheet h2 {
         font-family: var(--px-font-ui);
-        font-size: 0.9rem;
+        font-size: var(--fs-label);
         letter-spacing: 0.12em;
         text-transform: uppercase;
         margin: 0 0 10px;
@@ -4013,7 +4432,7 @@
       #help-sheet {
         max-height: min(80vh, 640px);
         flex-direction: column;
-        gap: 8px;
+        gap: var(--panel-gap);
       }
       #help-tabs {
         display: flex;
@@ -4086,7 +4505,7 @@
       }
       .gloss-row dt {
         font-family: var(--px-font-ui);
-        font-size: 0.82rem;
+        font-size: var(--fs-label);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--px-accent);
@@ -4129,21 +4548,22 @@
         box-shadow: 2px 2px 0 0 #000;
       }
       #help-trigger {
-        position: fixed;
-        top: 10px;
-        right: 180px;
-        width: 40px;
-        height: 40px;
+        position: static;
+        width: 100%;
+        min-height: 44px;
+        height: auto;
         border: 2px solid var(--px-border);
         background: var(--surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 18px;
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         line-height: 1;
         cursor: pointer;
         box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
-        z-index: 50;
-        display: none;
+        z-index: auto;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
       }
@@ -4157,6 +4577,47 @@
           align-items: center;
           justify-content: center;
         }
+      }
+
+      #rating-sheet .section-title,
+      #recovery-sheet .section-title,
+      .calib-card h2,
+      #story-title,
+      #help-sheet h2 {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--px-accent);
+      }
+
+      #demo-toggle-btn,
+      .calib-actions .calib-submit,
+      #help-close,
+      .demo-help-modal-card .demo-help-close {
+        border-color: var(--px-accent);
+        background: var(--px-accent);
+        color: var(--px-bg);
+        box-shadow: 2px 2px 0 0 #000;
+      }
+
+      #demo-toggle-btn:hover,
+      #demo-toggle-btn:focus-visible,
+      .calib-actions .calib-submit:hover,
+      .calib-actions .calib-submit:focus-visible,
+      #help-close:hover,
+      #help-close:focus-visible,
+      .demo-help-modal-card .demo-help-close:hover,
+      .demo-help-modal-card .demo-help-close:focus-visible {
+        border-color: var(--px-accent);
+        color: var(--px-bg);
+        filter: brightness(1.05);
+        outline: none;
+      }
+
+      #demo-toggle-btn:disabled {
+        cursor: default;
+        opacity: 0.78;
       }
 
       /* Empty state copy is important — guide says teach the next action */
@@ -4563,14 +5024,14 @@
       .diag-popover strong {
         display: block;
         font-family: var(--px-font-ui, "Silkscreen", monospace);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         color: var(--px-accent, #818cf8);
         letter-spacing: 0.08em;
         margin-bottom: 8px;
       }
       .diag-pop-formula {
         margin-top: 8px;
-        font-size: 13px;
+        font-size: var(--fs-label);
         color: var(--px-muted, #6060a0);
         border-top: 1px solid var(--px-border, #2a2a3a);
         padding-top: 6px;
@@ -4768,7 +5229,7 @@
       }
 
       .phase-portrait-frame {
-        width: min(100%, 280px);
+        width: min(100%, 272px);
         aspect-ratio: 1;
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
@@ -4784,10 +5245,13 @@
       }
 
       .phase-portrait-legend {
-        width: min(100%, 360px);
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px 14px;
+        width: min(100%, 720px);
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 2px;
       }
 
       .phase-legend-item {
@@ -4797,9 +5261,45 @@
         min-height: 24px;
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         letter-spacing: 0.06em;
         text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .phase-portrait-shell {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .phase-portrait-plot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .phase-portrait-axis-label {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+      }
+
+      .phase-portrait-axis-label.is-y {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+      }
+
+      @media (min-width: 720px) {
+        .phase-portrait-frame {
+          width: min(100%, 336px);
+        }
       }
 
       .phase-legend-line {
@@ -4833,7 +5333,7 @@
       }
       .model-viz-header {
         font-family: var(--px-font-ui);
-        font-size: 11px;
+        font-size: var(--fs-chrome);
         color: var(--px-accent);
         letter-spacing: 0.07em;
         text-transform: uppercase;
@@ -4844,7 +5344,7 @@
       }
       .model-viz-subtitle {
         font-family: var(--px-font-mono);
-        font-size: 13px;
+        font-size: var(--fs-label);
         color: var(--px-muted);
         font-weight: normal;
         text-transform: none;
@@ -4985,7 +5485,7 @@
       }
       .model-viz-couple {
         font-family: var(--px-font-mono);
-        font-size: 18px;
+        font-size: var(--fs-body);
         color: var(--px-muted);
       }
       .model-viz-net {
@@ -5032,7 +5532,7 @@
 
       /* UI legibility + timeline meter pass */
       body.is-demo #demo-toggle-btn {
-        display: none;
+        display: inline-flex;
       }
 
       #battery-card {
@@ -5057,7 +5557,7 @@
 
       #battery-caption {
         color: var(--px-text);
-        font-size: 18px;
+        font-size: var(--fs-body);
         font-weight: 700;
         line-height: 1.2;
       }
@@ -5108,7 +5608,7 @@
       }
 
       #intro-splash-sub {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .intro-splash-line {
@@ -5117,7 +5617,7 @@
       }
 
       .intro-splash-line strong {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .intro-splash-btn {
@@ -5157,7 +5657,7 @@
       .fvb-close {
         width: 48px;
         height: 48px;
-        font-size: 18px;
+        font-size: var(--fs-body);
       }
 
       .demo-topbar {
@@ -5173,7 +5673,7 @@
 
       .demo-badge {
         min-height: 34px;
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .demo-clock,
@@ -5194,7 +5694,7 @@
       .layer2-tank-code,
       .demo-feature-value,
       .demo-delta {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .demo-card-label,
@@ -5236,7 +5736,7 @@
       }
 
       .demo-data-chip {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .demo-why > summary {
@@ -5258,7 +5758,7 @@
       }
 
       .demo-feature-footnote {
-        font-size: 13px;
+        font-size: var(--fs-label);
         line-height: 1.35;
       }
 
@@ -5317,7 +5817,7 @@
 
       .demo-batt-readout {
         font-family: var(--px-font-body);
-        font-size: 20px;
+        font-size: var(--fs-numeric);
         line-height: 1;
         color: var(--px-text);
         font-variant-numeric: tabular-nums;
@@ -5325,7 +5825,7 @@
 
       .demo-batt-status {
         font-family: var(--px-font-ui);
-        font-size: 13px;
+        font-size: var(--fs-label);
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--px-muted);
@@ -5343,7 +5843,7 @@
         justify-content: flex-end;
         gap: 12px;
         padding: 0 12px 10px;
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .demo-tl-s {
@@ -5352,7 +5852,7 @@
 
       #story-step-num,
       #story-ode {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       #story-body {
@@ -5399,17 +5899,17 @@
 
       .stepper-display {
         min-height: 52px;
-        font-size: 18px;
+        font-size: var(--fs-body);
       }
 
       .toggle-banner {
         gap: 12px;
         padding: 10px 12px 10px 10px;
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .toggle-banner-since {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .toggle-banner-end {
@@ -5437,11 +5937,11 @@
         align-items: center;
         justify-content: center;
         min-height: 32px;
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .gloss-row dt {
-        font-size: 13px;
+        font-size: var(--fs-label);
       }
 
       .gloss-row dd,
@@ -5471,11 +5971,7 @@
         }
 
         .phase-portrait-frame {
-          width: min(100%, 240px);
-        }
-
-        .phase-portrait-legend {
-          grid-template-columns: 1fr;
+          width: min(100%, 272px);
         }
       }
 
@@ -5512,10 +6008,10 @@
   </head>
   <body data-layer="0" data-mode="normal">
     <header id="app-header">
-      <button id="brand-home" class="brand-home" type="button">
-        Mental Meter
-      </button>
-      <div id="header-controls">
+      <div id="header-top-row">
+        <button id="brand-home" class="brand-home" type="button">
+          Mental Meter
+        </button>
         <select id="demo-select" aria-label="Demo profile">
           <option value="">Live data</option>
           <option value="sam">Demo · Sam (busy + AI)</option>
@@ -5542,8 +6038,49 @@
           CALIBRATE
         </button>
         <span id="demo-header-badge" aria-live="polite">Demo mode</span>
-        <div id="connection-pill" role="status" aria-live="polite">
-          ○ no live data
+        <details id="header-more">
+          <summary>More</summary>
+          <div id="header-more-menu" aria-label="More actions"></div>
+        </details>
+        <div
+          id="connection-pill"
+          role="status"
+          aria-live="polite"
+          tabindex="0"
+          aria-describedby="connection-pill-popover"
+        >
+          <span class="conn-pill-text">○ no live data</span>
+          <span class="conn-pill-subtitle">Try the demo</span>
+          <div
+            id="connection-pill-popover"
+            class="conn-pill-popover"
+            role="tooltip"
+          >
+            <div class="cpp-current">Current state</div>
+            <p class="cpp-detail">Loading…</p>
+            <ul class="cpp-legend">
+              <li data-key="live">
+                <span class="cpp-key">● LIVE DATA</span>
+                <span>Flask backend ticking the ODE model</span>
+              </li>
+              <li data-key="aw">
+                <span class="cpp-key">● AW LIVE</span>
+                <span>ActivityWatch only — Flask offline</span>
+              </li>
+              <li data-key="cached">
+                <span class="cpp-key">◐ CACHED</span>
+                <span>Last saved tick from this browser</span>
+              </li>
+              <li data-key="none">
+                <span class="cpp-key">○ NO LIVE DATA</span>
+                <span>Nothing connected</span>
+              </li>
+            </ul>
+            <p class="cpp-hint">
+              Run <code>python server.py</code> + Flask backend at
+              <code>localhost:7070</code> for full data.
+            </p>
+          </div>
         </div>
       </div>
     </header>
@@ -5791,7 +6328,13 @@ P = drain - 0.5*recovery</pre
           <div id="model-viz-panel"></div>
           <div class="layer-card phase-portrait-card">
             <div class="section-title">Phase portrait</div>
-            <div id="phase-portrait" aria-live="polite"></div>
+            <div class="phase-portrait-shell">
+              <div class="phase-portrait-axis-label is-y">Stress</div>
+              <div class="phase-portrait-plot">
+                <div id="phase-portrait" aria-live="polite"></div>
+                <div class="phase-portrait-axis-label">Energy</div>
+              </div>
+            </div>
           </div>
 
           <details class="layer-legacy">
@@ -5818,6 +6361,21 @@ P = drain - 0.5*recovery</pre
       </button>
     </section>
 
+    <section id="today-signal-strip" aria-label="Today signal">
+      <div class="today-signal-tile">
+        <span class="today-signal-label">Drain so far</span>
+        <span id="today-drain-value" class="today-signal-value">--</span>
+      </div>
+      <div class="today-signal-tile">
+        <span class="today-signal-label">Recovery so far</span>
+        <span id="today-recovery-value" class="today-signal-value">--</span>
+      </div>
+      <div class="today-signal-tile">
+        <span class="today-signal-label">Net E shift</span>
+        <span id="today-net-value" class="today-signal-value">--</span>
+      </div>
+    </section>
+
     <div
       id="toggle-banner"
       class="toggle-banner"
@@ -5828,10 +6386,12 @@ P = drain - 0.5*recovery</pre
 
     <div id="self-log-dock">
       <button id="energy-btn" type="button" data-kind="energy_rating">
-        ⚡ Energy
+        <span class="dock-icon dock-icon-energy" aria-hidden="true">⚡</span>
+        Energy
       </button>
       <button id="stress-btn" type="button" data-kind="stress_rating">
-        🌀 Stress
+        <span class="dock-icon dock-icon-stress" aria-hidden="true">🌀</span>
+        Stress
       </button>
     </div>
 
@@ -5840,10 +6400,10 @@ P = drain - 0.5*recovery</pre
     <button
       id="help-trigger"
       type="button"
-      aria-label="Keyboard shortcuts (press ? key)"
-      title="Keyboard shortcuts"
+      aria-label="Help and shortcuts"
+      title="Help and shortcuts"
     >
-      &#9000;
+      Help
     </button>
 
     <section id="help-sheet" aria-hidden="true" aria-label="Help">
@@ -6333,6 +6893,14 @@ P = drain - 0.5*recovery</pre
     >
       <div class="sheet-head">
         <div class="section-title">Quick check-in</div>
+        <button
+          type="button"
+          id="rating-close-btn"
+          class="sheet-close-btn"
+          aria-label="Close check-in"
+        >
+          &times;
+        </button>
       </div>
       <div class="tab-row">
         <button type="button" class="tab-btn" data-kind="energy_rating">
@@ -6355,9 +6923,18 @@ P = drain - 0.5*recovery</pre
     >
       <div class="sheet-head">
         <div class="section-title">Recovery</div>
+        <button
+          type="button"
+          id="recovery-close-btn"
+          class="sheet-close-btn"
+          aria-label="Close recovery menu"
+        >
+          &times;
+        </button>
       </div>
       <div class="sheet-subtitle">
-        Pick a recovery activity and start a timer.
+        Pick an activity. Some start a timer, some log instantly, and some stay
+        on until you end them.
       </div>
       <div id="recovery-activities" class="activity-list"></div>
     </section>
@@ -6595,6 +7172,7 @@ P = drain - 0.5*recovery</pre
         uiLayer: 0,
         mode: "normal",
         model: { online: false, stale: false, payload: null, lastFetchAt: 0 },
+        phasePortraitTrail: [],
         aw: {
           online: false,
           windowHours: 0.083,
@@ -6634,6 +7212,15 @@ P = drain - 0.5*recovery</pre
         body: document.body,
         brandHome: document.getElementById("brand-home"),
         connectionPill: document.getElementById("connection-pill"),
+        connectionPillText: document.querySelector(
+          "#connection-pill .conn-pill-text",
+        ),
+        connectionPillSubtitle: document.querySelector(
+          "#connection-pill .conn-pill-subtitle",
+        ),
+        connectionPillPopover: document.getElementById(
+          "connection-pill-popover",
+        ),
         demoSelect: document.getElementById("demo-select"),
         demoToggleBtn: document.getElementById("demo-toggle-btn"),
         demoHeaderBadge: document.getElementById("demo-header-badge"),
@@ -6686,6 +7273,14 @@ P = drain - 0.5*recovery</pre
         screensaverCanvas: document.getElementById("screensaver-canvas"),
         screensaverTimer: document.getElementById("screensaver-timer"),
         screensaverDone: document.getElementById("screensaver-done"),
+        headerMoreMenu: document.getElementById("header-more-menu"),
+        headerMore: document.getElementById("header-more"),
+        themePicker: document.getElementById("theme-picker"),
+        helpTrigger: document.getElementById("help-trigger"),
+        todaySignalStrip: document.getElementById("today-signal-strip"),
+        todayDrainValue: document.getElementById("today-drain-value"),
+        todayRecoveryValue: document.getElementById("today-recovery-value"),
+        todayNetValue: document.getElementById("today-net-value"),
         toastStack: document.getElementById("toast-stack"),
       };
 
@@ -8398,9 +8993,22 @@ P = drain - 0.5*recovery</pre
 
       const HIGH_DRAIN_CAP = 15.0;
 
+      // 404-suppression state: when AW proxy is missing (server.py not running,
+      // or running on a static server like python -m http.server), the first
+      // request fails with 404 and every subsequent poll repeats the error.
+      // Log only the first 404 each session, then go quiet until a successful
+      // response resets the gate.
+      let _aw404Logged = false;
       async function apiFetch(path) {
         const res = await fetch(AW + path);
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        if (!res.ok) {
+          const err = new Error(`${res.status} ${res.statusText}`);
+          err.status = res.status;
+          err.silent = res.status === 404 && _aw404Logged;
+          if (res.status === 404) _aw404Logged = true;
+          throw err;
+        }
+        _aw404Logged = false;
         return res.json();
       }
 
@@ -8431,17 +9039,21 @@ P = drain - 0.5*recovery</pre
         return DRAIN_RULES[DRAIN_RULES.length - 1];
       }
 
-      function calculate(windowEvents, now) {
+      function calculate(windowEvents, now, windowStart = null) {
         const tally = {};
         let totalDrain = 0;
         let totalActMins = 0;
+        const effectiveStartMs =
+          windowStart instanceof Date && !Number.isNaN(windowStart.getTime())
+            ? windowStart.getTime()
+            : sessionStart.getTime();
 
         for (const ev of windowEvents) {
           const evStart = new Date(ev.timestamp).getTime();
           const evEnd = evStart + ev.duration * 1000;
           const clipped =
             (Math.min(evEnd, now.getTime()) -
-              Math.max(evStart, sessionStart.getTime())) /
+              Math.max(evStart, effectiveStartMs)) /
             1000;
           const mins = clipped / 60;
           if (mins < 0.1) continue;
@@ -8534,6 +9146,19 @@ P = drain - 0.5*recovery</pre
         return sameDay
           ? time
           : `${date.toLocaleDateString([], { month: "short", day: "numeric" })} ${time}`;
+      }
+
+      function formatElapsedSince(dateLike) {
+        const date = new Date(dateLike);
+        if (Number.isNaN(date.getTime())) return "unavailable";
+        const diffMs = Math.max(0, Date.now() - date.getTime());
+        const mins = Math.round(diffMs / 60000);
+        if (mins < 1) return "just now";
+        if (mins < 60) return `${mins}m ago`;
+        const hours = Math.round(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        const days = Math.round(hours / 24);
+        return `${days}d ago`;
       }
 
       function getModelPayload() {
@@ -8846,6 +9471,18 @@ P = drain - 0.5*recovery</pre
           0,
           100,
         );
+      }
+
+      function getResolvedChronotype(payloadChronotype) {
+        try {
+          return (
+            payloadChronotype ||
+            localStorage.getItem("pb_chronotype") ||
+            "intermediate"
+          );
+        } catch (_) {
+          return payloadChronotype || "intermediate";
+        }
       }
 
       const REDUCED_MOTION_QUERY = window.matchMedia(
@@ -9743,8 +10380,9 @@ P = drain - 0.5*recovery</pre
           return acc;
         }, {});
 
-        const chronotype =
-          APP.demo.savedAppState?.model?.payload?.chronotype || "intermediate";
+        const chronotype = getResolvedChronotype(
+          APP.demo.savedAppState?.model?.payload?.chronotype,
+        );
         const stepped = stepModelForward({
           cursor: new Date(beforeClock),
           energy: beforeBattery,
@@ -9991,9 +10629,18 @@ P = drain - 0.5*recovery</pre
         if (!DOM.phasePortrait) return;
 
         const payload = getModelPayload();
-        const eRestNow = clamp(Number(payload?.E_rest_now ?? 60), 0, 100);
+        const feats = getLastFeats();
+        const pressure = computePressure(feats);
+        const tickDate = getModelTickDate(payload);
+        const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
+        const chronotype = getResolvedChronotype(payload?.chronotype);
+        const eRestNow =
+          payload && typeof payload.E_rest_now === "number"
+            ? clamp(Number(payload.E_rest_now), 0, 100)
+            : computeERest(hour, chronotype);
         const energyValue = Number(payload?.E_internal);
         const stressValue = Number(payload?.S);
+        const hasPayload = Boolean(payload);
         const hasLivePosition =
           Number.isFinite(energyValue) && Number.isFinite(stressValue);
         const currentEnergy = hasLivePosition
@@ -10002,8 +10649,32 @@ P = drain - 0.5*recovery</pre
         const currentStress = hasLivePosition
           ? clamp(stressValue, 0, 100)
           : null;
-        const energyNullclineE = clamp(eRestNow - 4, 0, 100);
-        const stressNullclineS = clamp(0.2 / 0.02, 0, 100);
+        const flowAt = (sampleEnergy, sampleStress) => {
+          const clampedEnergy = clamp(Number(sampleEnergy) || 0, 0, 100);
+          const clampedStress = clamp(Number(sampleStress) || 0, 0, 100);
+          return {
+            dE_dt:
+              -0.05 * pressure * clampedEnergy +
+              (eRestNow - clampedEnergy) / 120,
+            dS_dt: 1.5 * pressure - clampedStress / 4320,
+          };
+        };
+        const energyNullclineE =
+          pressure > -1 / 6
+            ? clamp(eRestNow / (1 + pressure * 6), 0, 100)
+            : null;
+        const stressNullclineS = clamp(6480 * pressure, 0, 100);
+        const trail = hasPayload
+          ? APP.phasePortraitTrail
+              .filter(
+                (entry) =>
+                  Array.isArray(entry) &&
+                  entry.length >= 2 &&
+                  Number.isFinite(entry[0]) &&
+                  Number.isFinite(entry[1]),
+              )
+              .slice(-24)
+          : [];
 
         const width = 280;
         const height = 280;
@@ -10028,8 +10699,12 @@ P = drain - 0.5*recovery</pre
         plotRect.setAttribute("y", String(plotTop));
         plotRect.setAttribute("width", String(plotSize));
         plotRect.setAttribute("height", String(plotSize));
-        plotRect.style.fill = "var(--px-surface-2)";
-        plotRect.style.stroke = "var(--px-border)";
+        plotRect.style.fill = hasPayload
+          ? "var(--px-surface-2)"
+          : "var(--px-surface)";
+        plotRect.style.stroke = hasPayload
+          ? "var(--px-border)"
+          : "var(--px-muted)";
         plotRect.style.strokeWidth = "2";
         svg.appendChild(plotRect);
 
@@ -10042,9 +10717,11 @@ P = drain - 0.5*recovery</pre
           vGrid.setAttribute("x2", String(x));
           vGrid.setAttribute("y1", String(plotTop));
           vGrid.setAttribute("y2", String(plotBottom));
-          vGrid.style.stroke = "var(--px-border)";
+          vGrid.style.stroke = hasPayload
+            ? "var(--px-border)"
+            : "var(--px-muted)";
           vGrid.style.strokeWidth = "1";
-          vGrid.style.opacity = "0.18";
+          vGrid.style.opacity = hasPayload ? "0.18" : "0.22";
           svg.appendChild(vGrid);
 
           const hGrid = document.createElementNS(SVG_NS, "line");
@@ -10052,9 +10729,11 @@ P = drain - 0.5*recovery</pre
           hGrid.setAttribute("x2", String(plotRight));
           hGrid.setAttribute("y1", String(y));
           hGrid.setAttribute("y2", String(y));
-          hGrid.style.stroke = "var(--px-border)";
+          hGrid.style.stroke = hasPayload
+            ? "var(--px-border)"
+            : "var(--px-muted)";
           hGrid.style.strokeWidth = "1";
-          hGrid.style.opacity = "0.18";
+          hGrid.style.opacity = hasPayload ? "0.18" : "0.22";
           svg.appendChild(hGrid);
 
           const xTick = document.createElementNS(SVG_NS, "line");
@@ -10062,7 +10741,9 @@ P = drain - 0.5*recovery</pre
           xTick.setAttribute("x2", String(x));
           xTick.setAttribute("y1", String(plotBottom));
           xTick.setAttribute("y2", String(plotBottom + 6));
-          xTick.style.stroke = "var(--px-text)";
+          xTick.style.stroke = hasPayload
+            ? "var(--px-text)"
+            : "var(--px-muted)";
           xTick.style.strokeWidth = "2";
           svg.appendChild(xTick);
 
@@ -10071,119 +10752,181 @@ P = drain - 0.5*recovery</pre
           yTick.setAttribute("x2", String(plotLeft));
           yTick.setAttribute("y1", String(y));
           yTick.setAttribute("y2", String(y));
-          yTick.style.stroke = "var(--px-text)";
+          yTick.style.stroke = hasPayload
+            ? "var(--px-text)"
+            : "var(--px-muted)";
           yTick.style.strokeWidth = "2";
           svg.appendChild(yTick);
 
           appendSvgText(svg, x, plotBottom + 18, String(tickValue), {
             anchor: "middle",
-            fill: "var(--px-text)",
+            fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
             fontSize: "9px",
           });
           appendSvgText(svg, plotLeft - 10, y + 3, String(tickValue), {
             anchor: "end",
-            fill: "var(--px-text)",
+            fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
             fontSize: "9px",
           });
         });
 
         appendSvgText(svg, plotRight + 6, plotBottom + 18, "E", {
-          fill: "var(--px-text)",
+          fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
           fontSize: "10px",
         });
         appendSvgText(svg, 8, plotTop + 10, "S", {
-          fill: "var(--px-text)",
+          fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
           fontSize: "10px",
         });
 
-        const vectorGroup = document.createElementNS(SVG_NS, "g");
-        const gridValues = Array.from(
-          { length: 7 },
-          (_, index) => (index * 100) / 6,
-        );
-        gridValues.forEach((sampleStress) => {
-          gridValues.forEach((sampleEnergy) => {
-            // Viz-only approximation for the phase portrait, intentionally simpler than the live ODE.
-            // dE_dt = 0.3 - 0.5 - 0.05*(E - E_rest_now)
-            // dS_dt = 0.2 - 0.02*S
-            const dE_dt = 0.3 - 0.5 - 0.05 * (sampleEnergy - eRestNow);
-            const dS_dt = 0.2 - 0.02 * sampleStress;
-            const mag = Math.hypot(dE_dt, dS_dt) || 1;
-            const svgDx = dE_dt / mag;
-            const svgDy = -(dS_dt / mag);
-            const centerX = scaleX(sampleEnergy);
-            const centerY = scaleY(sampleStress);
-            const shaftHalf = 6;
-            const tipX = centerX + svgDx * shaftHalf;
-            const tipY = centerY + svgDy * shaftHalf;
-            const tailX = centerX - svgDx * shaftHalf;
-            const tailY = centerY - svgDy * shaftHalf;
-            const perpX = -svgDy;
-            const perpY = svgDx;
-            const headBaseX = tipX - svgDx * 3.5;
-            const headBaseY = tipY - svgDy * 3.5;
+        if (hasPayload) {
+          const vectorGroup = document.createElementNS(SVG_NS, "g");
+          const gridValues = Array.from(
+            { length: 7 },
+            (_, index) => (index * 100) / 6,
+          );
+          gridValues.forEach((sampleStress) => {
+            gridValues.forEach((sampleEnergy) => {
+              const { dE_dt, dS_dt } = flowAt(sampleEnergy, sampleStress);
+              const mag = Math.hypot(dE_dt, dS_dt) || 1;
+              const svgDx = dE_dt / mag;
+              const svgDy = -(dS_dt / mag);
+              const centerX = scaleX(sampleEnergy);
+              const centerY = scaleY(sampleStress);
+              const shaftHalf = 6;
+              const tipX = centerX + svgDx * shaftHalf;
+              const tipY = centerY + svgDy * shaftHalf;
+              const tailX = centerX - svgDx * shaftHalf;
+              const tailY = centerY - svgDy * shaftHalf;
+              const perpX = -svgDy;
+              const perpY = svgDx;
+              const headBaseX = tipX - svgDx * 3.5;
+              const headBaseY = tipY - svgDy * 3.5;
 
-            const shaft = document.createElementNS(SVG_NS, "line");
-            shaft.setAttribute("x1", tailX.toFixed(2));
-            shaft.setAttribute("y1", tailY.toFixed(2));
-            shaft.setAttribute("x2", tipX.toFixed(2));
-            shaft.setAttribute("y2", tipY.toFixed(2));
-            shaft.style.stroke = "var(--px-muted)";
-            shaft.style.strokeWidth = "1.5";
-            shaft.style.opacity = "0.4";
-            vectorGroup.appendChild(shaft);
+              const shaft = document.createElementNS(SVG_NS, "line");
+              shaft.setAttribute("x1", tailX.toFixed(2));
+              shaft.setAttribute("y1", tailY.toFixed(2));
+              shaft.setAttribute("x2", tipX.toFixed(2));
+              shaft.setAttribute("y2", tipY.toFixed(2));
+              shaft.style.stroke = "var(--px-muted)";
+              shaft.style.strokeWidth = "1.5";
+              shaft.style.opacity = "0.4";
+              vectorGroup.appendChild(shaft);
 
-            const head = document.createElementNS(SVG_NS, "polygon");
-            head.setAttribute(
-              "points",
-              [
-                `${tipX.toFixed(2)},${tipY.toFixed(2)}`,
-                `${(headBaseX + perpX * 2.2).toFixed(2)},${(headBaseY + perpY * 2.2).toFixed(2)}`,
-                `${(headBaseX - perpX * 2.2).toFixed(2)},${(headBaseY - perpY * 2.2).toFixed(2)}`,
-              ].join(" "),
-            );
-            head.style.fill = "var(--px-muted)";
-            head.style.opacity = "0.4";
-            vectorGroup.appendChild(head);
+              const head = document.createElementNS(SVG_NS, "polygon");
+              head.setAttribute(
+                "points",
+                [
+                  `${tipX.toFixed(2)},${tipY.toFixed(2)}`,
+                  `${(headBaseX + perpX * 2.2).toFixed(2)},${(headBaseY + perpY * 2.2).toFixed(2)}`,
+                  `${(headBaseX - perpX * 2.2).toFixed(2)},${(headBaseY - perpY * 2.2).toFixed(2)}`,
+                ].join(" "),
+              );
+              head.style.fill = "var(--px-muted)";
+              head.style.opacity = "0.4";
+              vectorGroup.appendChild(head);
+            });
           });
-        });
-        svg.appendChild(vectorGroup);
+          svg.appendChild(vectorGroup);
 
-        const energyNullcline = document.createElementNS(SVG_NS, "path");
-        energyNullcline.setAttribute(
-          "d",
-          `M ${scaleX(energyNullclineE)} ${plotBottom} L ${scaleX(energyNullclineE)} ${plotTop}`,
-        );
-        energyNullcline.style.fill = "none";
-        energyNullcline.style.stroke = "var(--px-good)";
-        energyNullcline.style.strokeWidth = "3";
-        svg.appendChild(energyNullcline);
+          if (trail.length > 1) {
+            const defs = document.createElementNS(SVG_NS, "defs");
+            const gradient = document.createElementNS(SVG_NS, "linearGradient");
+            gradient.setAttribute("id", "phase-trail-gradient");
+            gradient.setAttribute("gradientUnits", "userSpaceOnUse");
+            gradient.setAttribute("x1", String(scaleX(trail[0][0])));
+            gradient.setAttribute("y1", String(scaleY(trail[0][1])));
+            gradient.setAttribute(
+              "x2",
+              String(scaleX(trail[trail.length - 1][0])),
+            );
+            gradient.setAttribute(
+              "y2",
+              String(scaleY(trail[trail.length - 1][1])),
+            );
+            const startStop = document.createElementNS(SVG_NS, "stop");
+            startStop.setAttribute("offset", "0%");
+            startStop.setAttribute("stop-color", "var(--px-accent)");
+            startStop.setAttribute("stop-opacity", "0.12");
+            gradient.appendChild(startStop);
+            const endStop = document.createElementNS(SVG_NS, "stop");
+            endStop.setAttribute("offset", "100%");
+            endStop.setAttribute("stop-color", "var(--px-accent)");
+            endStop.setAttribute("stop-opacity", "0.95");
+            gradient.appendChild(endStop);
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
 
-        const stressNullcline = document.createElementNS(SVG_NS, "path");
-        stressNullcline.setAttribute(
-          "d",
-          `M ${plotLeft} ${scaleY(stressNullclineS)} L ${plotRight} ${scaleY(stressNullclineS)}`,
-        );
-        stressNullcline.style.fill = "none";
-        stressNullcline.style.stroke = "var(--px-critical)";
-        stressNullcline.style.strokeWidth = "3";
-        svg.appendChild(stressNullcline);
+            const trailLine = document.createElementNS(SVG_NS, "polyline");
+            trailLine.setAttribute(
+              "points",
+              trail
+                .map(
+                  (entry) =>
+                    `${scaleX(entry[0]).toFixed(2)},${scaleY(entry[1]).toFixed(2)}`,
+                )
+                .join(" "),
+            );
+            trailLine.style.fill = "none";
+            trailLine.style.stroke = "url(#phase-trail-gradient)";
+            trailLine.style.strokeWidth = "3";
+            trailLine.style.strokeLinecap = "round";
+            trailLine.style.strokeLinejoin = "round";
+            svg.appendChild(trailLine);
+          }
 
-        const restPoint = document.createElementNS(SVG_NS, "rect");
-        restPoint.setAttribute("x", String(scaleX(energyNullclineE) - 4));
-        restPoint.setAttribute("y", String(scaleY(stressNullclineS) - 4));
-        restPoint.setAttribute("width", "8");
-        restPoint.setAttribute("height", "8");
-        restPoint.style.fill = "var(--px-accent)";
-        svg.appendChild(restPoint);
+          if (Number.isFinite(energyNullclineE)) {
+            const energyNullcline = document.createElementNS(SVG_NS, "path");
+            energyNullcline.setAttribute(
+              "d",
+              `M ${scaleX(energyNullclineE)} ${plotBottom} L ${scaleX(energyNullclineE)} ${plotTop}`,
+            );
+            energyNullcline.style.fill = "none";
+            energyNullcline.style.stroke = "var(--px-good)";
+            energyNullcline.style.strokeWidth = "3";
+            svg.appendChild(energyNullcline);
+          }
 
-        if (hasLivePosition) {
-          const youDot = document.createElementNS(SVG_NS, "circle");
-          youDot.setAttribute("cx", String(scaleX(currentEnergy)));
-          youDot.setAttribute("cy", String(scaleY(currentStress)));
-          youDot.setAttribute("r", "5");
-          youDot.style.fill = "var(--px-accent)";
-          svg.appendChild(youDot);
+          const stressNullcline = document.createElementNS(SVG_NS, "path");
+          stressNullcline.setAttribute(
+            "d",
+            `M ${plotLeft} ${scaleY(stressNullclineS)} L ${plotRight} ${scaleY(stressNullclineS)}`,
+          );
+          stressNullcline.style.fill = "none";
+          stressNullcline.style.stroke = "var(--px-critical)";
+          stressNullcline.style.strokeWidth = "3";
+          svg.appendChild(stressNullcline);
+
+          if (Number.isFinite(energyNullclineE)) {
+            const restPoint = document.createElementNS(SVG_NS, "rect");
+            restPoint.setAttribute("x", String(scaleX(energyNullclineE) - 4));
+            restPoint.setAttribute("y", String(scaleY(stressNullclineS) - 4));
+            restPoint.setAttribute("width", "8");
+            restPoint.setAttribute("height", "8");
+            restPoint.style.fill = "var(--px-accent)";
+            svg.appendChild(restPoint);
+          }
+
+          if (hasLivePosition) {
+            const youDot = document.createElementNS(SVG_NS, "circle");
+            youDot.setAttribute("cx", String(scaleX(currentEnergy)));
+            youDot.setAttribute("cy", String(scaleY(currentStress)));
+            youDot.setAttribute("r", "5");
+            youDot.style.fill = "var(--px-accent)";
+            svg.appendChild(youDot);
+          }
+        } else {
+          appendSvgText(
+            svg,
+            width / 2,
+            plotTop + plotSize / 2 + 4,
+            "No live data — open the interactive demo",
+            {
+              anchor: "middle",
+              fill: "var(--px-muted)",
+              fontSize: "10px",
+            },
+          );
         }
 
         const frame = document.createElement("div");
@@ -10192,11 +10935,15 @@ P = drain - 0.5*recovery</pre
 
         const legend = document.createElement("div");
         legend.className = "phase-portrait-legend";
-        legend.innerHTML = `
+        legend.innerHTML = hasPayload
+          ? `
         <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-good)"></span><span>ENERGY NULLCLINE</span></div>
         <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-critical)"></span><span>STRESS NULLCLINE</span></div>
         <div class="phase-legend-item"><span class="phase-legend-square"></span><span>REST POINT</span></div>
         <div class="phase-legend-item"><span class="phase-legend-dot"></span><span>YOU</span></div>
+      `
+          : `
+        <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-muted)"></span><span>LIVE MODEL REQUIRED</span></div>
       `;
 
         DOM.phasePortrait.replaceChildren(frame, legend);
@@ -10282,7 +11029,7 @@ P = drain - 0.5*recovery</pre
         const currentStress = clamp(Number(payload?.S) || 0, 0, 100);
         const tickDate = getModelTickDate(payload);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
-        const chronotype = payload?.chronotype || "intermediate";
+        const chronotype = getResolvedChronotype(payload?.chronotype);
         const eRestNow =
           payload && typeof payload.E_rest_now === "number"
             ? Number(payload.E_rest_now)
@@ -10405,7 +11152,7 @@ P = drain - 0.5*recovery</pre
         const pressure = computePressure(feats);
         const tickDate = getModelTickDate(payload);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
-        const chronotype = payload?.chronotype || "intermediate";
+        const chronotype = getResolvedChronotype(payload?.chronotype);
         const eRestNow =
           payload && typeof payload.E_rest_now === "number"
             ? Number(payload.E_rest_now)
@@ -10696,7 +11443,7 @@ P = drain - 0.5*recovery</pre
         if (!payload) return false;
 
         const feats = { ...getLastFeats() };
-        const chronotype = payload.chronotype || "intermediate";
+        const chronotype = getResolvedChronotype(payload.chronotype);
         const stepped = stepModelForward({
           cursor: getModelTickDate(payload),
           energy: payload.E_internal,
@@ -10754,6 +11501,36 @@ P = drain - 0.5*recovery</pre
         DOM.diagFooter.textContent = `Last tick: ${tick}`;
       }
 
+      function setConnectionPillState(text, subtitle, color, tip, activeKey) {
+        if (DOM.connectionPillText) {
+          DOM.connectionPillText.textContent = text;
+        } else {
+          DOM.connectionPill.textContent = text;
+        }
+        if (DOM.connectionPillSubtitle) {
+          DOM.connectionPillSubtitle.textContent = subtitle;
+        }
+        DOM.connectionPill.style.color = color;
+        DOM.connectionPill.title = subtitle ? `${subtitle}. ${tip}` : tip;
+        DOM.connectionPill.setAttribute(
+          "aria-label",
+          subtitle ? `${text}. ${subtitle}. ${tip}` : `${text}. ${tip}`,
+        );
+        const pop = DOM.connectionPillPopover;
+        if (pop) {
+          const cur = pop.querySelector(".cpp-current");
+          const det = pop.querySelector(".cpp-detail");
+          if (cur) cur.textContent = text;
+          if (det) det.textContent = subtitle ? `${subtitle}. ${tip}` : tip;
+          pop.querySelectorAll(".cpp-legend li").forEach((li) => {
+            li.classList.toggle(
+              "is-active",
+              li.getAttribute("data-key") === activeKey,
+            );
+          });
+        }
+      }
+
       function renderConnectionPill() {
         DOM.body.classList.toggle(
           "is-backend-offline",
@@ -10761,45 +11538,122 @@ P = drain - 0.5*recovery</pre
         );
         DOM.body.classList.toggle("has-demo-profile", !!getActiveDemoProfile());
         if (APP.demo.enabled) {
-          DOM.connectionPill.textContent = "◆ DEMO MODE";
-          DOM.connectionPill.style.color = "var(--px-accent)";
-          DOM.connectionPill.title =
-            "You are inside the interactive demo. Live backend polling is paused.";
+          setConnectionPillState(
+            "◆ DEMO MODE",
+            APP.demo.simClock
+              ? `Sim clock ${formatDemoClock(APP.demo.simClock)}`
+              : "Sim clock unavailable",
+            "var(--px-accent)",
+            "You are inside the interactive demo. Live backend polling is paused.",
+            "demo",
+          );
           return;
         }
         const demo = getActiveDemoProfile();
         if (demo) {
-          DOM.connectionPill.textContent = `◆ DEMO · ${demo.name.toUpperCase()}`;
-          DOM.connectionPill.style.color = demo.accent;
-          DOM.connectionPill.title = `Demo profile: ${demo.tagline}. Not real data.`;
+          setConnectionPillState(
+            `◆ DEMO · ${demo.name.toUpperCase()}`,
+            "Profile ready",
+            demo.accent,
+            `Demo profile: ${demo.tagline}. Not real data.`,
+            "demo",
+          );
           return;
         }
 
         // Friendly first-visitor copy. Researchers can hover to see the technical detail.
         let text = "○ NO LIVE DATA";
+        let subtitle = "Try the demo";
         let color = "var(--muted)";
         let tip =
           "Not connected to a live backend. Try the interactive demo or run the Flask server at localhost:7070.";
+        let key = "none";
+        const payload = getModelPayload();
 
         if (APP.model.online && !APP.model.stale) {
           text = "● LIVE DATA";
+          subtitle = payload?.last_tick_iso
+            ? `Last tick ${formatTime(payload.last_tick_iso)}`
+            : "Last tick unavailable";
           color = "var(--good)";
           tip = "Connected to your Flask backend at localhost:7070.";
+          key = "live";
         } else if (APP.model.stale) {
           text = "◐ CACHED";
+          subtitle = `Cached since ${formatElapsedSince(payload?.last_tick_iso || APP.model.lastFetchAt || Date.now())}`;
           color = "var(--warn)";
           tip =
             "Backend offline. Showing your last saved tick from this browser.";
+          key = "cached";
         } else if (APP.aw.online) {
           text = "● AW LIVE";
+          subtitle = "ActivityWatch only";
           color = "var(--good)";
           tip =
             "ActivityWatch connected — ODE model offline. Run the Flask backend at localhost:7070 for full scoring.";
+          key = "aw";
         }
 
-        DOM.connectionPill.textContent = text;
-        DOM.connectionPill.style.color = color;
-        DOM.connectionPill.title = tip;
+        setConnectionPillState(text, subtitle, color, tip, key);
+      }
+
+      function renderTodaySignal() {
+        if (
+          !DOM.todaySignalStrip ||
+          !DOM.todayDrainValue ||
+          !DOM.todayRecoveryValue ||
+          !DOM.todayNetValue
+        ) {
+          return;
+        }
+
+        const payload = getModelPayload();
+        const feats = getLastFeats();
+        const hasFeatureWindow =
+          Boolean(payload) || Number(APP.aw.totalActMins) > 0 || APP.aw.online;
+        const drainTotal = hasFeatureWindow
+          ? DRAIN_FEATS.reduce(
+              (sum, item) => sum + normalizeFeature(item.key, feats[item.key]),
+              0,
+            )
+          : NaN;
+        const recoveryTotal = hasFeatureWindow
+          ? RECOVERY_FEATS.reduce(
+              (sum, item) => sum + normalizeFeature(item.key, feats[item.key]),
+              0,
+            )
+          : NaN;
+
+        let netShift = NaN;
+        if (payload) {
+          const pressure = computePressure(feats);
+          const tickDate = getModelTickDate(payload);
+          const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
+          const chronotype = getResolvedChronotype(payload?.chronotype);
+          const eRestNow =
+            typeof payload.E_rest_now === "number"
+              ? Number(payload.E_rest_now)
+              : computeERest(hour, chronotype);
+          const currentEnergy = clamp(Number(payload.E_internal) || 0, 0, 100);
+          netShift =
+            (-0.05 * pressure * currentEnergy + (eRestNow - currentEnergy) / 120) *
+            60;
+        } else if (Number.isFinite(drainTotal) && Number.isFinite(recoveryTotal)) {
+          netShift = recoveryTotal - drainTotal;
+        }
+
+        DOM.todayDrainValue.textContent = Number.isFinite(drainTotal)
+          ? drainTotal.toFixed(1)
+          : "--";
+        DOM.todayRecoveryValue.textContent = Number.isFinite(recoveryTotal)
+          ? recoveryTotal.toFixed(1)
+          : "--";
+        DOM.todayNetValue.textContent = Number.isFinite(netShift)
+          ? `${netShift > 0 ? "+" : ""}${netShift.toFixed(1)}`
+          : "--";
+        DOM.todaySignalStrip.title = APP.aw.totalActMins
+          ? `${APP.aw.totalActMins} ActivityWatch active min in the current window`
+          : "Waiting for enough recent activity data";
       }
 
       function renderMeta() {
@@ -10858,9 +11712,41 @@ P = drain - 0.5*recovery</pre
       }
 
       function renderApp() {
+        const payload = getModelPayload();
+        if (
+          payload &&
+          APP.model.online &&
+          !APP.model.stale &&
+          Number.isFinite(Number(payload.E_internal)) &&
+          Number.isFinite(Number(payload.S))
+        ) {
+          const ts =
+            Date.parse(payload.last_tick_iso || "") ||
+            APP.model.lastFetchAt ||
+            Date.now();
+          const sample = [
+            clamp(Number(payload.E_internal) || 0, 0, 100),
+            clamp(Number(payload.S) || 0, 0, 100),
+            ts,
+          ];
+          const last =
+            APP.phasePortraitTrail[APP.phasePortraitTrail.length - 1] || null;
+          if (
+            !last ||
+            last[0] !== sample[0] ||
+            last[1] !== sample[1] ||
+            last[2] !== sample[2]
+          ) {
+            APP.phasePortraitTrail = [
+              ...APP.phasePortraitTrail.slice(-23),
+              sample,
+            ];
+          }
+        }
         renderConnectionPill();
         renderBattery(getDisplayedMeterLevel());
         renderMeta();
+        renderTodaySignal();
         renderDemoLayout();
         if (APP.demo.enabled) {
           startDemoSceneAnimator();
@@ -11034,8 +11920,6 @@ P = drain - 0.5*recovery</pre
       function selectRecoveryActivity(activityId, logKind, theme) {
         const activity = recoveryActivityById(activityId);
         APP.recovery.activityId = activityId;
-        APP.recovery.logKind = logKind;
-        APP.recovery.theme = theme;
         APP.recovery.mode = activity ? activity.mode || "timer" : "timer";
         renderRecoverySheet();
       }
@@ -11684,18 +12568,17 @@ P = drain - 0.5*recovery</pre
           }
 
           const now = new Date();
-          const start = new Date(
-            Math.max(
-              sessionStart.getTime(),
-              now.getTime() - windowHours * 60 * 60 * 1000,
-            ),
-          );
+          const start = new Date(now.getTime() - windowHours * 60 * 60 * 1000);
           const events = await getEvents(
             windowBucket,
             start.toISOString(),
             now.toISOString(),
           );
-          const { battery, tally, totalActMins } = calculate(events, now);
+          const { battery, tally, totalActMins } = calculate(
+            events,
+            now,
+            start,
+          );
 
           APP.aw.online = true;
           APP.aw.breakdown = tally;
@@ -11704,7 +12587,7 @@ P = drain - 0.5*recovery</pre
           APP.aw.lastFetchAt = Date.now();
           APP.aw.windowHours = windowHours;
         } catch (error) {
-          console.error(error);
+          if (!error?.silent) console.error(error);
           APP.aw.online = false;
         } finally {
           awFetchInFlight = false;
@@ -11794,6 +12677,25 @@ P = drain - 0.5*recovery</pre
         DOM.ratingSheet.hidden = false;
         DOM.recoverySheet.hidden = false;
         DOM.screensaver.hidden = false;
+
+        if (DOM.headerMoreMenu && !DOM.headerMoreMenu.dataset.wired) {
+          const demoProfileWrap = document.createElement("div");
+          demoProfileWrap.id = "demo-profile-wrap";
+          const demoProfileLabel = document.createElement("label");
+          demoProfileLabel.className = "header-more-label";
+          demoProfileLabel.htmlFor = "demo-select";
+          demoProfileLabel.textContent = "Demo profile";
+          demoProfileWrap.appendChild(demoProfileLabel);
+          demoProfileWrap.appendChild(DOM.demoSelect);
+          DOM.headerMoreMenu.appendChild(demoProfileWrap);
+          ["tour-btn", "story-btn", "calib-btn"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) DOM.headerMoreMenu.appendChild(el);
+          });
+          if (DOM.themePicker) DOM.headerMoreMenu.appendChild(DOM.themePicker);
+          if (DOM.helpTrigger) DOM.headerMoreMenu.appendChild(DOM.helpTrigger);
+          DOM.headerMoreMenu.dataset.wired = "true";
+        }
 
         initTheme();
         renderRatingSheet();
@@ -11965,6 +12867,17 @@ P = drain - 0.5*recovery</pre
           openRecoverySheet();
         });
 
+        const ratingCloseBtn = document.getElementById("rating-close-btn");
+        if (ratingCloseBtn) {
+          ratingCloseBtn.addEventListener("click", () => closeRatingSheet());
+        }
+        const recoveryCloseBtn = document.getElementById("recovery-close-btn");
+        if (recoveryCloseBtn) {
+          recoveryCloseBtn.addEventListener("click", () =>
+            closeRecoverySheet(),
+          );
+        }
+
         DOM.backdrop.addEventListener("click", () => {
           if (APP.mode === "rating") closeRatingSheet();
           if (APP.mode === "recovery-menu") closeRecoverySheet();
@@ -12014,7 +12927,7 @@ P = drain - 0.5*recovery</pre
           void submitRating(Number(button.dataset.value), button);
         });
 
-        DOM.recoveryActivities.addEventListener("click", (event) => {
+        DOM.recoveryActivities.addEventListener("click", async (event) => {
           const activityButton = event.target.closest(".activity-btn");
           const stepperButton = event.target.closest(".stepper-btn");
           const startButton = event.target.closest(".start-btn");
@@ -12046,9 +12959,13 @@ P = drain - 0.5*recovery</pre
               return;
             }
             if (APP.recovery.toggleActive) {
-              void endToggleRecovery();
+              await endToggleRecovery();
             }
+            APP.recovery.activityId = activity.id;
             APP.recovery.startTs = Date.now();
+            APP.recovery.logKind = activity.logKind;
+            APP.recovery.theme = activity.theme;
+            APP.recovery.mode = activity.mode || "timer";
             closeRecoverySheet();
             startScreensaver();
           }
@@ -12341,6 +13258,14 @@ P = drain - 0.5*recovery</pre
         if (storyBtn) storyBtn.addEventListener("click", startStoryMode);
 
         document.addEventListener("keydown", (event) => {
+          const storyOverlay = document.getElementById("story-overlay");
+          const tourOverlay = document.getElementById("tour-overlay");
+          const storyVisible =
+            storyOverlay && !storyOverlay.hasAttribute("hidden");
+          const tourVisible =
+            tourOverlay && !tourOverlay.hasAttribute("hidden");
+          if ((storyVisible || tourVisible) && event.key !== "Escape") return;
+
           // Ignore if the user is typing in a form control
           const tag = (event.target && event.target.tagName) || "";
           if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
@@ -12348,13 +13273,11 @@ P = drain - 0.5*recovery</pre
 
           // Esc handled everywhere
           if (event.key === "Escape") {
-            const storyOverlay = document.getElementById("story-overlay");
-            if (storyOverlay && !storyOverlay.hasAttribute("hidden")) {
+            if (storyVisible) {
               endStoryMode();
               return;
             }
-            const tourOverlay = document.getElementById("tour-overlay");
-            if (tourOverlay && !tourOverlay.hasAttribute("hidden")) {
+            if (tourVisible) {
               endTour();
               return;
             }
@@ -12662,9 +13585,12 @@ P = drain - 0.5*recovery</pre
         _tourIdx = idx;
         const step = TOUR_STEPS[idx];
         const target = document.getElementById(step.targetId);
-        if (!target) {
+        if (!target || target.offsetParent === null) {
           showTourStep(idx + 1);
           return;
+        }
+        if (typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ block: "center" });
         }
 
         const rect = target.getBoundingClientRect();
@@ -12909,7 +13835,9 @@ P = drain - 0.5*recovery</pre
         if (overlay) overlay.setAttribute("hidden", "");
       }
 
-      // Random-interval blinking for zoom_meeting participants
+      // Random-interval blinking for zoom_meeting participants.
+      // Self-throttles: when no zoom scene is mounted, poll slowly so the
+      // timers don't burn CPU forever after the user leaves a zoom scene.
       function startZoomBlinks() {
         const seats = [
           { cls: ".scene-blink-a", initDelay: 0 },
@@ -12917,32 +13845,39 @@ P = drain - 0.5*recovery</pre
           { cls: ".scene-blink-c", initDelay: 1700 },
           { cls: ".scene-blink-d", initDelay: 300 },
         ];
+        const sceneSelector = '.demo-scene-frame[data-activity="zoom_meeting"]';
         seats.forEach(({ cls, initDelay }) => {
           function doBlink() {
-            document
-              .querySelectorAll(
-                `.demo-scene-frame[data-activity="zoom_meeting"] ${cls}`,
-              )
-              .forEach((el) => {
-                el.style.transform = "scaleY(0.1)";
-                setTimeout(() => {
-                  el.style.transform = "";
-                }, 120);
-              });
+            const targets = document.querySelectorAll(
+              `${sceneSelector} ${cls}`,
+            );
+            if (targets.length === 0) {
+              setTimeout(doBlink, 5000); // idle poll
+              return;
+            }
+            targets.forEach((el) => {
+              el.style.transform = "scaleY(0.1)";
+              setTimeout(() => {
+                el.style.transform = "";
+              }, 120);
+            });
             setTimeout(doBlink, 2500 + Math.random() * 3000);
           }
           setTimeout(doBlink, initDelay + Math.random() * 800);
         });
 
-        // Talking mouth — participant B alternates
+        // Talking mouth — participant B alternates.
         function doTalk() {
-          document
-            .querySelectorAll(
-              `.demo-scene-frame[data-activity="zoom_meeting"] .scene-talk-a`,
-            )
-            .forEach((el) => {
-              el.classList.toggle("is-closed");
-            });
+          const targets = document.querySelectorAll(
+            `${sceneSelector} .scene-talk-a`,
+          );
+          if (targets.length === 0) {
+            setTimeout(doTalk, 5000); // idle poll
+            return;
+          }
+          targets.forEach((el) => {
+            el.classList.toggle("is-closed");
+          });
           setTimeout(doTalk, 200 + Math.random() * 300);
         }
         setTimeout(doTalk, 1200);

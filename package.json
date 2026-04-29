@@ -1,7 +1,7 @@
 {
   "name": "psych-battery-app",
   "version": "1.0.0",
-  "description": "Psych Battery is a UC Berkeley research app that visualizes a user's mental energy as a pixel-art battery. The frontend is a single-file vanilla JS app (`index.html`, no build step, no npm). The backend is a Python Flask server (in the `dpm-research-hub` repo) that runs a two-compartment ODE model tracking energy and stress across the day, fed by real-time data from ActivityWatch, Slack, Google Calendar, Zoom, Todoist, Apple Health, and more.",
+  "description": "Mental Meter (formerly Psych Battery) is a UC Berkeley research app that visualizes a user's mental energy as a pixel-art battery. The frontend is a single-file vanilla JS app (`index.html`, no build step, no npm). The backend is a Python Flask server (in the `dpm-research-hub` repo) that runs a two-compartment ODE model tracking energy and stress across the day, fed by real-time data from ActivityWatch, Slack, Google Calendar, Zoom, Todoist, Apple Health, and more.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

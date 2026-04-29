@@ -1,10 +1,12 @@
-# Psych Battery
+# Mental Meter
+
+(Formerly "Psych Battery" — the repo URL still uses the old slug.)
 
 Visualizes your cognitive energy as a depleting battery based on screen activity tracked by [ActivityWatch](https://activitywatch.net/). Optionally displays on an [Elecrow CrowPanel 5.79" e-ink display](https://www.elecrow.com/wiki/CrowPanel_ESP32_E-paper_5.79-inch_HMI_Display.html).
 
 ## How it works
 
-ActivityWatch runs in the background and logs which apps and windows are in focus. Psych Battery pulls that data via ActivityWatch's local API, scores each app by cognitive drain, and renders a battery that depletes over a 4-hour rolling window. A local server calculates the current level and serves both the browser UI and the e-ink display.
+ActivityWatch runs in the background and logs which apps and windows are in focus. Mental Meter pulls that data via ActivityWatch's local API, scores each app by cognitive drain, and renders a battery that depletes over a 4-hour rolling window. A local server calculates the current level and serves both the browser UI and the e-ink display.
 
 ## Prerequisites
 
@@ -14,6 +16,7 @@ ActivityWatch runs in the background and logs which apps and windows are in focu
 ## Web app setup
 
 1. Clone the repo:
+
    ```bash
    git clone https://github.com/elisa-lj11/psych-battery.git
    cd psych-battery
@@ -22,10 +25,13 @@ ActivityWatch runs in the background and logs which apps and windows are in focu
 2. Make sure ActivityWatch is running — check by opening [http://localhost:5600](http://localhost:5600).
 
 3. Start everything with one command (PowerShell):
+
    ```powershell
    .\run.ps1
    ```
+
    This starts the local server and (if you have the CrowPanel) the display bridge. If PowerShell blocks the script, run this once first:
+
    ```powershell
    Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
    ```
@@ -42,15 +48,15 @@ Hardware: **Elecrow CrowPanel ESP32-S3 5.79" E-Paper Display** — one USB-C cab
 
 Install the ESP32 board package (add `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json` to Additional Boards Manager URLs, then install **esp32 by Espressif**), then configure under Tools:
 
-| Setting | Value |
-|---|---|
-| Board | ESP32S3 Dev Module |
+| Setting          | Value                            |
+| ---------------- | -------------------------------- |
+| Board            | ESP32S3 Dev Module               |
 | Partition Scheme | Huge APP (3MB No OTA/1MB SPIFFS) |
-| PSRAM | OPI PSRAM |
-| USB CDC On Boot | **Disabled** |
-| Upload Speed | 921600 |
-| Flash Size | 8MB (64Mb) |
-| Flash Mode | QIO |
+| PSRAM            | OPI PSRAM                        |
+| USB CDC On Boot  | **Disabled**                     |
+| Upload Speed     | 921600                           |
+| Flash Size       | 8MB (64Mb)                       |
+| Flash Mode       | QIO                              |
 
 ### 2. Download the Elecrow library
 
@@ -78,16 +84,19 @@ The `psych_battery_crowpanel.ino` is already in that folder.
 ### 4. Connect the display to the web app
 
 Install the Python bridge dependency:
+
 ```bash
 pip install pyserial requests
 ```
 
 Find your COM port:
+
 ```bash
 python crowpanel/charge_sender.py --list
 ```
 
 Update the port in `run.ps1` if yours isn't COM5, then run:
+
 ```powershell
 .\run.ps1
 ```
