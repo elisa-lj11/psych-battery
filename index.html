@@ -3593,6 +3593,14 @@
         min-width: 0;
       }
 
+      .activity-label-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        min-width: 0;
+      }
+
       .activity-emoji {
         font-size: 1.3rem;
         line-height: 1;
@@ -3606,6 +3614,31 @@
         color: var(--muted);
         font-size: 0.88rem;
         white-space: nowrap;
+      }
+
+      .activity-mode-tag {
+        font-family: var(--px-font-ui);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border: 1px solid;
+        border-radius: 0;
+      }
+
+      .activity-mode-tag--timer {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .activity-mode-tag--instant {
+        border-color: var(--good);
+        color: var(--good);
+      }
+
+      .activity-mode-tag--toggle {
+        border-color: var(--warn);
+        color: var(--warn);
       }
 
       .stepper-wrap {
@@ -4012,7 +4045,7 @@
         --px-border: #7a3a00;
         --px-border-2: #a05a00;
         --px-text: #ffb000;
-        --px-muted: #a07000;
+        --px-muted: #d39a36;
         --px-good: #ffb000;
         --px-warn: #ffd060;
         --px-low: #b88000;
@@ -4029,7 +4062,7 @@
         --px-border: #1a6a1a;
         --px-border-2: #2a8a2a;
         --px-text: #39ff14;
-        --px-muted: #1a6a1a;
+        --px-muted: #72b85b;
         --px-good: #39ff14;
         --px-warn: #b0ff39;
         --px-low: #3a8c39;
@@ -5221,6 +5254,38 @@
         gap: 12px;
       }
 
+      .jargon-tip {
+        border-bottom: 1px dashed currentColor;
+        cursor: help;
+        position: relative;
+      }
+
+      .jargon-tip::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--px-bg);
+        color: var(--px-text);
+        border: 2px solid var(--px-accent);
+        padding: 6px 10px;
+        font-family: var(--px-font-body);
+        font-size: 13px;
+        white-space: normal;
+        width: max-content;
+        max-width: 240px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms;
+        z-index: 1000;
+      }
+
+      .jargon-tip:hover::after,
+      .jargon-tip:focus-within::after {
+        opacity: 1;
+      }
+
       #phase-portrait {
         display: flex;
         flex-direction: column;
@@ -5281,6 +5346,13 @@
         align-items: center;
         gap: 8px;
         min-width: 0;
+      }
+
+      .phase-portrait-caption {
+        margin: 0;
+        color: var(--px-muted);
+        font-size: 14px;
+        line-height: 1.45;
       }
 
       .phase-portrait-axis-label {
@@ -5963,6 +6035,20 @@
         .demo-battery-pair {
           flex-direction: column;
         }
+
+        #theme-picker {
+          position: fixed;
+          top: auto;
+          bottom: 10px;
+          right: 10px;
+        }
+
+        #help-trigger {
+          display: inline-flex;
+          position: fixed;
+          top: 60px;
+          right: 10px;
+        }
       }
 
       @media (max-width: 520px) {
@@ -6033,9 +6119,9 @@
         <button
           id="calib-btn"
           type="button"
-          title="Personal calibration (5 questions)"
+          title="Tune your battery (5 questions)"
         >
-          CALIBRATE
+          TUNE
         </button>
         <span id="demo-header-badge" aria-live="polite">Demo mode</span>
         <details id="header-more">
@@ -6228,11 +6314,11 @@
               <div class="panel-section-head">
                 <h2 class="section-title">Activity breakdown</h2>
                 <select id="window-select" aria-label="Activity window">
-                  <option value="0.083" selected>5 min</option>
+                  <option value="0.083">5 min (demo)</option>
                   <option value="0.25">15 min</option>
                   <option value="1">1 hr</option>
                   <option value="2">2 hr</option>
-                  <option value="4">4 hr</option>
+                  <option value="4" selected>4 hr</option>
                   <option value="8">8 hr</option>
                 </select>
               </div>
@@ -6327,7 +6413,14 @@ P = drain - 0.5*recovery</pre
 
           <div id="model-viz-panel"></div>
           <div class="layer-card phase-portrait-card">
-            <div class="section-title">Phase portrait</div>
+            <div class="section-title">
+              <span
+                class="jargon-tip"
+                data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
+                tabindex="0"
+                >Phase portrait</span
+              >
+            </div>
             <div class="phase-portrait-shell">
               <div class="phase-portrait-axis-label is-y">Stress</div>
               <div class="phase-portrait-plot">
@@ -6335,6 +6428,37 @@ P = drain - 0.5*recovery</pre
                 <div class="phase-portrait-axis-label">Energy</div>
               </div>
             </div>
+            <p class="phase-portrait-caption">
+              This
+              <span
+                class="jargon-tip"
+                data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
+                tabindex="0"
+                >vector field</span
+              >
+              shows drift, the
+              <span
+                class="jargon-tip"
+                data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
+                tabindex="0"
+                >nullclines</span
+              >
+              mark where change stops, and your
+              <span
+                class="jargon-tip"
+                data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
+                tabindex="0"
+                >trajectory</span
+              >
+              traces the last 24 ticks. The
+              <span
+                class="jargon-tip"
+                data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
+                tabindex="0"
+                >circadian curve</span
+              >
+              shifts the resting target over the day.
+            </p>
           </div>
 
           <details class="layer-legacy">
@@ -6487,92 +6611,90 @@ P = drain - 0.5*recovery</pre
             <div class="gloss-row">
               <dt>E (Energy)</dt>
               <dd>
-                Your mental fuel tank, tracked on a 0-100 scale. Lower energy
-                means a smaller meter fill; sleep, walks, food, and people raise
-                it.
+                Your mental fuel tank on a 0-100 scale. When it drops, the meter
+                shrinks; sleep, walks, food, and people refill it.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>S (Stress)</dt>
               <dd>
-                A second tank that builds under cognitive load — back-to-back
-                meetings, late-night work, heavy multitasking. High S makes E
-                drain faster.
+                A second tank that rises under cognitive load like stacked
+                meetings, late-night work, or heavy multitasking. High stress
+                makes energy drain faster.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Pressure</dt>
               <dd>
-                The instantaneous load on you right now (meeting density,
-                message volume, app switching). Pressure is what feeds the
-                Stress tank.
+                The load on you right now: meeting density, message volume, and
+                app switching. When pressure stays high, stress climbs.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Chronotype</dt>
               <dd>
-                Your natural body-clock type: lark (early), intermediate, or owl
-                (late). Sets when your circadian baseline peaks.
+                Your natural body-clock type: lark, intermediate, or owl. It
+                sets when your daily energy baseline tends to peak.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>MSF_sc</dt>
               <dd>
-                Sleep-corrected mid-sleep on free days, from the Munich
-                Chronotype Questionnaire (Roenneberg et al., 2003). The number
-                we use to pick your chronotype curve.
+                Sleep-corrected mid-sleep on free days, derived from the Munich
+                Chronotype Questionnaire. We use it to place your chronotype
+                curve.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Peak cognition</dt>
               <dd>
-                The window where your circadian baseline is highest — usually
-                2–4 hours after wake for larks, late afternoon for owls. Best
-                time for hard thinking.
+                The part of the day when your circadian baseline is highest. Use
+                it for demanding work when possible.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Recovery</dt>
               <dd>
                 Anything that adds energy back: outside time, exercise, social
-                contact, food, rest. Each activity has a different lift.
+                contact, food, or rest. Use recovery to push the meter upward.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Drain</dt>
               <dd>
-                Anything that pulls energy out: video meetings, deep focus,
-                context switching, late hours, high keystroke rate.
+                Anything that pulls energy out: meetings, deep focus, context
+                switching, late hours, or high typing load. High drain makes the
+                meter fall faster.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>ActivityWatch</dt>
               <dd>
-                Open-source local time tracker that watches your active windows.
-                We read it (read-only, on your machine) to know how much you
-                actually meet, focus, and switch.
+                A local time tracker that watches your active windows on your
+                machine. We read it to estimate how much you meet, focus, and
+                switch.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Model B</dt>
               <dd>
-                The two-tank ODE: dE/dt = recovery − drain − k·(E − E_rest);
-                dS/dt = pressure − decay·S. The math behind every meter update.
+                The two-tank math that updates energy and stress every tick. It
+                turns recovery, drain, pressure, and resting baseline into meter
+                movement.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Model D</dt>
               <dd>
-                The circadian baseline E_rest — a smooth curve over 24h that
-                says "what you'd feel rested at this hour, given your
-                chronotype."
+                The circadian resting baseline E_rest over 24 hours. It says
+                what "rested" should feel like at this time of day.
               </dd>
             </div>
             <div class="gloss-row">
               <dt>Demo mode</dt>
               <dd>
-                Frontend-only simulation. No backend, no logs sent. Pick
-                activities and watch the model tanks move in real time.
+                A frontend-only simulation with no backend writes. Use it to try
+                activities and watch the model respond in real time.
               </dd>
             </div>
           </dl>
@@ -6613,6 +6735,9 @@ P = drain - 0.5*recovery</pre
         </div>
       </div>
 
+      <button id="reset-onboarding-btn" type="button">
+        Reset onboarding tips
+      </button>
       <button id="help-close" type="button">Close</button>
     </section>
 
@@ -6773,11 +6898,11 @@ P = drain - 0.5*recovery</pre
       aria-labelledby="calib-title"
     >
       <div class="calib-card">
-        <h2 id="calib-title">Personal Calibration</h2>
+        <h2 id="calib-title">Tune your battery</h2>
         <p class="calib-intro">
-          5 quick questions about your sleep schedule. We use the Munich
-          Chronotype Questionnaire (MCTQ) to compute your chronotype — lark,
-          intermediate, or owl — which sets your circadian baseline curve.
+          If the battery does not feel right, answer these quick questions to
+          shift the daily rhythm. We use your sleep schedule to set the built-in
+          24-hour curve.
         </p>
 
         <div class="calib-q">
@@ -7175,7 +7300,7 @@ P = drain - 0.5*recovery</pre
         phasePortraitTrail: [],
         aw: {
           online: false,
-          windowHours: 0.083,
+          windowHours: 4,
           buckets: { win: null, afk: null },
           breakdown: {},
           lastFetchAt: 0,
@@ -8805,7 +8930,7 @@ P = drain - 0.5*recovery</pre
         },
       };
 
-      let windowHours = 0.083;
+      let windowHours = 4;
       let windowBucket = null;
       let afkBucket = null;
       const sessionStart = new Date();
@@ -9658,7 +9783,7 @@ P = drain - 0.5*recovery</pre
         };
         APP.aw = {
           online: Boolean(saved.aw?.online),
-          windowHours: Number(saved.aw?.windowHours) || 0.083,
+          windowHours: Number(saved.aw?.windowHours) || 4,
           buckets: saved.aw?.buckets
             ? { ...saved.aw.buckets }
             : { win: null, afk: null },
@@ -11636,9 +11761,13 @@ P = drain - 0.5*recovery</pre
               : computeERest(hour, chronotype);
           const currentEnergy = clamp(Number(payload.E_internal) || 0, 0, 100);
           netShift =
-            (-0.05 * pressure * currentEnergy + (eRestNow - currentEnergy) / 120) *
+            (-0.05 * pressure * currentEnergy +
+              (eRestNow - currentEnergy) / 120) *
             60;
-        } else if (Number.isFinite(drainTotal) && Number.isFinite(recoveryTotal)) {
+        } else if (
+          Number.isFinite(drainTotal) &&
+          Number.isFinite(recoveryTotal)
+        ) {
           netShift = recoveryTotal - drainTotal;
         }
 
@@ -11809,7 +11938,10 @@ P = drain - 0.5*recovery</pre
               data-mode="${mode}">
               <span class="activity-copy">
                 <span class="activity-emoji">${pixelIcon(activity.sprite, activity.accent)}</span>
-                <span class="activity-label">${activity.label}</span>
+                <span class="activity-label-wrap">
+                  <span class="activity-label">${activity.label}</span>
+                  <span class="activity-mode-tag activity-mode-tag--${mode}">${mode}</span>
+                </span>
               </span>
               <span class="activity-meta">${recoveryMetaLabel(activity, selected)}</span>
             </button>
@@ -12582,10 +12714,18 @@ P = drain - 0.5*recovery</pre
 
           APP.aw.online = true;
           APP.aw.breakdown = tally;
-          APP.aw.fallbackBattery = battery;
           APP.aw.totalActMins = totalActMins;
           APP.aw.lastFetchAt = Date.now();
           APP.aw.windowHours = windowHours;
+          // Sync battery with server.py so web app matches CrowPanel exactly
+          try {
+            const sr = await fetch("/state");
+            APP.aw.fallbackBattery = sr.ok
+              ? (await sr.json()).battery_pct
+              : battery;
+          } catch {
+            APP.aw.fallbackBattery = battery;
+          }
         } catch (error) {
           if (!error?.silent) console.error(error);
           APP.aw.online = false;
@@ -12890,6 +13030,15 @@ P = drain - 0.5*recovery</pre
           windowBucket = null;
           afkBucket = null;
           APP.aw.buckets = { win: null, afk: null };
+          // Sync server.py accelerated mode with window selection
+          const wantAccel = windowHours <= 0.1;
+          fetch("/mode")
+            .then((r) => r.json())
+            .then((m) => {
+              if (m.accelerated !== wantAccel)
+                fetch("/accelerate", { method: "POST" });
+            })
+            .catch(() => {});
           void refreshAwData({ reason: "change" });
         });
 
@@ -13014,6 +13163,9 @@ P = drain - 0.5*recovery</pre
         const helpSheet = document.getElementById("help-sheet");
         const helpTrigger = document.getElementById("help-trigger");
         const helpClose = document.getElementById("help-close");
+        const resetOnboardingBtn = document.getElementById(
+          "reset-onboarding-btn",
+        );
 
         function openHelp() {
           const saved = (() => {
@@ -13039,6 +13191,23 @@ P = drain - 0.5*recovery</pre
 
         if (helpTrigger) helpTrigger.addEventListener("click", openHelp);
         if (helpClose) helpClose.addEventListener("click", closeHelp);
+        if (resetOnboardingBtn) {
+          resetOnboardingBtn.addEventListener("click", () => {
+            [
+              "pb_seen_intro",
+              "pb_seen_demo_banner",
+              "pb_seen_layer_1",
+              "pb_seen_layer_2",
+              "pb_help_tab",
+              "pb_story_done",
+            ].forEach((key) => {
+              try {
+                localStorage.removeItem(key);
+              } catch (_) {}
+            });
+            showToast("Onboarding tips reset");
+          });
+        }
 
         const HELP_TABS = ["shortcuts", "glossary", "howitworks"];
         function setHelpTab(name) {

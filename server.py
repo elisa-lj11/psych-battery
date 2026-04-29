@@ -13,10 +13,13 @@ import json
 import time
 from datetime import datetime, timezone, timedelta
 
-AW_BASE      = 'http://localhost:5600/api/0'
-WINDOW_HOURS = 2 / 60  # 2-minute rolling window
-HIGH_DRAIN   = 15.0    # max drain rate (normalises battery to 0%)
-AFK_RECHARGE = 7.5     # recharge rate while AFK (drain units per minute)
+AW_BASE             = 'http://localhost:5600/api/0'
+NORMAL_WINDOW_HOURS = 4        # 4-hour rolling window (normal use)
+DEMO_WINDOW_HOURS   = 2 / 60   # 2-minute rolling window (accelerated demo)
+HIGH_DRAIN          = 15.0     # max drain rate (normalises battery to 0%)
+AFK_RECHARGE        = 7.5      # recharge rate while AFK (drain units per minute)
+
+_accelerated = False   # toggled via POST /accelerate
 
 DRAIN_RULES = [
     {'patterns': ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'], 'rate': 15.0},
@@ -56,8 +59,9 @@ def compute_battery() -> tuple[int, str]:
     global _prev_battery, _cache
     if _cache and (time.monotonic() - _cache[0]) < CACHE_TTL:
         return _cache[1], _cache[2]
+    window_hours = DEMO_WINDOW_HOURS if _accelerated else NORMAL_WINDOW_HOURS
     now   = datetime.now(timezone.utc)
-    start = max(SERVER_START, now - timedelta(hours=WINDOW_HOURS))
+    start = max(SERVER_START, now - timedelta(hours=window_hours))
 
     with urllib.request.urlopen(AW_BASE + '/buckets/', timeout=10) as r:
         buckets = json.load(r)
@@ -94,7 +98,7 @@ def compute_battery() -> tuple[int, str]:
                     continue
                 total_drain -= mins * AFK_RECHARGE
 
-    capacity = WINDOW_HOURS * 60 * HIGH_DRAIN
+    capacity = window_hours * 60 * HIGH_DRAIN
     battery  = max(0, min(100, round(100 - (total_drain / capacity) * 100)))
 
     trend = 'up' if battery > _prev_battery else ('down' if battery < _prev_battery else 'flat')
@@ -107,10 +111,46 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/state':
             self._state()
+        elif self.path == '/mode':
+            self._mode()
         elif self.path.startswith('/aw/'):
             self._proxy(self.path[3:])
         else:
             super().do_GET()
+
+    def do_POST(self):
+        global _accelerated, _cache
+        if self.path == '/accelerate':
+            _accelerated = not _accelerated
+            _cache = None  # bust cache so next /state reflects new window immediately
+            label = 'demo (2 min)' if _accelerated else 'normal (4 hr)'
+            print(f'[mode] switched to {label}')
+            data = json.dumps({'accelerated': _accelerated}).encode()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-Length', str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.end_headers()
+
+    def _mode(self):
+        data = json.dumps({'accelerated': _accelerated,
+                           'window': 'demo (2 min)' if _accelerated else 'normal (4 hr)'}).encode()
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-Length', str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
 
     def _state(self):
         try:
