@@ -13,7 +13,7 @@ Write-Host "Starting CrowPanel bridge..."
 Start-Process python -ArgumentList "crowpanel/charge_sender.py --port COM6" -WorkingDirectory $PSScriptRoot -WindowStyle Normal
 
 Write-Host ""
-Write-Host "Psych Battery is running."
+Write-Host "Mental Meter is running."
 Write-Host "  Web app : http://localhost:3131"
 Write-Host "  Display : CrowPanel on COM6 (updates every 10s)"
 

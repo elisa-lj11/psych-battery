@@ -1,5 +1,5 @@
 """
-Psych Battery local server.
+Mental Meter local server.
 - Serves index.html
 - Proxies /aw/* → http://localhost:5600/api/0/*
 - Exposes GET /state → {"E_display": 0-1} for the CrowPanel bridge
@@ -164,6 +164,6 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 if __name__ == '__main__':
     addr = ('', 3131)
-    print('Psych Battery running at http://localhost:3131')
+    print('Mental Meter running at http://localhost:3131')
     print('  Battery state: http://localhost:3131/state')
     ThreadedHTTPServer(addr, Handler).serve_forever()

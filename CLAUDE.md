@@ -1,4 +1,6 @@
-# Psych Battery — Agent Instructions
+# Mental Meter — Agent Instructions
+
+(Renamed from "Psych Battery" — repo URL still uses the old slug.)
 
 ## What this repo is
 
@@ -46,51 +48,73 @@ Demo mode works with zero setup — pick a profile from the dropdown. ActivityWa
 
 ## Key files
 
-| File | Purpose |
-|------|---------|
-| `index.html` | Entire frontend (4650 lines, vanilla JS) |
-| `server.py` | Minimal Python proxy: serves index.html, forwards `/aw/*` → AW at :5600 |
-| `run-local.sh` / `run-local.bat` | One-command launchers (Mac/Linux, Windows) |
-| `check-health.py` | Stdlib health check for both servers |
-| `crowpanel/` | CrowPanel e-ink firmware + Python bridge + setup brief |
-| `vercel.json` | Static deploy config (all routes → index.html) |
+| File                             | Purpose                                                                 |
+| -------------------------------- | ----------------------------------------------------------------------- |
+| `index.html`                     | Entire frontend (4650 lines, vanilla JS)                                |
+| `server.py`                      | Minimal Python proxy: serves index.html, forwards `/aw/*` → AW at :5600 |
+| `run-local.sh` / `run-local.bat` | One-command launchers (Mac/Linux, Windows)                              |
+| `check-health.py`                | Stdlib health check for both servers                                    |
+| `crowpanel/`                     | CrowPanel e-ink firmware + Python bridge + setup brief                  |
+| `vercel.json`                    | Static deploy config (all routes → index.html)                          |
 
 ## Frontend architecture (index.html)
 
 ### App state
+
 ```js
 const APP = {
-  uiLayer: 0,      // 0=battery only, 1=metrics, 2=diagnostics
-  mode: 'normal',  // 'normal'|'rating'|'recovery-menu'|'screensaver'
+  uiLayer: 0, // 0=battery only, 1=metrics, 2=diagnostics
+  mode: "normal", // 'normal'|'rating'|'recovery-menu'|'screensaver'
   model: { online, stale, payload, lastFetchAt },
-  aw: { online, windowHours, buckets, breakdown, fallbackBattery, totalActMins },
+  aw: {
+    online,
+    windowHours,
+    buckets,
+    breakdown,
+    fallbackBattery,
+    totalActMins,
+  },
   rating: { kind, submitting },
-  recovery: { activityId, logKind, theme, plannedMin, startTs, timerId, toggleActive }
+  recovery: {
+    activityId,
+    logKind,
+    theme,
+    plannedMin,
+    startTs,
+    timerId,
+    toggleActive,
+  },
 };
 ```
 
 ### UI layers
+
 - **Layer 0** (default): Large pixel-art battery SVG, %, 4 color themes
 - **Layer 1** (tap battery): Drain-pressure bar (12 pixel segments), drain vs recovery feature rows with mini-bars
 - **Layer 2** (tap "Show full diagnostics"): Circadian model chart (SVG), pixel E+S state tanks, particle field
 
 ### Modes
+
 - `normal` → default
 - `rating` → Energy/Stress 1–10 sheet open
 - `recovery-menu` → Activity selection sheet open
 - `screensaver` → Full-screen canvas animation
 
 ### Recovery modes (two kinds)
+
 - **Instant**: tap activity → duration stepper → Start → screensaver → Done → one POST /log
 - **Toggle**: tap activity with toggle option → banner appears bottom-right with "END" → tap END → POST /log with elapsed time
 
 ### Demo profiles
+
 Four synthetic profiles selectable from header dropdown: Sam, Maya, Alex, Jordan. Each provides a full `payload` (E_display, E_internal, S, E_rest_now, chronotype, last_tick_iso, last_feats with all 18 keys) and `aw` breakdown. Demo mode short-circuits all fetch calls.
 
 ### Themes
+
 Four CSS var themes: `arcade` (default), `gameboy`, `amber`, `phosphor`. Stored in localStorage `pb_theme`. Applied via `body[data-theme]`.
 
 ### Polling
+
 - `/state` every 30s (paused when tab hidden)
 - `/aw/*` only when `uiLayer >= 1`
 - `localStorage('pb_state')` cache used when Flask offline
@@ -98,6 +122,7 @@ Four CSS var themes: `arcade` (default), `gameboy`, `amber`, `phosphor`. Stored 
 ## Flask backend contract
 
 `GET /state` returns:
+
 ```json
 {
   "E_display": 0.0–1.0,
@@ -112,6 +137,7 @@ Four CSS var themes: `arcade` (default), `gameboy`, `amber`, `phosphor`. Stored 
 ```
 
 `POST /log` accepts:
+
 ```json
 { "kind": "outside"|"walk"|"with_people"|"detach"|"energy_rating"|"stress_rating", "minutes": float, "value": int }
 ```

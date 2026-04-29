@@ -19,7 +19,7 @@ if not "%~1"=="" (
 
 echo.
 echo ================================================
-echo  Psych Battery - Local Launcher (Windows)
+echo  Mental Meter - Local Launcher (Windows)
 echo ================================================
 echo.
 
@@ -56,7 +56,7 @@ start "" http://localhost:3131
 
 echo.
 echo ================================================
-echo  Psych Battery is running at http://localhost:3131
+echo  Mental Meter is running at http://localhost:3131
 echo.
 echo  To stop: close the "Flask Backend" and
 echo            "Proxy Server" command windows.

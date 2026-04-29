@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start Psych Battery: proxy server + CrowPanel bridge (Mac)
+# Start Mental Meter: proxy server + CrowPanel bridge (Mac)
 set -e
 
 cd "$(dirname "$0")"
@@ -24,7 +24,7 @@ else
 fi
 
 echo ""
-echo "Psych Battery is running."
+echo "Mental Meter is running."
 echo "  Web app : http://localhost:3131"
 [ -n "$PORT" ] && echo "  Display : CrowPanel on $PORT (updates every 10s)"
 
