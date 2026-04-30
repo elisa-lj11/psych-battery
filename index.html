@@ -369,7 +369,7 @@
       }
 
       #header-more {
-        position: relative;
+        display: none !important;
       }
 
       #header-more > summary {
@@ -463,11 +463,11 @@
       #tour-btn,
       #story-btn,
       #calib-btn,
-      #help-trigger {
+      #timeline-toggle-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
+        width: auto;
         min-height: 44px;
         padding: 0 14px;
         border: 2px solid var(--px-border);
@@ -476,16 +476,48 @@
         box-shadow: 2px 2px 0 0 #000;
       }
 
+      #timeline-toggle-btn[aria-pressed="true"] {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+        background: rgba(129, 140, 248, 0.12);
+      }
+
+      #help-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 10px;
+        border: 2px solid var(--px-border);
+        background: var(--surface);
+        color: var(--px-accent);
+        font-family: var(--px-font-ui);
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        box-shadow: 2px 2px 0 0 #000;
+        cursor: pointer;
+      }
+
       #tour-btn:hover,
       #tour-btn:focus-visible,
       #story-btn:hover,
       #story-btn:focus-visible,
       #calib-btn:hover,
       #calib-btn:focus-visible,
+      #timeline-toggle-btn:hover,
+      #timeline-toggle-btn:focus-visible {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+        outline: none;
+      }
+
       #help-trigger:hover,
       #help-trigger:focus-visible {
         border-color: var(--px-accent);
-        color: var(--px-accent);
+        background: rgba(129, 140, 248, 0.12);
         outline: none;
       }
 
@@ -579,10 +611,20 @@
         margin: 4px 0 0;
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: 2.2rem;
+        font-size: 3rem;
         font-weight: 700;
         letter-spacing: 0.04em;
         line-height: 1;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      }
+
+      .pct-sup {
+        font-size: 0.55em;
+        vertical-align: baseline;
+        letter-spacing: 0;
+        opacity: 0.8;
+        font-weight: 400;
+        margin-left: 3px;
       }
 
       .battery-expand-hint {
@@ -3436,6 +3478,10 @@
         background: var(--surface-2);
         cursor: pointer;
         display: none;
+        font-family: var(--px-font-ui);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: var(--fs-label, 0.82rem);
       }
 
       body[data-layer="1"] #collapse-btn,
@@ -3465,6 +3511,10 @@
         background: var(--surface);
         cursor: pointer;
         font-weight: 700;
+        font-family: var(--px-font-ui);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: var(--fs-label, 0.82rem);
       }
 
       #recovery-trigger {
@@ -3898,6 +3948,22 @@
         backdrop-filter: blur(12px);
       }
 
+      #screensaver-activity-label {
+        position: absolute;
+        top: clamp(28px, 6vh, 56px);
+        left: 0;
+        right: 0;
+        z-index: 2;
+        text-align: center;
+        font-family: var(--px-font-ui);
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+        display: none;
+      }
+
       #toast-stack {
         position: fixed;
         left: 16px;
@@ -4163,31 +4229,32 @@
       /* Theme picker — collapsed disclosure in the top-right chrome. Hidden by
        default so it doesn't compete with the battery; expands on click. */
       #theme-picker {
-        position: static;
-        z-index: auto;
-        width: 100%;
+        position: relative;
+        z-index: 60;
+        flex: 0 0 auto;
       }
       .theme-toggle {
         list-style: none;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        justify-content: space-between;
-        width: 100%;
+        gap: 6px;
+        justify-content: center;
+        width: auto;
         padding: 0 12px;
-        min-height: 40px;
+        min-height: 44px;
         box-sizing: border-box;
         border: 2px solid var(--px-border);
         background: var(--surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
-        font-size: var(--fs-chrome);
-        letter-spacing: 0.1em;
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
         cursor: pointer;
         box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
         -webkit-font-smoothing: none;
         font-smooth: never;
         user-select: none;
+        white-space: nowrap;
       }
       .theme-toggle::-webkit-details-marker {
         display: none;
@@ -4216,17 +4283,19 @@
         transform: rotate(180deg);
       }
       .theme-panel {
-        position: static;
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;
-        margin-top: 8px;
         padding: 8px;
         background: var(--surface);
         border: 2px solid var(--px-border-2);
         box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
-        min-width: 0;
-        width: 100%;
+        min-width: 180px;
+        width: max-content;
+        z-index: 100;
       }
       .theme-swatch {
         display: grid;
@@ -4369,6 +4438,7 @@
       #recovery-trigger,
       #collapse-btn,
       #open-diagnostics,
+      #timeline-toggle-btn,
       .bottom-sheet,
       #screensaver-done,
       #help-sheet,
@@ -4414,6 +4484,8 @@
       #recovery-trigger,
       #open-diagnostics,
       #collapse-btn,
+      #timeline-toggle-btn,
+      #help-trigger,
       #screensaver-done {
         border: 2px solid var(--px-border-2);
         background: var(--px-surface-2);
@@ -4519,6 +4591,15 @@
         text-transform: uppercase;
         margin: 0 0 10px;
         color: var(--px-accent);
+      }
+      .help-about-lead {
+        margin: 0 0 12px;
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: var(--px-text);
+        opacity: 0.9;
+        border-left: 3px solid var(--px-accent);
+        padding-left: 10px;
       }
       .help-row {
         display: grid;
@@ -5314,6 +5395,52 @@
         align-items: stretch;
       }
 
+      .layer2-viz-row {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        align-items: stretch;
+        min-height: 340px;
+      }
+
+      .layer2-viz-row #model-viz-panel {
+        flex: 3 1 0;
+        min-width: 0;
+      }
+
+      .layer2-viz-row .phase-portrait-card {
+        flex: 2 1 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .layer2-viz-row .phase-portrait-card .phase-portrait-shell {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+
+      .layer2-viz-row .phase-portrait-card .phase-portrait-plot {
+        height: 100%;
+      }
+
+      .layer2-viz-row .phase-portrait-card #phase-portrait {
+        width: 100%;
+        height: 100%;
+      }
+
+      @media (max-width: 720px) {
+        .layer2-viz-row {
+          flex-direction: column;
+          min-height: unset;
+        }
+        .layer2-viz-row #model-viz-panel,
+        .layer2-viz-row .phase-portrait-card {
+          flex: unset;
+          width: 100%;
+        }
+      }
+
       .layer2-formula-v2 {
         min-height: 100%;
         font-family: var(--px-font-body);
@@ -5753,7 +5880,8 @@
       #demo-header-badge,
       #tour-btn,
       #story-btn,
-      #calib-btn {
+      #calib-btn,
+      #timeline-toggle-btn {
         min-height: 44px;
         padding-inline: 14px;
         font-size: 15px;
@@ -6134,12 +6262,7 @@
           right: 10px;
         }
 
-        #help-trigger {
-          display: inline-flex;
-          position: fixed;
-          top: 60px;
-          right: 10px;
-        }
+        /* #help-trigger is now in the top row, not fixed-position */
       }
 
       @media (max-width: 520px) {
@@ -6198,6 +6321,14 @@
         <button id="demo-toggle-btn" type="button" aria-pressed="false">
           Interactive Demo
         </button>
+        <button
+          id="timeline-toggle-btn"
+          type="button"
+          title="Toggle between 2-minute (fast demo) and 4-hour (normal) data window"
+          aria-pressed="false"
+        >
+          4H
+        </button>
         <button id="tour-btn" type="button" title="App tour">TOUR</button>
         <button
           id="story-btn"
@@ -6218,6 +6349,92 @@
           <summary>More</summary>
           <div id="header-more-menu" aria-label="More actions"></div>
         </details>
+        <details id="theme-picker">
+          <summary
+            class="theme-toggle"
+            aria-label="Change color theme"
+            title="Color theme"
+          >
+            <span class="theme-toggle-dot" aria-hidden="true"></span>
+            <span>THEME</span>
+            <span data-theme-name>ARCADE</span>
+            <span class="theme-toggle-caret" aria-hidden="true">▾</span>
+          </summary>
+          <div
+            class="theme-panel"
+            role="group"
+            aria-label="Color theme options"
+          >
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="arcade"
+              aria-pressed="true"
+              title="Arcade (default)"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #0b0b14"></span
+                ><span style="background: #b388ff"></span>
+                <span style="background: #9fe86a"></span
+                ><span style="background: #ffc857"></span>
+              </div>
+              <span>ARCADE</span>
+            </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="gameboy"
+              aria-pressed="false"
+              title="Game Boy"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #0f380f"></span
+                ><span style="background: #9bbc0f"></span>
+                <span style="background: #8bac0f"></span
+                ><span style="background: #306230"></span>
+              </div>
+              <span>GB</span>
+            </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="amber"
+              aria-pressed="false"
+              title="Amber CRT"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #1a0a00"></span
+                ><span style="background: #ffb000"></span>
+                <span style="background: #ffd060"></span
+                ><span style="background: #b88000"></span>
+              </div>
+              <span>AMBER</span>
+            </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="phosphor"
+              aria-pressed="false"
+              title="Phosphor green CRT"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #001405"></span
+                ><span style="background: #39ff14"></span>
+                <span style="background: #00ff88"></span
+                ><span style="background: #3a8c39"></span>
+              </div>
+              <span>PHOS</span>
+            </button>
+          </div>
+        </details>
+        <button
+          id="help-trigger"
+          type="button"
+          aria-label="Help and shortcuts"
+          title="Help and shortcuts"
+        >
+          ?
+        </button>
         <div
           id="connection-pill"
           role="status"
@@ -6261,81 +6478,6 @@
       </div>
     </header>
 
-    <details id="theme-picker">
-      <summary
-        class="theme-toggle"
-        aria-label="Change color theme"
-        title="Color theme"
-      >
-        <span class="theme-toggle-dot" aria-hidden="true"></span>
-        <span>THEME</span>
-        <span data-theme-name>ARCADE</span>
-        <span class="theme-toggle-caret" aria-hidden="true">▾</span>
-      </summary>
-      <div class="theme-panel" role="group" aria-label="Color theme options">
-        <button
-          type="button"
-          class="theme-swatch"
-          data-theme="arcade"
-          aria-pressed="true"
-          title="Arcade (default)"
-        >
-          <div class="swatch-grid" aria-hidden="true">
-            <span style="background: #0b0b14"></span>
-            <span style="background: #b388ff"></span>
-            <span style="background: #9fe86a"></span>
-            <span style="background: #ffc857"></span>
-          </div>
-          <span>ARCADE</span>
-        </button>
-        <button
-          type="button"
-          class="theme-swatch"
-          data-theme="gameboy"
-          aria-pressed="false"
-          title="Game Boy"
-        >
-          <div class="swatch-grid" aria-hidden="true">
-            <span style="background: #0f380f"></span>
-            <span style="background: #9bbc0f"></span>
-            <span style="background: #8bac0f"></span>
-            <span style="background: #306230"></span>
-          </div>
-          <span>GB</span>
-        </button>
-        <button
-          type="button"
-          class="theme-swatch"
-          data-theme="amber"
-          aria-pressed="false"
-          title="Amber CRT"
-        >
-          <div class="swatch-grid" aria-hidden="true">
-            <span style="background: #1a0a00"></span>
-            <span style="background: #ffb000"></span>
-            <span style="background: #ffd060"></span>
-            <span style="background: #b88000"></span>
-          </div>
-          <span>AMBER</span>
-        </button>
-        <button
-          type="button"
-          class="theme-swatch"
-          data-theme="phosphor"
-          aria-pressed="false"
-          title="Phosphor green CRT"
-        >
-          <div class="swatch-grid" aria-hidden="true">
-            <span style="background: #001405"></span>
-            <span style="background: #39ff14"></span>
-            <span style="background: #00ff88"></span>
-            <span style="background: #3a8c39"></span>
-          </div>
-          <span>PHOS</span>
-        </button>
-      </div>
-    </details>
-
     <section
       id="battery-card"
       aria-labelledby="battery-caption model-status-text"
@@ -6344,7 +6486,9 @@
         <div id="battery-visual" aria-hidden="true"></div>
         <div class="battery-copy">
           <div id="battery-caption">Cognitive energy</div>
-          <div id="battery-pct-display" aria-live="polite">--%</div>
+          <div id="battery-pct-display" aria-live="polite">
+            --<span class="pct-sup">%</span>
+          </div>
           <div class="battery-expand-hint" aria-hidden="true">
             TAP TO EXPAND<span class="pix-arrow">&#9660;</span>
           </div>
@@ -6438,7 +6582,14 @@
             <div class="layer-card layer2-chart-wrap layer2-chart-card">
               <div class="layer2-action-row">
                 <div class="layer-title-stack">
-                  <div class="section-title">Circadian model</div>
+                  <div class="section-title">
+                    <span
+                      class="jargon-tip"
+                      data-tip="Your built-in 24-hour energy rhythm. Energy peaks late morning for larks (~14h) or evening for owls (~21h), with a natural mid-afternoon dip. The model shifts your resting energy target based on your chronotype."
+                      tabindex="0"
+                      >Circadian model</span
+                    >
+                  </div>
                   <div class="layer2-mini">
                     Model D baseline with current E overlay
                   </div>
@@ -6479,54 +6630,6 @@
                   <div id="layer2-particle-field" aria-hidden="true"></div>
                 </div>
               </div>
-              <div class="layer-card phase-portrait-card">
-                <div class="section-title">
-                  <span
-                    class="jargon-tip"
-                    data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
-                    tabindex="0"
-                    >Phase portrait</span
-                  >
-                </div>
-                <div class="phase-portrait-shell">
-                  <div class="phase-portrait-axis-label is-y">Stress</div>
-                  <div class="phase-portrait-plot">
-                    <div id="phase-portrait" aria-live="polite"></div>
-                    <div class="phase-portrait-axis-label">Energy</div>
-                  </div>
-                </div>
-                <p class="phase-portrait-caption">
-                  This
-                  <span
-                    class="jargon-tip"
-                    data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
-                    tabindex="0"
-                    >vector field</span
-                  >
-                  shows drift, the
-                  <span
-                    class="jargon-tip"
-                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
-                    tabindex="0"
-                    >nullclines</span
-                  >
-                  mark where change stops, and your
-                  <span
-                    class="jargon-tip"
-                    data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
-                    tabindex="0"
-                    >trajectory</span
-                  >
-                  traces the last 24 ticks. The
-                  <span
-                    class="jargon-tip"
-                    data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
-                    tabindex="0"
-                    >circadian curve</span
-                  >
-                  shifts the resting target over the day.
-                </p>
-              </div>
             </div>
           </div>
 
@@ -6552,7 +6655,57 @@ P = drain - 0.5*recovery</pre
             <div id="layer2-readout" class="layer2-readout"></div>
           </div>
 
-          <div id="model-viz-panel"></div>
+          <div class="layer2-viz-row">
+            <div id="model-viz-panel"></div>
+            <div class="layer-card phase-portrait-card">
+              <div class="section-title">
+                <span
+                  class="jargon-tip"
+                  data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
+                  tabindex="0"
+                  >Phase portrait</span
+                >
+              </div>
+              <div class="phase-portrait-shell">
+                <div class="phase-portrait-axis-label is-y">Stress</div>
+                <div class="phase-portrait-plot">
+                  <div id="phase-portrait" aria-live="polite"></div>
+                  <div class="phase-portrait-axis-label">Energy</div>
+                </div>
+              </div>
+              <p class="phase-portrait-caption">
+                This
+                <span
+                  class="jargon-tip"
+                  data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
+                  tabindex="0"
+                  >vector field</span
+                >
+                shows drift, the
+                <span
+                  class="jargon-tip"
+                  data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
+                  tabindex="0"
+                  >nullclines</span
+                >
+                mark where change stops, and your
+                <span
+                  class="jargon-tip"
+                  data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
+                  tabindex="0"
+                  >trajectory</span
+                >
+                traces the last 24 ticks. The
+                <span
+                  class="jargon-tip"
+                  data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
+                  tabindex="0"
+                  >circadian curve</span
+                >
+                shifts the resting target over the day.
+              </p>
+            </div>
+          </div>
 
           <details class="layer-legacy">
             <summary>Raw diagnostics</summary>
@@ -6574,7 +6727,7 @@ P = drain - 0.5*recovery</pre
       </section>
 
       <button id="collapse-btn" type="button">
-        <span class="pix-arrow-up">&#9650;</span> Collapse
+        <span class="pix-arrow-up">&#9650;</span> COLLAPSE
       </button>
     </section>
 
@@ -6614,24 +6767,26 @@ P = drain - 0.5*recovery</pre
 
     <button id="recovery-trigger" type="button">RECOVERY</button>
 
-    <button
-      id="help-trigger"
-      type="button"
-      aria-label="Help and shortcuts"
-      title="Help and shortcuts"
-    >
-      Help
-    </button>
-
     <section id="help-sheet" aria-hidden="true" aria-label="Help">
       <div id="help-tabs" role="tablist" aria-label="Help sections">
         <button
           type="button"
           role="tab"
-          id="help-tab-shortcuts"
+          id="help-tab-about"
           class="help-tab is-active"
-          data-help-tab="shortcuts"
+          data-help-tab="about"
           aria-selected="true"
+          aria-controls="help-panel-about"
+        >
+          WHAT IS THIS
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="help-tab-shortcuts"
+          class="help-tab"
+          data-help-tab="shortcuts"
+          aria-selected="false"
           aria-controls="help-panel-shortcuts"
         >
           SHORTCUTS
@@ -6664,8 +6819,72 @@ P = drain - 0.5*recovery</pre
         <div
           class="help-panel is-active"
           role="tabpanel"
+          id="help-panel-about"
+          aria-labelledby="help-tab-about"
+        >
+          <h2>What is Mental Meter?</h2>
+          <p class="help-about-lead">
+            A real-time dashboard that estimates your cognitive energy
+            throughout the day — not from how you feel, but from what your
+            computer has actually seen you do.
+          </p>
+          <dl class="help-glossary">
+            <div class="gloss-row">
+              <dt>The core idea</dt>
+              <dd>
+                Your brain has a fuel tank. Meetings, deep focus, context
+                switching, and late hours drain it. Sleep, walks, food, and
+                downtime refill it. Mental Meter tracks that tank in real time
+                using a two-variable dynamical system (energy + stress) driven
+                by ActivityWatch data.
+              </dd>
+            </div>
+            <div class="gloss-row">
+              <dt>Where the data comes from</dt>
+              <dd>
+                ActivityWatch runs locally on your machine and watches which
+                apps and windows are active. Mental Meter reads it every 5
+                minutes to estimate meeting load, typing intensity, focus
+                duration, and context switching — then feeds those into the
+                energy model.
+              </dd>
+            </div>
+            <div class="gloss-row">
+              <dt>The circadian layer</dt>
+              <dd>
+                On top of your activity, your body has a natural 24-hour rhythm.
+                The model shifts your resting energy baseline up or down
+                depending on the time of day and your chronotype (lark,
+                intermediate, or owl).
+              </dd>
+            </div>
+            <div class="gloss-row">
+              <dt>Three display layers</dt>
+              <dd>
+                Tap the meter to go deeper. Layer 0 is just the fill. Layer 1
+                shows drain bars, recovery activity, and pressure score. Layer 2
+                adds the circadian curve, state tanks, energy dynamics chart,
+                and phase portrait.
+              </dd>
+            </div>
+            <div class="gloss-row">
+              <dt>Research context</dt>
+              <dd>
+                This tool is part of ongoing research at UC Berkeley on passive
+                sensing and cognitive self-monitoring. The model is experimental
+                — treat the number as a useful signal, not a medical
+                measurement.
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div
+          class="help-panel"
+          role="tabpanel"
           id="help-panel-shortcuts"
           aria-labelledby="help-tab-shortcuts"
+          hidden
         >
           <h2>Keyboard shortcuts</h2>
           <div class="help-row"><kbd>E</kbd><span>Log energy rating</span></div>
@@ -7159,6 +7378,7 @@ P = drain - 0.5*recovery</pre
 
     <div id="screensaver" hidden aria-hidden="true">
       <canvas id="screensaver-canvas"></canvas>
+      <div id="screensaver-activity-label"></div>
       <div id="screensaver-timer">20:00</div>
       <button id="screensaver-done" type="button">Done</button>
     </div>
@@ -7441,6 +7661,7 @@ P = drain - 0.5*recovery</pre
         ),
         demoSelect: document.getElementById("demo-select"),
         demoToggleBtn: document.getElementById("demo-toggle-btn"),
+        timelineToggleBtn: document.getElementById("timeline-toggle-btn"),
         demoHeaderBadge: document.getElementById("demo-header-badge"),
         batteryCard: document.getElementById("battery-card"),
         batteryToggle: document.getElementById("battery-toggle"),
@@ -7491,6 +7712,9 @@ P = drain - 0.5*recovery</pre
         screensaverCanvas: document.getElementById("screensaver-canvas"),
         screensaverTimer: document.getElementById("screensaver-timer"),
         screensaverDone: document.getElementById("screensaver-done"),
+        screensaverActivityLabel: document.getElementById(
+          "screensaver-activity-label",
+        ),
         headerMoreMenu: document.getElementById("header-more-menu"),
         headerMore: document.getElementById("header-more"),
         themePicker: document.getElementById("theme-picker"),
@@ -9433,6 +9657,11 @@ P = drain - 0.5*recovery</pre
           DOM.windowSelect.value = String(windowHours);
         }
         syncDemoWindowButtons();
+        if (DOM.timelineToggleBtn) {
+          const isFast = windowHours <= 0.1;
+          DOM.timelineToggleBtn.textContent = isFast ? "2M" : "4H";
+          DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
+        }
         windowBucket = null;
         afkBucket = null;
         APP.aw.buckets = { win: null, afk: null };
@@ -9522,7 +9751,7 @@ P = drain - 0.5*recovery</pre
       function renderBattery(level) {
         ensureBatterySvg();
         const cells = DOM.batteryVisual.querySelectorAll(".bat-cell");
-        let percentText = "--%";
+        let percentText = "--";
 
         if (level == null) {
           cells.forEach((cell) => {
@@ -9561,14 +9790,18 @@ P = drain - 0.5*recovery</pre
           cells.forEach((cell, i) => {
             cell.classList.toggle("is-low", isLow && i === Math.max(0, full));
           });
-          percentText = `${Math.round(level <= 1 ? level * 100 : level)}%`;
+          percentText = `${Math.round(level <= 1 ? level * 100 : level)}`;
         }
 
         const batteryPctDisplay = document.getElementById(
           "battery-pct-display",
         );
         if (batteryPctDisplay) {
-          batteryPctDisplay.textContent = percentText;
+          if (percentText === "--") {
+            batteryPctDisplay.innerHTML = '--<span class="pct-sup">%</span>';
+          } else {
+            batteryPctDisplay.innerHTML = `${percentText}<span class="pct-sup">%</span>`;
+          }
         }
       }
 
@@ -12235,7 +12468,7 @@ P = drain - 0.5*recovery</pre
         APP.recovery.toggleActive = true;
         APP.recovery.startTs = Date.now();
         closeRecoverySheet();
-        renderToggleBanner();
+        startScreensaver();
       }
 
       async function endToggleRecovery() {
@@ -12636,6 +12869,19 @@ P = drain - 0.5*recovery</pre
       }
 
       function updateScreensaverTimer() {
+        if (APP.recovery.mode === "toggle") {
+          DOM.screensaverTimer.style.display = "none";
+          DOM.screensaverDone.textContent = "END";
+          if (DOM.screensaverActivityLabel) {
+            const act = recoveryActivityById(APP.recovery.activityId);
+            DOM.screensaverActivityLabel.textContent = act ? act.label : "";
+            DOM.screensaverActivityLabel.style.display = "block";
+          }
+          return;
+        }
+        if (DOM.screensaverActivityLabel) {
+          DOM.screensaverActivityLabel.style.display = "none";
+        }
         const totalSeconds = APP.recovery.plannedMin * 60;
         const elapsedSeconds = Math.floor(
           (Date.now() - APP.recovery.startTs) / 1000,
@@ -12724,19 +12970,31 @@ P = drain - 0.5*recovery</pre
           1,
           Math.round((Date.now() - APP.recovery.startTs) / 60000),
         );
+        const isToggle = APP.recovery.mode === "toggle";
+        const logKind = APP.recovery.logKind;
         APP.mode = "normal";
+        if (isToggle) {
+          APP.recovery.toggleActive = false;
+          APP.recovery.activityId = null;
+          APP.recovery.logKind = null;
+          APP.recovery.mode = null;
+          APP.recovery.startTs = 0;
+          DOM.screensaverTimer.style.display = "";
+          DOM.screensaverDone.textContent = "Done";
+          if (DOM.screensaverActivityLabel) {
+            DOM.screensaverActivityLabel.style.display = "none";
+            DOM.screensaverActivityLabel.textContent = "";
+          }
+        }
         applyState();
-        const saved = await postLog({
-          kind: APP.recovery.logKind,
-          minutes: elapsed,
-        });
+        const saved = await postLog({ kind: logKind, minutes: elapsed });
         if (saved) {
           showToast(`Recovery logged: ${elapsed}m`);
           void refreshModelState({ allowCache: true });
         } else {
           showToast("Backend offline — recovery not saved", "error");
         }
-        APP.recovery.startTs = 0;
+        if (!isToggle) APP.recovery.startTs = 0;
       }
 
       async function refreshModelState({ allowCache = true } = {}) {
@@ -12966,24 +13224,7 @@ P = drain - 0.5*recovery</pre
         DOM.recoverySheet.hidden = false;
         DOM.screensaver.hidden = false;
 
-        if (DOM.headerMoreMenu && !DOM.headerMoreMenu.dataset.wired) {
-          const demoProfileWrap = document.createElement("div");
-          demoProfileWrap.id = "demo-profile-wrap";
-          const demoProfileLabel = document.createElement("label");
-          demoProfileLabel.className = "header-more-label";
-          demoProfileLabel.htmlFor = "demo-select";
-          demoProfileLabel.textContent = "Demo profile";
-          demoProfileWrap.appendChild(demoProfileLabel);
-          demoProfileWrap.appendChild(DOM.demoSelect);
-          DOM.headerMoreMenu.appendChild(demoProfileWrap);
-          ["tour-btn", "story-btn", "calib-btn"].forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) DOM.headerMoreMenu.appendChild(el);
-          });
-          if (DOM.themePicker) DOM.headerMoreMenu.appendChild(DOM.themePicker);
-          if (DOM.helpTrigger) DOM.headerMoreMenu.appendChild(DOM.helpTrigger);
-          DOM.headerMoreMenu.dataset.wired = "true";
-        }
+        // More menu removed — tour/story/calib/theme/help stay in the top row
 
         initTheme();
         renderRatingSheet();
@@ -13349,9 +13590,9 @@ P = drain - 0.5*recovery</pre
           });
         }
 
-        const HELP_TABS = ["shortcuts", "glossary", "howitworks"];
+        const HELP_TABS = ["about", "shortcuts", "glossary", "howitworks"];
         function setHelpTab(name) {
-          if (!HELP_TABS.includes(name)) name = "shortcuts";
+          if (!HELP_TABS.includes(name)) name = "about";
           document.querySelectorAll(".help-tab").forEach((btn) => {
             const on = btn.dataset.helpTab === name;
             btn.classList.toggle("is-active", on);
@@ -13376,9 +13617,9 @@ P = drain - 0.5*recovery</pre
           if (APP.mode !== "help") return;
           if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
           e.preventDefault();
-          let current = "shortcuts";
+          let current = "about";
           try {
-            current = localStorage.getItem("pb_help_tab") || "shortcuts";
+            current = localStorage.getItem("pb_help_tab") || "about";
           } catch (_) {}
           const cur = HELP_TABS.indexOf(current);
           const dir = e.key === "ArrowRight" ? 1 : -1;
@@ -13565,6 +13806,25 @@ P = drain - 0.5*recovery</pre
         if (tourBtn) tourBtn.addEventListener("click", startTour);
         const storyBtn = document.getElementById("story-btn");
         if (storyBtn) storyBtn.addEventListener("click", startStoryMode);
+
+        function syncTimelineToggleBtn() {
+          if (!DOM.timelineToggleBtn) return;
+          const isFast = windowHours <= 0.1;
+          DOM.timelineToggleBtn.textContent = isFast ? "2M" : "4H";
+          DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
+          DOM.timelineToggleBtn.title = isFast
+            ? "Fast (2-min window) — click for 4-hour window"
+            : "Normal (4-hour window) — click for 2-min fast window";
+        }
+
+        if (DOM.timelineToggleBtn) {
+          DOM.timelineToggleBtn.addEventListener("click", () => {
+            const isFast = windowHours <= 0.1;
+            applyWindowHoursSelection(isFast ? 4 : 0.033, "timeline-toggle");
+            syncTimelineToggleBtn();
+          });
+          syncTimelineToggleBtn();
+        }
 
         document.addEventListener("keydown", (event) => {
           const storyOverlay = document.getElementById("story-overlay");
@@ -13841,37 +14101,61 @@ P = drain - 0.5*recovery</pre
         {
           targetId: "battery-card",
           title: "YOUR MENTAL METER",
-          body: "This pixel meter shows your current mental energy — calculated from sleep, meetings, focus time, and more. The fill reflects your energy level on a 0-100 scale.",
+          body: "This pixel meter shows your current cognitive energy on a 0–100 scale. It updates every few minutes based on what ActivityWatch sees you doing — meetings, deep focus, context switching, sleep, and more.",
           pos: "below",
         },
         {
           targetId: "battery-toggle",
-          title: "TAP TO EXPAND",
-          body: "Tap the meter to flip through three layers: meter only → metrics & drain bars → full diagnostics with the circadian model chart and phase portrait.",
+          title: "THREE LAYERS",
+          body: "Tap the meter to reveal more detail. Layer 1 shows drain bars, recovery activity, and pressure score. Layer 2 adds full diagnostics: circadian model, state tanks, energy dynamics chart, and phase portrait.",
           pos: "below",
         },
         {
           targetId: "energy-btn",
           title: "RATE YOUR ENERGY",
-          body: "Log your felt energy 1–10 right now. Over time this trains the model to your personal baseline so predictions get sharper.",
+          body: "Log your felt energy from 1–10 right now. These self-reports calibrate the model to your personal baseline — the more you log, the sharper the predictions get.",
+          pos: "above",
+        },
+        {
+          targetId: "stress-btn",
+          title: "RATE YOUR STRESS",
+          body: "Log your felt stress from 1–10. Stress is a second tank in the model — when it fills up from back-to-back meetings or late-night work, it accelerates energy drain.",
           pos: "above",
         },
         {
           targetId: "recovery-trigger",
           title: "LOG RECOVERY",
-          body: "Starting a walk, nap, or break? Log it here. The meter fill updates in real time as you recover — pick from 10 activity types.",
+          body: "Starting a walk, nap, meal, or break? Tap here to log it. The meter updates in real time as you recover. Choose from 10 activity types — timer-based, toggled, or instant.",
           pos: "above",
+        },
+        {
+          targetId: "timeline-toggle-btn",
+          title: "TIMELINE WINDOW",
+          body: "Switch between a 4-hour rolling window (normal view) and a 2-minute accelerated window. The fast mode compresses time so you can watch the model respond to actions in real time — useful for demos and debugging.",
+          pos: "below",
+        },
+        {
+          targetId: "connection-pill",
+          title: "LIVE DATA STATUS",
+          body: "This pill shows whether ActivityWatch is connected and serving fresh data. Green = live. If it shows STALE or AW OFFLINE, the meter is coasting on the last known state rather than updating.",
+          pos: "below",
         },
         {
           targetId: "demo-toggle-btn",
           title: "INTERACTIVE DEMO",
-          body: "No live data yet? Try demo mode — it simulates a full day of activity so you can explore every feature right now and watch the meter fill react across four different user profiles.",
+          body: "No ActivityWatch running? Try demo mode — it loads a synthetic day profile so you can explore every layer, log activities, and watch the model respond across four different user archetypes.",
           pos: "below",
         },
         {
           targetId: "theme-picker",
           title: "COLOR THEMES",
-          body: "Pick a visual theme — Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved in the browser.",
+          body: "Pick a visual theme — Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved locally.",
+          pos: "below",
+        },
+        {
+          targetId: "help-trigger",
+          title: "HELP & SHORTCUTS",
+          body: "Open this panel any time for keyboard shortcuts (E, S, R, Space, D, ?), a full glossary of model terms, and a plain-English explanation of how the energy and stress tanks work.",
           pos: "below",
         },
       ];
