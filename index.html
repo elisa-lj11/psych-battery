@@ -106,6 +106,7 @@
 
       .eyebrow,
       .section-title {
+        font-family: var(--px-font-ui);
         font-size: var(--fs-label);
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -267,12 +268,13 @@
       }
 
       body.is-demo #demo-toggle-btn {
+        background: var(--px-accent);
+        color: var(--px-bg);
         border-color: var(--px-accent);
-        color: var(--px-accent);
       }
 
       body.is-demo #demo-header-badge {
-        display: none;
+        display: inline-flex;
       }
 
       body.is-demo #connection-pill {
@@ -287,55 +289,34 @@
       }
 
       #header-top-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: start;
-        gap: 10px;
-      }
-
-      #header-controls {
-        width: min(100%, 520px);
-        margin-left: auto;
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
         gap: 10px;
-      }
-
-      #header-bottom-row {
-        justify-content: flex-end;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
       }
 
       #brand-home {
-        grid-column: 1;
-        grid-row: 1;
+        flex: 0 0 auto;
       }
 
       #connection-pill {
-        grid-column: 2;
-        grid-row: 1;
-        justify-self: end;
+        flex: 0 0 auto;
       }
 
       #demo-toggle-btn {
-        grid-column: 1;
-        grid-row: 2;
-        justify-self: start;
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
       }
 
-      #header-more {
-        grid-column: 2;
-        grid-row: 2;
-        justify-self: end;
-      }
-
-      #header-top-row > #demo-select,
-      #header-top-row > #tour-btn,
-      #header-top-row > #story-btn,
-      #header-top-row > #calib-btn,
-      #header-top-row > #demo-header-badge {
-        display: none;
+      #header-more,
+      #demo-header-badge {
+        flex: 0 0 auto;
       }
 
       @media (min-width: 720px) {
@@ -346,7 +327,7 @@
 
       @media (max-width: 720px) {
         #header-top-row {
-          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 8px;
         }
 
         #header-controls {
@@ -588,7 +569,20 @@
 
       #battery-caption {
         color: var(--muted);
+        font-family: var(--px-font-ui);
         font-size: 0.96rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      #battery-pct-display {
+        margin: 4px 0 0;
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
       }
 
       .battery-expand-hint {
@@ -707,6 +701,14 @@
 
       body.is-demo #demo-shell {
         display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        overflow: hidden;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        background: #0a0d12;
       }
 
       body.is-demo #battery-toggle,
@@ -721,13 +723,30 @@
       }
 
       #demo-layout {
+        height: 100%;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        min-height: 420px;
+        overflow: hidden;
         background: #111820;
         border-radius: 2px;
         padding: 16px;
+      }
+
+      .demo-stage-body {
+        display: flex;
+        flex: 1 1 0;
+        flex-direction: column;
+        gap: 16px;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .demo-menu,
+      .demo-activity-view {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow: auto;
       }
 
       .brand-home,
@@ -769,8 +788,39 @@
         align-items: stretch;
         gap: 12px;
         flex: 1 1 0;
+        flex-wrap: wrap;
         min-width: 0;
         justify-content: flex-end;
+      }
+
+      .demo-window-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .demo-window-btn {
+        min-height: 36px;
+        padding: 0 10px;
+        border: 2px solid var(--px-border);
+        background: rgba(11, 11, 20, 0.82);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+      }
+
+      .demo-window-btn:hover,
+      .demo-window-btn:focus-visible,
+      .demo-window-btn.is-active {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+        outline: none;
       }
 
       .demo-topbar-copy,
@@ -1241,6 +1291,11 @@
 
       .demo-big-batt-row.is-energy .demo-big-batt-head {
         color: var(--px-good);
+        text-shadow:
+          1px 1px 0 #000,
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000;
       }
       .demo-big-batt-row.is-stress .demo-big-batt-head {
         color: var(--px-critical);
@@ -1267,6 +1322,11 @@
 
       .demo-big-batt-row.is-energy .demo-big-batt-fill {
         background: var(--px-good);
+        text-shadow:
+          1px 1px 0 #000,
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000;
       }
       .demo-big-batt-row.is-stress .demo-big-batt-fill {
         background: var(--px-critical);
@@ -1697,6 +1757,14 @@
         color: var(--px-text);
       }
 
+      .demo-stage-value {
+        text-shadow:
+          1px 1px 0 #000,
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000;
+      }
+
       .demo-kpis {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1718,6 +1786,11 @@
       }
       .demo-kpi.is-energy .demo-kpi-value {
         color: #86efac;
+        text-shadow:
+          1px 1px 0 #000,
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000;
       }
       .demo-kpi.is-stress {
         border-color: #f87171;
@@ -3282,6 +3355,7 @@
         padding: 0;
         margin-top: 12px;
         color: var(--accent);
+        font-family: var(--px-font-ui);
         font-weight: 700;
         cursor: pointer;
       }
@@ -3503,6 +3577,7 @@
         border: 1px solid var(--border);
         background: var(--surface-2);
         color: var(--muted);
+        font-family: var(--px-font-ui);
         font-size: 0.82rem;
         font-weight: 800;
         letter-spacing: 0.16em;
@@ -5150,6 +5225,19 @@
         overflow: hidden;
       }
 
+      .layer2-side-by-side {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .layer2-side-by-side > * {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 280px;
+      }
+
       .layer2-mini-readout {
         display: inline-flex;
         align-items: center;
@@ -5606,6 +5694,9 @@
       /* UI legibility + timeline meter pass */
       body.is-demo #demo-toggle-btn {
         display: inline-flex;
+        background: var(--px-accent);
+        color: var(--px-bg);
+        border-color: var(--px-accent);
       }
 
       #battery-card {
@@ -5836,7 +5927,6 @@
       }
 
       #demo-layout {
-        min-height: 520px;
         padding: 18px;
         gap: 18px;
       }
@@ -6074,7 +6164,6 @@
         }
 
         #demo-layout {
-          min-height: 580px;
           padding: 20px 20px 12px;
         }
 
@@ -6254,7 +6343,8 @@
       <button id="battery-toggle" type="button" aria-expanded="false">
         <div id="battery-visual" aria-hidden="true"></div>
         <div class="battery-copy">
-          <div id="battery-caption">Mental energy</div>
+          <div id="battery-caption">Cognitive energy</div>
+          <div id="battery-pct-display" aria-live="polite">--%</div>
           <div class="battery-expand-hint" aria-hidden="true">
             TAP TO EXPAND<span class="pix-arrow">&#9660;</span>
           </div>
@@ -6360,32 +6450,82 @@
               <div id="layer2-circadian" aria-live="polite"></div>
             </div>
 
-            <div class="layer-card layer2-system-card">
-              <div class="section-title">State tanks</div>
-              <div id="layer2-system" class="layer2-system">
-                <div id="layer2-pressure-node" class="layer2-node">
-                  <span class="layer2-node-label">Pressure</span>
-                  <span class="layer2-node-value">--%</span>
-                </div>
-                <div
-                  id="layer2-energy-tank"
-                  class="layer2-tank layer2-tank-energy"
-                >
-                  <div class="layer2-tank-title">Energy</div>
-                  <div class="layer2-tank-code">E</div>
-                  <div id="layer2-energy-cells" class="layer2-cells"></div>
-                </div>
-                <div
-                  id="layer2-stress-tank"
-                  class="layer2-tank layer2-tank-stress"
-                >
-                  <div class="layer2-tank-title is-vertical">Stress</div>
+            <div class="layer2-side-by-side">
+              <div class="layer-card layer2-system-card">
+                <div class="section-title">State tanks</div>
+                <div id="layer2-system" class="layer2-system">
+                  <div id="layer2-pressure-node" class="layer2-node">
+                    <span class="layer2-node-label">Pressure</span>
+                    <span class="layer2-node-value">--%</span>
+                  </div>
                   <div
-                    id="layer2-stress-cells"
-                    class="layer2-cells-vertical"
-                  ></div>
+                    id="layer2-energy-tank"
+                    class="layer2-tank layer2-tank-energy"
+                  >
+                    <div class="layer2-tank-title">Energy</div>
+                    <div class="layer2-tank-code">E</div>
+                    <div id="layer2-energy-cells" class="layer2-cells"></div>
+                  </div>
+                  <div
+                    id="layer2-stress-tank"
+                    class="layer2-tank layer2-tank-stress"
+                  >
+                    <div class="layer2-tank-title is-vertical">Stress</div>
+                    <div
+                      id="layer2-stress-cells"
+                      class="layer2-cells-vertical"
+                    ></div>
+                  </div>
+                  <div id="layer2-particle-field" aria-hidden="true"></div>
                 </div>
-                <div id="layer2-particle-field" aria-hidden="true"></div>
+              </div>
+              <div class="layer-card phase-portrait-card">
+                <div class="section-title">
+                  <span
+                    class="jargon-tip"
+                    data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
+                    tabindex="0"
+                    >Phase portrait</span
+                  >
+                </div>
+                <div class="phase-portrait-shell">
+                  <div class="phase-portrait-axis-label is-y">Stress</div>
+                  <div class="phase-portrait-plot">
+                    <div id="phase-portrait" aria-live="polite"></div>
+                    <div class="phase-portrait-axis-label">Energy</div>
+                  </div>
+                </div>
+                <p class="phase-portrait-caption">
+                  This
+                  <span
+                    class="jargon-tip"
+                    data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
+                    tabindex="0"
+                    >vector field</span
+                  >
+                  shows drift, the
+                  <span
+                    class="jargon-tip"
+                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
+                    tabindex="0"
+                    >nullclines</span
+                  >
+                  mark where change stops, and your
+                  <span
+                    class="jargon-tip"
+                    data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
+                    tabindex="0"
+                    >trajectory</span
+                  >
+                  traces the last 24 ticks. The
+                  <span
+                    class="jargon-tip"
+                    data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
+                    tabindex="0"
+                    >circadian curve</span
+                  >
+                  shifts the resting target over the day.
+                </p>
               </div>
             </div>
           </div>
@@ -6413,54 +6553,6 @@ P = drain - 0.5*recovery</pre
           </div>
 
           <div id="model-viz-panel"></div>
-          <div class="layer-card phase-portrait-card">
-            <div class="section-title">
-              <span
-                class="jargon-tip"
-                data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
-                tabindex="0"
-                >Phase portrait</span
-              >
-            </div>
-            <div class="phase-portrait-shell">
-              <div class="phase-portrait-axis-label is-y">Stress</div>
-              <div class="phase-portrait-plot">
-                <div id="phase-portrait" aria-live="polite"></div>
-                <div class="phase-portrait-axis-label">Energy</div>
-              </div>
-            </div>
-            <p class="phase-portrait-caption">
-              This
-              <span
-                class="jargon-tip"
-                data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
-                tabindex="0"
-                >vector field</span
-              >
-              shows drift, the
-              <span
-                class="jargon-tip"
-                data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
-                tabindex="0"
-                >nullclines</span
-              >
-              mark where change stops, and your
-              <span
-                class="jargon-tip"
-                data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
-                tabindex="0"
-                >trajectory</span
-              >
-              traces the last 24 ticks. The
-              <span
-                class="jargon-tip"
-                data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
-                tabindex="0"
-                >circadian curve</span
-              >
-              shifts the resting target over the day.
-            </p>
-          </div>
 
           <details class="layer-legacy">
             <summary>Raw diagnostics</summary>
@@ -6814,7 +6906,7 @@ P = drain - 0.5*recovery</pre
           />
         </svg>
         <h2 id="intro-splash-title" class="intro-splash-title">Mental Meter</h2>
-        <p class="intro-splash-sub">UC Berkeley · Mental energy, modeled.</p>
+        <p class="intro-splash-sub">UC Berkeley · Cognitive energy, modeled.</p>
 
         <div class="intro-splash-lines">
           <div class="intro-splash-line">
@@ -8934,6 +9026,8 @@ P = drain - 0.5*recovery</pre
       let windowHours = 4;
       let windowBucket = null;
       let afkBucket = null;
+      const FAST_DEMO_WINDOW_HOURS = 0.083;
+      const LIVE_WINDOW_HOURS = 4;
       const sessionStart = new Date();
       let modelFetchInFlight = false;
       let awFetchInFlight = false;
@@ -9319,6 +9413,41 @@ P = drain - 0.5*recovery</pre
         return null;
       }
 
+      function syncDemoWindowButtons() {
+        DOM.demoLayout
+          .querySelectorAll("[data-demo-window-hours]")
+          .forEach((btn) => {
+            const btnHours = Number(btn.dataset.demoWindowHours);
+            const isActive = Math.abs(btnHours - windowHours) < 0.001;
+            btn.classList.toggle("is-active", isActive);
+            btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+          });
+      }
+
+      function applyWindowHoursSelection(nextWindowHours, reason = "change") {
+        const parsedHours = parseFloat(nextWindowHours);
+        if (!Number.isFinite(parsedHours)) return;
+        windowHours = parsedHours;
+        APP.aw.windowHours = windowHours;
+        if (DOM.windowSelect) {
+          DOM.windowSelect.value = String(windowHours);
+        }
+        syncDemoWindowButtons();
+        windowBucket = null;
+        afkBucket = null;
+        APP.aw.buckets = { win: null, afk: null };
+        const wantAccel = windowHours <= 0.1;
+        fetch("/mode")
+          .then((r) => r.json())
+          .then((m) => {
+            if (m.accelerated !== wantAccel) {
+              fetch("/accelerate", { method: "POST" });
+            }
+          })
+          .catch(() => {});
+        void refreshAwData({ reason });
+      }
+
       function applyState() {
         applyDemoModeBody();
         DOM.body.dataset.layer = String(APP.uiLayer);
@@ -9356,9 +9485,8 @@ P = drain - 0.5*recovery</pre
           "aria-pressed",
           APP.demo.enabled ? "true" : "false",
         );
-        DOM.demoToggleBtn.disabled = APP.demo.enabled;
         DOM.demoToggleBtn.textContent = APP.demo.enabled
-          ? "Demo mode active"
+          ? "EXIT DEMO"
           : "Interactive Demo";
         DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
         DOM.openDiagnostics.disabled = APP.uiLayer === 2;
@@ -9394,6 +9522,7 @@ P = drain - 0.5*recovery</pre
       function renderBattery(level) {
         ensureBatterySvg();
         const cells = DOM.batteryVisual.querySelectorAll(".bat-cell");
+        let percentText = "--%";
 
         if (level == null) {
           cells.forEach((cell) => {
@@ -9401,39 +9530,46 @@ P = drain - 0.5*recovery</pre
             cell.style.fill = "var(--px-surface-2)";
             cell.setAttribute("opacity", "0.5");
           });
-          return;
+        } else {
+          const rounded = Math.round(level);
+          const color = levelColor(level);
+          const full = Math.floor(level / 10);
+          const partialFrac = level / 10 - full;
+          const CELL_W = 18;
+
+          cells.forEach((cell, i) => {
+            if (i < full) {
+              cell.setAttribute("width", CELL_W);
+              cell.style.fill = color; // var() only works via inline style, not attr
+              cell.setAttribute("opacity", "1");
+            } else if (i === full && partialFrac > 0) {
+              cell.setAttribute(
+                "width",
+                Math.max(2, CELL_W * partialFrac).toFixed(2),
+              );
+              cell.style.fill = color;
+              cell.setAttribute("opacity", "1");
+            } else {
+              cell.setAttribute("width", CELL_W);
+              cell.style.fill = "var(--px-surface-2)";
+              cell.setAttribute("opacity", "0.5");
+            }
+          });
+
+          // Low-power pulse on the last visible cell
+          const isLow = level < 20;
+          cells.forEach((cell, i) => {
+            cell.classList.toggle("is-low", isLow && i === Math.max(0, full));
+          });
+          percentText = `${Math.round(level <= 1 ? level * 100 : level)}%`;
         }
 
-        const rounded = Math.round(level);
-        const color = levelColor(level);
-        const full = Math.floor(level / 10);
-        const partialFrac = level / 10 - full;
-        const CELL_W = 18;
-
-        cells.forEach((cell, i) => {
-          if (i < full) {
-            cell.setAttribute("width", CELL_W);
-            cell.style.fill = color; // var() only works via inline style, not attr
-            cell.setAttribute("opacity", "1");
-          } else if (i === full && partialFrac > 0) {
-            cell.setAttribute(
-              "width",
-              Math.max(2, CELL_W * partialFrac).toFixed(2),
-            );
-            cell.style.fill = color;
-            cell.setAttribute("opacity", "1");
-          } else {
-            cell.setAttribute("width", CELL_W);
-            cell.style.fill = "var(--px-surface-2)";
-            cell.setAttribute("opacity", "0.5");
-          }
-        });
-
-        // Low-power pulse on the last visible cell
-        const isLow = level < 20;
-        cells.forEach((cell, i) => {
-          cell.classList.toggle("is-low", isLow && i === Math.max(0, full));
-        });
+        const batteryPctDisplay = document.getElementById(
+          "battery-pct-display",
+        );
+        if (batteryPctDisplay) {
+          batteryPctDisplay.textContent = percentText;
+        }
       }
 
       function stressColor(value) {
@@ -10124,6 +10260,10 @@ P = drain - 0.5*recovery</pre
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
+            <div class="demo-window-toggle" role="group" aria-label="Activity window">
+              <button type="button" class="demo-window-btn" data-demo-window-hours="${FAST_DEMO_WINDOW_HOURS}" aria-pressed="false">2 MIN (FAST DEMO)</button>
+              <button type="button" class="demo-window-btn" data-demo-window-hours="${LIVE_WINDOW_HOURS}" aria-pressed="false">4 HR (LIVE)</button>
+            </div>
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
@@ -10133,7 +10273,8 @@ P = drain - 0.5*recovery</pre
         if (!activity) {
           DOM.demoLayout.innerHTML = `
           ${topbar}
-          <div class="demo-menu">
+          <div class="demo-stage-body">
+            <div class="demo-menu">
             <div class="demo-menu-head">
               <div class="demo-stage-label">Choose an activity to see how the meter fill responds.</div>
             </div>
@@ -10163,14 +10304,16 @@ P = drain - 0.5*recovery</pre
             `,
               )
               .join("")}
-          </div>
-          <div class="demo-timeline-strip">
+            </div>
+            <div class="demo-timeline-strip">
             <div class="demo-timeline-meter-row">
               <div class="demo-battery-pair" data-demo-battery-pair></div>
             </div>
             <div data-demo-timeline></div>
+            </div>
           </div>
         `;
+          syncDemoWindowButtons();
           renderDemoBatteryPair(
             DOM.demoLayout.querySelector("[data-demo-battery-pair]"),
             getDemoDisplayPercent(),
@@ -10241,8 +10384,9 @@ P = drain - 0.5*recovery</pre
 
         DOM.demoLayout.innerHTML = `
         ${topbar}
-        <div class="demo-activity-view">
-          <div class="demo-scene-panel is-${activity.kind}">
+        <div class="demo-stage-body">
+          <div class="demo-activity-view">
+            <div class="demo-scene-panel is-${activity.kind}">
             <div class="demo-scene-meta">
               <div class="demo-scene-title">${activity.label}</div>
               <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === "recovery" ? "Recovery" : "Drain"}</div>
@@ -10330,8 +10474,10 @@ P = drain - 0.5*recovery</pre
           </div>
           <div data-demo-timeline></div>
         </div>
+        </div>
       `;
 
+        syncDemoWindowButtons();
         renderDemoBatteryPair(
           DOM.demoLayout.querySelector("[data-demo-battery-pair]"),
           getDemoDisplayPercent(),
@@ -12738,6 +12884,7 @@ P = drain - 0.5*recovery</pre
 
       function applyDemoModeBody() {
         DOM.body.classList.toggle("is-demo", APP.demo.enabled);
+        document.body.style.overflow = APP.demo.enabled ? "hidden" : "";
       }
 
       // ── Theme ──
@@ -12872,7 +13019,8 @@ P = drain - 0.5*recovery</pre
           attributeFilter: ["data-layer"],
         });
 
-        DOM.windowSelect.value = String(APP.aw.windowHours);
+        windowHours = APP.aw.windowHours || LIVE_WINDOW_HOURS;
+        DOM.windowSelect.value = String(windowHours);
         DOM.demoSelect.value = getActiveDemoId();
         applyDemoModeBody();
         syncLayer2Motion();
@@ -12900,6 +13048,11 @@ P = drain - 0.5*recovery</pre
           const exitBtn = event.target.closest("[data-demo-exit]");
           const backBtn = event.target.closest("[data-demo-back]");
           const helpBtn = event.target.closest("[data-demo-help]");
+          const windowBtn = event.target.closest("[data-demo-window-hours]");
+          if (windowBtn) {
+            applyWindowHoursSelection(windowBtn.dataset.demoWindowHours);
+            return;
+          }
           if (helpBtn) {
             const modal = document.getElementById("demo-help-modal");
             if (modal) modal.classList.add("is-open");
@@ -13026,21 +13179,7 @@ P = drain - 0.5*recovery</pre
         });
 
         DOM.windowSelect.addEventListener("change", (event) => {
-          windowHours = parseFloat(event.target.value);
-          APP.aw.windowHours = windowHours;
-          windowBucket = null;
-          afkBucket = null;
-          APP.aw.buckets = { win: null, afk: null };
-          // Sync server.py accelerated mode with window selection
-          const wantAccel = windowHours <= 0.1;
-          fetch("/mode")
-            .then((r) => r.json())
-            .then((m) => {
-              if (m.accelerated !== wantAccel)
-                fetch("/accelerate", { method: "POST" });
-            })
-            .catch(() => {});
-          void refreshAwData({ reason: "change" });
+          applyWindowHoursSelection(event.target.value);
         });
 
         DOM.ratingTabs.forEach((tab) => {
