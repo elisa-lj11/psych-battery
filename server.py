@@ -49,16 +49,42 @@ def _match_rate(app: str, title: str) -> float:
     return 4.0
 
 
+MODEL_URL      = 'http://localhost:7070/state'  # Flask ODE model (preferred source)
 SERVER_START   = datetime.now(timezone.utc)
 _prev_battery  = 100
 _cache         = None   # (timestamp, battery, trend)
 CACHE_TTL      = 8      # seconds — both browser and display see the same value per cycle
 
 
+def _try_model_battery() -> tuple[int, str] | None:
+    """Try to get battery from Flask ODE model. Returns (battery_pct, trend) or None."""
+    try:
+        with urllib.request.urlopen(MODEL_URL, timeout=3) as r:
+            data = json.load(r)
+        e = float(data.get('E_display', -1))
+        if 0 <= e <= 1:
+            pct = round(e * 100)
+            global _prev_battery
+            trend = 'up' if pct > _prev_battery else ('down' if pct < _prev_battery else 'flat')
+            _prev_battery = pct
+            return pct, trend
+    except Exception:
+        pass
+    return None
+
+
 def compute_battery() -> tuple[int, str]:
     global _prev_battery, _cache
     if _cache and (time.monotonic() - _cache[0]) < CACHE_TTL:
         return _cache[1], _cache[2]
+
+    # Prefer Flask ODE model — same source as web app
+    model_result = _try_model_battery()
+    if model_result:
+        _cache = (time.monotonic(), *model_result)
+        return model_result
+
+    # Fall back to AW-based calculation
     window_hours = DEMO_WINDOW_HOURS if _accelerated else NORMAL_WINDOW_HOURS
     now   = datetime.now(timezone.utc)
     start = max(SERVER_START, now - timedelta(hours=window_hours))

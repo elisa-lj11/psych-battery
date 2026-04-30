@@ -127,6 +127,7 @@
         color: var(--critical);
         backdrop-filter: blur(10px);
         position: relative;
+        z-index: 500;
         cursor: help;
       }
       #connection-pill:focus-visible {
@@ -158,7 +159,7 @@
         transition:
           opacity 120ms ease,
           transform 120ms ease;
-        z-index: 80;
+        z-index: 9000;
       }
       #connection-pill:hover .conn-pill-popover,
       #connection-pill:focus-within .conn-pill-popover,
