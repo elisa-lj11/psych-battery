@@ -115,9 +115,9 @@
 
       #connection-pill {
         display: inline-flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
-        min-height: 36px;
+        min-height: 44px;
         padding: 0 12px;
         border-radius: 999px;
         border: 1px solid var(--border-light);
@@ -136,11 +136,11 @@
         outline-offset: 2px;
       }
       .conn-pill-popover {
-        position: absolute;
-        top: calc(100% + 10px);
-        right: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
         min-width: 280px;
-        max-width: 320px;
+        max-width: min(320px, calc(100vw - 16px));
         padding: 12px 14px;
         background: var(--px-surface, #1a1a24);
         border: 2px solid var(--px-accent, #818cf8);
@@ -160,7 +160,7 @@
         transition:
           opacity 120ms ease,
           transform 120ms ease;
-        z-index: 9000;
+        z-index: 12000;
       }
       #connection-pill:hover .conn-pill-popover,
       #connection-pill:focus-within .conn-pill-popover,
@@ -172,13 +172,22 @@
       .conn-pill-popover::before {
         content: "";
         position: absolute;
-        top: -10px;
-        right: 18px;
+        left: var(--cpp-arrow-left, 18px);
+        transform: translateX(-50%);
         width: 0;
         height: 0;
+      }
+      .conn-pill-popover[data-side="bottom"]::before {
+        top: -10px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-bottom: 10px solid var(--px-accent, #818cf8);
+      }
+      .conn-pill-popover[data-side="top"]::before {
+        bottom: -10px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 10px solid var(--px-accent, #818cf8);
       }
       .conn-pill-popover .cpp-current {
         font-family: var(--px-font-ui, monospace);
@@ -189,7 +198,15 @@
         margin-bottom: 4px;
       }
       .conn-pill-popover .cpp-detail {
+        margin: 0 0 8px 0;
+      }
+      .conn-pill-popover .cpp-display {
         margin: 0 0 10px 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--px-text, #e0e0f0);
       }
       .conn-pill-popover .cpp-legend {
         list-style: none;
@@ -345,7 +362,7 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        gap: 2px;
+        gap: 4px;
         min-height: 44px;
         padding: 6px 10px;
         white-space: normal;
@@ -353,7 +370,53 @@
         line-height: 1.1;
       }
 
-      .conn-pill-status,
+      .conn-pill-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+      }
+
+      .conn-pill-status-label {
+        opacity: 0.8;
+      }
+
+      .conn-pill-display-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 18px;
+        padding: 1px 6px;
+        border: 1px solid currentColor;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--px-muted);
+      }
+
+      .conn-pill-display-chip[data-status="live"] {
+        color: var(--px-good);
+      }
+
+      .conn-pill-display-chip[data-status="stale"] {
+        color: var(--px-warn);
+      }
+
+      .conn-pill-display-chip[data-status="offline"] {
+        color: var(--px-critical);
+      }
+
+      .conn-pill-dot {
+        width: 8px;
+        height: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        background: currentColor;
+        box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+        flex: 0 0 auto;
+      }
+
       .conn-pill-text {
         display: inline-flex;
         align-items: center;
@@ -366,6 +429,16 @@
         letter-spacing: 0.04em;
         line-height: 1.2;
         opacity: 0.82;
+      }
+
+      .timeline-toggle-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .timeline-toggle-value {
+        display: inline-flex;
+        align-items: center;
       }
 
       #header-more {
@@ -467,12 +540,18 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 6px;
         width: auto;
         min-height: 44px;
         padding: 0 14px;
         border: 2px solid var(--px-border);
         background: var(--surface);
         color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         box-shadow: 2px 2px 0 0 #000;
       }
 
@@ -3491,14 +3570,17 @@
 
       #self-log-dock {
         position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        left: 50%;
+        width: min(calc(100% - 32px), 420px);
+        transform: translateX(-50%);
+        bottom: 10px;
         display: flex;
         gap: 8px;
-        padding: 12px 16px env(safe-area-inset-bottom, 16px);
+        padding: 10px 12px calc(env(safe-area-inset-bottom, 12px) + 6px);
         background: rgba(15, 15, 19, 0.94);
-        border-top: 1px solid var(--border);
+        border: 2px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
         backdrop-filter: blur(18px);
         z-index: 30;
       }
@@ -3568,6 +3650,9 @@
         box-shadow: var(--panel-shadow);
         pointer-events: none;
         visibility: hidden;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
       }
 
       body[data-mode="rating"] #rating-sheet,
@@ -3600,6 +3685,13 @@
         line-height: 1;
         cursor: pointer;
         box-shadow: 2px 2px 0 0 #000;
+      }
+      .sheet-close-btn.is-text {
+        min-width: auto;
+        padding: 0 12px;
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
       .sheet-close-btn:hover,
       .sheet-close-btn:focus-visible {
@@ -3649,11 +3741,11 @@
       }
 
       .tap-rail {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
-        overflow-x: auto;
+        overflow: visible;
         padding-bottom: 4px;
-        scrollbar-width: none;
       }
 
       .tap-rail::-webkit-scrollbar {
@@ -3661,18 +3753,46 @@
       }
 
       .tap-score {
-        flex: 0 0 auto;
-        min-width: 44px;
-        min-height: 52px;
+        width: 100%;
+        min-height: 58px;
         border-radius: 8px;
         border: 1px solid var(--border);
         background: var(--surface-2);
         cursor: pointer;
         font-weight: 800;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        align-items: stretch;
+        padding: 0;
+        text-align: left;
         transition:
           transform 120ms ease,
           border-color 120ms ease,
           background 120ms ease;
+      }
+
+      .tap-score-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+        border-right: 1px solid var(--border-light);
+        font-family: var(--px-font-body);
+        font-size: 1.7rem;
+        line-height: 1;
+        color: var(--text);
+      }
+
+      .tap-score-copy {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        padding: 10px 12px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        font-size: 0.95rem;
+        line-height: 1.3;
+        color: var(--text);
       }
 
       .tap-score.is-pressed {
@@ -5280,6 +5400,8 @@
       .layer2-system-card > .section-title,
       .layer2-formula-v2 > .section-title {
         margin: 0;
+        font-size: calc(var(--fs-label) + 2px);
+        letter-spacing: 0.12em;
       }
 
       .layer-feature-card .layer-feature-list {
@@ -5396,47 +5518,48 @@
       }
 
       .layer2-viz-row {
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
         gap: 12px;
         align-items: stretch;
-        min-height: 340px;
+        min-height: 440px;
       }
 
       .layer2-viz-row #model-viz-panel {
-        flex: 3 1 0;
         min-width: 0;
+        min-height: 100%;
+        display: flex;
       }
 
       .layer2-viz-row .phase-portrait-card {
-        flex: 2 1 0;
         min-width: 0;
+        min-height: 100%;
         display: flex;
         flex-direction: column;
+        gap: 12px;
       }
 
       .layer2-viz-row .phase-portrait-card .phase-portrait-shell {
-        flex: 1 1 0;
-        min-height: 0;
+        flex: 0 0 auto;
+        min-height: auto;
       }
 
       .layer2-viz-row .phase-portrait-card .phase-portrait-plot {
-        height: 100%;
+        height: auto;
       }
 
       .layer2-viz-row .phase-portrait-card #phase-portrait {
         width: 100%;
-        height: 100%;
+        height: auto;
       }
 
-      @media (max-width: 720px) {
+      @media (max-width: 920px) {
         .layer2-viz-row {
-          flex-direction: column;
+          grid-template-columns: 1fr;
           min-height: unset;
         }
         .layer2-viz-row #model-viz-panel,
         .layer2-viz-row .phase-portrait-card {
-          flex: unset;
           width: 100%;
         }
       }
@@ -5562,6 +5685,7 @@
         align-items: center;
         gap: 8px;
         min-width: 0;
+        flex: 0 0 auto;
       }
 
       .phase-portrait-caption {
@@ -5569,6 +5693,8 @@
         color: var(--px-muted);
         font-size: 14px;
         line-height: 1.45;
+        padding-top: 6px;
+        border-top: 1px solid var(--px-border);
       }
 
       .phase-portrait-axis-label {
@@ -5617,7 +5743,10 @@
 
       /* ── Model Viz ─────────────────────────────────── */
       .model-viz-card {
-        margin-top: 12px;
+        margin-top: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
       }
       .model-viz-header {
         font-family: var(--px-font-ui);
@@ -5642,6 +5771,8 @@
         display: flex;
         gap: 10px;
         align-items: stretch;
+        flex: 1 1 auto;
+        min-height: 280px;
       }
       .model-viz-side {
         flex: 0 0 112px;
@@ -5698,6 +5829,7 @@
         display: flex;
         gap: 6px;
         align-items: stretch;
+        min-height: 240px;
       }
       .model-viz-tank-wrap {
         flex: 1;
@@ -6067,15 +6199,16 @@
         display: flex;
         flex-direction: column;
         gap: 0;
-        padding: 0;
+        padding: 0 12px 12px;
         margin-top: auto;
       }
 
       .demo-timeline-meter-row {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(220px, 0.95fr) minmax(0, 1.35fr);
         align-items: stretch;
         gap: 12px;
-        padding: 12px 12px 0;
+        padding: 12px 0 0;
       }
 
       .demo-battery-pair {
@@ -6083,6 +6216,10 @@
         align-items: stretch;
         gap: 12px;
         width: 100%;
+      }
+
+      .demo-timeline-pane {
+        min-width: 0;
       }
 
       .demo-batt-wrap {
@@ -6262,12 +6399,20 @@
           right: 10px;
         }
 
+        body[data-mode="rating"] #theme-picker,
+        body[data-mode="recovery-menu"] #theme-picker,
+        body[data-mode="help"] #theme-picker,
+        body[data-mode="screensaver"] #theme-picker {
+          display: none;
+        }
+
         /* #help-trigger is now in the top row, not fixed-position */
       }
 
       @media (max-width: 520px) {
         .demo-timeline-meter-row {
-          padding: 10px 10px 0;
+          grid-template-columns: 1fr;
+          padding-top: 10px;
         }
 
         .phase-portrait-frame {
@@ -6324,10 +6469,11 @@
         <button
           id="timeline-toggle-btn"
           type="button"
-          title="Toggle between 2-minute (fast demo) and 4-hour (normal) data window"
+          title="4-hour rolling window. Click for the 2-minute accelerated demo view."
           aria-pressed="false"
         >
-          4H
+          <span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span>
+          <span class="timeline-toggle-value">4H</span>
         </button>
         <button id="tour-btn" type="button" title="App tour">TOUR</button>
         <button
@@ -6442,15 +6588,24 @@
           tabindex="0"
           aria-describedby="connection-pill-popover"
         >
+          <span class="conn-pill-status">
+            <span class="conn-pill-status-label">Display</span>
+            <span class="conn-pill-display-chip" data-status="offline">
+              <span class="conn-pill-dot" aria-hidden="true"></span>
+              <span class="conn-pill-display-label">offline</span>
+            </span>
+          </span>
           <span class="conn-pill-text">○ no live data</span>
           <span class="conn-pill-subtitle">Try the demo</span>
           <div
             id="connection-pill-popover"
             class="conn-pill-popover"
             role="tooltip"
+            data-side="bottom"
           >
             <div class="cpp-current">Current state</div>
             <p class="cpp-detail">Loading…</p>
+            <p class="cpp-display">Display write: offline.</p>
             <ul class="cpp-legend">
               <li data-key="live">
                 <span class="cpp-key">● LIVE DATA</span>
@@ -6505,69 +6660,6 @@
       </section>
 
       <section id="layer-1" class="panel" aria-hidden="true">
-        <div class="layer-panel-block layer-panel-block-v2">
-          <button
-            type="button"
-            class="layer-back-top"
-            data-layer-back
-            aria-label="Collapse to battery"
-          >
-            <span class="layer-back-arrow">&#9664;</span
-            ><span>Back to battery</span>
-          </button>
-          <div class="layer-card layer-card-pressure">
-            <div class="layer1-pressure-head">
-              <div class="layer-copy-stack">
-                <div class="section-title">Drain pressure</div>
-                <div id="layer1-pressure-copy" class="layer1-pressure-copy">
-                  --%
-                </div>
-              </div>
-              <div id="layer1-pressure-meta" class="layer1-pressure-meta">
-                Waiting for model
-              </div>
-            </div>
-            <div id="layer1-pressure-bar" aria-live="polite"></div>
-          </div>
-
-          <div class="layer1-feature-columns layer1-feature-columns-v2">
-            <div class="layer-card layer-feature-card">
-              <h2 class="section-title">Drain features</h2>
-              <div id="layer1-drain-list" class="layer-feature-list"></div>
-            </div>
-            <div class="layer-card layer-feature-card">
-              <h2 class="section-title">Recovery features</h2>
-              <div id="layer1-recovery-list" class="layer-feature-list"></div>
-            </div>
-          </div>
-
-          <details class="layer-legacy" id="legacy-breakdown">
-            <summary>Legacy breakdown</summary>
-            <div class="layer-legacy-body">
-              <div id="metrics-grid"></div>
-
-              <div class="panel-section-head">
-                <h2 class="section-title">Activity breakdown</h2>
-                <select id="window-select" aria-label="Activity window">
-                  <option value="0.083">5 min (demo)</option>
-                  <option value="0.25">15 min</option>
-                  <option value="1">1 hr</option>
-                  <option value="2">2 hr</option>
-                  <option value="4" selected>4 hr</option>
-                  <option value="8">8 hr</option>
-                </select>
-              </div>
-
-              <div id="breakdown-list" aria-live="polite"></div>
-            </div>
-          </details>
-          <button id="open-diagnostics" class="panel-link" type="button">
-            Show full diagnostics <span class="pix-arrow-down">&#9660;</span>
-          </button>
-        </div>
-      </section>
-
-      <section id="layer-2" class="panel" aria-hidden="true">
         <div class="layer-panel-block layer-panel-block-v2">
           <button
             type="button"
@@ -6723,6 +6815,69 @@ P = drain - 0.5*recovery</pre
               <div id="diag-footer">Last tick: unavailable</div>
             </div>
           </details>
+          <button id="open-diagnostics" class="panel-link" type="button">
+            Show signal breakdown <span class="pix-arrow-down">&#9660;</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="layer-2" class="panel" aria-hidden="true">
+        <div class="layer-panel-block layer-panel-block-v2">
+          <button
+            type="button"
+            class="layer-back-top"
+            data-layer-back
+            aria-label="Collapse to battery"
+          >
+            <span class="layer-back-arrow">&#9664;</span
+            ><span>Back to battery</span>
+          </button>
+          <div class="layer-card layer-card-pressure">
+            <div class="layer1-pressure-head">
+              <div class="layer-copy-stack">
+                <div class="section-title">Drain pressure</div>
+                <div id="layer1-pressure-copy" class="layer1-pressure-copy">
+                  --%
+                </div>
+              </div>
+              <div id="layer1-pressure-meta" class="layer1-pressure-meta">
+                Waiting for model
+              </div>
+            </div>
+            <div id="layer1-pressure-bar" aria-live="polite"></div>
+          </div>
+
+          <div class="layer1-feature-columns layer1-feature-columns-v2">
+            <div class="layer-card layer-feature-card">
+              <h2 class="section-title">Drain features</h2>
+              <div id="layer1-drain-list" class="layer-feature-list"></div>
+            </div>
+            <div class="layer-card layer-feature-card">
+              <h2 class="section-title">Recovery features</h2>
+              <div id="layer1-recovery-list" class="layer-feature-list"></div>
+            </div>
+          </div>
+
+          <details class="layer-legacy" id="legacy-breakdown">
+            <summary>Legacy breakdown</summary>
+            <div class="layer-legacy-body">
+              <div id="metrics-grid"></div>
+
+              <div class="panel-section-head">
+                <h2 class="section-title">Activity breakdown</h2>
+                <select id="window-select" aria-label="Activity window">
+                  <option value="0.083">5 min (demo)</option>
+                  <option value="0.25">15 min</option>
+                  <option value="1">1 hr</option>
+                  <option value="2">2 hr</option>
+                  <option value="4" selected>4 hr</option>
+                  <option value="8">8 hr</option>
+                </select>
+              </div>
+
+              <div id="breakdown-list" aria-live="polite"></div>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -6862,9 +7017,10 @@ P = drain - 0.5*recovery</pre
               <dt>Three display layers</dt>
               <dd>
                 Tap the meter to go deeper. Layer 0 is just the fill. Layer 1
-                shows drain bars, recovery activity, and pressure score. Layer 2
-                adds the circadian curve, state tanks, energy dynamics chart,
-                and phase portrait.
+                opens the diagnostics view: circadian curve, state tanks, energy
+                dynamics, and phase portrait. Layer 2 adds the signal
+                breakdown: pressure, drain rows, recovery rows, and the legacy
+                activity window.
               </dd>
             </div>
             <div class="gloss-row">
@@ -6896,7 +7052,7 @@ P = drain - 0.5*recovery</pre
             <kbd>Space</kbd><span>Expand / collapse the meter</span>
           </div>
           <div class="help-row">
-            <kbd>D</kbd><span>Open full diagnostics</span>
+            <kbd>D</kbd><span>Open the signal breakdown layer</span>
           </div>
           <div class="help-row">
             <kbd>1 – 0</kbd
@@ -7363,10 +7519,10 @@ P = drain - 0.5*recovery</pre
         <button
           type="button"
           id="recovery-close-btn"
-          class="sheet-close-btn"
+          class="sheet-close-btn is-text"
           aria-label="Close recovery menu"
         >
-          &times;
+          Back
         </button>
       </div>
       <div class="sheet-subtitle">
@@ -7643,6 +7799,8 @@ P = drain - 0.5*recovery</pre
           animationStopId: null,
           completedActivities: [],
           simClockStart: null,
+          menuScrollTop: 0,
+          activityScrollTop: 0,
         },
       };
 
@@ -7655,6 +7813,12 @@ P = drain - 0.5*recovery</pre
         ),
         connectionPillSubtitle: document.querySelector(
           "#connection-pill .conn-pill-subtitle",
+        ),
+        connectionPillDisplayChip: document.querySelector(
+          "#connection-pill .conn-pill-display-chip",
+        ),
+        connectionPillDisplayLabel: document.querySelector(
+          "#connection-pill .conn-pill-display-label",
         ),
         connectionPillPopover: document.getElementById(
           "connection-pill-popover",
@@ -9890,9 +10054,13 @@ P = drain - 0.5*recovery</pre
           .join("");
       }
 
+      function hasFeatureValue(raw) {
+        return raw !== null && raw !== undefined && raw !== "" && Number.isFinite(Number(raw));
+      }
+
       function formatFeatureValue(key, unit, raw) {
-        if (raw == null || Number.isNaN(Number(raw))) {
-          return { text: "—", zero: true };
+        if (!hasFeatureValue(raw)) {
+          return { text: "", zero: false, missing: true };
         }
 
         let value = Number(raw);
@@ -9904,6 +10072,7 @@ P = drain - 0.5*recovery</pre
         return {
           text: isInteger ? String(value) : value.toFixed(1),
           zero: value === 0,
+          missing: false,
         };
       }
 
@@ -11874,7 +12043,7 @@ P = drain - 0.5*recovery</pre
 
       function layer2AnimLoop(timestamp = 0) {
         if (
-          APP.uiLayer < 2 ||
+          APP.uiLayer < 1 ||
           APP.mode === "screensaver" ||
           !DOM.layer2ParticleField.childElementCount
         ) {
@@ -13233,7 +13402,7 @@ P = drain - 0.5*recovery</pre
 
         const syncLayer2Motion = () => {
           APP.layer2.lastStepTs = 0;
-          if (APP.uiLayer >= 2) {
+          if (APP.uiLayer >= 1) {
             renderLayer2Static();
             if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
               if (APP.layer2.frameId) {
@@ -13515,7 +13684,7 @@ P = drain - 0.5*recovery</pre
         });
 
         window.addEventListener("resize", () => {
-          if (APP.uiLayer >= 2) {
+          if (APP.uiLayer >= 1) {
             renderLayer2Static();
           }
           if (APP.mode === "screensaver") {
@@ -13939,15 +14108,15 @@ P = drain - 0.5*recovery</pre
       // ── Onboarding #4: Auto-tooltip on first layer expansion ────────────
       const LAYER_HINTS = {
         1: {
-          targetId: "layer1-drain-list",
-          title: "METRICS LAYER",
-          body: "Each row is a real-time signal pulled from your activity. Hover the ? buttons for what each one means.",
+          targetId: "layer2-circadian",
+          title: "DIAGNOSTICS LAYER",
+          body: "This first expansion is the model view: circadian baseline, state tanks, energy dynamics, and phase portrait.",
           flag: "pb_seen_layer_1",
         },
         2: {
-          targetId: "layer2-circadian",
-          title: "DIAGNOSTICS LAYER",
-          body: "The curve is your circadian baseline — where energy wants to be. Your energy level drifts toward it whenever you idle.",
+          targetId: "layer1-drain-list",
+          title: "SIGNALS LAYER",
+          body: "This deeper layer is the signal breakdown: pressure plus the specific drain and recovery inputs driving the model.",
           flag: "pb_seen_layer_2",
         },
       };
@@ -14107,7 +14276,7 @@ P = drain - 0.5*recovery</pre
         {
           targetId: "battery-toggle",
           title: "THREE LAYERS",
-          body: "Tap the meter to reveal more detail. Layer 1 shows drain bars, recovery activity, and pressure score. Layer 2 adds full diagnostics: circadian model, state tanks, energy dynamics chart, and phase portrait.",
+          body: "Tap the meter to reveal more detail. Layer 1 now opens the full diagnostics view: circadian model, state tanks, energy dynamics, and phase portrait. Layer 2 adds the signal breakdown: pressure, drain rows, recovery rows, and the legacy activity window.",
           pos: "below",
         },
         {
