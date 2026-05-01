@@ -5402,6 +5402,11 @@
         margin: 0;
         font-size: calc(var(--fs-label) + 2px);
         letter-spacing: 0.12em;
+        line-height: 1.2;
+      }
+
+      .layer-feature-card > .section-title {
+        color: var(--px-text);
       }
 
       .layer-feature-card .layer-feature-list {
@@ -5627,17 +5632,18 @@
 
       #phase-portrait {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 12px;
+        justify-content: center;
+        min-height: 0;
       }
 
       .phase-portrait-frame {
-        width: min(100%, 272px);
+        width: min(100%, 308px);
         aspect-ratio: 1;
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
         box-shadow: inset 0 0 0 1px var(--px-border);
+        margin-inline: auto;
       }
 
       .phase-portrait-frame svg {
@@ -5648,14 +5654,16 @@
         image-rendering: pixelated;
       }
 
+      #phase-portrait-legend-host {
+        min-height: 28px;
+      }
+
       .phase-portrait-legend {
-        width: min(100%, 720px);
+        width: 100%;
         display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-        gap: 12px;
-        overflow-x: auto;
-        padding-bottom: 2px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
       }
 
       .phase-legend-item {
@@ -5674,8 +5682,8 @@
       .phase-portrait-shell {
         display: grid;
         grid-template-columns: auto 1fr;
-        align-items: center;
-        gap: 10px;
+        align-items: stretch;
+        gap: 14px;
         width: 100%;
       }
 
@@ -5683,9 +5691,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         min-width: 0;
-        flex: 0 0 auto;
+        min-height: 320px;
       }
 
       .phase-portrait-caption {
@@ -5693,8 +5701,7 @@
         color: var(--px-muted);
         font-size: 14px;
         line-height: 1.45;
-        padding-top: 6px;
-        border-top: 1px solid var(--px-border);
+        padding-top: 2px;
       }
 
       .phase-portrait-axis-label {
@@ -5712,7 +5719,7 @@
 
       @media (min-width: 720px) {
         .phase-portrait-frame {
-          width: min(100%, 336px);
+          width: min(100%, 352px);
         }
       }
 
@@ -5769,13 +5776,13 @@
       }
       .model-viz-body {
         display: flex;
-        gap: 10px;
+        gap: 14px;
         align-items: stretch;
         flex: 1 1 auto;
-        min-height: 280px;
+        min-height: 308px;
       }
       .model-viz-side {
-        flex: 0 0 112px;
+        flex: 0 0 124px;
         display: flex;
         flex-direction: column;
         gap: 4px;
@@ -5841,7 +5848,7 @@
       .model-viz-tank {
         width: 100%;
         flex: 1;
-        min-height: 80px;
+        min-height: 220px;
         position: relative;
         border: 2px solid var(--px-border);
         overflow: hidden;
@@ -6765,6 +6772,7 @@ P = drain - 0.5*recovery</pre
                   <div class="phase-portrait-axis-label">Energy</div>
                 </div>
               </div>
+              <div id="phase-portrait-legend-host"></div>
               <p class="phase-portrait-caption">
                 This
                 <span
@@ -10634,11 +10642,31 @@ P = drain - 0.5*recovery</pre
         return "📊";
       }
 
+      function captureDemoScrollState() {
+        if (!APP.demo.enabled) return;
+        const menu = DOM.demoLayout.querySelector(".demo-menu");
+        const activityView = DOM.demoLayout.querySelector(".demo-activity-view");
+        if (menu) APP.demo.menuScrollTop = menu.scrollTop;
+        if (activityView) APP.demo.activityScrollTop = activityView.scrollTop;
+      }
+
+      function restoreDemoScrollState() {
+        if (!APP.demo.enabled) return;
+        const menu = DOM.demoLayout.querySelector(".demo-menu");
+        const activityView = DOM.demoLayout.querySelector(".demo-activity-view");
+        if (menu) menu.scrollTop = APP.demo.menuScrollTop || 0;
+        if (activityView) activityView.scrollTop = APP.demo.activityScrollTop || 0;
+      }
+
       function renderDemoLayout() {
         if (!APP.demo.enabled) {
           DOM.demoLayout.innerHTML = "";
+          APP.demo.menuScrollTop = 0;
+          APP.demo.activityScrollTop = 0;
           return;
         }
+
+        captureDemoScrollState();
 
         const activity = APP.demo.activity;
         const featureLabelMap = getDemoFeatureLabelMap();
@@ -10708,10 +10736,10 @@ P = drain - 0.5*recovery</pre
               .join("")}
             </div>
             <div class="demo-timeline-strip">
-            <div class="demo-timeline-meter-row">
-              <div class="demo-battery-pair" data-demo-battery-pair></div>
-            </div>
-            <div data-demo-timeline></div>
+              <div class="demo-timeline-meter-row">
+                <div class="demo-battery-pair" data-demo-battery-pair></div>
+                <div class="demo-timeline-pane" data-demo-timeline></div>
+              </div>
             </div>
           </div>
         `;
@@ -10722,6 +10750,7 @@ P = drain - 0.5*recovery</pre
             APP.demo.S,
           );
           renderDemoTimeline();
+          restoreDemoScrollState();
           return;
         }
 
@@ -10873,8 +10902,8 @@ P = drain - 0.5*recovery</pre
         <div class="demo-timeline-strip">
           <div class="demo-timeline-meter-row">
             <div class="demo-battery-pair" data-demo-battery-pair></div>
+            <div class="demo-timeline-pane" data-demo-timeline></div>
           </div>
-          <div data-demo-timeline></div>
         </div>
         </div>
       `;
@@ -10886,6 +10915,7 @@ P = drain - 0.5*recovery</pre
           APP.demo.S,
         );
         renderDemoTimeline();
+        restoreDemoScrollState();
         if (activity.step === "features") {
           requestAnimationFrame(() => animateDemoFeaturePackets());
         } else if (activity.step === "battery") {
@@ -11350,8 +11380,8 @@ P = drain - 0.5*recovery</pre
               .slice(-24)
           : [];
 
-        const width = 280;
-        const height = 280;
+        const width = 320;
+        const height = 320;
         const margin = { top: 18, right: 18, bottom: 34, left: 34 };
         const plotSize = Math.min(
           width - margin.left - margin.right,
@@ -11620,7 +11650,11 @@ P = drain - 0.5*recovery</pre
         <div class="phase-legend-item"><span class="phase-legend-line" style="--phase-color:var(--px-muted)"></span><span>LIVE MODEL REQUIRED</span></div>
       `;
 
-        DOM.phasePortrait.replaceChildren(frame, legend);
+        DOM.phasePortrait.replaceChildren(frame);
+        const legendHost = document.getElementById("phase-portrait-legend-host");
+        if (legendHost) {
+          legendHost.replaceChildren(legend);
+        }
       }
 
       function renderLayer1() {
@@ -11665,16 +11699,17 @@ P = drain - 0.5*recovery</pre
         const renderFeatureRows = (target, items, group) => {
           target.innerHTML = items
             .map((item) => {
-              const { text, zero } = formatFeatureValue(
+              const { text, zero, missing } = formatFeatureValue(
                 item.key,
                 item.unit,
                 feats[item.key],
               );
+              if (missing) return "";
               const norm = normalizeFeature(item.key, feats[item.key]);
               const fillCount = Math.round(norm * 12);
               const toneColor = getFeatureTone(group, norm);
               return `
-            <div class="layer-feature-row${zero ? " is-zero" : ""}">
+            <div class="layer-feature-row">
               <div class="layer-feature-head">
                 <span class="layer-feature-label">${item.label}<button type="button" class="layer-feature-help-btn" data-feature-key="${item.key}" aria-label="Explain ${item.label}">?</button></span>
                 <span class="layer-feature-value" style="color:${toneColor}">${text}${item.unit ? item.unit : ""}</span>
@@ -12145,15 +12180,16 @@ P = drain - 0.5*recovery</pre
         const feats = getLastFeats();
         target.innerHTML = items
           .map((item) => {
-            const { text, zero } = formatFeatureValue(
+            const { text, missing } = formatFeatureValue(
               item.key,
               item.unit,
               feats[item.key],
             );
+            if (missing) return "";
             const help = FEAT_HELP[item.key];
             const popId = `pop-feat-${item.key.replace(/_/g, "-")}`;
             return `
-          <div class="diag-row" style="opacity:${zero ? "0.35" : "1"}">
+          <div class="diag-row">
             <span class="diag-label">
               ${item.label}
               ${help ? `<button class="diag-help-btn" popovertarget="${popId}" aria-label="Explain ${item.label}">?</button>` : ""}
@@ -12175,27 +12211,119 @@ P = drain - 0.5*recovery</pre
         DOM.diagFooter.textContent = `Last tick: ${tick}`;
       }
 
-      function setConnectionPillState(text, subtitle, color, tip, activeKey) {
+      function getDisplayWriteStatus(payload = getModelPayload()) {
+        const raw = String(payload?.status || "").toLowerCase();
+        if (raw === "live" || raw === "stale" || raw === "offline") return raw;
+        if (APP.model.stale) return "stale";
+        if (APP.model.online) return "live";
+        return "offline";
+      }
+
+      function getDisplayWriteMeta(status) {
+        switch (status) {
+          case "live":
+            return {
+              key: "live",
+              short: "live",
+              long: "live",
+              tip: "Fresh display heartbeat; writes are landing on the panel.",
+            };
+          case "stale":
+            return {
+              key: "stale",
+              short: "stale",
+              long: "stale",
+              tip: "Display heartbeat is delayed; the last panel write may be old.",
+            };
+          default:
+            return {
+              key: "offline",
+              short: "offline",
+              long: "offline",
+              tip: "No recent display heartbeat; panel writes look offline.",
+            };
+        }
+      }
+
+      let connectionPillPopoverFrame = 0;
+      function positionConnectionPillPopover() {
+        const pill = DOM.connectionPill;
+        const pop = DOM.connectionPillPopover;
+        if (!pill || !pop) return;
+        const pillRect = pill.getBoundingClientRect();
+        const popRect = pop.getBoundingClientRect();
+        const popWidth = Math.min(popRect.width || 320, window.innerWidth - 16);
+        const popHeight = popRect.height || 160;
+        const maxLeft = Math.max(8, window.innerWidth - popWidth - 8);
+        const left = Math.round(clamp(pillRect.right - popWidth, 8, maxLeft));
+        let top = Math.round(pillRect.bottom + 12);
+        let side = "bottom";
+        if (
+          top + popHeight + 8 > window.innerHeight &&
+          pillRect.top - popHeight - 12 >= 8
+        ) {
+          top = Math.round(pillRect.top - popHeight - 12);
+          side = "top";
+        }
+        const arrowLeft = clamp(pillRect.right - left - 22, 18, popWidth - 18);
+        pop.dataset.side = side;
+        pop.style.left = `${left}px`;
+        pop.style.top = `${top}px`;
+        pop.style.setProperty("--cpp-arrow-left", `${Math.round(arrowLeft)}px`);
+      }
+
+      function scheduleConnectionPillPopoverPosition() {
+        if (connectionPillPopoverFrame) {
+          cancelAnimationFrame(connectionPillPopoverFrame);
+        }
+        connectionPillPopoverFrame = requestAnimationFrame(() => {
+          connectionPillPopoverFrame = 0;
+          positionConnectionPillPopover();
+        });
+      }
+
+      function setConnectionPillState(
+        text,
+        subtitle,
+        color,
+        tip,
+        activeKey,
+        displayStatus,
+      ) {
+        const displayMeta = getDisplayWriteMeta(displayStatus);
         if (DOM.connectionPillText) {
           DOM.connectionPillText.textContent = text;
-        } else {
-          DOM.connectionPill.textContent = text;
         }
         if (DOM.connectionPillSubtitle) {
           DOM.connectionPillSubtitle.textContent = subtitle;
         }
+        if (DOM.connectionPillDisplayChip) {
+          DOM.connectionPillDisplayChip.dataset.status = displayMeta.key;
+          DOM.connectionPillDisplayChip.title = `Display write ${displayMeta.long}`;
+        }
+        if (DOM.connectionPillDisplayLabel) {
+          DOM.connectionPillDisplayLabel.textContent = displayMeta.short;
+        }
         DOM.connectionPill.style.color = color;
-        DOM.connectionPill.title = subtitle ? `${subtitle}. ${tip}` : tip;
+        DOM.connectionPill.title = subtitle
+          ? `${subtitle}. ${tip} Display write ${displayMeta.long}. ${displayMeta.tip}`
+          : `${tip} Display write ${displayMeta.long}. ${displayMeta.tip}`;
         DOM.connectionPill.setAttribute(
           "aria-label",
-          subtitle ? `${text}. ${subtitle}. ${tip}` : `${text}. ${tip}`,
+          subtitle
+            ? `${text}. ${subtitle}. ${tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`
+            : `${text}. ${tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`,
         );
         const pop = DOM.connectionPillPopover;
         if (pop) {
           const cur = pop.querySelector(".cpp-current");
           const det = pop.querySelector(".cpp-detail");
+          const display = pop.querySelector(".cpp-display");
           if (cur) cur.textContent = text;
           if (det) det.textContent = subtitle ? `${subtitle}. ${tip}` : tip;
+          if (display) {
+            display.textContent = `Display write: ${displayMeta.long}. ${displayMeta.tip}`;
+          }
           pop.querySelectorAll(".cpp-legend li").forEach((li) => {
             li.classList.toggle(
               "is-active",
@@ -12203,9 +12331,14 @@ P = drain - 0.5*recovery</pre
             );
           });
         }
+        scheduleConnectionPillPopoverPosition();
       }
 
       function renderConnectionPill() {
+        const payload = getModelPayload();
+        const displayStatus = APP.demo.enabled
+          ? "offline"
+          : getDisplayWriteStatus(payload);
         DOM.body.classList.toggle(
           "is-backend-offline",
           !APP.model.online && !APP.model.stale,
@@ -12213,39 +12346,52 @@ P = drain - 0.5*recovery</pre
         DOM.body.classList.toggle("has-demo-profile", !!getActiveDemoProfile());
         if (APP.demo.enabled) {
           setConnectionPillState(
-            "◆ DEMO MODE",
+            "DEMO MODE",
             APP.demo.simClock
               ? `Sim clock ${formatDemoClock(APP.demo.simClock)}`
               : "Sim clock unavailable",
             "var(--px-accent)",
             "You are inside the interactive demo. Live backend polling is paused.",
             "demo",
+            displayStatus,
           );
           return;
         }
         const demo = getActiveDemoProfile();
         if (demo) {
           setConnectionPillState(
-            `◆ DEMO · ${demo.name.toUpperCase()}`,
+            `DEMO ${demo.name.toUpperCase()}`,
             "Profile ready",
             demo.accent,
             `Demo profile: ${demo.tagline}. Not real data.`,
             "demo",
+            displayStatus,
           );
           return;
         }
 
         // Friendly first-visitor copy. Researchers can hover to see the technical detail.
-        let text = "○ NO LIVE DATA";
+        let text = "NO LIVE DATA";
         let subtitle = "Try the demo";
         let color = "var(--muted)";
         let tip =
           "Not connected to a live backend. Try the interactive demo or run the Flask server at localhost:7070.";
         let key = "none";
-        const payload = getModelPayload();
+
+        if (payload?.source === "demo") {
+          setConnectionPillState(
+            "DEMO DATA",
+            "Server demo override",
+            "var(--px-accent)",
+            "The backend is currently serving demo-state data.",
+            "demo",
+            displayStatus,
+          );
+          return;
+        }
 
         if (APP.model.online && !APP.model.stale) {
-          text = "● LIVE DATA";
+          text = "LIVE DATA";
           subtitle = payload?.last_tick_iso
             ? `Last tick ${formatTime(payload.last_tick_iso)}`
             : "Last tick unavailable";
@@ -12253,14 +12399,14 @@ P = drain - 0.5*recovery</pre
           tip = "Connected to your Flask backend at localhost:7070.";
           key = "live";
         } else if (APP.model.stale) {
-          text = "◐ CACHED";
+          text = "CACHED";
           subtitle = `Cached since ${formatElapsedSince(payload?.last_tick_iso || APP.model.lastFetchAt || Date.now())}`;
           color = "var(--warn)";
           tip =
             "Backend offline. Showing your last saved tick from this browser.";
           key = "cached";
         } else if (APP.aw.online) {
-          text = "● AW LIVE";
+          text = "AW LIVE";
           subtitle = "ActivityWatch only";
           color = "var(--good)";
           tip =
@@ -12268,7 +12414,7 @@ P = drain - 0.5*recovery</pre
           key = "aw";
         }
 
-        setConnectionPillState(text, subtitle, color, tip, key);
+        setConnectionPillState(text, subtitle, color, tip, key, displayStatus);
       }
 
       function renderTodaySignal() {
@@ -12455,7 +12601,7 @@ P = drain - 0.5*recovery</pre
         DOM.ratingHint.textContent = getRatingDefaultHint(kind);
         DOM.ratingRail.innerHTML = Array.from({ length: 10 }, (_, index) => {
           const value = index + 1;
-          return `<button type="button" class="tap-score" data-value="${value}" aria-label="${RATING_HINTS[kind][value]}">${value}</button>`;
+          return `<button type="button" class="tap-score" data-value="${value}" aria-label="${value}: ${RATING_HINTS[kind][value]}"><span class="tap-score-num">${value}</span><span class="tap-score-copy">${RATING_HINTS[kind][value]}</span></button>`;
         }).join("");
       }
 
