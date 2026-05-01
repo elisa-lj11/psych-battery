@@ -2,7 +2,18 @@
 
 ## GET /state
 
-Response shape:
+Exact contract:
+
+```text
+GET /state -> {
+  "E_display": float 0-1,
+  "status": "live" | "stale" | "offline",
+  "last_update_iso": ISO timestamp,
+  // any other existing fields preserved
+}
+```
+
+Expanded response shape:
 
 ```json
 {
@@ -10,6 +21,7 @@ Response shape:
   "battery_pct": 53,
   "trend": "up",
   "status": "live",
+  "last_update_iso": "2026-05-01T10:38:19.105639",
   "source": "model",
   "aw_connected": true,
   "last_tick_iso": "2026-05-01T10:38:19.105639",
@@ -25,6 +37,7 @@ Rules:
 - `battery_pct = round(E_display * 100)`.
 - `trend` is server-derived: `up | down | flat`.
 - `status` is server-derived: `live | stale | offline`.
+- `last_update_iso` mirrors the freshest model/demo timestamp the server used for the current payload. Today that is the same value as `last_tick_iso`.
 - `source` is one of `model | demo | aw-fallback`.
 - When `source = model`, extra Flask fields such as `E_internal`, `S`, `E_rest_now`, `last_feats`, `phase`, and `chronotype` pass through unchanged.
 - When `source = demo`, `/state` returns the last demo payload pushed by the UI agent until cleared or expired.
