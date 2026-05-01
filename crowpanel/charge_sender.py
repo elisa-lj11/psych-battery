@@ -1,8 +1,8 @@
 """
-charge_sender.py — Serial bridge between the Flask model server and the CrowPanel.
+charge_sender.py — Serial bridge between the local /state endpoint and the CrowPanel.
 
-Polls localhost:7070/state every 30 seconds, reads E_display (0-1),
-converts to 0-100, and sends it to the CrowPanel over USB Serial.
+Polls localhost:3131/state every 10 seconds, reads the shared battery/status
+payload, and sends "NN trend status" to the CrowPanel over USB Serial.
 
 Usage:
     python charge_sender.py --port COM3           # Windows
@@ -23,9 +23,10 @@ import requests
 import serial
 import serial.tools.list_ports
 
-MODEL_URL   = "http://localhost:3131/state"
-POLL_SEC    = 10
-BAUD_RATE   = 115200
+STATE_URL     = "http://localhost:3131/state"
+HEARTBEAT_URL = "http://localhost:3131/heartbeat"
+POLL_SEC      = 10
+BAUD_RATE     = 115200
 
 
 def find_crowpanel_port() -> str | None:
@@ -45,17 +46,41 @@ def list_ports() -> None:
         print(f"  {p.device:20s} — {p.description}")
 
 
-def fetch_charge() -> tuple[int, str] | None:
+def _coerce_pct(data: dict) -> int:
+    if "battery_pct" in data:
+        return max(0, min(100, round(float(data["battery_pct"]))))
+    e_display = float(data.get("E_display", 0))
+    return max(0, min(100, round(e_display * 100)))
+
+
+def fetch_state(session: requests.Session) -> tuple[int, str, str] | None:
     try:
-        r = requests.get(MODEL_URL, timeout=15)
+        r = session.get(STATE_URL, timeout=15)
         r.raise_for_status()
         data = r.json()
-        e_display = float(data.get("E_display", 0))
-        trend = data.get("trend", "flat")
-        return round(e_display * 100), trend
+        charge = _coerce_pct(data)
+        trend = str(data.get("trend", "flat")).strip().lower()
+        status = str(data.get("status", "offline")).strip().lower()
+        if trend not in {"up", "down", "flat"}:
+            trend = "flat"
+        if status not in {"live", "stale", "offline"}:
+            status = "offline"
+        return charge, trend, status
     except Exception as e:
-        print(f"[model] fetch failed: {e}")
+        print(f"[state] fetch failed: {e}")
         return None
+
+
+def put_heartbeat(session: requests.Session, charge: int, trend: str, status: str) -> None:
+    try:
+        r = session.put(
+            HEARTBEAT_URL,
+            json={"battery_pct": charge, "trend": trend, "status": status},
+            timeout=5,
+        )
+        r.raise_for_status()
+    except Exception as e:
+        print(f"[heartbeat] update failed: {e}")
 
 
 def run(port: str) -> None:
@@ -67,27 +92,32 @@ def run(port: str) -> None:
         sys.exit(1)
 
     time.sleep(1.5)  # let ESP32 boot/reset after Serial open
-    print("Connected. Polling model server every", POLL_SEC, "seconds.")
-    last_sent  = -1
-    last_trend = ''
+    print("Connected. Polling shared /state endpoint every", POLL_SEC, "seconds.")
+    session = requests.Session()
+    last_sent = None
 
     while True:
-        result = fetch_charge()
+        result = fetch_state(session)
         if result is not None:
-            charge, trend = result
-            if charge != last_sent or trend != last_trend:
-                msg = f"{charge} {trend}\n".encode()
-                try:
-                    ser.write(msg)
-                    ser.flush()
-                    ack = ser.readline().decode(errors="replace").strip()
-                    print(f"[{time.strftime('%H:%M:%S')}] Sent {charge}% {trend} → {ack or '(no ack)'}")
-                    last_sent  = charge
-                    last_trend = trend
-                except Exception as e:
-                    print(f"[serial] write failed: {e}")
-            else:
-                print(f"[{time.strftime('%H:%M:%S')}] {charge}% {trend} (no change, skipped)")
+            charge, trend, status = result
+            msg = f"{charge} {trend} {status}\n".encode()
+            try:
+                ser.reset_input_buffer()
+                ser.write(msg)
+                ser.flush()
+                ack = ser.readline().decode(errors="replace").strip()
+                change_label = "changed" if (charge, trend, status) != last_sent else "steady"
+                print(
+                    f"[{time.strftime('%H:%M:%S')}] Sent {charge}% {trend} {status}"
+                    f" ({change_label}) → {ack or '(no ack)'}"
+                )
+                if ack.startswith("ACK"):
+                    put_heartbeat(session, charge, trend, status)
+                    last_sent = (charge, trend, status)
+                else:
+                    print("[heartbeat] skipped because the CrowPanel did not ACK the packet")
+            except Exception as e:
+                print(f"[serial] write failed: {e}")
         time.sleep(POLL_SEC)
 
 
@@ -112,7 +142,7 @@ def main() -> None:
         try:
             ser = serial.Serial(port, BAUD_RATE, timeout=2)
             time.sleep(1.5)
-            ser.write(f"{args.test} down\n".encode())
+            ser.write(f"{args.test} down live\n".encode())
             ser.flush()
             ack = ser.readline().decode(errors="replace").strip()
             print(f"ACK: {ack or '(none)'}")
