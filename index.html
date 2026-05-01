@@ -57,18 +57,7 @@
         min-height: 100vh;
         padding: 20px 16px 164px;
         font-family: Aptos, "Segoe UI Variable Display", "Segoe UI", sans-serif;
-        background:
-          radial-gradient(
-            circle at top,
-            rgba(129, 140, 248, 0.12),
-            transparent 38%
-          ),
-          radial-gradient(
-            circle at bottom left,
-            rgba(74, 222, 128, 0.08),
-            transparent 32%
-          ),
-          linear-gradient(180deg, #12121a 0%, var(--bg) 62%);
+        background: var(--bg);
         color: var(--text);
         display: flex;
         flex-direction: column;
@@ -115,21 +104,46 @@
 
       #connection-pill {
         display: inline-flex;
-        align-items: flex-start;
-        justify-content: center;
-        min-height: 44px;
-        padding: 0 12px;
-        border-radius: 999px;
-        border: 1px solid var(--border-light);
-        background: var(--surface);
-        font-size: 0.88rem;
-        font-weight: 700;
+        align-items: center;
+        gap: 6px;
+        min-height: 28px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid var(--px-border);
+        background: var(--px-panel);
+        font-family: var(--px-font-ui);
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         white-space: nowrap;
-        color: var(--critical);
-        backdrop-filter: blur(10px);
+        color: var(--px-muted);
         position: relative;
         z-index: 500;
         cursor: help;
+      }
+      #connection-pill .conn-pill-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--px-muted);
+      }
+      #connection-pill[data-source="live"] .conn-pill-dot,
+      #connection-pill[data-status="live"] .conn-pill-dot {
+        background: var(--px-good);
+      }
+      #connection-pill[data-source="demo"] .conn-pill-dot {
+        background: var(--px-accent);
+      }
+      #connection-pill[data-status="stale"] .conn-pill-dot {
+        background: var(--px-warn);
+      }
+      #connection-pill[data-source="live"],
+      #connection-pill[data-status="live"] {
+        color: var(--px-good);
+      }
+      #connection-pill[data-source="demo"] {
+        color: var(--px-accent);
       }
       #connection-pill:focus-visible {
         outline: 2px solid var(--px-accent, #818cf8);
@@ -559,6 +573,88 @@
         width: 100%;
       }
 
+      /* ── DEMO dropdown ───────────────────────────── */
+      #demo-dropdown {
+        position: relative;
+        flex: 0 0 auto;
+      }
+      #demo-dropdown > summary {
+        list-style: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 2px solid var(--px-border);
+        background: var(--surface);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 #000;
+        white-space: nowrap;
+      }
+      #demo-dropdown > summary::-webkit-details-marker {
+        display: none;
+      }
+      #demo-dropdown > summary::after {
+        content: "▾";
+        font-size: var(--fs-chrome);
+        transition: transform 150ms steps(3);
+      }
+      #demo-dropdown[open] > summary {
+        border-color: var(--px-accent);
+        color: var(--px-accent);
+      }
+      #demo-dropdown[open] > summary::after {
+        transform: rotate(180deg);
+      }
+      #demo-panel {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        z-index: 70;
+        width: min(240px, calc(100vw - 32px));
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px;
+        border: var(--panel-border);
+        border-radius: var(--panel-radius);
+        background: var(--surface);
+        box-shadow: var(--panel-shadow);
+      }
+      #demo-dropdown[open] #demo-panel {
+        display: flex;
+      }
+      #demo-panel > button {
+        width: 100%;
+      }
+      #demo-panel #demo-select {
+        display: inline-flex !important;
+        width: 100%;
+        max-width: none;
+        border-radius: 4px;
+      }
+      #demo-panel #timeline-toggle-btn {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      /* Connection pill — compact single-line */
+      .conn-pill-status,
+      .conn-pill-subtitle {
+        display: none;
+      }
+      #connection-pill {
+        min-height: 28px;
+        padding: 2px 8px;
+        font-size: 0.76rem;
+        border-radius: 4px;
+        align-items: center;
+      }
+
       #tour-btn,
       #story-btn,
       #calib-btn,
@@ -650,33 +746,12 @@
         padding: 18px;
         border-radius: 22px;
         border: 1px solid var(--border-light);
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 42%),
-          linear-gradient(
-            180deg,
-            rgba(129, 140, 248, 0.12),
-            rgba(26, 26, 36, 0.95) 18%,
-            rgba(26, 26, 36, 0.98) 100%
-          );
+        background: var(--px-panel);
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
         overflow: hidden;
         transition:
           opacity 200ms ease,
           filter 200ms ease;
-      }
-
-      #battery-card::before {
-        content: "";
-        position: absolute;
-        inset: -12% 48% auto -12%;
-        height: 220px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(129, 140, 248, 0.2),
-          transparent 70%
-        );
-        pointer-events: none;
       }
 
       #battery-toggle {
@@ -835,25 +910,44 @@
         color: var(--px-text);
       }
 
+      .header-source-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 4px 12px;
+        border: 2px solid var(--px-border);
+        border-radius: 6px;
+        background: var(--px-panel);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        flex: 0 0 auto;
+      }
+      .header-source-label {
+        color: var(--px-muted);
+        font-size: 0.7rem;
+      }
       #demo-select {
-        min-height: 36px;
-        padding: 0 10px;
-        border-radius: 999px;
-        border: 1px solid var(--border-light);
-        background: var(--surface);
-        color: var(--text);
+        min-height: 32px;
+        padding: 0 8px;
+        border: none;
+        background: transparent;
+        color: var(--px-accent);
+        font-family: var(--px-font-ui);
         font-size: 0.82rem;
         font-weight: 600;
         cursor: pointer;
-        backdrop-filter: blur(10px);
-        max-width: 220px;
-        display: none;
-      }
-
-      body.is-backend-offline:not(.is-demo) #demo-select,
-      body.has-demo-profile:not(.is-demo) #demo-select {
+        max-width: 240px;
         display: inline-flex;
         align-items: center;
+      }
+      #demo-select:focus {
+        outline: none;
+      }
+      .header-source-control:focus-within {
+        border-color: var(--px-accent);
       }
 
       #demo-shell {
@@ -1259,18 +1353,14 @@
         min-height: 56px;
         padding: 0 22px;
         border: 3px solid var(--px-accent);
-        background: linear-gradient(
-          180deg,
-          rgba(179, 136, 255, 0.18),
-          rgba(11, 11, 20, 0.96)
-        );
+        background: var(--px-accent-soft);
         color: var(--px-accent);
         font-family: var(--px-font-ui);
         font-size: 14px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+        box-shadow: 4px 4px 0 0 var(--px-button-shadow);
       }
 
       .demo-continue-btn:hover,
@@ -1651,9 +1741,7 @@
         flex: 1;
         min-height: 380px;
         border: 2px solid var(--px-border-2);
-        background:
-          linear-gradient(180deg, rgba(179, 136, 255, 0.08), transparent 34%),
-          rgba(11, 11, 20, 0.96);
+        background: rgba(11, 11, 20, 0.96);
         overflow: hidden;
         --scene-loop-offset: 0ms;
       }
@@ -1666,11 +1754,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: radial-gradient(
-          circle at center,
-          var(--px-accent) 0%,
-          transparent 60%
-        );
+        background: var(--px-accent);
         opacity: 0;
         pointer-events: none;
         mix-blend-mode: screen;
@@ -1696,33 +1780,15 @@
       }
 
       .demo-scene-frame.is-recovery {
-        border-color: #4ade80;
-        background:
-          linear-gradient(
-            180deg,
-            rgba(74, 222, 128, 0.45) 0%,
-            rgba(30, 110, 60, 0.3) 45%,
-            transparent 75%
-          ),
-          #0a2014;
-        box-shadow:
-          inset 0 0 80px 0 rgba(74, 222, 128, 0.2),
-          0 0 0 2px #4ade80;
+        border-color: var(--px-recovery);
+        background: var(--px-recovery-soft);
+        box-shadow: 0 0 0 2px var(--px-recovery);
       }
 
       .demo-scene-frame.is-drain {
-        border-color: #facc15;
-        background:
-          linear-gradient(
-            180deg,
-            rgba(250, 204, 21, 0.4) 0%,
-            rgba(200, 130, 15, 0.25) 45%,
-            transparent 75%
-          ),
-          #1e1004;
-        box-shadow:
-          inset 0 0 80px 0 rgba(250, 204, 21, 0.18),
-          0 0 0 2px #facc15;
+        border-color: var(--px-warn);
+        background: rgba(250, 204, 21, 0.16);
+        box-shadow: 0 0 0 2px var(--px-warn);
       }
 
       .demo-scene-frame.is-recovery .demo-scene-zoomer {
@@ -2533,11 +2599,7 @@
         box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
       #tour-next {
-        background: linear-gradient(
-          135deg,
-          var(--px-accent) 0%,
-          var(--px-recovery) 100%
-        );
+        background: var(--px-accent);
         border-color: var(--px-accent, #818cf8);
         color: var(--bg, #0f0f13);
         margin-left: auto;
@@ -2605,12 +2667,7 @@
         margin: 0 auto 14px;
         padding: 10px 16px;
         border: 2px solid var(--px-border);
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.04),
-          var(--px-accent-soft)
-        );
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        background: var(--px-accent-soft);
         image-rendering: pixelated;
       }
       .intro-splash-title {
@@ -2675,11 +2732,7 @@
         color: var(--px-text, #e0e0f0);
       }
       .intro-splash-btn.is-primary {
-        background: linear-gradient(
-          135deg,
-          var(--px-accent) 0%,
-          var(--px-recovery) 100%
-        );
+        background: var(--px-accent);
         color: var(--px-bg);
         border-color: var(--px-accent, #818cf8);
       }
@@ -3637,7 +3690,7 @@
       #self-log-dock {
         position: fixed;
         left: 50%;
-        width: min(calc(100% - 32px), 420px);
+        width: min(calc(100% - 32px), 640px);
         transform: translateX(-50%);
         bottom: 10px;
         display: flex;
@@ -3657,6 +3710,7 @@
         border-radius: 14px;
         border: 1px solid var(--border-light);
         background: var(--px-button-surface);
+        color: var(--px-text);
         cursor: pointer;
         font-weight: 700;
         font-family: var(--px-font-ui);
@@ -3664,21 +3718,15 @@
         text-transform: uppercase;
         font-size: var(--fs-label, 0.82rem);
       }
-
-      #recovery-trigger {
-        position: fixed;
-        right: 20px;
-        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
-        z-index: 31;
-        min-height: 48px;
-        border: none;
-        border-radius: 24px;
-        padding: 12px 20px;
-        background: linear-gradient(135deg, #6d76f8 0%, #818cf8 100%);
-        color: #fff;
-        font-weight: 700;
-        box-shadow: 0 18px 36px rgba(99, 102, 241, 0.24);
-        cursor: pointer;
+      #self-log-dock #recovery-trigger {
+        background: var(--px-recovery-soft);
+        border-color: var(--px-recovery);
+        color: var(--px-recovery);
+      }
+      #self-log-dock #tune-trigger {
+        background: var(--px-accent-soft);
+        border-color: var(--px-accent);
+        color: var(--px-accent);
       }
 
       #backdrop {
@@ -3706,9 +3754,7 @@
         border-radius: var(--panel-radius) var(--panel-radius) 0 0;
         border: var(--panel-border);
         border-bottom: none;
-        background:
-          linear-gradient(180deg, var(--px-accent-soft), transparent 28%),
-          var(--px-panel);
+        background: var(--px-panel);
         transform: translateY(100%);
         transition: transform 220ms ease;
         padding: var(--panel-pad) var(--panel-pad)
@@ -3842,7 +3888,11 @@
 
       .rating-sidecar-copy {
         margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
           sans-serif;
         font-size: 0.92rem;
         line-height: 1.45;
@@ -3887,7 +3937,11 @@
       .rating-sidecar-detail {
         display: block;
         margin-top: 2px;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
           sans-serif;
         font-size: 0.9rem;
         line-height: 1.35;
@@ -3949,7 +4003,11 @@
         align-items: center;
         min-width: 0;
         padding: 10px 12px;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
           sans-serif;
         font-size: 0.95rem;
         line-height: 1.3;
@@ -4100,11 +4158,7 @@
 
       .start-btn {
         border: none;
-        background: linear-gradient(
-          135deg,
-          var(--px-recovery) 0%,
-          var(--px-info) 100%
-        );
+        background: var(--px-recovery);
         color: var(--px-bg);
       }
 
@@ -4441,8 +4495,8 @@
 
         --px-font-ui: "Silkscreen", ui-monospace, "Courier New", monospace;
         --px-font-body: "VT323", ui-monospace, "Courier New", monospace;
-        --px-font-copy: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        --px-font-copy:
+          system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --px-font-mono: "VT323", ui-monospace, "Courier New", monospace;
       }
 
@@ -4469,97 +4523,78 @@
        Each theme overrides the --px-* variables so every downstream
        rule picks them up via var() with no per-rule changes. */
 
-      body[data-theme="gameboy"] {
-        --px-bg: #0f380f;
-        --px-bg-top: #234b1b;
-        --px-bg-bottom: #0a220a;
-        --px-surface: #1a4318;
-        --px-surface-2: #285225;
-        --px-surface-3: #356634;
-        --px-panel: rgba(26, 67, 24, 0.94);
-        --px-panel-soft: rgba(40, 82, 37, 0.84);
-        --px-border: #4a7a2a;
-        --px-border-2: #5a8a3a;
-        --px-text: #9bbc0f;
-        --px-muted: #86a84c;
-        --px-good: #9bbc0f;
-        --px-warn: #c8d848; /* slight yellow-shift, still within GB palette */
-        --px-low: #5a7a1a;
-        --px-critical: #c14a3e; /* necessary red for alert states */
-        --px-accent: #9bbc0f;
-        --px-info: #8bac0f;
-        --px-focus: #c8d848;
-        --px-energy: #9bbc0f;
-        --px-stress: #c14a3e;
-        --px-recovery: #8bac0f;
-        --px-accent-soft: rgba(155, 188, 15, 0.14);
-        --px-energy-soft: rgba(155, 188, 15, 0.16);
-        --px-stress-soft: rgba(193, 74, 62, 0.16);
-        --px-recovery-soft: rgba(139, 172, 15, 0.14);
-        --px-button-surface: #2a5a2a;
-        --px-button-surface-strong: #356634;
+      body[data-theme="pastel"] {
+        --px-bg: #2a1f3d;
+        --px-bg-top: #3a2d52;
+        --px-bg-bottom: #1f1530;
+        --px-surface: #3d2f54;
+        --px-surface-2: #4a3a64;
+        --px-surface-3: #5a4878;
+        --px-panel: rgba(61, 47, 84, 0.94);
+        --px-panel-soft: rgba(74, 58, 100, 0.84);
+        --px-border: #7d6a98;
+        --px-border-2: #a092b8;
+        --px-text: #f5e8ff;
+        --px-muted: #c4b6d8;
+        --px-good: #c5e8b5;
+        --px-warn: #ffe5a3;
+        --px-low: #ffc99e;
+        --px-critical: #ff9eaa;
+        --px-accent: #d6b3ff;
+        --px-info: #b5dcff;
+        --px-focus: #ffd8e8;
+        --px-energy: #c5e8b5;
+        --px-stress: #ff9eaa;
+        --px-recovery: #b5dcff;
+        --px-accent-soft: rgba(214, 179, 255, 0.16);
+        --px-energy-soft: rgba(197, 232, 181, 0.18);
+        --px-stress-soft: rgba(255, 158, 170, 0.18);
+        --px-recovery-soft: rgba(181, 220, 255, 0.18);
+        --px-button-surface: #4a3a64;
+        --px-button-surface-strong: #5a4878;
+        --px-button-shadow: rgba(15, 8, 25, 0.6);
       }
 
-      body[data-theme="amber"] {
-        --px-bg: #1a0a00;
-        --px-bg-top: #2e1705;
-        --px-bg-bottom: #140700;
-        --px-surface: #2a1505;
-        --px-surface-2: #3a1f0a;
-        --px-surface-3: #542b0d;
-        --px-panel: rgba(42, 21, 5, 0.95);
-        --px-panel-soft: rgba(58, 31, 10, 0.84);
-        --px-border: #7a3a00;
-        --px-border-2: #a05a00;
-        --px-text: #ffb000;
-        --px-muted: #dcae6a;
-        --px-good: #ffb000;
-        --px-warn: #ffd060;
-        --px-low: #b88000;
-        --px-critical: #ff4a1c;
-        --px-accent: #ffd060;
-        --px-info: #ff8800;
-        --px-focus: #ffe080;
-        --px-energy: #ffcf70;
-        --px-stress: #ff6b36;
-        --px-recovery: #ffb95a;
-        --px-accent-soft: rgba(255, 208, 96, 0.14);
-        --px-energy-soft: rgba(255, 207, 112, 0.16);
-        --px-stress-soft: rgba(255, 107, 54, 0.16);
-        --px-recovery-soft: rgba(255, 185, 90, 0.15);
-        --px-button-surface: #4a260d;
-        --px-button-surface-strong: #5c3211;
+      body[data-theme="acrylic"] {
+        --px-bg: #0e1422;
+        --px-bg-top: #1a2540;
+        --px-bg-bottom: #0a0f1c;
+        --px-surface: rgba(20, 30, 50, 0.55);
+        --px-surface-2: rgba(35, 50, 78, 0.6);
+        --px-surface-3: rgba(55, 75, 110, 0.5);
+        --px-panel: rgba(22, 32, 56, 0.6);
+        --px-panel-soft: rgba(40, 55, 90, 0.4);
+        --px-border: rgba(180, 200, 240, 0.28);
+        --px-border-2: rgba(200, 220, 255, 0.45);
+        --px-text: #ffffff;
+        --px-muted: #b6c3da;
+        --px-good: #6ee0b6;
+        --px-warn: #ffd980;
+        --px-low: #ff9e6b;
+        --px-critical: #ff6b8c;
+        --px-accent: #8fbeff;
+        --px-info: #6ad7ff;
+        --px-focus: #f3a8ff;
+        --px-energy: #6ee0b6;
+        --px-stress: #ff6b8c;
+        --px-recovery: #6ad7ff;
+        --px-accent-soft: rgba(143, 190, 255, 0.18);
+        --px-energy-soft: rgba(110, 224, 182, 0.16);
+        --px-stress-soft: rgba(255, 107, 140, 0.16);
+        --px-recovery-soft: rgba(106, 215, 255, 0.16);
+        --px-button-surface: rgba(40, 55, 90, 0.5);
+        --px-button-surface-strong: rgba(60, 80, 120, 0.6);
+        --px-button-shadow: rgba(2, 5, 15, 0.4);
       }
 
-      body[data-theme="phosphor"] {
-        --px-bg: #001405;
-        --px-bg-top: #08230d;
-        --px-bg-bottom: #000d03;
-        --px-surface: #062814;
-        --px-surface-2: #0b3a22;
-        --px-surface-3: #0f4a2c;
-        --px-panel: rgba(6, 40, 20, 0.94);
-        --px-panel-soft: rgba(11, 58, 34, 0.84);
-        --px-border: #1a6a1a;
-        --px-border-2: #2a8a2a;
-        --px-text: #39ff14;
-        --px-muted: #8ccb72;
-        --px-good: #39ff14;
-        --px-warn: #b0ff39;
-        --px-low: #3a8c39;
-        --px-critical: #ff3838;
-        --px-accent: #39ff14;
-        --px-info: #00ff88;
-        --px-focus: #00ff88;
-        --px-energy: #39ff14;
-        --px-stress: #ff5a5a;
-        --px-recovery: #00ff88;
-        --px-accent-soft: rgba(57, 255, 20, 0.12);
-        --px-energy-soft: rgba(57, 255, 20, 0.16);
-        --px-stress-soft: rgba(255, 90, 90, 0.16);
-        --px-recovery-soft: rgba(0, 255, 136, 0.14);
-        --px-button-surface: #0f3b22;
-        --px-button-surface-strong: #14502f;
+      /* Acrylic glass: stronger blur on panels and dock */
+      body[data-theme="acrylic"] #self-log-dock,
+      body[data-theme="acrylic"] .header-shell,
+      body[data-theme="acrylic"] #battery-card,
+      body[data-theme="acrylic"] #layer-1,
+      body[data-theme="acrylic"] #layer-2 {
+        backdrop-filter: blur(24px) saturate(140%);
+        -webkit-backdrop-filter: blur(24px) saturate(140%);
       }
 
       body[data-theme="light"] {
@@ -4765,15 +4800,13 @@
       }
 
       #energy-btn {
-        border-color: var(--px-energy);
         background: var(--px-energy-soft);
-        color: var(--px-text);
+        color: var(--px-energy);
       }
 
       #stress-btn {
-        border-color: var(--px-stress);
         background: var(--px-stress-soft);
-        color: var(--px-text);
+        color: var(--px-stress);
       }
       /* Emoji icons in self-log buttons follow the active theme accent
          instead of the OS-default colored emoji glyph. Using
@@ -4795,23 +4828,7 @@
         font-family: var(--px-font-body);
         font-size: 1.06rem; /* VT323 needs slight upscale */
         letter-spacing: 0.01em;
-        background:
-          radial-gradient(
-            circle at top,
-            var(--px-accent-soft),
-            transparent 38%
-          ),
-          radial-gradient(
-            circle at bottom left,
-            var(--px-recovery-soft),
-            transparent 32%
-          ),
-          linear-gradient(
-            180deg,
-            var(--px-bg-top) 0%,
-            var(--bg) 62%,
-            var(--px-bg-bottom) 100%
-          );
+        background: var(--bg);
         color: var(--text);
         transition:
           background-color 200ms steps(3),
@@ -4891,12 +4908,7 @@
       /* Battery card: stronger border, no glass glow */
       #battery-card {
         border: 2px solid var(--px-border);
-        background: linear-gradient(
-          180deg,
-          var(--px-accent-soft),
-          var(--px-panel) 24%,
-          var(--px-surface) 100%
-        );
+        background: var(--px-panel);
         box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.32);
       }
       #battery-card::before {
@@ -4921,9 +4933,6 @@
       #window-select,
       .tab-btn,
       .stepper-btn,
-      #energy-btn,
-      #stress-btn,
-      #recovery-trigger,
       #open-diagnostics,
       #collapse-btn,
       #timeline-toggle-btn,
@@ -4937,16 +4946,6 @@
       }
 
       #recovery-trigger {
-        background: linear-gradient(
-          135deg,
-          var(--px-recovery) 0%,
-          var(--px-info) 100%
-        );
-        color: var(--px-bg);
-        border-color: var(--px-recovery);
-        box-shadow:
-          2px 2px 0 0 var(--px-button-shadow),
-          inset 1px 1px 0 rgba(255, 255, 255, 0.25);
         font-family: var(--px-font-ui);
         letter-spacing: 0.05em;
       }
@@ -5403,6 +5402,17 @@
         border-color: var(--layer-tone, var(--px-info));
       }
 
+      .layer-feature-unlogged {
+        margin-top: 6px;
+        padding: 4px 8px;
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.06em;
+        color: var(--px-muted);
+        border: 1px dashed var(--px-border);
+        cursor: help;
+      }
+
       .layer-legacy {
         border: 2px solid var(--px-border);
         background: var(--px-panel-soft);
@@ -5545,12 +5555,12 @@
 
       .layer2-bottom {
         display: grid;
-        grid-template-columns: minmax(180px, auto) minmax(240px, 1fr) minmax(
+        grid-template-columns: minmax(220px, 1fr) minmax(240px, 1fr) minmax(
             220px,
-            1fr
+            1.2fr
           );
-        gap: 12px;
-        align-items: start;
+        gap: 16px;
+        align-items: stretch;
       }
 
       .layer2-action-stack {
@@ -5587,8 +5597,13 @@
 
       .layer2-readout {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      @media (max-width: 720px) {
+        .layer2-readout {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       .layer2-readout-row {
@@ -5776,7 +5791,7 @@
       .layer2-side-by-side > * {
         flex: 1 1 0;
         min-width: 0;
-        min-height: 280px;
+        min-height: 300px;
       }
 
       .layer2-mini-readout {
@@ -5791,7 +5806,8 @@
 
       .layer2-system {
         min-height: 286px;
-        align-items: end;
+        align-items: stretch;
+        gap: 14px;
       }
 
       .layer2-node {
@@ -5814,8 +5830,9 @@
       }
 
       .layer2-tank {
-        min-height: 228px;
+        min-height: 240px;
         justify-content: space-between;
+        padding: 12px;
       }
 
       .layer2-tank-energy .layer2-tank-title,
@@ -5843,8 +5860,7 @@
 
       .layer2-cells-vertical {
         grid-template-rows: repeat(8, minmax(0, 1fr));
-        min-height: 184px;
-        margin-right: 34px;
+        min-height: 196px;
       }
 
       .layer2-cell {
@@ -5857,7 +5873,7 @@
 
       .layer2-viz-row {
         display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 12px;
         align-items: stretch;
         min-height: 440px;
@@ -6568,8 +6584,8 @@
       .demo-batt-wrap {
         align-items: center;
         gap: 12px;
-        padding: 10px 12px;
-        min-height: 72px;
+        padding: 6px 10px;
+        min-height: 44px;
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
       }
@@ -6603,11 +6619,11 @@
       }
 
       .demo-batt-svg {
-        height: 48px;
+        height: 32px;
       }
 
       .demo-timeline-svg {
-        height: 168px;
+        height: 110px;
       }
 
       .demo-timeline-legend {
@@ -6800,61 +6816,56 @@
         <button id="brand-home" class="brand-home" type="button">
           Mental Meter
         </button>
-        <select id="demo-select" aria-label="Demo profile">
-          <option value="">Live data</option>
-          <option value="sam">Demo · Sam (busy + AI)</option>
-          <option value="maya">Demo · Maya (deep work, healthy)</option>
-          <option value="alex">Demo · Alex (isolated, unhealthy)</option>
-          <option value="jordan">Demo · Jordan (tech, low AI)</option>
-        </select>
-        <button id="demo-toggle-btn" type="button" aria-pressed="false">
-          Interactive Demo
-        </button>
-        <button
-          id="timeline-toggle-btn"
-          type="button"
-          title="4-hour rolling window. Click for the 2-minute accelerated demo view."
-          aria-pressed="false"
-        >
-          <span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span>
-          <span class="timeline-toggle-value">4H</span>
-        </button>
-        <button id="tour-btn" type="button" title="App tour">TOUR</button>
-        <button
-          id="story-btn"
-          type="button"
-          title="5-scene day-in-the-life walkthrough"
-        >
-          STORY &#9654;
-        </button>
-        <button
-          id="calib-btn"
-          type="button"
-          title="Tune your battery (5 questions)"
-        >
-          TUNE
-        </button>
         <span id="demo-header-badge" aria-live="polite">Demo mode</span>
+        <label class="header-source-control" for="demo-select">
+          <span class="header-source-label">Source</span>
+          <select id="demo-select" aria-label="Data source">
+            <option value="">Live data</option>
+            <option value="sam">Demo · Sam (busy + AI)</option>
+            <option value="maya">Demo · Maya (deep work, healthy)</option>
+            <option value="alex">Demo · Alex (isolated, unhealthy)</option>
+            <option value="jordan">Demo · Jordan (tech, low AI)</option>
+          </select>
+        </label>
+        <details id="demo-dropdown">
+          <summary>DEMO</summary>
+          <div id="demo-panel">
+            <button id="demo-toggle-btn" type="button" aria-pressed="false">
+              Interactive Demo
+            </button>
+            <button
+              id="timeline-toggle-btn"
+              type="button"
+              title="4-hour rolling window. Click for the 2-minute accelerated demo view."
+              aria-pressed="false"
+            >
+              <span class="timeline-toggle-icon" aria-hidden="true"
+                >&#8635;</span
+              >
+              <span class="timeline-toggle-value">4H</span>
+            </button>
+            <button id="tour-btn" type="button" title="App tour">TOUR</button>
+            <button
+              id="story-btn"
+              type="button"
+              title="5-scene day-in-the-life walkthrough"
+            >
+              STORY &#9654;
+            </button>
+          </div>
+        </details>
         <details id="header-more">
           <summary>More</summary>
           <div id="header-more-menu" aria-label="More actions"></div>
         </details>
         <details id="theme-picker">
-          <summary
-            class="theme-toggle"
-            aria-label="Change color theme"
-            title="Color theme"
-          >
+          <summary class="theme-toggle" aria-label="Settings" title="Settings">
             <span class="theme-toggle-dot" aria-hidden="true"></span>
-            <span>THEME</span>
+            <span>&#9881;</span>
             <span data-theme-name>ARCADE</span>
             <span class="theme-toggle-caret" aria-hidden="true">▾</span>
           </summary>
-          <div
-            class="theme-panel"
-            role="group"
-            aria-label="Color theme options"
-          >
+          <div class="theme-panel" role="group" aria-label="Settings">
             <button
               type="button"
               class="theme-swatch"
@@ -6873,47 +6884,32 @@
             <button
               type="button"
               class="theme-swatch"
-              data-theme="gameboy"
+              data-theme="pastel"
               aria-pressed="false"
-              title="Game Boy"
+              title="Pastel"
             >
               <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #0f380f"></span
-                ><span style="background: #9bbc0f"></span>
-                <span style="background: #8bac0f"></span
-                ><span style="background: #306230"></span>
+                <span style="background: #2a1f3d"></span
+                ><span style="background: #d6b3ff"></span>
+                <span style="background: #c5e8b5"></span
+                ><span style="background: #ff9eaa"></span>
               </div>
-              <span>GB</span>
+              <span>PASTEL</span>
             </button>
             <button
               type="button"
               class="theme-swatch"
-              data-theme="amber"
+              data-theme="acrylic"
               aria-pressed="false"
-              title="Amber CRT"
+              title="Acrylic glass"
             >
               <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #1a0a00"></span
-                ><span style="background: #ffb000"></span>
-                <span style="background: #ffd060"></span
-                ><span style="background: #b88000"></span>
+                <span style="background: #0e1422"></span
+                ><span style="background: #8fbeff"></span>
+                <span style="background: #6ee0b6"></span
+                ><span style="background: #ff6b8c"></span>
               </div>
-              <span>AMBER</span>
-            </button>
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="phosphor"
-              aria-pressed="false"
-              title="Phosphor green CRT"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #001405"></span
-                ><span style="background: #39ff14"></span>
-                <span style="background: #00ff88"></span
-                ><span style="background: #3a8c39"></span>
-              </div>
-              <span>PHOS</span>
+              <span>ACRYLIC</span>
             </button>
             <button
               type="button"
@@ -6930,20 +6926,30 @@
               </div>
               <span>LIGHT</span>
             </button>
+            <button
+              id="theme-mode-toggle"
+              type="button"
+              aria-pressed="false"
+              aria-label="Switch to light mode"
+              title="Switch to light mode"
+            >
+              <span
+                class="theme-mode-icon"
+                data-theme-mode-icon
+                aria-hidden="true"
+                >☀</span
+              >
+              <span class="theme-mode-label" data-theme-mode-label>LIGHT</span>
+            </button>
+            <button
+              id="calib-btn"
+              type="button"
+              title="Tune your battery (5 questions)"
+            >
+              TUNE
+            </button>
           </div>
         </details>
-        <button
-          id="theme-mode-toggle"
-          type="button"
-          aria-pressed="false"
-          aria-label="Switch to light mode"
-          title="Switch to light mode"
-        >
-          <span class="theme-mode-icon" data-theme-mode-icon aria-hidden="true"
-            >☀</span
-          >
-          <span class="theme-mode-label" data-theme-mode-label>LIGHT</span>
-        </button>
         <button
           id="help-trigger"
           type="button"
@@ -6958,36 +6964,21 @@
           aria-live="polite"
           tabindex="0"
           aria-describedby="connection-pill-popover"
+          data-source="none"
+          data-status="offline"
         >
-          <span class="conn-pill-status">
-            <span class="conn-pill-status-group">
-              <span class="conn-pill-status-label">Source</span>
-              <span class="conn-pill-source-chip" data-source="none">
-                <span class="conn-pill-dot" aria-hidden="true"></span>
-                <span class="conn-pill-source-label">none</span>
-              </span>
-            </span>
-            <span class="conn-pill-status-group">
-              <span class="conn-pill-status-label">Display</span>
-              <span class="conn-pill-display-chip" data-status="offline">
-                <span class="conn-pill-dot" aria-hidden="true"></span>
-                <span class="conn-pill-display-label">offline</span>
-              </span>
-            </span>
-          </span>
-          <span class="conn-pill-text">○ no live data</span>
-          <span class="conn-pill-subtitle">Try the demo</span>
+          <span class="conn-pill-dot" aria-hidden="true"></span>
+          <span class="conn-pill-text">offline</span>
           <div
             id="connection-pill-popover"
             class="conn-pill-popover"
             role="tooltip"
             data-side="bottom"
           >
-            <div class="cpp-current">Current state</div>
+            <div class="cpp-current">Connection status</div>
             <p class="cpp-source">Data source: unavailable.</p>
             <p class="cpp-detail">Loading…</p>
-            <p class="cpp-display">Display write: offline.</p>
-            <ul class="cpp-legend">
+            <ul class="cpp-legend" hidden>
               <li data-key="demo">
                 <span class="cpp-key">â— DEMO DATA</span>
                 <span>Server demo override or interactive demo payload</span>
@@ -7272,21 +7263,6 @@ P = drain - 0.5*recovery</pre
       </button>
     </section>
 
-    <section id="today-signal-strip" aria-label="Today signal">
-      <div class="today-signal-tile">
-        <span class="today-signal-label">Drain so far</span>
-        <span id="today-drain-value" class="today-signal-value">--</span>
-      </div>
-      <div class="today-signal-tile">
-        <span class="today-signal-label">Recovery so far</span>
-        <span id="today-recovery-value" class="today-signal-value">--</span>
-      </div>
-      <div class="today-signal-tile">
-        <span class="today-signal-label">Net E shift</span>
-        <span id="today-net-value" class="today-signal-value">--</span>
-      </div>
-    </section>
-
     <div
       id="toggle-banner"
       class="toggle-banner"
@@ -7304,9 +7280,15 @@ P = drain - 0.5*recovery</pre
         <span class="dock-icon dock-icon-stress" aria-hidden="true">🌀</span>
         Stress
       </button>
+      <button id="recovery-trigger" type="button">
+        <span class="dock-icon" aria-hidden="true">⟲</span>
+        Recovery
+      </button>
+      <button id="tune-trigger" type="button" aria-label="Tune chronotype">
+        <span class="dock-icon" aria-hidden="true">⚙</span>
+        Tune
+      </button>
     </div>
-
-    <button id="recovery-trigger" type="button">RECOVERY</button>
 
     <section id="help-sheet" aria-hidden="true" aria-label="Help">
       <div id="help-tabs" role="tablist" aria-label="Help sections">
@@ -7404,9 +7386,9 @@ P = drain - 0.5*recovery</pre
               <dd>
                 Tap the meter to go deeper. Layer 0 is just the fill. Layer 1
                 opens the diagnostics view: circadian curve, state tanks, energy
-                dynamics, and phase portrait. Layer 2 adds the signal
-                breakdown: pressure, drain rows, recovery rows, and the legacy
-                activity window.
+                dynamics, and phase portrait. Layer 2 adds the signal breakdown:
+                pressure, drain rows, recovery rows, and the legacy activity
+                window.
               </dd>
             </div>
             <div class="gloss-row">
@@ -9711,28 +9693,67 @@ P = drain - 0.5*recovery</pre
         },
       ];
 
+      // Only features derivable from ActivityWatch (window/keyboard/AFK) and the
+      // Calendar API. Anything needing a wearable, sleep tracker, GPS, mic, or
+      // manual log is intentionally excluded.
       const DRAIN_FEATS = [
-        { key: "meeting_video_min", label: "Video meetings", unit: "min" },
-        { key: "meeting_f2f_min", label: "F2F meetings", unit: "min" },
-        { key: "context_switches", label: "Context switches", unit: "" },
-        { key: "kpm_p95_over_base", label: "Typing intensity", unit: "×base" },
-        { key: "after_hours_frac", label: "After-hours", unit: "%" },
-        { key: "sleep_debt_h", label: "Sleep debt", unit: "h" },
-        { key: "fragmentation_dev", label: "Fragmentation", unit: "×base" },
-        { key: "zoom_back_to_back_frac", label: "Back-to-back", unit: "%" },
-        { key: "todoist_overdue_count", label: "Overdue tasks", unit: "" },
+        {
+          key: "meeting_video_min",
+          label: "Video meetings",
+          unit: "min",
+          source: "calendar",
+        },
+        {
+          key: "meeting_f2f_min",
+          label: "F2F meetings",
+          unit: "min",
+          source: "calendar",
+        },
+        {
+          key: "zoom_back_to_back_frac",
+          label: "Back-to-back",
+          unit: "%",
+          source: "calendar",
+        },
+        {
+          key: "after_hours_frac",
+          label: "After-hours",
+          unit: "%",
+          source: "aw+calendar",
+        },
+        {
+          key: "context_switches",
+          label: "Context switches",
+          unit: "",
+          source: "aw",
+        },
+        {
+          key: "fragmentation_dev",
+          label: "Fragmentation",
+          unit: "×base",
+          source: "aw",
+        },
+        {
+          key: "kpm_p95_over_base",
+          label: "Typing intensity",
+          unit: "×base",
+          source: "aw",
+        },
       ];
 
       const RECOVERY_FEATS = [
-        { key: "focus_block_min", label: "Focus blocks", unit: "min" },
-        { key: "walk_outside_min", label: "Walk/outside", unit: "min" },
-        { key: "outside_log_min", label: "Logged outside", unit: "min" },
-        { key: "afk_10plus_min", label: "AFK 10+ min", unit: "min" },
-        { key: "social_voice_min", label: "Social voice", unit: "min" },
-        { key: "with_people_min", label: "With people", unit: "min" },
-        { key: "detach_block_min", label: "Detach blocks", unit: "min" },
-        { key: "continuous_sleep_h", label: "Continuous sleep", unit: "h" },
-        { key: "hrv_z", label: "HRV z-score", unit: "z" },
+        {
+          key: "focus_block_min",
+          label: "Focus blocks",
+          unit: "min",
+          source: "aw",
+        },
+        {
+          key: "afk_10plus_min",
+          label: "AFK 10+ min",
+          unit: "min",
+          source: "aw",
+        },
       ];
 
       const FEAT_HELP = {
@@ -10221,8 +10242,7 @@ P = drain - 0.5*recovery</pre
         const tip = isFast
           ? "2-minute accelerated demo window. Click for the 4-hour rolling window."
           : "4-hour rolling window. Click for the 2-minute accelerated demo view.";
-        DOM.timelineToggleBtn.innerHTML =
-          `<span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span><span class="timeline-toggle-value">${label}</span>`;
+        DOM.timelineToggleBtn.innerHTML = `<span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span><span class="timeline-toggle-value">${label}</span>`;
         DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
         DOM.timelineToggleBtn.setAttribute("aria-label", `${label}. ${tip}`);
         DOM.timelineToggleBtn.title = tip;
@@ -10467,7 +10487,12 @@ P = drain - 0.5*recovery</pre
       }
 
       function hasFeatureValue(raw) {
-        return raw !== null && raw !== undefined && raw !== "" && Number.isFinite(Number(raw));
+        return (
+          raw !== null &&
+          raw !== undefined &&
+          raw !== "" &&
+          Number.isFinite(Number(raw))
+        );
       }
 
       function formatFeatureValue(key, unit, raw) {
@@ -11052,7 +11077,9 @@ P = drain - 0.5*recovery</pre
       function captureDemoScrollState() {
         if (!APP.demo.enabled) return;
         const menu = DOM.demoLayout.querySelector(".demo-menu");
-        const activityView = DOM.demoLayout.querySelector(".demo-activity-view");
+        const activityView = DOM.demoLayout.querySelector(
+          ".demo-activity-view",
+        );
         if (menu) APP.demo.menuScrollTop = menu.scrollTop;
         if (activityView) APP.demo.activityScrollTop = activityView.scrollTop;
       }
@@ -11060,9 +11087,12 @@ P = drain - 0.5*recovery</pre
       function restoreDemoScrollState() {
         if (!APP.demo.enabled) return;
         const menu = DOM.demoLayout.querySelector(".demo-menu");
-        const activityView = DOM.demoLayout.querySelector(".demo-activity-view");
+        const activityView = DOM.demoLayout.querySelector(
+          ".demo-activity-view",
+        );
         if (menu) menu.scrollTop = APP.demo.menuScrollTop || 0;
-        if (activityView) activityView.scrollTop = APP.demo.activityScrollTop || 0;
+        if (activityView)
+          activityView.scrollTop = APP.demo.activityScrollTop || 0;
       }
 
       function renderDemoLayout() {
@@ -11481,7 +11511,8 @@ P = drain - 0.5*recovery</pre
           100,
         );
         const stress = clamp(Number(APP.demo.S) || 0, 0, 100);
-        const eRest = APP.demo.activity?.eRest ?? computeERest(hour, chronotype);
+        const eRest =
+          APP.demo.activity?.eRest ?? computeERest(hour, chronotype);
         return {
           E_display: Number((displayEnergy / 100).toFixed(4)),
           E_internal: Number(internalEnergy.toFixed(2)),
@@ -11528,8 +11559,8 @@ P = drain - 0.5*recovery</pre
           if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
           if (!APP.demo.enabled) return;
           await refreshConnectionPillStateFromServer();
-        } catch (_) {}
-        finally {
+        } catch (_) {
+        } finally {
           demoStateSyncInFlight = false;
           if (demoStateSyncQueued && APP.demo.enabled) {
             demoStateSyncQueued = false;
@@ -12166,7 +12197,9 @@ P = drain - 0.5*recovery</pre
       `;
 
         DOM.phasePortrait.replaceChildren(frame);
-        const legendHost = document.getElementById("phase-portrait-legend-host");
+        const legendHost = document.getElementById(
+          "phase-portrait-legend-host",
+        );
         if (legendHost) {
           legendHost.replaceChildren(legend);
         }
@@ -12212,14 +12245,18 @@ P = drain - 0.5*recovery</pre
         DOM.layer1PressureBar.replaceChildren(pressureSvg);
 
         const renderFeatureRows = (target, items, group) => {
-          target.innerHTML = items
+          const missingLabels = [];
+          const rows = items
             .map((item) => {
               const { text, zero, missing } = formatFeatureValue(
                 item.key,
                 item.unit,
                 feats[item.key],
               );
-              if (missing) return "";
+              if (missing) {
+                missingLabels.push(item.label);
+                return "";
+              }
               const norm = normalizeFeature(item.key, feats[item.key]);
               const fillCount = Math.round(norm * 12);
               const toneColor = getFeatureTone(group, norm);
@@ -12237,6 +12274,11 @@ P = drain - 0.5*recovery</pre
           `;
             })
             .join("");
+          const unloggedRow =
+            missingLabels.length > 0
+              ? `<div class="layer-feature-unlogged" title="${missingLabels.join(", ")}">${missingLabels.length} feature${missingLabels.length > 1 ? "s" : ""} not logged &#9432;</div>`
+              : "";
+          target.innerHTML = rows + unloggedRow;
         };
 
         renderFeatureRows(DOM.layer1DrainList, DRAIN_FEATS, "drain");
@@ -12420,52 +12462,101 @@ P = drain - 0.5*recovery</pre
         const baselineY = scaleY(yMin);
         const area = document.createElementNS(SVG_NS, "polygon");
         const line = document.createElementNS(SVG_NS, "polyline");
-        const currentLine = document.createElementNS(SVG_NS, "line");
         const dot = document.createElementNS(SVG_NS, "circle");
 
+        // 1) Circadian baseline curve (Erest by time of day)
         const points = Array.from({ length: 72 }, (_, index) => {
           const sampleHour = (index / 71) * 24;
           const value = computeERest(sampleHour, chronotype);
           return `${scaleX(sampleHour)},${scaleY(value)}`;
         });
-
         area.setAttribute(
           "points",
           `${margin.left},${baselineY} ${points.join(" ")} ${scaleX(24)},${baselineY}`,
         );
-        area.style.fill = "var(--px-info)";
-        area.style.opacity = "0.25";
+        area.style.fill = "var(--px-accent)";
+        area.style.opacity = "0.12";
         svg.appendChild(area);
 
         line.setAttribute("points", points.join(" "));
         line.style.fill = "none";
         line.style.stroke = "var(--px-accent)";
-        line.style.strokeWidth = "3";
+        line.style.strokeWidth = "2";
+        line.style.opacity = "0.65";
         svg.appendChild(line);
 
-        currentLine.setAttribute("x1", String(margin.left));
-        currentLine.setAttribute("x2", String(width - margin.right));
-        currentLine.setAttribute(
-          "y1",
-          String(scaleY(payload ? currentEnergy : 50)),
-        );
-        currentLine.setAttribute(
-          "y2",
-          String(scaleY(payload ? currentEnergy : 50)),
-        );
-        currentLine.style.stroke = payload
-          ? levelColor(currentEnergy)
-          : "var(--px-muted)";
-        currentLine.style.strokeWidth = "2";
-        currentLine.style.strokeDasharray = "8 6";
-        svg.appendChild(currentLine);
+        // 2) Energy + Stress overlays from tick history (last 24h, by time-of-day)
+        const overlayHistory = loadTickHistory();
+        const overlayCutoff = Date.now() - 24 * 3600 * 1000;
+        const energyPts = [];
+        const stressPts = [];
+        overlayHistory.forEach((entry) => {
+          if (!entry || !entry.payload) return;
+          const ts =
+            entry.savedAt || Date.parse(entry.payload.last_tick_iso || "");
+          if (!Number.isFinite(ts) || ts < overlayCutoff) return;
+          const d = new Date(ts);
+          const sampleHour = d.getHours() + d.getMinutes() / 60;
+          const e = Number(entry.payload.E);
+          const s = Number(entry.payload.S);
+          if (Number.isFinite(e))
+            energyPts.push(`${scaleX(sampleHour)},${scaleY(e)}`);
+          if (Number.isFinite(s))
+            stressPts.push(`${scaleX(sampleHour)},${scaleY(s)}`);
+        });
+        if (payload) {
+          energyPts.push(`${scaleX(hour)},${scaleY(currentEnergy)}`);
+          stressPts.push(`${scaleX(hour)},${scaleY(currentStress)}`);
+        }
+        if (energyPts.length >= 2) {
+          const energyLine = document.createElementNS(SVG_NS, "polyline");
+          energyLine.setAttribute("points", energyPts.join(" "));
+          energyLine.style.fill = "none";
+          energyLine.style.stroke = "var(--px-energy)";
+          energyLine.style.strokeWidth = "2.5";
+          energyLine.style.strokeLinejoin = "round";
+          svg.appendChild(energyLine);
+        }
+        if (stressPts.length >= 2) {
+          const stressLine = document.createElementNS(SVG_NS, "polyline");
+          stressLine.setAttribute("points", stressPts.join(" "));
+          stressLine.style.fill = "none";
+          stressLine.style.stroke = "var(--px-stress)";
+          stressLine.style.strokeWidth = "2.5";
+          stressLine.style.strokeLinejoin = "round";
+          svg.appendChild(stressLine);
+        }
 
+        // 3) Current-time dot on circadian baseline
         dot.setAttribute("cx", String(scaleX(hour)));
         dot.setAttribute("cy", String(scaleY(computeERest(hour, chronotype))));
         dot.setAttribute("r", "5");
         dot.classList.add("layer2-current-dot");
         dot.style.fill = "var(--px-accent)";
         svg.appendChild(dot);
+
+        // Mini legend (top-right)
+        appendSvgText(
+          svg,
+          width - margin.right - 6,
+          margin.top + 8,
+          "● Energy",
+          { anchor: "end", fontSize: "10px", fill: "var(--px-energy)" },
+        );
+        appendSvgText(
+          svg,
+          width - margin.right - 6,
+          margin.top + 22,
+          "● Stress",
+          { anchor: "end", fontSize: "10px", fill: "var(--px-stress)" },
+        );
+        appendSvgText(
+          svg,
+          width - margin.right - 6,
+          margin.top + 36,
+          "● Circadian",
+          { anchor: "end", fontSize: "10px", fill: "var(--px-accent)" },
+        );
 
         [0, 6, 12, 18, 24].forEach((labelHour) => {
           const tick = document.createElementNS(SVG_NS, "line");
@@ -12877,6 +12968,9 @@ P = drain - 0.5*recovery</pre
         if (DOM.connectionPillDisplayLabel) {
           DOM.connectionPillDisplayLabel.textContent = displayMeta.short;
         }
+        // Drive the simplified pill via data-* attributes for our CSS color rules
+        DOM.connectionPill.dataset.source = sourceMeta.key;
+        DOM.connectionPill.dataset.status = displayMeta.key;
         DOM.connectionPill.style.color = color;
         DOM.connectionPill.title = subtitle
           ? `${subtitle}. ${tip} Data source ${sourceMeta.long}. ${sourceMeta.tip} Display write ${displayMeta.long}. ${displayMeta.tip}`
@@ -14114,13 +14208,12 @@ P = drain - 0.5*recovery</pre
       const THEME_KEY = "pb_theme";
       const LAST_DARK_THEME_KEY = "pb_last_dark_theme";
       const LIGHT_THEME = "light";
-      const DARK_THEMES = ["arcade", "gameboy", "amber", "phosphor"];
+      const DARK_THEMES = ["arcade", "pastel", "acrylic"];
       const VALID_THEMES = [...DARK_THEMES, LIGHT_THEME];
       const THEME_LABELS = {
         arcade: "ARCADE",
-        gameboy: "GB",
-        amber: "AMBER",
-        phosphor: "PHOS",
+        pastel: "PASTEL",
+        acrylic: "ACRYLIC",
         light: "LIGHT",
       };
 
@@ -14204,20 +14297,43 @@ P = drain - 0.5*recovery</pre
             if (current === LIGHT_THEME) {
               setThemePreference(getPreferredDarkTheme());
             } else {
-              rememberDarkTheme(DARK_THEMES.includes(current) ? current : "arcade");
+              rememberDarkTheme(
+                DARK_THEMES.includes(current) ? current : "arcade",
+              );
               setThemePreference(LIGHT_THEME);
             }
             if (picker && picker.tagName === "DETAILS") picker.open = false;
           });
         }
         // Dismiss on outside click, and on Escape while open
+        const demoDD = document.getElementById("demo-dropdown");
         document.addEventListener("click", (e) => {
-          if (!picker || !picker.open) return;
-          if (!picker.contains(e.target)) picker.open = false;
+          if (picker && picker.open && !picker.contains(e.target))
+            picker.open = false;
+          if (demoDD && demoDD.open && !demoDD.contains(e.target))
+            demoDD.open = false;
         });
         document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && picker && picker.open) picker.open = false;
+          if (e.key === "Escape") {
+            if (picker && picker.open) picker.open = false;
+            if (demoDD && demoDD.open) demoDD.open = false;
+          }
         });
+        // Auto-close demo dropdown when a button inside the panel is clicked
+        if (demoDD) {
+          demoDD.addEventListener("click", (e) => {
+            if (
+              e.target !== demoDD.querySelector("summary") &&
+              (e.target.tagName === "BUTTON" ||
+                e.target.tagName === "OPTION" ||
+                e.target.closest("button"))
+            ) {
+              setTimeout(() => {
+                demoDD.open = false;
+              }, 80);
+            }
+          });
+        }
       }
 
       let modelPollId = 0;
@@ -14256,13 +14372,20 @@ P = drain - 0.5*recovery</pre
 
         const layer1Back = layer1Block.querySelector("[data-layer-back]");
         const layer2Back = layer2Block.querySelector("[data-layer-back]");
-        const layer1PressureCard = layer1Block.querySelector(".layer-card-pressure");
-        const featureColumns = layer1Block.querySelector(".layer1-feature-columns-v2");
+        const layer1PressureCard = layer1Block.querySelector(
+          ".layer-card-pressure",
+        );
+        const featureColumns = layer1Block.querySelector(
+          ".layer1-feature-columns-v2",
+        );
         const legacyBreakdown = document.getElementById("legacy-breakdown");
         const diagnosticsTop = layer2Block.querySelector(".layer2-top-v2");
-        const diagnosticsBottom = layer2Block.querySelector(".layer2-bottom-v2");
+        const diagnosticsBottom =
+          layer2Block.querySelector(".layer2-bottom-v2");
         const diagnosticsViz = layer2Block.querySelector(".layer2-viz-row");
-        const diagnosticsRaw = layer2Block.querySelector("details.layer-legacy");
+        const diagnosticsRaw = layer2Block.querySelector(
+          "details.layer-legacy",
+        );
         if (
           !layer1Back ||
           !layer2Back ||
@@ -14817,6 +14940,8 @@ P = drain - 0.5*recovery</pre
         }
 
         if (calibBtn) calibBtn.addEventListener("click", openCalibModal);
+        const tuneTrigger = document.getElementById("tune-trigger");
+        if (tuneTrigger) tuneTrigger.addEventListener("click", openCalibModal);
         if (calibModal) {
           calibModal.addEventListener("click", (e) => {
             if (
