@@ -6418,7 +6418,8 @@
 
       @media (max-width: 520px) {
         .demo-timeline-meter-row {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(132px, 0.9fr) minmax(0, 1fr);
+          gap: 10px;
           padding-top: 10px;
         }
 
@@ -6874,7 +6875,7 @@ P = drain - 0.5*recovery</pre
               <div class="panel-section-head">
                 <h2 class="section-title">Activity breakdown</h2>
                 <select id="window-select" aria-label="Activity window">
-                  <option value="0.083">5 min (demo)</option>
+                  <option value="0.03333333333333333">2 min (demo)</option>
                   <option value="0.25">15 min</option>
                   <option value="1">1 hr</option>
                   <option value="2">2 hr</option>
@@ -7205,7 +7206,7 @@ P = drain - 0.5*recovery</pre
             </li>
             <li>
               The meter fill shows your current energy level, smoothed; the
-              diagnostics layer shows the math underneath if you want to look.
+              detail layers show the math underneath if you want to look.
             </li>
           </ol>
         </div>
@@ -9422,11 +9423,12 @@ P = drain - 0.5*recovery</pre
       let windowHours = 4;
       let windowBucket = null;
       let afkBucket = null;
-      const FAST_DEMO_WINDOW_HOURS = 0.083;
+      const FAST_DEMO_WINDOW_HOURS = 2 / 60;
       const LIVE_WINDOW_HOURS = 4;
       const sessionStart = new Date();
       let modelFetchInFlight = false;
       let awFetchInFlight = false;
+      let demoStateSyncTimer = 0;
       let screenScene = null;
       let screensaverCtx = null;
       let screensaverWidth = 0;
@@ -9820,6 +9822,20 @@ P = drain - 0.5*recovery</pre
           });
       }
 
+      function updateTimelineToggleButton() {
+        if (!DOM.timelineToggleBtn) return;
+        const isFast = windowHours <= 0.1;
+        const label = isFast ? "2M" : "4H";
+        const tip = isFast
+          ? "2-minute accelerated demo window. Click for the 4-hour rolling window."
+          : "4-hour rolling window. Click for the 2-minute accelerated demo view.";
+        DOM.timelineToggleBtn.innerHTML =
+          `<span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span><span class="timeline-toggle-value">${label}</span>`;
+        DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
+        DOM.timelineToggleBtn.setAttribute("aria-label", `${label}. ${tip}`);
+        DOM.timelineToggleBtn.title = tip;
+      }
+
       function applyWindowHoursSelection(nextWindowHours, reason = "change") {
         const parsedHours = parseFloat(nextWindowHours);
         if (!Number.isFinite(parsedHours)) return;
@@ -9829,11 +9845,7 @@ P = drain - 0.5*recovery</pre
           DOM.windowSelect.value = String(windowHours);
         }
         syncDemoWindowButtons();
-        if (DOM.timelineToggleBtn) {
-          const isFast = windowHours <= 0.1;
-          DOM.timelineToggleBtn.textContent = isFast ? "2M" : "4H";
-          DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
-        }
+        updateTimelineToggleButton();
         windowBucket = null;
         afkBucket = null;
         APP.aw.buckets = { win: null, afk: null };
@@ -10376,6 +10388,8 @@ P = drain - 0.5*recovery</pre
         APP.demo.featureAccum = getDemoFeatureSeed();
         APP.demo.animationStopId = null;
         APP.demo.completedActivities = [];
+        APP.demo.menuScrollTop = 0;
+        APP.demo.activityScrollTop = 0;
       }
 
       function buildBatterySvg(level, isStress) {
@@ -10444,6 +10458,7 @@ P = drain - 0.5*recovery</pre
           );
           renderDemoTimeline();
         }
+        scheduleDemoStateSync();
       }
 
       function startDemoBatteryTween(activityId, handles, durationMs = 1700) {
@@ -11053,6 +11068,67 @@ P = drain - 0.5*recovery</pre
         activity.completed = true;
       }
 
+      function buildDemoStatePayload() {
+        const savedPayload = APP.demo.savedAppState?.model?.payload || null;
+        const chronotype = getResolvedChronotype(savedPayload?.chronotype);
+        const tickIso = APP.demo.activity?.afterClock || APP.demo.simClock || new Date().toISOString();
+        const tickDate = new Date(tickIso);
+        const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
+        const modelFeats = projectDemoFeaturesToModel(APP.demo.featureAccum);
+        const displayEnergy = clamp(
+          Number(APP.demo.activity?.displayBattery ?? APP.demo.E) || 0,
+          0,
+          100,
+        );
+        const internalEnergy = clamp(Number(APP.demo.E) || displayEnergy, 0, 100);
+        const stress = clamp(Number(APP.demo.S) || 0, 0, 100);
+        const eRest = APP.demo.activity?.eRest ?? computeERest(hour, chronotype);
+        return {
+          E_display: Number((displayEnergy / 100).toFixed(4)),
+          E_internal: Number(internalEnergy.toFixed(2)),
+          S: Number(stress.toFixed(2)),
+          E_rest_now: Number(eRest.toFixed(2)),
+          last_tick_iso: tickDate.toISOString(),
+          last_update_iso: tickDate.toISOString(),
+          last_feats: modelFeats,
+          phase: Number(savedPayload?.phase) || 0,
+          chronotype,
+          aw_connected: true,
+        };
+      }
+
+      async function pushDemoStateNow() {
+        if (!APP.demo.enabled) return;
+        try {
+          await fetch("/demo-state", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(buildDemoStatePayload()),
+          });
+        } catch (_) {}
+      }
+
+      function scheduleDemoStateSync(delay = 80) {
+        if (!APP.demo.enabled) return;
+        if (demoStateSyncTimer) {
+          window.clearTimeout(demoStateSyncTimer);
+        }
+        demoStateSyncTimer = window.setTimeout(() => {
+          demoStateSyncTimer = 0;
+          void pushDemoStateNow();
+        }, delay);
+      }
+
+      async function clearDemoStateSync() {
+        if (demoStateSyncTimer) {
+          window.clearTimeout(demoStateSyncTimer);
+          demoStateSyncTimer = 0;
+        }
+        try {
+          await fetch("/demo-state", { method: "DELETE" });
+        } catch (_) {}
+      }
+
       function playDemoActivity(activityId) {
         const activity = getDemoActivity(activityId);
         if (!activity || !APP.demo.enabled) return;
@@ -11143,6 +11219,7 @@ P = drain - 0.5*recovery</pre
             APP.demo.activity.displayBattery = displayBattery;
           }
           renderApp();
+          scheduleDemoStateSync();
           const sceneFrame = DOM.demoLayout.querySelector(".demo-scene-frame");
           if (sceneFrame) {
             const elapsedMs = Math.max(0, Math.round(nowMs() - sceneStartMs));
@@ -11220,11 +11297,13 @@ P = drain - 0.5*recovery</pre
         APP.demo.completedActivities = [];
         renderToggleBanner();
         renderApp();
+        scheduleDemoStateSync(0);
       }
 
       function exitDemoMode() {
         if (!APP.demo.enabled) return;
         stopDemoAnimation();
+        void clearDemoStateSync();
         const saved = APP.demo.savedAppState || null;
         const resumeScreensaver = saved?.mode === "screensaver";
         restoreDemoAppState(saved);
@@ -12336,9 +12415,9 @@ P = drain - 0.5*recovery</pre
 
       function renderConnectionPill() {
         const payload = getModelPayload();
-        const displayStatus = APP.demo.enabled
-          ? "offline"
-          : getDisplayWriteStatus(payload);
+        const demo = getActiveDemoProfile();
+        const displayStatus =
+          APP.demo.enabled || demo ? "offline" : getDisplayWriteStatus(payload);
         DOM.body.classList.toggle(
           "is-backend-offline",
           !APP.model.online && !APP.model.stale,
@@ -12357,7 +12436,6 @@ P = drain - 0.5*recovery</pre
           );
           return;
         }
-        const demo = getActiveDemoProfile();
         if (demo) {
           setConnectionPillState(
             `DEMO ${demo.name.toUpperCase()}`,
@@ -13533,6 +13611,53 @@ P = drain - 0.5*recovery</pre
         }, AW_POLL_MS);
       }
 
+      function initializeLayerPanels() {
+        const layer1Block = DOM.layer1?.querySelector(".layer-panel-block-v2");
+        const layer2Block = DOM.layer2?.querySelector(".layer-panel-block-v2");
+        if (!layer1Block || !layer2Block) return;
+
+        const layer1Back = layer1Block.querySelector("[data-layer-back]");
+        const layer2Back = layer2Block.querySelector("[data-layer-back]");
+        const layer1PressureCard = layer1Block.querySelector(".layer-card-pressure");
+        const featureColumns = layer1Block.querySelector(".layer1-feature-columns-v2");
+        const legacyBreakdown = document.getElementById("legacy-breakdown");
+        const diagnosticsTop = layer2Block.querySelector(".layer2-top-v2");
+        const diagnosticsBottom = layer2Block.querySelector(".layer2-bottom-v2");
+        const diagnosticsViz = layer2Block.querySelector(".layer2-viz-row");
+        const diagnosticsRaw = layer2Block.querySelector("details.layer-legacy");
+        if (
+          !layer1Back ||
+          !layer2Back ||
+          !layer1PressureCard ||
+          !featureColumns ||
+          !legacyBreakdown ||
+          !diagnosticsTop ||
+          !diagnosticsBottom ||
+          !diagnosticsViz ||
+          !diagnosticsRaw
+        ) {
+          return;
+        }
+
+        layer1Block.replaceChildren(
+          layer1Back,
+          diagnosticsTop,
+          diagnosticsBottom,
+          diagnosticsViz,
+          diagnosticsRaw,
+          DOM.openDiagnostics,
+        );
+        layer2Block.replaceChildren(
+          layer2Back,
+          layer1PressureCard,
+          featureColumns,
+          legacyBreakdown,
+        );
+        DOM.openDiagnostics.innerHTML =
+          'Show feature signals <span class="pix-arrow-down">&#9660;</span>';
+        DOM.openDiagnostics.title = "Open the drain and recovery feature layer";
+      }
+
       function initUi() {
         DOM.backdrop.hidden = false;
         DOM.ratingSheet.hidden = false;
@@ -13542,6 +13667,7 @@ P = drain - 0.5*recovery</pre
         // More menu removed — tour/story/calib/theme/help stay in the top row
 
         initTheme();
+        initializeLayerPanels();
         renderRatingSheet();
         renderRecoverySheet();
         renderApp();
@@ -13580,6 +13706,46 @@ P = drain - 0.5*recovery</pre
         DOM.demoSelect.value = getActiveDemoId();
         applyDemoModeBody();
         syncLayer2Motion();
+        scheduleConnectionPillPopoverPosition();
+
+        if (DOM.connectionPill) {
+          DOM.connectionPill.addEventListener(
+            "mouseenter",
+            scheduleConnectionPillPopoverPosition,
+          );
+          DOM.connectionPill.addEventListener(
+            "focusin",
+            scheduleConnectionPillPopoverPosition,
+          );
+          DOM.connectionPill.addEventListener("click", (event) => {
+            DOM.connectionPill.classList.toggle("is-pinned");
+            scheduleConnectionPillPopoverPosition();
+            event.stopPropagation();
+          });
+          document.addEventListener("click", (event) => {
+            if (!DOM.connectionPill.contains(event.target)) {
+              DOM.connectionPill.classList.remove("is-pinned");
+            }
+          });
+          window.addEventListener(
+            "scroll",
+            scheduleConnectionPillPopoverPosition,
+            true,
+          );
+        }
+
+        window.addEventListener("beforeunload", () => {
+          if (APP.demo.enabled) {
+            fetch("/demo-state", { method: "DELETE", keepalive: true }).catch(
+              () => {},
+            );
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            DOM.connectionPill.classList.remove("is-pinned");
+          }
+        });
 
         DOM.brandHome.addEventListener("click", () => {
           if (APP.demo.enabled) {
@@ -13836,6 +14002,7 @@ P = drain - 0.5*recovery</pre
           if (APP.mode === "screensaver") {
             initScreensaverScene(APP.recovery.theme);
           }
+          scheduleConnectionPillPopoverPosition();
         });
 
         document.addEventListener("visibilitychange", () => {
@@ -14123,19 +14290,16 @@ P = drain - 0.5*recovery</pre
         if (storyBtn) storyBtn.addEventListener("click", startStoryMode);
 
         function syncTimelineToggleBtn() {
-          if (!DOM.timelineToggleBtn) return;
-          const isFast = windowHours <= 0.1;
-          DOM.timelineToggleBtn.textContent = isFast ? "2M" : "4H";
-          DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
-          DOM.timelineToggleBtn.title = isFast
-            ? "Fast (2-min window) — click for 4-hour window"
-            : "Normal (4-hour window) — click for 2-min fast window";
+          updateTimelineToggleButton();
         }
 
         if (DOM.timelineToggleBtn) {
           DOM.timelineToggleBtn.addEventListener("click", () => {
             const isFast = windowHours <= 0.1;
-            applyWindowHoursSelection(isFast ? 4 : 0.033, "timeline-toggle");
+            applyWindowHoursSelection(
+              isFast ? LIVE_WINDOW_HOURS : FAST_DEMO_WINDOW_HOURS,
+              "timeline-toggle",
+            );
             syncTimelineToggleBtn();
           });
           syncTimelineToggleBtn();
@@ -14452,7 +14616,7 @@ P = drain - 0.5*recovery</pre
         {
           targetId: "connection-pill",
           title: "LIVE DATA STATUS",
-          body: "This pill shows whether ActivityWatch is connected and serving fresh data. Green = live. If it shows STALE or AW OFFLINE, the meter is coasting on the last known state rather than updating.",
+          body: "This pill shows whether the app has fresh live data, and the small Display chip shows whether the e-ink panel is actively receiving writes. Green = live, amber = stale, red = offline.",
           pos: "below",
         },
         {
