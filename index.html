@@ -142,10 +142,10 @@
         min-width: 280px;
         max-width: min(320px, calc(100vw - 16px));
         padding: 12px 14px;
-        background: var(--px-surface, #1a1a24);
+        background: var(--px-panel);
         border: 2px solid var(--px-accent, #818cf8);
-        box-shadow: 3px 3px 0 0 #000;
-        font-family: var(--px-font-body, system-ui);
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
+        font-family: var(--px-font-copy);
         font-weight: 400;
         font-size: 13px;
         line-height: 1.45;
@@ -200,10 +200,10 @@
       .conn-pill-popover .cpp-detail {
         margin: 0 0 8px 0;
       }
+      .conn-pill-popover .cpp-source,
       .conn-pill-popover .cpp-display {
         margin: 0 0 10px 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: var(--px-font-copy);
         font-size: 12px;
         line-height: 1.45;
         color: var(--px-text, #e0e0f0);
@@ -239,6 +239,7 @@
         margin: 8px 0 0 0;
         padding-top: 8px;
         border-top: 1px solid var(--px-border, #2a2a3a);
+        font-family: var(--px-font-copy);
         font-size: 11px;
         opacity: 0.75;
       }
@@ -373,7 +374,8 @@
       .conn-pill-status {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        flex-wrap: wrap;
         min-width: 0;
         font-size: 10px;
         letter-spacing: 0.12em;
@@ -381,10 +383,18 @@
         color: var(--px-muted);
       }
 
+      .conn-pill-status-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+      }
+
       .conn-pill-status-label {
         opacity: 0.8;
       }
 
+      .conn-pill-source-chip,
       .conn-pill-display-chip {
         display: inline-flex;
         align-items: center;
@@ -393,6 +403,22 @@
         padding: 1px 6px;
         border: 1px solid currentColor;
         background: rgba(255, 255, 255, 0.04);
+        color: var(--px-muted);
+      }
+
+      .conn-pill-source-chip[data-source="model"] {
+        color: var(--px-good);
+      }
+
+      .conn-pill-source-chip[data-source="demo"] {
+        color: var(--px-accent);
+      }
+
+      .conn-pill-source-chip[data-source="aw-fallback"] {
+        color: var(--px-warn);
+      }
+
+      .conn-pill-source-chip[data-source="none"] {
         color: var(--px-muted);
       }
 
@@ -536,7 +562,8 @@
       #tour-btn,
       #story-btn,
       #calib-btn,
-      #timeline-toggle-btn {
+      #timeline-toggle-btn,
+      #theme-mode-toggle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -545,20 +572,38 @@
         min-height: 44px;
         padding: 0 14px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        box-shadow: 2px 2px 0 0 #000;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
 
       #timeline-toggle-btn[aria-pressed="true"] {
         border-color: var(--px-accent);
         color: var(--px-accent);
-        background: rgba(129, 140, 248, 0.12);
+        background: var(--px-accent-soft);
+      }
+
+      #tour-btn:hover,
+      #tour-btn:focus-visible,
+      #story-btn:hover,
+      #story-btn:focus-visible,
+      #calib-btn:hover,
+      #calib-btn:focus-visible,
+      #timeline-toggle-btn:hover,
+      #timeline-toggle-btn:focus-visible,
+      #theme-mode-toggle:hover,
+      #theme-mode-toggle:focus-visible,
+      .theme-toggle:hover,
+      .theme-toggle:focus-visible {
+        border-color: var(--px-accent);
+        background: var(--px-button-surface-strong);
+        color: var(--px-text);
+        outline: none;
       }
 
       #help-trigger {
@@ -570,13 +615,13 @@
         min-height: 44px;
         padding: 0 10px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
-        color: var(--px-accent);
+        background: var(--px-button-surface);
+        color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: 1rem;
         font-weight: 700;
         letter-spacing: 0;
-        box-shadow: 2px 2px 0 0 #000;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
         cursor: pointer;
       }
 
@@ -784,7 +829,7 @@
       }
 
       .today-signal-value {
-        font-family: var(--px-font-body);
+        font-family: var(--px-font-copy);
         font-size: var(--fs-numeric);
         line-height: 1;
         color: var(--px-text);
@@ -1161,10 +1206,10 @@
         max-height: 90vh;
         overflow-y: auto;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-panel);
         padding: 32px 36px;
-        box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
-        font-family: var(--px-font-ui);
+        box-shadow: 4px 4px 0 0 var(--px-button-shadow);
+        font-family: var(--px-font-copy);
         color: var(--px-text);
         font-size: 16px;
         line-height: 1.7;
@@ -1201,12 +1246,13 @@
         margin-top: 18px;
         padding: 8px 16px;
         border: 2px solid var(--px-border);
-        background: var(--surface-2);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         cursor: pointer;
         letter-spacing: 0.08em;
         text-transform: uppercase;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
 
       .demo-continue-btn {
@@ -2336,14 +2382,14 @@
         padding: 0 18px;
         min-height: 44px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
       .calib-actions .calib-submit {
         border-color: var(--px-good);
@@ -2361,7 +2407,7 @@
         padding: 0;
         margin-left: 6px;
         border: 1px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-button-surface);
         color: var(--px-accent);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
@@ -2369,7 +2415,7 @@
         vertical-align: middle;
       }
       .layer-feature-help-btn:hover {
-        background: var(--surface-2);
+        background: var(--px-button-surface-strong);
         border-color: var(--px-accent);
       }
       .layer-feature-popover {
@@ -2377,12 +2423,12 @@
         max-width: 320px;
         padding: 14px 16px;
         border: 2px solid var(--px-accent);
-        background: var(--surface);
+        background: var(--px-panel);
         color: var(--px-text);
-        font-family: var(--px-font-ui);
-        font-size: var(--fs-label);
+        font-family: var(--px-font-copy);
+        font-size: 14px;
         line-height: 1.5;
-        box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.7);
+        box-shadow: 4px 4px 0 0 var(--px-button-shadow);
         z-index: 9999;
         inset: unset;
       }
@@ -2438,16 +2484,16 @@
       }
       #tour-tooltip {
         position: fixed;
-        background: var(--surface, #1a1a24);
+        background: var(--px-panel);
         border: 2px solid var(--px-accent, #818cf8);
         padding: 16px;
         max-width: 290px;
         min-width: 200px;
-        font-family: var(--px-font-ui, "Silkscreen", monospace);
+        font-family: var(--px-font-copy);
         font-size: 12px;
         color: var(--text, #e0e0f0);
         z-index: 9002;
-        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 4px 4px 0 0 var(--px-button-shadow);
       }
       #tour-step-num {
         font-size: 10px;
@@ -2464,7 +2510,7 @@
       #tour-body {
         line-height: 1.55;
         color: var(--text, #e0e0f0);
-        font-family: "VT323", monospace;
+        font-family: var(--px-font-copy);
         font-size: 16px;
       }
       #tour-controls {
@@ -2480,22 +2526,28 @@
         padding: 6px 10px;
         min-height: 36px;
         border: 2px solid var(--px-border, #2a2a3a);
-        background: var(--surface-2, #22223a);
+        background: var(--px-button-surface);
         color: var(--text, #e0e0f0);
         cursor: pointer;
         letter-spacing: 0.06em;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
       #tour-next {
-        background: var(--px-accent, #818cf8);
+        background: linear-gradient(
+          135deg,
+          var(--px-accent) 0%,
+          var(--px-recovery) 100%
+        );
         border-color: var(--px-accent, #818cf8);
         color: var(--bg, #0f0f13);
         margin-left: auto;
       }
       #tour-back:hover {
         border-color: var(--px-accent, #818cf8);
+        background: var(--px-button-surface-strong);
       }
       #tour-next:hover {
-        opacity: 0.85;
+        filter: brightness(1.05);
       }
       #tour-skip {
         font-family: var(--px-font-ui, "Silkscreen", monospace);
@@ -2530,11 +2582,11 @@
         width: 100%;
         max-width: 460px;
         border: 3px solid var(--px-accent, #818cf8);
-        background: var(--px-surface, #1a1a24);
-        box-shadow: 6px 6px 0 0 #000;
+        background: var(--px-panel);
+        box-shadow: 6px 6px 0 0 var(--px-button-shadow);
         padding: 28px 26px 22px;
         text-align: center;
-        font-family: var(--px-font-body, system-ui);
+        font-family: var(--px-font-copy);
         color: var(--px-text, #e0e0f0);
         animation: intro-pop 320ms steps(4, end) both;
       }
@@ -2551,6 +2603,14 @@
       .intro-splash-icon {
         display: block;
         margin: 0 auto 14px;
+        padding: 10px 16px;
+        border: 2px solid var(--px-border);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          var(--px-accent-soft)
+        );
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
         image-rendering: pixelated;
       }
       .intro-splash-title {
@@ -2574,7 +2634,7 @@
         text-align: left;
         margin: 0 0 22px;
         padding: 14px 16px;
-        background: var(--px-surface-2, #22223a);
+        background: var(--px-panel-soft);
         border: 2px dashed var(--px-border, #2a2a3a);
       }
       .intro-splash-line {
@@ -2609,22 +2669,27 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 3px 3px 0 0 #000;
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
         border: 2px solid var(--px-border, #2a2a3a);
-        background: var(--px-surface-2, #22223a);
+        background: var(--px-button-surface);
         color: var(--px-text, #e0e0f0);
       }
       .intro-splash-btn.is-primary {
-        background: var(--px-accent, #818cf8);
-        color: #0b0b14;
+        background: linear-gradient(
+          135deg,
+          var(--px-accent) 0%,
+          var(--px-recovery) 100%
+        );
+        color: var(--px-bg);
         border-color: var(--px-accent, #818cf8);
       }
       .intro-splash-btn.is-primary:hover {
-        filter: brightness(1.1);
+        filter: brightness(1.06);
       }
       .intro-splash-btn.is-ghost:hover {
         border-color: var(--px-accent, #818cf8);
         color: var(--px-accent, #818cf8);
+        background: var(--px-button-surface-strong);
       }
       .intro-splash-skip {
         margin: 14px 0 0;
@@ -2655,10 +2720,10 @@
         display: none;
         align-items: center;
         gap: 18px;
-        background: var(--px-surface, #1a1a24);
+        background: var(--px-panel);
         border: 2px solid var(--px-accent, #818cf8);
-        box-shadow: 3px 3px 0 0 #000;
-        font-family: var(--px-font-body, system-ui);
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
+        font-family: var(--px-font-copy);
         font-size: 17px;
         color: var(--px-text, #e0e0f0);
         animation: first-visit-slide 360ms steps(4, end) both;
@@ -2783,10 +2848,10 @@
         z-index: 75;
         max-width: 300px;
         padding: 12px 14px 12px 16px;
-        background: var(--px-surface, #1a1a24);
+        background: var(--px-panel);
         border: 2px solid var(--px-accent, #818cf8);
-        box-shadow: 3px 3px 0 0 #000;
-        font-family: var(--px-font-body, system-ui);
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
+        font-family: var(--px-font-copy);
         color: var(--px-text, #e0e0f0);
         font-size: 13px;
         line-height: 1.4;
@@ -2961,6 +3026,7 @@
         font-size: 1.1rem;
         line-height: 1.45;
         color: var(--px-text);
+        font-family: var(--px-font-copy);
         min-height: 3.6em;
       }
       #story-controls {
@@ -3577,10 +3643,10 @@
         display: flex;
         gap: 8px;
         padding: 10px 12px calc(env(safe-area-inset-bottom, 12px) + 6px);
-        background: rgba(15, 15, 19, 0.94);
+        background: var(--px-panel);
         border: 2px solid var(--border);
         border-radius: 18px;
-        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
+        box-shadow: 0 16px 28px rgba(2, 8, 20, 0.28);
         backdrop-filter: blur(18px);
         z-index: 30;
       }
@@ -3590,7 +3656,7 @@
         min-height: 48px;
         border-radius: 14px;
         border: 1px solid var(--border-light);
-        background: var(--surface);
+        background: var(--px-button-surface);
         cursor: pointer;
         font-weight: 700;
         font-family: var(--px-font-ui);
@@ -3641,8 +3707,8 @@
         border: var(--panel-border);
         border-bottom: none;
         background:
-          linear-gradient(180deg, rgba(129, 140, 248, 0.12), transparent 28%),
-          var(--surface);
+          linear-gradient(180deg, var(--px-accent-soft), transparent 28%),
+          var(--px-panel);
         transform: translateY(100%);
         transition: transform 220ms ease;
         padding: var(--panel-pad) var(--panel-pad)
@@ -3702,7 +3768,9 @@
 
       .sheet-subtitle {
         color: var(--muted);
-        font-size: 0.94rem;
+        font-family: var(--px-font-copy);
+        font-size: 0.98rem;
+        line-height: 1.5;
         margin-bottom: 14px;
       }
 
@@ -3729,15 +3797,108 @@
 
       .tab-btn.is-active {
         color: var(--text);
-        border-color: rgba(129, 140, 248, 0.48);
-        background: rgba(129, 140, 248, 0.16);
+        border-color: var(--px-accent);
+        background: var(--px-accent-soft);
       }
 
       #rating-hint {
         min-height: 22px;
         color: var(--muted);
-        font-size: 0.94rem;
+        font-family: var(--px-font-copy);
+        font-size: 0.98rem;
+        line-height: 1.45;
         margin-bottom: 12px;
+      }
+
+      .rating-layout {
+        display: grid;
+        gap: 14px;
+        align-items: start;
+      }
+
+      .rating-main {
+        min-width: 0;
+      }
+
+      .rating-sidecar {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+        border: 2px solid var(--px-border);
+        background: var(--px-surface);
+      }
+
+      .rating-sidecar[hidden] {
+        display: none;
+      }
+
+      .rating-sidecar-title {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-accent);
+      }
+
+      .rating-sidecar-copy {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--text);
+      }
+
+      .rating-sidecar-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .rating-sidecar-row {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+      }
+
+      .rating-sidecar-range {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        padding: 0 8px;
+        border: 2px solid var(--rating-tone, var(--px-critical));
+        color: var(--rating-tone, var(--px-critical));
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .rating-sidecar-label {
+        display: block;
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text);
+      }
+
+      .rating-sidecar-detail {
+        display: block;
+        margin-top: 2px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      @media (min-width: 760px) {
+        #rating-sheet[data-kind="stress_rating"] .rating-layout {
+          grid-template-columns: minmax(0, 1.25fr) minmax(220px, 0.9fr);
+          gap: 16px;
+        }
       }
 
       .tap-rail {
@@ -3796,8 +3957,8 @@
       }
 
       .tap-score.is-pressed {
-        border-color: rgba(129, 140, 248, 0.6);
-        background: rgba(129, 140, 248, 0.2);
+        border-color: var(--px-accent);
+        background: var(--px-accent-soft);
         transform: translateY(-1px);
       }
 
@@ -3828,8 +3989,10 @@
 
       .activity-btn.is-active {
         border-color: var(--activity-accent);
-        background: rgba(129, 140, 248, 0.16);
-        box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.12);
+        background: var(--px-panel-soft);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+          2px 2px 0 0 var(--px-button-shadow);
       }
 
       .activity-copy {
@@ -3858,6 +4021,7 @@
 
       .activity-meta {
         color: var(--muted);
+        font-family: var(--px-font-copy);
         font-size: 0.88rem;
         white-space: nowrap;
       }
@@ -3892,7 +4056,7 @@
         padding: 14px;
         border-radius: 16px;
         border: 1px solid var(--border-light);
-        background: rgba(15, 15, 19, 0.34);
+        background: var(--px-panel-soft);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -3936,11 +4100,16 @@
 
       .start-btn {
         border: none;
-        background: linear-gradient(135deg, #6d76f8 0%, #818cf8 100%);
-        color: #fff;
+        background: linear-gradient(
+          135deg,
+          var(--px-recovery) 0%,
+          var(--px-info) 100%
+        );
+        color: var(--px-bg);
       }
 
       .toggle-hint {
+        font-family: var(--px-font-copy);
         font-size: 0.82rem;
         color: var(--muted);
         padding: 2px 4px 8px;
@@ -3957,15 +4126,12 @@
         align-items: center;
         gap: 10px;
         padding: 8px 10px 8px 8px;
-        background: var(--surface);
+        background: var(--px-panel);
         border: 2px solid var(--px-border-2);
-        box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.65);
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
         color: var(--text);
-        font-family: var(--px-font-ui);
-        font-size: 9px;
-        letter-spacing: 0.08em;
-        -webkit-font-smoothing: none;
-        font-smooth: never;
+        font-family: var(--px-font-copy);
+        font-size: 12px;
         max-width: calc(100% - 32px);
       }
       .toggle-banner[hidden] {
@@ -3982,11 +4148,13 @@
       }
       .toggle-banner-label {
         color: var(--px-accent);
+        font-family: var(--px-font-ui);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
       .toggle-banner-since {
         color: var(--muted);
-        font-size: 8px;
-        letter-spacing: 0.04em;
+        font-size: 11px;
       }
       .toggle-banner-end {
         margin-left: 4px;
@@ -3996,7 +4164,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: transparent;
+        background: var(--px-button-surface);
         border: 2px solid var(--px-border);
         color: var(--px-text);
         cursor: pointer;
@@ -4239,24 +4407,42 @@
     */
 
       :root {
-        --px-bg: #000000;
-        --px-surface: #16162a;
-        --px-surface-2: #1e1e38;
-        --px-border: #3d3d60; /* chunkier visible borders */
-        --px-border-2: #5a5a88;
-        --px-text: #e8e8f8;
-        --px-muted: #8080b0;
+        --px-bg: #0a1018;
+        --px-bg-top: #111a27;
+        --px-bg-bottom: #070c13;
+        --px-surface: #121b27;
+        --px-surface-2: #1b2737;
+        --px-surface-3: #27374b;
+        --px-panel: rgba(18, 27, 39, 0.94);
+        --px-panel-soft: rgba(26, 37, 52, 0.84);
+        --px-border: #3b536d;
+        --px-border-2: #587491;
+        --px-text: #edf4ff;
+        --px-muted: #9db0c8;
 
-        --px-good: #9fe86a; /* GB green */
-        --px-warn: #ffc857; /* arcade yellow */
-        --px-low: #ff9e5e; /* warm orange */
-        --px-critical: #e8615a; /* arcade red */
-        --px-accent: #b388ff; /* SNES lavender */
-        --px-info: #6ac6ea; /* NES cyan */
-        --px-focus: #ffd447; /* bright focus ring */
+        --px-good: #7fe58c;
+        --px-warn: #ffd36d;
+        --px-low: #ffb06d;
+        --px-critical: #ff7a66;
+        --px-accent: #b08cff;
+        --px-info: #74c7ff;
+        --px-focus: #ffe17a;
+
+        --px-energy: #7fe58c;
+        --px-stress: #ff856d;
+        --px-recovery: #74c7ff;
+        --px-accent-soft: rgba(176, 140, 255, 0.12);
+        --px-energy-soft: rgba(127, 229, 140, 0.14);
+        --px-stress-soft: rgba(255, 133, 109, 0.14);
+        --px-recovery-soft: rgba(116, 199, 255, 0.14);
+        --px-button-surface: #25364b;
+        --px-button-surface-strong: #314967;
+        --px-button-shadow: rgba(2, 8, 20, 0.84);
 
         --px-font-ui: "Silkscreen", ui-monospace, "Courier New", monospace;
         --px-font-body: "VT323", ui-monospace, "Courier New", monospace;
+        --px-font-copy: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
         --px-font-mono: "VT323", ui-monospace, "Courier New", monospace;
       }
 
@@ -4273,8 +4459,8 @@
         --warn: var(--px-warn);
         --low: var(--px-low);
         --critical: var(--px-critical);
-        --drain: var(--px-critical);
-        --recover: var(--px-good);
+        --drain: var(--px-stress);
+        --recover: var(--px-recovery);
         --accent: var(--px-accent);
       }
 
@@ -4285,12 +4471,17 @@
 
       body[data-theme="gameboy"] {
         --px-bg: #0f380f;
-        --px-surface: #1a4a1a;
-        --px-surface-2: #2a5a2a;
+        --px-bg-top: #234b1b;
+        --px-bg-bottom: #0a220a;
+        --px-surface: #1a4318;
+        --px-surface-2: #285225;
+        --px-surface-3: #356634;
+        --px-panel: rgba(26, 67, 24, 0.94);
+        --px-panel-soft: rgba(40, 82, 37, 0.84);
         --px-border: #4a7a2a;
         --px-border-2: #5a8a3a;
         --px-text: #9bbc0f;
-        --px-muted: #6d8a2a;
+        --px-muted: #86a84c;
         --px-good: #9bbc0f;
         --px-warn: #c8d848; /* slight yellow-shift, still within GB palette */
         --px-low: #5a7a1a;
@@ -4298,16 +4489,30 @@
         --px-accent: #9bbc0f;
         --px-info: #8bac0f;
         --px-focus: #c8d848;
+        --px-energy: #9bbc0f;
+        --px-stress: #c14a3e;
+        --px-recovery: #8bac0f;
+        --px-accent-soft: rgba(155, 188, 15, 0.14);
+        --px-energy-soft: rgba(155, 188, 15, 0.16);
+        --px-stress-soft: rgba(193, 74, 62, 0.16);
+        --px-recovery-soft: rgba(139, 172, 15, 0.14);
+        --px-button-surface: #2a5a2a;
+        --px-button-surface-strong: #356634;
       }
 
       body[data-theme="amber"] {
         --px-bg: #1a0a00;
+        --px-bg-top: #2e1705;
+        --px-bg-bottom: #140700;
         --px-surface: #2a1505;
         --px-surface-2: #3a1f0a;
+        --px-surface-3: #542b0d;
+        --px-panel: rgba(42, 21, 5, 0.95);
+        --px-panel-soft: rgba(58, 31, 10, 0.84);
         --px-border: #7a3a00;
         --px-border-2: #a05a00;
         --px-text: #ffb000;
-        --px-muted: #d39a36;
+        --px-muted: #dcae6a;
         --px-good: #ffb000;
         --px-warn: #ffd060;
         --px-low: #b88000;
@@ -4315,16 +4520,30 @@
         --px-accent: #ffd060;
         --px-info: #ff8800;
         --px-focus: #ffe080;
+        --px-energy: #ffcf70;
+        --px-stress: #ff6b36;
+        --px-recovery: #ffb95a;
+        --px-accent-soft: rgba(255, 208, 96, 0.14);
+        --px-energy-soft: rgba(255, 207, 112, 0.16);
+        --px-stress-soft: rgba(255, 107, 54, 0.16);
+        --px-recovery-soft: rgba(255, 185, 90, 0.15);
+        --px-button-surface: #4a260d;
+        --px-button-surface-strong: #5c3211;
       }
 
       body[data-theme="phosphor"] {
         --px-bg: #001405;
-        --px-surface: #002810;
-        --px-surface-2: #004020;
+        --px-bg-top: #08230d;
+        --px-bg-bottom: #000d03;
+        --px-surface: #062814;
+        --px-surface-2: #0b3a22;
+        --px-surface-3: #0f4a2c;
+        --px-panel: rgba(6, 40, 20, 0.94);
+        --px-panel-soft: rgba(11, 58, 34, 0.84);
         --px-border: #1a6a1a;
         --px-border-2: #2a8a2a;
         --px-text: #39ff14;
-        --px-muted: #72b85b;
+        --px-muted: #8ccb72;
         --px-good: #39ff14;
         --px-warn: #b0ff39;
         --px-low: #3a8c39;
@@ -4332,6 +4551,47 @@
         --px-accent: #39ff14;
         --px-info: #00ff88;
         --px-focus: #00ff88;
+        --px-energy: #39ff14;
+        --px-stress: #ff5a5a;
+        --px-recovery: #00ff88;
+        --px-accent-soft: rgba(57, 255, 20, 0.12);
+        --px-energy-soft: rgba(57, 255, 20, 0.16);
+        --px-stress-soft: rgba(255, 90, 90, 0.16);
+        --px-recovery-soft: rgba(0, 255, 136, 0.14);
+        --px-button-surface: #0f3b22;
+        --px-button-surface-strong: #14502f;
+      }
+
+      body[data-theme="light"] {
+        --px-bg: #eef3fb;
+        --px-bg-top: #fcfdff;
+        --px-bg-bottom: #dde7f5;
+        --px-surface: #f8fbff;
+        --px-surface-2: #e8f0fb;
+        --px-surface-3: #d7e3f2;
+        --px-panel: rgba(248, 251, 255, 0.96);
+        --px-panel-soft: rgba(232, 240, 251, 0.92);
+        --px-border: #8ba0ba;
+        --px-border-2: #6a83a3;
+        --px-text: #182232;
+        --px-muted: #53657b;
+        --px-good: #2f9e57;
+        --px-warn: #ad7a00;
+        --px-low: #c96b22;
+        --px-critical: #c75142;
+        --px-accent: #7f61d9;
+        --px-info: #2487d8;
+        --px-focus: #7f61d9;
+        --px-energy: #2f9e57;
+        --px-stress: #d56045;
+        --px-recovery: #2487d8;
+        --px-accent-soft: rgba(127, 97, 217, 0.12);
+        --px-energy-soft: rgba(47, 158, 87, 0.12);
+        --px-stress-soft: rgba(213, 96, 69, 0.12);
+        --px-recovery-soft: rgba(36, 135, 216, 0.12);
+        --px-button-surface: #dde7f5;
+        --px-button-surface-strong: #c9d7ea;
+        --px-button-shadow: rgba(79, 101, 130, 0.28);
       }
 
       /* Battery frame / nub / digits pick up theme vars */
@@ -4364,13 +4624,13 @@
         min-height: 44px;
         box-sizing: border-box;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
         letter-spacing: 0.08em;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
         -webkit-font-smoothing: none;
         font-smooth: never;
         user-select: none;
@@ -4407,13 +4667,13 @@
         top: calc(100% + 4px);
         right: 0;
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 6px;
-        padding: 8px;
-        background: var(--surface);
+        padding: 10px;
+        background: var(--px-panel);
         border: 2px solid var(--px-border-2);
-        box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
-        min-width: 180px;
+        box-shadow: 3px 3px 0 0 var(--px-button-shadow);
+        min-width: 244px;
         width: max-content;
         z-index: 100;
       }
@@ -4422,7 +4682,7 @@
         grid-template-rows: 30px auto;
         gap: 3px;
         padding: 3px;
-        background: transparent;
+        background: var(--px-button-surface);
         border: 2px solid var(--px-border);
         color: var(--px-muted);
         font-family: var(--px-font-ui);
@@ -4430,7 +4690,7 @@
         letter-spacing: 0.06em;
         text-align: center;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
         -webkit-font-smoothing: none;
         font-smooth: never;
         min-width: 50px;
@@ -4463,10 +4723,56 @@
         display: block;
       }
 
+      #theme-mode-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 0 12px;
+        border: 2px solid var(--px-border);
+        background: var(--px-button-surface);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
+      }
+
+      #theme-mode-toggle[aria-pressed="true"] {
+        border-color: var(--px-accent);
+        background: var(--px-accent-soft);
+        color: var(--px-accent);
+      }
+
+      .theme-mode-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .theme-mode-label {
+        display: inline-flex;
+        align-items: center;
+      }
+
       /* Self-log dock buttons should also re-tint by theme */
       #energy-btn,
       #stress-btn {
         border-color: var(--px-border);
+        color: var(--px-text);
+      }
+
+      #energy-btn {
+        border-color: var(--px-energy);
+        background: var(--px-energy-soft);
+        color: var(--px-text);
+      }
+
+      #stress-btn {
+        border-color: var(--px-stress);
+        background: var(--px-stress-soft);
         color: var(--px-text);
       }
       /* Emoji icons in self-log buttons follow the active theme accent
@@ -4489,7 +4795,23 @@
         font-family: var(--px-font-body);
         font-size: 1.06rem; /* VT323 needs slight upscale */
         letter-spacing: 0.01em;
-        background: var(--bg);
+        background:
+          radial-gradient(
+            circle at top,
+            var(--px-accent-soft),
+            transparent 38%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            var(--px-recovery-soft),
+            transparent 32%
+          ),
+          linear-gradient(
+            180deg,
+            var(--px-bg-top) 0%,
+            var(--bg) 62%,
+            var(--px-bg-bottom) 100%
+          );
         color: var(--text);
         transition:
           background-color 200ms steps(3),
@@ -4571,11 +4893,11 @@
         border: 2px solid var(--px-border);
         background: linear-gradient(
           180deg,
-          rgba(179, 136, 255, 0.06),
-          rgba(14, 14, 28, 0.95) 24%,
-          rgba(14, 14, 28, 0.98) 100%
+          var(--px-accent-soft),
+          var(--px-panel) 24%,
+          var(--px-surface) 100%
         );
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.32);
       }
       #battery-card::before {
         display: none;
@@ -4583,13 +4905,13 @@
 
       .metric-card {
         border: 2px solid var(--px-border);
-        background: rgba(22, 22, 42, 0.96);
+        background: var(--px-panel);
       }
 
       .drain-row,
       .diag-row {
         border: 2px solid var(--px-border);
-        background: rgba(22, 22, 42, 0.55);
+        background: var(--px-panel-soft);
       }
 
       #connection-pill,
@@ -4608,18 +4930,22 @@
       #help-trigger,
       #screensaver-done {
         border: 2px solid var(--px-border-2);
-        background: var(--px-surface-2);
+        background: var(--px-button-surface);
         box-shadow:
           inset 0 0 0 1px rgba(0, 0, 0, 0.35),
-          2px 2px 0 0 #000;
+          2px 2px 0 0 var(--px-button-shadow);
       }
 
       #recovery-trigger {
-        background: var(--px-accent);
-        color: #120728;
-        border-color: #6b4cc4;
+        background: linear-gradient(
+          135deg,
+          var(--px-recovery) 0%,
+          var(--px-info) 100%
+        );
+        color: var(--px-bg);
+        border-color: var(--px-recovery);
         box-shadow:
-          2px 2px 0 0 #000,
+          2px 2px 0 0 var(--px-button-shadow),
           inset 1px 1px 0 rgba(255, 255, 255, 0.25);
         font-family: var(--px-font-ui);
         letter-spacing: 0.05em;
@@ -4629,8 +4955,8 @@
       .activity-btn,
       .start-btn {
         border: 2px solid var(--px-border-2);
-        background: var(--px-surface-2);
-        box-shadow: 2px 2px 0 0 #000;
+        background: var(--px-button-surface);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
 
       .tap-score {
@@ -4685,15 +5011,15 @@
       #help-sheet {
         position: fixed;
         inset: auto 16px 16px 16px;
-        max-width: 560px;
+        max-width: 620px;
         margin-inline: auto;
         padding: var(--panel-pad);
-        background: var(--px-surface);
+        background: var(--px-panel);
         border: var(--panel-border);
         box-shadow: var(--panel-shadow);
         z-index: 60;
         display: none;
-        font-family: var(--px-font-body);
+        font-family: var(--px-font-copy);
         border-radius: var(--panel-radius);
       }
       body[data-mode="help"] #help-sheet {
@@ -4714,8 +5040,9 @@
       }
       .help-about-lead {
         margin: 0 0 12px;
-        font-size: 1.05rem;
-        line-height: 1.55;
+        font-family: var(--px-font-copy);
+        font-size: 1.08rem;
+        line-height: 1.65;
         color: var(--px-text);
         opacity: 0.9;
         border-left: 3px solid var(--px-accent);
@@ -4727,7 +5054,12 @@
         gap: 12px;
         padding: 6px 0;
         border-bottom: 1px dashed var(--px-border);
-        font-size: 1.1rem;
+        font-size: 1.02rem;
+      }
+      .help-row span {
+        font-family: var(--px-font-copy);
+        font-size: 1.04rem;
+        line-height: 1.55;
       }
       .help-row kbd {
         font-family: var(--px-font-ui);
@@ -4822,17 +5154,17 @@
       }
       .gloss-row dd {
         margin: 0;
-        font-family: var(--px-font-body);
-        font-size: 1.05rem;
-        line-height: 1.4;
+        font-family: var(--px-font-copy);
+        font-size: 1.04rem;
+        line-height: 1.65;
         color: var(--px-text);
       }
       .help-howitworks {
         margin: 0;
         padding-left: 22px;
-        font-family: var(--px-font-body);
-        font-size: 1.1rem;
-        line-height: 1.5;
+        font-family: var(--px-font-copy);
+        font-size: 1.06rem;
+        line-height: 1.7;
         color: var(--px-text);
       }
       .help-howitworks li {
@@ -4852,10 +5184,10 @@
         font-family: var(--px-font-ui);
         letter-spacing: 0.05em;
         border: 2px solid var(--px-border-2);
-        background: var(--px-surface-2);
+        background: var(--px-button-surface);
         color: var(--px-text);
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 #000;
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
       #help-trigger {
         position: static;
@@ -4863,7 +5195,7 @@
         min-height: 44px;
         height: auto;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
@@ -4871,7 +5203,7 @@
         text-transform: uppercase;
         line-height: 1;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
         z-index: auto;
         display: inline-flex;
         align-items: center;
@@ -5027,7 +5359,7 @@
         gap: 8px;
         padding: 10px;
         border: 2px solid var(--px-border);
-        background: rgba(15, 15, 19, 0.42);
+        background: var(--px-panel-soft);
       }
 
       .layer-feature-row.is-zero {
@@ -5073,7 +5405,7 @@
 
       .layer-legacy {
         border: 2px solid var(--px-border);
-        background: rgba(15, 15, 19, 0.3);
+        background: var(--px-panel-soft);
         padding: 0;
       }
 
@@ -5129,20 +5461,20 @@
         min-width: 120px;
         min-height: 34px;
         border: 2px solid var(--px-border-2);
-        background: var(--px-surface-2);
+        background: var(--px-button-surface);
         display: grid;
         place-items: center;
         font-family: var(--px-font-ui);
         font-size: 0.72rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
 
       .layer2-tank {
         position: relative;
         border: 2px solid var(--px-border);
-        background: rgba(15, 15, 19, 0.44);
+        background: var(--px-panel-soft);
         padding: 12px;
         min-height: 210px;
         display: flex;
@@ -5241,7 +5573,7 @@
 
       .layer2-formula {
         border: 2px solid var(--px-border);
-        background: rgba(15, 15, 19, 0.34);
+        background: var(--px-panel-soft);
         padding: 12px;
       }
 
@@ -5261,7 +5593,7 @@
 
       .layer2-readout-row {
         border: 2px solid var(--px-border);
-        background: rgba(15, 15, 19, 0.34);
+        background: var(--px-panel-soft);
         padding: 10px;
         min-height: 70px;
         display: flex;
@@ -5319,16 +5651,16 @@
       .diag-popover {
         position: fixed;
         inset: unset;
-        background: var(--surface, #1a1a24);
+        background: var(--px-panel);
         border: 2px solid var(--px-accent, #818cf8);
         padding: 14px;
         max-width: 280px;
         min-width: 200px;
-        font-family: "VT323", monospace;
-        font-size: 16px;
+        font-family: var(--px-font-copy);
+        font-size: 0.98rem;
         color: var(--text, #e0e0f0);
-        line-height: 1.4;
-        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+        line-height: 1.55;
+        box-shadow: 4px 4px 0 var(--px-button-shadow);
         z-index: 800;
       }
       .diag-popover strong {
@@ -5341,6 +5673,7 @@
       }
       .diag-pop-formula {
         margin-top: 8px;
+        font-family: var(--px-font-mono);
         font-size: var(--fs-label);
         color: var(--px-muted, #6060a0);
         border-top: 1px solid var(--px-border, #2a2a3a);
@@ -5610,12 +5943,13 @@
         bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
-        background: var(--px-bg);
+        background: var(--px-panel);
         color: var(--px-text);
         border: 2px solid var(--px-accent);
         padding: 6px 10px;
-        font-family: var(--px-font-body);
-        font-size: 13px;
+        font-family: var(--px-font-copy);
+        font-size: 12px;
+        line-height: 1.45;
         white-space: normal;
         width: max-content;
         max-width: 240px;
@@ -5641,7 +5975,7 @@
         width: min(100%, 308px);
         aspect-ratio: 1;
         border: 2px solid var(--px-border);
-        background: var(--px-surface-2);
+        background: var(--px-panel-soft);
         box-shadow: inset 0 0 0 1px var(--px-border);
         margin-inline: auto;
       }
@@ -5699,8 +6033,9 @@
       .phase-portrait-caption {
         margin: 0;
         color: var(--px-muted);
-        font-size: 14px;
-        line-height: 1.45;
+        font-family: var(--px-font-copy);
+        font-size: 13px;
+        line-height: 1.6;
         padding-top: 2px;
       }
 
@@ -6020,7 +6355,8 @@
       #tour-btn,
       #story-btn,
       #calib-btn,
-      #timeline-toggle-btn {
+      #timeline-toggle-btn,
+      #theme-mode-toggle {
         min-height: 44px;
         padding-inline: 14px;
         font-size: 15px;
@@ -6340,11 +6676,11 @@
       .toggle-banner {
         gap: 12px;
         padding: 10px 12px 10px 10px;
-        font-size: var(--fs-label);
+        font-size: 14px;
       }
 
       .toggle-banner-since {
-        font-size: var(--fs-label);
+        font-size: 12px;
       }
 
       .toggle-banner-end {
@@ -6355,7 +6691,7 @@
       #screensaver-done,
       #help-close {
         min-height: 44px;
-        font-size: 15px;
+        font-size: 16px;
       }
 
       .help-tab {
@@ -6364,7 +6700,7 @@
 
       .help-row {
         padding: 8px 0;
-        font-size: 15px;
+        font-size: 16px;
       }
 
       .help-row kbd {
@@ -6381,8 +6717,8 @@
 
       .gloss-row dd,
       .help-howitworks {
-        font-size: 15px;
-        line-height: 1.45;
+        font-size: 17px;
+        line-height: 1.7;
       }
 
       @media (max-width: 720px) {
@@ -6579,8 +6915,35 @@
               </div>
               <span>PHOS</span>
             </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="light"
+              aria-pressed="false"
+              title="Light mode"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #f8fbff"></span
+                ><span style="background: #7f61d9"></span>
+                <span style="background: #2f9e57"></span
+                ><span style="background: #2487d8"></span>
+              </div>
+              <span>LIGHT</span>
+            </button>
           </div>
         </details>
+        <button
+          id="theme-mode-toggle"
+          type="button"
+          aria-pressed="false"
+          aria-label="Switch to light mode"
+          title="Switch to light mode"
+        >
+          <span class="theme-mode-icon" data-theme-mode-icon aria-hidden="true"
+            >☀</span
+          >
+          <span class="theme-mode-label" data-theme-mode-label>LIGHT</span>
+        </button>
         <button
           id="help-trigger"
           type="button"
@@ -6597,10 +6960,19 @@
           aria-describedby="connection-pill-popover"
         >
           <span class="conn-pill-status">
-            <span class="conn-pill-status-label">Display</span>
-            <span class="conn-pill-display-chip" data-status="offline">
-              <span class="conn-pill-dot" aria-hidden="true"></span>
-              <span class="conn-pill-display-label">offline</span>
+            <span class="conn-pill-status-group">
+              <span class="conn-pill-status-label">Source</span>
+              <span class="conn-pill-source-chip" data-source="none">
+                <span class="conn-pill-dot" aria-hidden="true"></span>
+                <span class="conn-pill-source-label">none</span>
+              </span>
+            </span>
+            <span class="conn-pill-status-group">
+              <span class="conn-pill-status-label">Display</span>
+              <span class="conn-pill-display-chip" data-status="offline">
+                <span class="conn-pill-dot" aria-hidden="true"></span>
+                <span class="conn-pill-display-label">offline</span>
+              </span>
             </span>
           </span>
           <span class="conn-pill-text">○ no live data</span>
@@ -6612,9 +6984,14 @@
             data-side="bottom"
           >
             <div class="cpp-current">Current state</div>
+            <p class="cpp-source">Data source: unavailable.</p>
             <p class="cpp-detail">Loading…</p>
             <p class="cpp-display">Display write: offline.</p>
             <ul class="cpp-legend">
+              <li data-key="demo">
+                <span class="cpp-key">â— DEMO DATA</span>
+                <span>Server demo override or interactive demo payload</span>
+              </li>
               <li data-key="live">
                 <span class="cpp-key">● LIVE DATA</span>
                 <span>Flask backend ticking the ODE model</span>
@@ -7512,8 +7889,13 @@ P = drain - 0.5*recovery</pre
           Stress
         </button>
       </div>
-      <div id="rating-hint">Tap the number that matches right now.</div>
-      <div id="rating-rail" class="tap-rail"></div>
+      <div class="rating-layout">
+        <div class="rating-main">
+          <div id="rating-hint">Tap the number that matches right now.</div>
+          <div id="rating-rail" class="tap-rail"></div>
+        </div>
+        <aside id="rating-sidecar" class="rating-sidecar" hidden></aside>
+      </div>
     </section>
 
     <section
@@ -7823,6 +8205,12 @@ P = drain - 0.5*recovery</pre
         connectionPillSubtitle: document.querySelector(
           "#connection-pill .conn-pill-subtitle",
         ),
+        connectionPillSourceChip: document.querySelector(
+          "#connection-pill .conn-pill-source-chip",
+        ),
+        connectionPillSourceLabel: document.querySelector(
+          "#connection-pill .conn-pill-source-label",
+        ),
         connectionPillDisplayChip: document.querySelector(
           "#connection-pill .conn-pill-display-chip",
         ),
@@ -7879,6 +8267,7 @@ P = drain - 0.5*recovery</pre
         ratingTabs: Array.from(document.querySelectorAll(".tab-btn")),
         ratingHint: document.getElementById("rating-hint"),
         ratingRail: document.getElementById("rating-rail"),
+        ratingSidecar: document.getElementById("rating-sidecar"),
         recoverySheet: document.getElementById("recovery-sheet"),
         recoveryActivities: document.getElementById("recovery-activities"),
         screensaver: document.getElementById("screensaver"),
@@ -7891,6 +8280,7 @@ P = drain - 0.5*recovery</pre
         headerMoreMenu: document.getElementById("header-more-menu"),
         headerMore: document.getElementById("header-more"),
         themePicker: document.getElementById("theme-picker"),
+        themeModeToggle: document.getElementById("theme-mode-toggle"),
         helpTrigger: document.getElementById("help-trigger"),
         todaySignalStrip: document.getElementById("today-signal-strip"),
         todayDrainValue: document.getElementById("today-drain-value"),
@@ -9429,6 +9819,8 @@ P = drain - 0.5*recovery</pre
       let modelFetchInFlight = false;
       let awFetchInFlight = false;
       let demoStateSyncTimer = 0;
+      let demoStateSyncInFlight = false;
+      let demoStateSyncQueued = false;
       let screenScene = null;
       let screensaverCtx = null;
       let screensaverWidth = 0;
@@ -11071,7 +11463,10 @@ P = drain - 0.5*recovery</pre
       function buildDemoStatePayload() {
         const savedPayload = APP.demo.savedAppState?.model?.payload || null;
         const chronotype = getResolvedChronotype(savedPayload?.chronotype);
-        const tickIso = APP.demo.activity?.afterClock || APP.demo.simClock || new Date().toISOString();
+        const tickIso =
+          APP.demo.activity?.afterClock ||
+          APP.demo.simClock ||
+          new Date().toISOString();
         const tickDate = new Date(tickIso);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
         const modelFeats = projectDemoFeaturesToModel(APP.demo.featureAccum);
@@ -11080,7 +11475,11 @@ P = drain - 0.5*recovery</pre
           0,
           100,
         );
-        const internalEnergy = clamp(Number(APP.demo.E) || displayEnergy, 0, 100);
+        const internalEnergy = clamp(
+          Number(APP.demo.E) || displayEnergy,
+          0,
+          100,
+        );
         const stress = clamp(Number(APP.demo.S) || 0, 0, 100);
         const eRest = APP.demo.activity?.eRest ?? computeERest(hour, chronotype);
         return {
@@ -11097,15 +11496,48 @@ P = drain - 0.5*recovery</pre
         };
       }
 
+      async function refreshConnectionPillStateFromServer() {
+        try {
+          const res = await fetch(modelUrl("/state"), { cache: "no-store" });
+          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+          const payload = await res.json();
+          APP.model.online = true;
+          APP.model.stale = false;
+          APP.model.payload = payload;
+          APP.model.lastFetchAt = Date.now();
+          renderConnectionPill();
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
       async function pushDemoStateNow() {
         if (!APP.demo.enabled) return;
+        if (demoStateSyncInFlight) {
+          demoStateSyncQueued = true;
+          return;
+        }
+        demoStateSyncInFlight = true;
         try {
-          await fetch("/demo-state", {
+          const res = await fetch(modelUrl("/demo-state"), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(buildDemoStatePayload()),
           });
+          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+          if (!APP.demo.enabled) return;
+          await refreshConnectionPillStateFromServer();
         } catch (_) {}
+        finally {
+          demoStateSyncInFlight = false;
+          if (demoStateSyncQueued && APP.demo.enabled) {
+            demoStateSyncQueued = false;
+            scheduleDemoStateSync(0);
+          } else {
+            demoStateSyncQueued = false;
+          }
+        }
       }
 
       function scheduleDemoStateSync(delay = 80) {
@@ -11119,13 +11551,17 @@ P = drain - 0.5*recovery</pre
         }, delay);
       }
 
-      async function clearDemoStateSync() {
+      async function clearDemoStateSync({ keepalive = false } = {}) {
         if (demoStateSyncTimer) {
           window.clearTimeout(demoStateSyncTimer);
           demoStateSyncTimer = 0;
         }
+        demoStateSyncQueued = false;
         try {
-          await fetch("/demo-state", { method: "DELETE" });
+          await fetch(modelUrl("/demo-state"), {
+            method: "DELETE",
+            keepalive,
+          });
         } catch (_) {}
       }
 
@@ -12292,10 +12728,59 @@ P = drain - 0.5*recovery</pre
 
       function getDisplayWriteStatus(payload = getModelPayload()) {
         const raw = String(payload?.status || "").toLowerCase();
-        if (raw === "live" || raw === "stale" || raw === "offline") return raw;
+        const hasServerStatus =
+          raw === "live" || raw === "stale" || raw === "offline";
+        if (payload?.source === "demo" && hasServerStatus) return raw;
+        if (APP.demo.enabled || getActiveDemoProfile()) {
+          return "offline";
+        }
+        if (hasServerStatus) return raw;
         if (APP.model.stale) return "stale";
         if (APP.model.online) return "live";
         return "offline";
+      }
+
+      function getConnectionSource(payload = getModelPayload()) {
+        const raw = String(payload?.source || "").toLowerCase();
+        if (raw === "demo") return "demo";
+        if (APP.demo.enabled || getActiveDemoProfile()) return "demo";
+        if (raw === "model" || raw === "aw-fallback") return raw;
+        if (APP.aw.online && !payload) return "aw-fallback";
+        if (payload) return "model";
+        return "none";
+      }
+
+      function getConnectionSourceMeta(source) {
+        switch (source) {
+          case "demo":
+            return {
+              key: "demo",
+              short: "demo",
+              long: "demo",
+              tip: "Using demo-state data rather than the live model payload.",
+            };
+          case "aw-fallback":
+            return {
+              key: "aw-fallback",
+              short: "aw",
+              long: "ActivityWatch fallback",
+              tip: "Using fallback data because the model payload is unavailable.",
+            };
+          case "model":
+            return {
+              key: "model",
+              short: "model",
+              long: "live model",
+              tip: "Using the Flask model payload for the browser state.",
+            };
+          default:
+            return {
+              key: "none",
+              short: "none",
+              long: "unavailable",
+              tip: "No current state payload is available.",
+            };
+        }
       }
 
       function getDisplayWriteMeta(status) {
@@ -12368,13 +12853,22 @@ P = drain - 0.5*recovery</pre
         tip,
         activeKey,
         displayStatus,
+        sourceKey,
       ) {
+        const sourceMeta = getConnectionSourceMeta(sourceKey);
         const displayMeta = getDisplayWriteMeta(displayStatus);
         if (DOM.connectionPillText) {
           DOM.connectionPillText.textContent = text;
         }
         if (DOM.connectionPillSubtitle) {
           DOM.connectionPillSubtitle.textContent = subtitle;
+        }
+        if (DOM.connectionPillSourceChip) {
+          DOM.connectionPillSourceChip.dataset.source = sourceMeta.key;
+          DOM.connectionPillSourceChip.title = `Data source ${sourceMeta.long}`;
+        }
+        if (DOM.connectionPillSourceLabel) {
+          DOM.connectionPillSourceLabel.textContent = sourceMeta.short;
         }
         if (DOM.connectionPillDisplayChip) {
           DOM.connectionPillDisplayChip.dataset.status = displayMeta.key;
@@ -12385,20 +12879,24 @@ P = drain - 0.5*recovery</pre
         }
         DOM.connectionPill.style.color = color;
         DOM.connectionPill.title = subtitle
-          ? `${subtitle}. ${tip} Display write ${displayMeta.long}. ${displayMeta.tip}`
-          : `${tip} Display write ${displayMeta.long}. ${displayMeta.tip}`;
+          ? `${subtitle}. ${tip} Data source ${sourceMeta.long}. ${sourceMeta.tip} Display write ${displayMeta.long}. ${displayMeta.tip}`
+          : `${tip} Data source ${sourceMeta.long}. ${sourceMeta.tip} Display write ${displayMeta.long}. ${displayMeta.tip}`;
         DOM.connectionPill.setAttribute(
           "aria-label",
           subtitle
-            ? `${text}. ${subtitle}. ${tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`
-            : `${text}. ${tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`,
+            ? `${text}. ${subtitle}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`
+            : `${text}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`,
         );
         const pop = DOM.connectionPillPopover;
         if (pop) {
           const cur = pop.querySelector(".cpp-current");
+          const source = pop.querySelector(".cpp-source");
           const det = pop.querySelector(".cpp-detail");
           const display = pop.querySelector(".cpp-display");
           if (cur) cur.textContent = text;
+          if (source) {
+            source.textContent = `Data source: ${sourceMeta.long}. ${sourceMeta.tip}`;
+          }
           if (det) det.textContent = subtitle ? `${subtitle}. ${tip}` : tip;
           if (display) {
             display.textContent = `Display write: ${displayMeta.long}. ${displayMeta.tip}`;
@@ -12416,8 +12914,8 @@ P = drain - 0.5*recovery</pre
       function renderConnectionPill() {
         const payload = getModelPayload();
         const demo = getActiveDemoProfile();
-        const displayStatus =
-          APP.demo.enabled || demo ? "offline" : getDisplayWriteStatus(payload);
+        const sourceKey = getConnectionSource(payload);
+        const displayStatus = getDisplayWriteStatus(payload);
         DOM.body.classList.toggle(
           "is-backend-offline",
           !APP.model.online && !APP.model.stale,
@@ -12433,6 +12931,7 @@ P = drain - 0.5*recovery</pre
             "You are inside the interactive demo. Live backend polling is paused.",
             "demo",
             displayStatus,
+            sourceKey,
           );
           return;
         }
@@ -12444,6 +12943,7 @@ P = drain - 0.5*recovery</pre
             `Demo profile: ${demo.tagline}. Not real data.`,
             "demo",
             displayStatus,
+            sourceKey,
           );
           return;
         }
@@ -12464,6 +12964,7 @@ P = drain - 0.5*recovery</pre
             "The backend is currently serving demo-state data.",
             "demo",
             displayStatus,
+            sourceKey,
           );
           return;
         }
@@ -12492,7 +12993,15 @@ P = drain - 0.5*recovery</pre
           key = "aw";
         }
 
-        setConnectionPillState(text, subtitle, color, tip, key, displayStatus);
+        setConnectionPillState(
+          text,
+          subtitle,
+          color,
+          tip,
+          key,
+          displayStatus,
+          sourceKey,
+        );
       }
 
       function renderTodaySignal() {
@@ -12673,14 +13182,77 @@ P = drain - 0.5*recovery</pre
 
       function renderRatingSheet() {
         const kind = APP.rating.kind;
+        const stressDescriptorRows = [
+          {
+            range: "1-2",
+            label: "Maxed out",
+            detail: "Very high load. Thinking feels effortful and brittle.",
+            tone: "var(--critical)",
+          },
+          {
+            range: "3-4",
+            label: "Heavy",
+            detail: "Overloaded, with reduced patience and attention.",
+            tone: "var(--low)",
+          },
+          {
+            range: "5-6",
+            label: "Moderate",
+            detail: "Noticeable pressure, but still workable.",
+            tone: "var(--warn)",
+          },
+          {
+            range: "7-8",
+            label: "Manageable",
+            detail: "Steady enough to keep going without much friction.",
+            tone: "var(--accent)",
+          },
+          {
+            range: "9-10",
+            label: "Effortless",
+            detail: "Calm, low-friction state with clear headroom.",
+            tone: "var(--good)",
+          },
+        ];
         DOM.ratingTabs.forEach((tab) => {
           tab.classList.toggle("is-active", tab.dataset.kind === kind);
         });
+        DOM.ratingSheet.dataset.kind = kind;
         DOM.ratingHint.textContent = getRatingDefaultHint(kind);
         DOM.ratingRail.innerHTML = Array.from({ length: 10 }, (_, index) => {
           const value = index + 1;
           return `<button type="button" class="tap-score" data-value="${value}" aria-label="${value}: ${RATING_HINTS[kind][value]}"><span class="tap-score-num">${value}</span><span class="tap-score-copy">${RATING_HINTS[kind][value]}</span></button>`;
         }).join("");
+        if (DOM.ratingSidecar) {
+          if (kind === "stress_rating") {
+            DOM.ratingSidecar.hidden = false;
+            DOM.ratingSidecar.innerHTML = `
+              <div class="rating-sidecar-title">Stress scale</div>
+              <p class="rating-sidecar-copy">
+                Lower numbers mean more overload right now. Use the side guide if
+                you want a fast anchor before tapping.
+              </p>
+              <div class="rating-sidecar-list">
+                ${stressDescriptorRows
+                  .map(
+                    (item) => `
+                  <div class="rating-sidecar-row" style="--rating-tone:${item.tone}">
+                    <span class="rating-sidecar-range">${item.range}</span>
+                    <span>
+                      <span class="rating-sidecar-label">${item.label}</span>
+                      <span class="rating-sidecar-detail">${item.detail}</span>
+                    </span>
+                  </div>
+                `,
+                  )
+                  .join("")}
+              </div>
+            `;
+          } else {
+            DOM.ratingSidecar.hidden = true;
+            DOM.ratingSidecar.innerHTML = "";
+          }
+        }
       }
 
       function recoveryActivityById(id) {
@@ -13540,7 +14112,56 @@ P = drain - 0.5*recovery</pre
 
       // ── Theme ──
       const THEME_KEY = "pb_theme";
-      const VALID_THEMES = ["arcade", "gameboy", "amber", "phosphor"];
+      const LAST_DARK_THEME_KEY = "pb_last_dark_theme";
+      const LIGHT_THEME = "light";
+      const DARK_THEMES = ["arcade", "gameboy", "amber", "phosphor"];
+      const VALID_THEMES = [...DARK_THEMES, LIGHT_THEME];
+      const THEME_LABELS = {
+        arcade: "ARCADE",
+        gameboy: "GB",
+        amber: "AMBER",
+        phosphor: "PHOS",
+        light: "LIGHT",
+      };
+
+      function getPreferredDarkTheme() {
+        const stored = localStorage.getItem(LAST_DARK_THEME_KEY) || "arcade";
+        return DARK_THEMES.includes(stored) ? stored : "arcade";
+      }
+
+      function rememberDarkTheme(theme) {
+        if (DARK_THEMES.includes(theme)) {
+          localStorage.setItem(LAST_DARK_THEME_KEY, theme);
+        }
+      }
+
+      function updateThemeModeToggle(theme) {
+        const btn = DOM.themeModeToggle;
+        if (!btn) return;
+        const isLight = theme === LIGHT_THEME;
+        const iconEl = btn.querySelector("[data-theme-mode-icon]");
+        const labelEl = btn.querySelector("[data-theme-mode-label]");
+        const darkTheme = getPreferredDarkTheme();
+        if (iconEl) iconEl.textContent = isLight ? "☾" : "☀";
+        if (labelEl) {
+          labelEl.textContent = isLight
+            ? THEME_LABELS[darkTheme] || darkTheme.toUpperCase()
+            : "LIGHT";
+        }
+        const tip = isLight
+          ? `Switch back to ${THEME_LABELS[darkTheme] || darkTheme.toUpperCase()} dark mode`
+          : "Switch to light mode";
+        btn.setAttribute("aria-pressed", String(isLight));
+        btn.setAttribute("aria-label", tip);
+        btn.title = tip;
+      }
+
+      function setThemePreference(theme) {
+        const t = VALID_THEMES.includes(theme) ? theme : "arcade";
+        if (DARK_THEMES.includes(t)) rememberDarkTheme(t);
+        localStorage.setItem(THEME_KEY, t);
+        applyTheme(t);
+      }
 
       function applyTheme(theme) {
         const t = VALID_THEMES.includes(theme) ? theme : "arcade";
@@ -13549,6 +14170,11 @@ P = drain - 0.5*recovery</pre
         } else {
           document.body.setAttribute("data-theme", t);
         }
+        if (DARK_THEMES.includes(t)) rememberDarkTheme(t);
+        document.body.setAttribute(
+          "data-color-mode",
+          t === LIGHT_THEME ? "light" : "dark",
+        );
         document.querySelectorAll(".theme-swatch").forEach((btn) => {
           btn.setAttribute(
             "aria-pressed",
@@ -13556,7 +14182,8 @@ P = drain - 0.5*recovery</pre
           );
         });
         const nameEl = document.querySelector("[data-theme-name]");
-        if (nameEl) nameEl.textContent = t.toUpperCase();
+        if (nameEl) nameEl.textContent = THEME_LABELS[t] || t.toUpperCase();
+        updateThemeModeToggle(t);
       }
 
       function initTheme() {
@@ -13567,11 +14194,22 @@ P = drain - 0.5*recovery</pre
           btn.addEventListener("click", () => {
             const t = btn.dataset.theme;
             if (!VALID_THEMES.includes(t)) return;
-            localStorage.setItem(THEME_KEY, t);
-            applyTheme(t);
+            setThemePreference(t);
             if (picker && picker.tagName === "DETAILS") picker.open = false;
           });
         });
+        if (DOM.themeModeToggle) {
+          DOM.themeModeToggle.addEventListener("click", () => {
+            const current = localStorage.getItem(THEME_KEY) || "arcade";
+            if (current === LIGHT_THEME) {
+              setThemePreference(getPreferredDarkTheme());
+            } else {
+              rememberDarkTheme(DARK_THEMES.includes(current) ? current : "arcade");
+              setThemePreference(LIGHT_THEME);
+            }
+            if (picker && picker.tagName === "DETAILS") picker.open = false;
+          });
+        }
         // Dismiss on outside click, and on Escape while open
         document.addEventListener("click", (e) => {
           if (!picker || !picker.open) return;
@@ -13734,13 +14372,13 @@ P = drain - 0.5*recovery</pre
           );
         }
 
-        window.addEventListener("beforeunload", () => {
-          if (APP.demo.enabled) {
-            fetch("/demo-state", { method: "DELETE", keepalive: true }).catch(
-              () => {},
-            );
+        const clearDemoStateOnUnload = () => {
+          if (APP.demo.enabled || getModelPayload()?.source === "demo") {
+            void clearDemoStateSync({ keepalive: true });
           }
-        });
+        };
+        window.addEventListener("pagehide", clearDemoStateOnUnload);
+        window.addEventListener("beforeunload", clearDemoStateOnUnload);
         document.addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
             DOM.connectionPill.classList.remove("is-pinned");
@@ -13815,6 +14453,7 @@ P = drain - 0.5*recovery</pre
           if (id && DEMO_PROFILES[id]) {
             localStorage.setItem(DEMO_KEY, id);
           } else {
+            void clearDemoStateSync();
             localStorage.removeItem(DEMO_KEY);
             // Clear cached model so re-entering live mode doesn't show demo values.
             APP.model.payload = null;
