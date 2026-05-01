@@ -209,6 +209,7 @@ def _enrich_status(payload: dict) -> dict:
     enriched['data_age_sec'] = None if data_age is None else round(data_age, 3)
     enriched['heartbeat_age_sec'] = None if heartbeat_age is None else round(heartbeat_age, 3)
     enriched['last_display_heartbeat_iso'] = None if heartbeat_at is None else heartbeat_at.isoformat()
+    enriched['last_update_iso'] = enriched.get('last_tick_iso') or _now_local().isoformat()
     enriched['status'] = status
     return enriched
 
