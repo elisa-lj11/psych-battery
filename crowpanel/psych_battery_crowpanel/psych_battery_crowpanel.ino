@@ -3,7 +3,7 @@
  *
  * Minimal recovery display: show only the current charge as "NN%".
  * Send an integer 0-100 over USB Serial at 115200 baud.
- * The bridge may send "NN trend"; toInt() reads the leading number.
+ * The bridge may send "NN trend status" (for example: "53 flat live").
  */
 
 #include "EPD.h"
@@ -13,38 +13,34 @@ uint8_t ImageBW[27200];  // 800 * 272 / 8
 
 int    currentCharge = 100;
 String currentTrend  = "flat";
+unsigned long lastPacketAtMs = 0;
 bool   needsRedraw   = true;
 int    g_fillW       = 0;  // right-edge of fill; pixels at x >= (EPD_W - g_fillW) are black
 
-#define LED_R 15
-#define LED_G 17
-#define LED_B 21
+#define LED_R 15  // Red anode
+#define LED_G 17  // Green anode
+#define LED_B 21  // Blue anode
 
-void setLED(int pct) {
-  // Map pct 100→0 to hue 270→0 (purple→blue→cyan→green→yellow→orange→red)
-  int h = 270 * pct / 100;
-  int sector = h / 60;
-  int f = (h % 60) * 255 / 60;
-  int q = 255 - f;
-  int r, g, b;
-  switch (sector) {
-    case 0: r=255; g=f;   b=0;   break;
-    case 1: r=q;   g=255; b=0;   break;
-    case 2: r=0;   g=255; b=f;   break;
-    case 3: r=0;   g=q;   b=255; break;
-    case 4: r=f;   g=0;   b=255; break;
-    default: r=255; g=0;  b=0;   break;
-  }
-  analogWrite(LED_R, r);
-  analogWrite(LED_G, g);
-  analogWrite(LED_B, b);
-}
+const unsigned long OFFLINE_TIMEOUT_MS = 60UL * 1000UL;
+
+enum SyncStatus {
+  STATUS_OFFLINE = 0,
+  STATUS_STALE = 1,
+  STATUS_LIVE = 2
+};
+
+SyncStatus currentStatus = STATUS_OFFLINE;
 
 void drawBattery(int pct, const String& trend);
 void drawPercentRotatedCCW(int x, int y, int pct);
 void drawTrendArrow(const String& trend, int x, int y);
 void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW, char chr, uint16_t size);
 void fullRefresh();
+SyncStatus parseStatusToken(const String& token);
+const char* statusName(SyncStatus status);
+void writeLedPins(bool redOn, bool greenOn, bool blueOn);
+void updateStatusLed();
+bool parseSerialPayload(const String& line, int& chargeOut, String& trendOut, SyncStatus& statusOut);
 
 void setup() {
   Serial.begin(115200);
@@ -52,12 +48,7 @@ void setup() {
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
-
-  // Startup test: cycle R → G → B
-  analogWrite(LED_R, 255); analogWrite(LED_G, 0);   analogWrite(LED_B, 0);   delay(500);
-  analogWrite(LED_R, 0);   analogWrite(LED_G, 255); analogWrite(LED_B, 0);   delay(500);
-  analogWrite(LED_R, 0);   analogWrite(LED_G, 0);   analogWrite(LED_B, 255); delay(500);
-  analogWrite(LED_R, 0);   analogWrite(LED_G, 0);   analogWrite(LED_B, 0);
+  updateStatusLed();
 
   pinMode(7, OUTPUT);
   digitalWrite(7, HIGH);
@@ -70,13 +61,12 @@ void setup() {
   EPD_Display_Clear();
   EPD_Update();
 
-  setLED(currentCharge);
   drawBattery(currentCharge, currentTrend);
   fullRefresh();
   needsRedraw = false;
 
   delay(200);
-  Serial.println("Psych_Battery CrowPanel ready. Send '0-100 up|down|flat' over Serial.");
+  Serial.println("Psych_Battery CrowPanel ready. Send '0-100 up|down|flat live|stale|offline' over Serial.");
 }
 
 void loop() {
@@ -85,32 +75,107 @@ void loop() {
     line.trim();
 
     if (line.length() > 0) {
-      int spaceIdx = line.indexOf(' ');
-      int val = line.toInt();
-      String trend = "flat";
+      int nextCharge = currentCharge;
+      String nextTrend = currentTrend;
+      SyncStatus nextStatus = currentStatus;
 
-      if (spaceIdx > 0) {
-        trend = line.substring(spaceIdx + 1);
-        trend.trim();
-      }
-
-      if (val >= 0 && val <= 100) {
-        currentCharge = val;
-        currentTrend = trend;
-        needsRedraw = true;
+      if (parseSerialPayload(line, nextCharge, nextTrend, nextStatus)) {
+        bool chargeChanged = nextCharge != currentCharge;
+        bool trendChanged = nextTrend != currentTrend;
+        currentCharge = nextCharge;
+        currentTrend = nextTrend;
+        currentStatus = nextStatus;
+        lastPacketAtMs = millis();
+        needsRedraw = needsRedraw || chargeChanged || trendChanged;
         Serial.print("ACK ");
-        Serial.println(currentCharge);
+        Serial.print(currentCharge);
+        Serial.print(" ");
+        Serial.println(statusName(currentStatus));
       }
     }
   }
 
+  updateStatusLed();
+
   if (needsRedraw) {
-    setLED(currentCharge);
     Paint_Clear(WHITE);
     drawBattery(currentCharge, currentTrend);
     fullRefresh();
     needsRedraw = false;
   }
+}
+
+SyncStatus parseStatusToken(const String& token) {
+  if (token == "live") return STATUS_LIVE;
+  if (token == "stale") return STATUS_STALE;
+  return STATUS_OFFLINE;
+}
+
+const char* statusName(SyncStatus status) {
+  switch (status) {
+    case STATUS_LIVE:
+      return "live";
+    case STATUS_STALE:
+      return "stale";
+    default:
+      return "offline";
+  }
+}
+
+void writeLedPins(bool redOn, bool greenOn, bool blueOn) {
+  digitalWrite(LED_R, redOn ? HIGH : LOW);
+  digitalWrite(LED_G, greenOn ? HIGH : LOW);
+  digitalWrite(LED_B, blueOn ? HIGH : LOW);
+}
+
+void updateStatusLed() {
+  SyncStatus effectiveStatus = currentStatus;
+  if (lastPacketAtMs == 0 || (millis() - lastPacketAtMs) > OFFLINE_TIMEOUT_MS) {
+    effectiveStatus = STATUS_OFFLINE;
+  }
+
+  switch (effectiveStatus) {
+    case STATUS_LIVE:
+      writeLedPins(false, true, false);  // GREEN
+      break;
+    case STATUS_STALE:
+      writeLedPins(true, true, false);   // AMBER = R + G
+      break;
+    default:
+      writeLedPins(true, false, false);  // RED
+      break;
+  }
+}
+
+bool parseSerialPayload(const String& line, int& chargeOut, String& trendOut, SyncStatus& statusOut) {
+  int value = line.toInt();
+  if (value < 0 || value > 100) {
+    return false;
+  }
+
+  int firstSpace = line.indexOf(' ');
+  int secondSpace = firstSpace >= 0 ? line.indexOf(' ', firstSpace + 1) : -1;
+
+  trendOut = "flat";
+  statusOut = currentStatus;
+
+  if (firstSpace > 0) {
+    if (secondSpace > firstSpace) {
+      trendOut = line.substring(firstSpace + 1, secondSpace);
+    } else {
+      trendOut = line.substring(firstSpace + 1);
+    }
+    trendOut.trim();
+  }
+
+  if (secondSpace > firstSpace) {
+    String statusToken = line.substring(secondSpace + 1);
+    statusToken.trim();
+    statusOut = parseStatusToken(statusToken);
+  }
+
+  chargeOut = value;
+  return true;
 }
 
 void fullRefresh() {
