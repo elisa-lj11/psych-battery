@@ -6,6 +6,7 @@ Mental Meter local server.
 """
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
+from threading import Lock
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -16,6 +17,7 @@ AW_BASE             = 'http://localhost:5600/api/0'
 MODEL_URL           = 'http://localhost:7070/state'  # Flask ODE model (browser source of truth)
 NORMAL_WINDOW_HOURS = 4        # 4-hour rolling window (normal use)
 DEMO_WINDOW_HOURS   = 2 / 60   # 2-minute rolling window (accelerated demo)
+DEMO_STATE_TTL_SEC  = 10 * 60  # UI agent must refresh demo override before this expires
 HIGH_DRAIN          = 15.0     # max drain rate (normalises battery to 0%)
 AFK_RECHARGE        = 7.5      # recharge rate while AFK (drain units per minute)
 
@@ -51,6 +53,24 @@ def _match_rate(app: str, title: str) -> float:
 
 SERVER_START  = datetime.now(timezone.utc)
 _prev_battery = None
+_demo_state   = None
+_STATE_LOCK   = Lock()
+
+
+def _now_local() -> datetime:
+    return datetime.now().astimezone()
+
+
+def _parse_iso(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=_now_local().tzinfo)
+    return parsed.astimezone()
 
 
 def _fetch_json(url: str, timeout: int = 10):
@@ -86,6 +106,56 @@ def _fetch_model_state() -> dict | None:
     except Exception:
         pass
     return None
+
+
+def _set_demo_state(payload: dict) -> None:
+    global _demo_state
+    cleaned = dict(payload)
+    cleaned.setdefault('last_tick_iso', _now_local().isoformat())
+    with _STATE_LOCK:
+        _demo_state = {
+            'payload': cleaned,
+            'updated_at': _now_local(),
+        }
+
+
+def _clear_demo_state() -> None:
+    global _demo_state
+    with _STATE_LOCK:
+        _demo_state = None
+
+
+def _get_demo_state() -> dict | None:
+    global _demo_state
+    with _STATE_LOCK:
+        if not _demo_state:
+            return None
+        age_sec = (_now_local() - _demo_state['updated_at']).total_seconds()
+        if age_sec > DEMO_STATE_TTL_SEC:
+            _demo_state = None
+            return None
+        return {
+            'payload': dict(_demo_state['payload']),
+            'updated_at': _demo_state['updated_at'],
+        }
+
+
+def _build_demo_state() -> dict | None:
+    demo_state = _get_demo_state()
+    if not demo_state:
+        return None
+    payload = dict(demo_state['payload'])
+    try:
+        e = float(payload.get('E_display', -1))
+    except (TypeError, ValueError):
+        return None
+    if not 0 <= e <= 1:
+        return None
+    payload.setdefault('last_tick_iso', demo_state['updated_at'].isoformat())
+    payload['battery_pct'] = round(e * 100)
+    payload['trend'] = _next_trend(payload['battery_pct'])
+    payload['source'] = 'demo'
+    return payload
 
 
 def _build_aw_fallback_state() -> dict:
@@ -154,6 +224,10 @@ def build_state_payload() -> dict:
     and display read the same `E_display` source. Only fall back to the local
     AW calculation if the model server is unavailable.
     """
+    demo_state = _build_demo_state()
+    if demo_state:
+        return demo_state
+
     model_state = _fetch_model_state()
     if model_state:
         return model_state
@@ -188,31 +262,74 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
 
+    def do_PUT(self):
+        if self.path == '/demo-state':
+            self._put_demo_state()
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_DELETE(self):
+        if self.path == '/demo-state':
+            _clear_demo_state()
+            self._send_json({'ok': True, 'demo_active': False})
+        else:
+            self.send_response(404)
+            self.end_headers()
+
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
-    def _mode(self):
-        data = json.dumps({'accelerated': _accelerated,
-                           'window': 'demo (2 min)' if _accelerated else 'normal (4 hr)'}).encode()
-        self.send_response(200)
+    def _send_json(self, payload: dict, status: int = 200):
+        data = json.dumps(payload).encode()
+        self.send_response(status)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-Length', str(len(data)))
         self.end_headers()
         self.wfile.write(data)
 
+    def _read_json_body(self) -> dict:
+        length = int(self.headers.get('Content-Length', '0') or '0')
+        raw = self.rfile.read(length) if length > 0 else b'{}'
+        try:
+            payload = json.loads(raw.decode() or '{}')
+        except json.JSONDecodeError as exc:
+            raise ValueError(f'invalid JSON body: {exc.msg}') from exc
+        if not isinstance(payload, dict):
+            raise ValueError('JSON body must be an object')
+        return payload
+
+    def _mode(self):
+        self._send_json({
+            'accelerated': _accelerated,
+            'demo_active': _get_demo_state() is not None,
+            'window': 'demo (2 min)' if _accelerated else 'normal (4 hr)',
+        })
+
+    def _put_demo_state(self):
+        try:
+            body = self._read_json_body()
+            payload = body.get('payload') if isinstance(body.get('payload'), dict) else body
+            e_display = float(payload.get('E_display', -1))
+            if not 0 <= e_display <= 1:
+                raise ValueError('E_display must be a float in [0, 1]')
+            _set_demo_state(payload)
+            self._send_json({
+                'ok': True,
+                'demo_active': True,
+                'expires_in_sec': DEMO_STATE_TTL_SEC,
+            })
+        except ValueError as exc:
+            self._send_json({'error': str(exc)}, status=400)
+
     def _state(self):
         try:
-            data = json.dumps(build_state_payload()).encode()
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.send_header('Content-Length', str(len(data)))
-            self.end_headers()
-            self.wfile.write(data)
+            self._send_json(build_state_payload())
         except Exception as ex:
             msg = str(ex).encode()
             self.send_response(502)
