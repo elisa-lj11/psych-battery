@@ -18,6 +18,8 @@ MODEL_URL           = 'http://localhost:7070/state'  # Flask ODE model (browser 
 NORMAL_WINDOW_HOURS = 4        # 4-hour rolling window (normal use)
 DEMO_WINDOW_HOURS   = 2 / 60   # 2-minute rolling window (accelerated demo)
 DEMO_STATE_TTL_SEC  = 10 * 60  # UI agent must refresh demo override before this expires
+LIVE_HEARTBEAT_SEC  = 60
+DATA_STALE_SEC      = 5 * 60
 HIGH_DRAIN          = 15.0     # max drain rate (normalises battery to 0%)
 AFK_RECHARGE        = 7.5      # recharge rate while AFK (drain units per minute)
 
@@ -54,6 +56,7 @@ def _match_rate(app: str, title: str) -> float:
 SERVER_START  = datetime.now(timezone.utc)
 _prev_battery = None
 _demo_state   = None
+_last_display_heartbeat_at = None
 _STATE_LOCK   = Lock()
 
 
@@ -101,11 +104,25 @@ def _fetch_model_state() -> dict | None:
             payload = dict(data)
             payload['battery_pct'] = round(e * 100)
             payload['trend'] = _next_trend(payload['battery_pct'])
+            payload['aw_connected'] = _aw_connected()
             payload['source'] = 'model'
             return payload
     except Exception:
         pass
     return None
+
+
+def _mark_display_heartbeat() -> datetime:
+    global _last_display_heartbeat_at
+    stamped = _now_local()
+    with _STATE_LOCK:
+        _last_display_heartbeat_at = stamped
+    return stamped
+
+
+def _get_display_heartbeat() -> datetime | None:
+    with _STATE_LOCK:
+        return _last_display_heartbeat_at
 
 
 def _set_demo_state(payload: dict) -> None:
@@ -154,8 +171,46 @@ def _build_demo_state() -> dict | None:
     payload.setdefault('last_tick_iso', demo_state['updated_at'].isoformat())
     payload['battery_pct'] = round(e * 100)
     payload['trend'] = _next_trend(payload['battery_pct'])
+    payload['aw_connected'] = bool(payload.get('aw_connected', True))
     payload['source'] = 'demo'
     return payload
+
+
+def _aw_connected() -> bool:
+    try:
+        buckets = _fetch_json(AW_BASE + '/buckets/', timeout=3)
+    except Exception:
+        return False
+    return any(bucket.startswith('aw-watcher-window_') for bucket in buckets)
+
+
+def _enrich_status(payload: dict) -> dict:
+    enriched = dict(payload)
+    heartbeat_at = _get_display_heartbeat()
+    heartbeat_age = None
+    if heartbeat_at is not None:
+        heartbeat_age = max(0.0, (_now_local() - heartbeat_at).total_seconds())
+
+    data_tick = _parse_iso(enriched.get('last_tick_iso'))
+    data_age = None
+    if data_tick is not None:
+        data_age = max(0.0, (_now_local() - data_tick).total_seconds())
+
+    aw_connected = bool(enriched.get('aw_connected', False))
+
+    if heartbeat_age is None or heartbeat_age > LIVE_HEARTBEAT_SEC:
+        status = 'offline'
+    elif (not aw_connected) or (data_age is None) or (data_age > DATA_STALE_SEC):
+        status = 'stale'
+    else:
+        status = 'live'
+
+    enriched['aw_connected'] = aw_connected
+    enriched['data_age_sec'] = None if data_age is None else round(data_age, 3)
+    enriched['heartbeat_age_sec'] = None if heartbeat_age is None else round(heartbeat_age, 3)
+    enriched['last_display_heartbeat_iso'] = None if heartbeat_at is None else heartbeat_at.isoformat()
+    enriched['status'] = status
+    return enriched
 
 
 def _build_aw_fallback_state() -> dict:
@@ -175,6 +230,7 @@ def _build_aw_fallback_state() -> dict:
             'E_display': round(battery / 100, 4),
             'battery_pct': battery,
             'trend': _next_trend(battery),
+            'aw_connected': False,
             'source': 'aw-fallback',
             'last_tick_iso': now.isoformat(),
         }
@@ -210,6 +266,7 @@ def _build_aw_fallback_state() -> dict:
         'E_display': round(battery / 100, 4),
         'battery_pct': battery,
         'trend': _next_trend(battery),
+        'aw_connected': True,
         'source': 'aw-fallback',
         'last_tick_iso': now.isoformat(),
     }
@@ -226,12 +283,12 @@ def build_state_payload() -> dict:
     """
     demo_state = _build_demo_state()
     if demo_state:
-        return demo_state
+        return _enrich_status(demo_state)
 
     model_state = _fetch_model_state()
     if model_state:
-        return model_state
-    return _build_aw_fallback_state()
+        return _enrich_status(model_state)
+    return _enrich_status(_build_aw_fallback_state())
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -265,6 +322,8 @@ class Handler(SimpleHTTPRequestHandler):
     def do_PUT(self):
         if self.path == '/demo-state':
             self._put_demo_state()
+        elif self.path == '/heartbeat':
+            self._put_heartbeat()
         else:
             self.send_response(404)
             self.end_headers()
@@ -326,6 +385,21 @@ class Handler(SimpleHTTPRequestHandler):
             })
         except ValueError as exc:
             self._send_json({'error': str(exc)}, status=400)
+
+    def _put_heartbeat(self):
+        try:
+            # Optional JSON body accepted for future debugging/telemetry, but the
+            # endpoint contract only requires recording the receipt time.
+            self._read_json_body()
+        except ValueError as exc:
+            self._send_json({'error': str(exc)}, status=400)
+            return
+
+        stamped = _mark_display_heartbeat()
+        self._send_json({
+            'ok': True,
+            'last_display_heartbeat_iso': stamped.isoformat(),
+        })
 
     def _state(self):
         try:
