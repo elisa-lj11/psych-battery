@@ -2431,6 +2431,51 @@
         transform: scaleY(0.15);
       }
 
+      /* ─── Piskel+CSS spritesheet walker ───────────────────────────────────────
+         Workflow: draw frames in Piskel → export spritestrip PNG → embed as
+         base64 data URI → animate background-position-x with steps(N, end).
+         Spritesheet: sprites/walk-outside.png  64×24px, 4 frames of 16×24.
+         Displayed at 3× scale: 48×72px container, 192×72px background strip. */
+      .px-walker {
+        position: absolute;
+        bottom: 30%;
+        left: 0;
+        width: 32px;
+        height: 48px;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAYCAYAAABKtPtEAAABAUlEQVR42u1WOw7CMAzNFVgZO7OxMTNxKmbOw8BpmLlFqiBFCsGE+L0EpyqWPFR5H9tJ0zqXxWG39Wk6ZbB8Nij/nKwVYflsA7R/AD9ul7eMayi/togWG8D4N2lgyXxRBDmGKL9FA2z97nQ/+zS1lxDLZxug/HOyVoTlsw3Q/tYDMN8ARuATd4QBVGusfgAjXILW/GdMx6sPif6OLp1PCaRcVMfUP5IQssTR6lj7wxMsYVEdC3+ogG+43gNo6a8uoBVmFP8uO4BqWfh3eQe1RzX3/9kQmAJC7KeND4lgpNtf+0Vg/F8WIyB/rhGuLUDCmfqnC1IBJeFaXAlr7f+PtcYM6cjAmAGx0FQAAAAASUVORK5CYII=");
+        background-size: 128px 48px;
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .demo-scene-frame.animating .px-walker {
+        animation:
+          px-walk-cycle 480ms steps(4, end) infinite,
+          px-walk-across 7s linear infinite;
+      }
+
+      @keyframes px-walk-cycle {
+        from {
+          background-position-x: 0px;
+        }
+        to {
+          background-position-x: -128px;
+        }
+      }
+
+      @keyframes px-walk-across {
+        from {
+          transform: translateX(-40px);
+        }
+        to {
+          transform: translateX(600px);
+        }
+      }
+
       /* Tour button */
       #calib-btn {
         min-height: 36px;
@@ -11633,6 +11678,7 @@ P = drain - 0.5*recovery</pre
                 </div>
                 <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
                   <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
+                  ${activity.id === "go_outside" ? '<div class="px-walker" aria-hidden="true"></div>' : ""}
                 </div>
                 <div class="demo-scene-footer">
                   <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
