@@ -5642,12 +5642,15 @@
       #layer1-pressure-bar,
       #layer2-circadian {
         width: 100%;
+        flex: 1 1 auto;
+        min-height: 120px;
       }
 
       #layer1-pressure-bar svg,
       #layer2-circadian svg {
         width: 100%;
-        height: auto;
+        height: 100%;
+        min-height: 120px;
         display: block;
         shape-rendering: crispEdges;
         image-rendering: pixelated;
@@ -12780,6 +12783,7 @@ P = drain - 0.5*recovery</pre
         };
 
         const svg = buildSvgRoot(width, height, `0 0 ${width} ${height}`);
+        svg.setAttribute("preserveAspectRatio", "none");
         const baselineY = scaleY(yMin);
         const area = document.createElementNS(SVG_NS, "polygon");
         const line = document.createElementNS(SVG_NS, "polyline");
