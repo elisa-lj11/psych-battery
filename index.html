@@ -103,7 +103,7 @@
       }
 
       #connection-pill {
-        display: inline-flex;
+        display: none !important;
         align-items: center;
         gap: 6px;
         min-height: 28px;
@@ -271,7 +271,7 @@
         min-height: 36px;
         padding: 0 12px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-surface);
         color: var(--text);
         font-family: var(--px-font-ui);
         font-size: 0.88rem;
@@ -472,8 +472,10 @@
       }
 
       .timeline-toggle-icon {
-        font-size: 14px;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
         line-height: 1;
+        margin-right: 5px;
       }
 
       .timeline-toggle-value {
@@ -495,7 +497,7 @@
         min-width: 124px;
         padding: 0 14px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
@@ -535,7 +537,7 @@
         padding: 12px;
         border: var(--panel-border);
         border-radius: var(--panel-radius);
-        background: var(--surface);
+        background: var(--px-surface);
         box-shadow: var(--panel-shadow);
       }
 
@@ -586,7 +588,7 @@
         min-height: 44px;
         padding: 0 14px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
@@ -623,7 +625,7 @@
         padding: 10px;
         border: var(--panel-border);
         border-radius: var(--panel-radius);
-        background: var(--surface);
+        background: var(--px-surface);
         box-shadow: var(--panel-shadow);
       }
       #demo-dropdown[open] #demo-panel {
@@ -887,7 +889,7 @@
         padding: 10px 12px;
         border: var(--panel-border);
         border-radius: var(--panel-radius);
-        background: var(--surface);
+        background: var(--px-surface);
         box-shadow: var(--panel-shadow);
         display: flex;
         flex-direction: column;
@@ -916,7 +918,7 @@
         gap: 8px;
         padding: 4px 10px 4px 12px;
         border: 2px solid var(--px-border);
-        border-radius: 6px;
+        border-radius: 0;
         background: var(--px-panel);
         color: var(--px-text);
         font-family: var(--px-font-ui);
@@ -1154,32 +1156,34 @@
 
       .demo-battery-pair {
         display: flex;
-        align-items: center;
-        gap: 16px;
-        flex: 1 1 0;
-        min-width: 0;
+        flex-direction: column;
+        gap: 8px;
+        flex: 0 0 auto;
+        width: 120px;
+        justify-content: center;
       }
 
       .demo-batt-wrap {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 8px;
-        flex: 1 1 0;
+        gap: 6px;
         min-width: 0;
       }
 
       .demo-batt-label {
         font-family: var(--px-font-ui);
-        font-size: 16px;
+        font-size: 14px;
+        font-weight: 800;
         color: var(--px-text);
         letter-spacing: 0.1em;
-        flex: 0 0 auto;
+        flex: 0 0 18px;
+        text-align: center;
       }
 
       .demo-batt-svg {
         width: 100%;
-        height: 40px;
+        height: 22px;
         display: block;
         flex: 1 1 auto;
         min-width: 0;
@@ -1204,7 +1208,7 @@
         margin: 0 0 14px 0;
         min-height: 40px;
         border: 2px solid var(--px-border, var(--border-light));
-        background: var(--surface-2);
+        background: var(--px-surface-2);
         color: var(--px-text, var(--text));
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
@@ -1214,7 +1218,7 @@
         box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
       }
       .layer-back-top:hover {
-        background: var(--surface-2);
+        background: var(--px-surface-2);
         border-color: var(--px-accent);
         color: var(--px-accent);
       }
@@ -1246,16 +1250,16 @@
       .demo-exit-btn,
       .demo-back-btn {
         padding: 0 16px;
-        min-height: 44px;
-        border: 2px solid var(--px-border);
-        background: var(--surface);
+        min-height: 40px;
+        border: 2px solid var(--px-border-2);
+        background: var(--px-button-surface);
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: 14px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
         flex: 0 0 auto;
       }
 
@@ -1263,7 +1267,7 @@
         width: 44px;
         height: 44px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-surface);
         color: var(--px-accent);
         font-family: var(--px-font-ui);
         font-size: var(--fs-body);
@@ -1276,7 +1280,7 @@
       }
 
       .demo-help-btn:hover {
-        background: var(--surface-2);
+        background: var(--px-surface-2);
       }
 
       .demo-help-modal {
@@ -1714,6 +1718,7 @@
         padding: 14px;
         box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.6);
         min-width: 0;
+        min-height: 0;
       }
 
       .demo-scene-panel.is-recovery,
@@ -2178,26 +2183,50 @@
       }
 
       .demo-back-wrap {
-        display: flex;
-        justify-content: flex-end;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 280ms steps(4, end);
+        display: none; /* replaced by scene-footer back button */
       }
 
-      .demo-back-wrap.is-visible {
-        opacity: 1;
-        pointer-events: auto;
+      .demo-scene-footer {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        z-index: 10;
+      }
+
+      .demo-scene-panel {
+        position: relative;
+      }
+
+      .demo-pipeline-panel {
+        display: flex;
+        flex-direction: column;
+        position: relative; /* keeps packet-layer anchor */
+      }
+
+      .demo-pipeline-content {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow-y: auto;
       }
 
       .demo-timeline-strip {
-        position: sticky;
-        bottom: 0;
+        position: static;
         width: 100%;
-        background: var(--surface);
+        background: transparent;
         border-top: 2px solid var(--px-border);
         padding: 10px 0 0;
+        margin-top: auto;
         box-sizing: border-box;
+        flex-shrink: 0;
+      }
+
+      .demo-tl-header {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        margin-bottom: 6px;
       }
 
       .demo-timeline-svg {
@@ -2314,7 +2343,7 @@
         min-height: 36px;
         padding: 0 12px;
         border: 2px solid var(--px-border);
-        background: var(--surface);
+        background: var(--px-surface);
         color: var(--px-good);
         font-family: var(--px-font-ui);
         font-size: 0.88rem;
@@ -2354,7 +2383,7 @@
         max-height: 88vh;
         overflow-y: auto;
         border: var(--panel-border);
-        background: var(--surface);
+        background: var(--px-surface);
         padding: var(--panel-pad);
         box-shadow: var(--panel-shadow);
         font-family: var(--px-font-ui);
@@ -2422,7 +2451,7 @@
         cursor: pointer;
       }
       .calib-q .calib-yesno button.is-on {
-        background: var(--surface-2);
+        background: var(--px-surface-2);
         border-color: var(--px-accent);
         color: var(--px-accent);
       }
@@ -3468,6 +3497,7 @@
         max-height: 9999px;
         opacity: 1;
         margin-top: 18px;
+        padding-bottom: 96px;
       }
 
       body[data-layer="1"] #layer-2 {
@@ -3485,6 +3515,10 @@
         margin-top: 18px;
       }
 
+      body[data-layer="2"] #layer-2 {
+        padding-bottom: 96px;
+      }
+
       #metrics-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3494,7 +3528,7 @@
       .metric-card {
         min-height: 96px;
         border-radius: 14px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--px-border);
         background: rgba(26, 26, 36, 0.92);
         padding: 12px;
         display: flex;
@@ -3529,7 +3563,7 @@
         min-height: 48px;
         border-radius: 12px;
         border: 1px solid var(--border-light);
-        background: var(--surface-2);
+        background: var(--px-surface-2);
         color: var(--text);
         padding: 0 12px;
         cursor: pointer;
@@ -3557,7 +3591,7 @@
         align-items: center;
         padding: 10px 12px;
         border-radius: 12px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--px-border);
         background: rgba(255, 255, 255, 0.02);
         font-size: 0.96rem;
       }
@@ -3583,7 +3617,7 @@
         padding: 0 10px;
         border-radius: 999px;
         border: 1px solid var(--border-light);
-        background: var(--surface-2);
+        background: var(--px-surface-2);
         font-size: 0.8rem;
         font-weight: 700;
       }
@@ -3612,7 +3646,7 @@
 
       .diag-col {
         border-radius: 16px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--px-border);
         background: rgba(255, 255, 255, 0.02);
         padding: 14px;
       }
@@ -3672,8 +3706,8 @@
         min-height: 48px;
         margin-top: 14px;
         border-radius: 14px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
+        border: 1px solid var(--px-border);
+        background: var(--px-surface-2);
         cursor: pointer;
         display: none;
         font-family: var(--px-font-ui);
@@ -3689,19 +3723,26 @@
 
       #self-log-dock {
         position: fixed;
-        left: 50%;
-        width: min(calc(100% - 32px), 640px);
-        transform: translateX(-50%);
-        bottom: 10px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0 auto;
+        width: 100%;
+        max-width: none;
         display: flex;
-        gap: 8px;
-        padding: 10px 12px calc(env(safe-area-inset-bottom, 12px) + 6px);
-        background: var(--px-panel);
-        border: 2px solid var(--border);
-        border-radius: 18px;
-        box-shadow: 0 16px 28px rgba(2, 8, 20, 0.28);
-        backdrop-filter: blur(18px);
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px calc(env(safe-area-inset-bottom, 8px) + 12px);
+        background: var(--px-bg);
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        backdrop-filter: none;
         z-index: 30;
+      }
+
+      #self-log-dock button {
+        max-width: 160px;
       }
 
       #self-log-dock button {
@@ -3727,6 +3768,7 @@
         background: var(--px-accent-soft);
         border-color: var(--px-accent);
         color: var(--px-accent);
+        border-radius: 0;
       }
 
       #backdrop {
@@ -3774,6 +3816,17 @@
         visibility: visible;
       }
 
+      #rating-sheet {
+        left: 50%;
+        right: auto;
+        width: min(460px, 100%);
+        transform: translateX(-50%) translateY(100%);
+      }
+
+      body[data-mode="rating"] #rating-sheet {
+        transform: translateX(-50%) translateY(0);
+      }
+
       .sheet-head {
         display: flex;
         align-items: center;
@@ -3789,7 +3842,7 @@
         min-width: 44px;
         min-height: 44px;
         padding: 0 10px;
-        background: var(--surface);
+        background: var(--px-surface);
         border: 2px solid var(--border-light, #2a2a3a);
         color: var(--text);
         font-family: var(--px-font-ui);
@@ -3830,8 +3883,8 @@
         flex: 1;
         min-height: 48px;
         border-radius: 12px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
+        border: 1px solid var(--px-border);
+        background: var(--px-surface-2);
         color: var(--muted);
         font-family: var(--px-font-ui);
         font-size: 0.82rem;
@@ -3867,15 +3920,7 @@
       }
 
       .rating-sidecar {
-        display: grid;
-        gap: 10px;
-        padding: 12px;
-        border: 2px solid var(--px-border);
-        background: var(--px-surface);
-      }
-
-      .rating-sidecar[hidden] {
-        display: none;
+        display: none !important;
       }
 
       .rating-sidecar-title {
@@ -3956,9 +4001,10 @@
       }
 
       .tap-rail {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 6px;
         overflow: visible;
         padding-bottom: 4px;
       }
@@ -3968,18 +4014,19 @@
       }
 
       .tap-score {
-        width: 100%;
-        min-height: 58px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 52px;
+        min-height: 44px;
+        border-radius: 6px;
+        border: 1px solid var(--px-border);
+        background: var(--px-surface-2);
         cursor: pointer;
         font-weight: 800;
-        display: grid;
-        grid-template-columns: 44px minmax(0, 1fr);
-        align-items: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 0;
-        text-align: left;
         transition:
           transform 120ms ease,
           border-color 120ms ease,
@@ -3987,31 +4034,15 @@
       }
 
       .tap-score-num {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100%;
-        border-right: 1px solid var(--border-light);
+        display: block;
         font-family: var(--px-font-body);
-        font-size: 1.7rem;
+        font-size: 1.5rem;
         line-height: 1;
         color: var(--text);
       }
 
       .tap-score-copy {
-        display: flex;
-        align-items: center;
-        min-width: 0;
-        padding: 10px 12px;
-        font-family:
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        font-size: 0.95rem;
-        line-height: 1.3;
-        color: var(--text);
+        display: none;
       }
 
       .tap-score.is-pressed {
@@ -4034,8 +4065,8 @@
         width: 100%;
         min-height: 64px;
         border-radius: 16px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
+        border: 1px solid var(--px-border);
+        background: var(--px-surface-2);
         padding: 14px 16px;
         display: flex;
         align-items: center;
@@ -4139,8 +4170,8 @@
       }
 
       .stepper-btn {
-        border: 1px solid var(--border);
-        background: var(--surface);
+        border: 1px solid var(--px-border);
+        background: var(--px-surface);
       }
 
       .stepper-display {
@@ -4150,8 +4181,8 @@
         place-items: center;
         padding: 0 14px;
         border-radius: 12px;
-        border: 1px solid var(--border);
-        background: var(--surface);
+        border: 1px solid var(--px-border);
+        background: var(--px-surface);
         font-weight: 800;
         font-variant-numeric: tabular-nums;
       }
@@ -4461,14 +4492,14 @@
     */
 
       :root {
-        --px-bg: #0a1018;
-        --px-bg-top: #111a27;
-        --px-bg-bottom: #070c13;
-        --px-surface: #121b27;
-        --px-surface-2: #1b2737;
-        --px-surface-3: #27374b;
-        --px-panel: rgba(18, 27, 39, 0.94);
-        --px-panel-soft: rgba(26, 37, 52, 0.84);
+        --px-bg: #000000;
+        --px-bg-top: #080c12;
+        --px-bg-bottom: #000000;
+        --px-surface: #0e1520;
+        --px-surface-2: #161f2e;
+        --px-surface-3: #1f2d40;
+        --px-panel: rgba(12, 18, 28, 0.96);
+        --px-panel-soft: rgba(20, 28, 42, 0.88);
         --px-border: #3b536d;
         --px-border-2: #587491;
         --px-text: #edf4ff;
@@ -4524,35 +4555,37 @@
        rule picks them up via var() with no per-rule changes. */
 
       body[data-theme="pastel"] {
-        --px-bg: #2a1f3d;
-        --px-bg-top: #3a2d52;
-        --px-bg-bottom: #1f1530;
-        --px-surface: #3d2f54;
-        --px-surface-2: #4a3a64;
-        --px-surface-3: #5a4878;
-        --px-panel: rgba(61, 47, 84, 0.94);
-        --px-panel-soft: rgba(74, 58, 100, 0.84);
-        --px-border: #7d6a98;
-        --px-border-2: #a092b8;
-        --px-text: #f5e8ff;
-        --px-muted: #c4b6d8;
-        --px-good: #c5e8b5;
-        --px-warn: #ffe5a3;
-        --px-low: #ffc99e;
-        --px-critical: #ff9eaa;
-        --px-accent: #d6b3ff;
-        --px-info: #b5dcff;
-        --px-focus: #ffd8e8;
-        --px-energy: #c5e8b5;
-        --px-stress: #ff9eaa;
-        --px-recovery: #b5dcff;
-        --px-accent-soft: rgba(214, 179, 255, 0.16);
-        --px-energy-soft: rgba(197, 232, 181, 0.18);
-        --px-stress-soft: rgba(255, 158, 170, 0.18);
-        --px-recovery-soft: rgba(181, 220, 255, 0.18);
-        --px-button-surface: #4a3a64;
-        --px-button-surface-strong: #5a4878;
-        --px-button-shadow: rgba(15, 8, 25, 0.6);
+        background: var(--px-bg);
+        color: var(--px-text);
+        --px-bg: #fdf9ff;
+        --px-bg-top: #fdf9ff;
+        --px-bg-bottom: #f5effe;
+        --px-surface: #f6f1fb;
+        --px-surface-2: #ede6f5;
+        --px-surface-3: #e3d8ee;
+        --px-panel: rgba(253, 249, 255, 0.97);
+        --px-panel-soft: rgba(242, 236, 250, 0.94);
+        --px-border: #c8b8d8;
+        --px-border-2: #9880b0;
+        --px-text: #1e1430;
+        --px-muted: #7a6888;
+        --px-good: #4a8a50;
+        --px-warn: #9a7020;
+        --px-low: #b86030;
+        --px-critical: #c03838;
+        --px-accent: #9870c8;
+        --px-info: #5a9ed0;
+        --px-focus: #6040a0;
+        --px-energy: #5a9a60;
+        --px-stress: #c87068;
+        --px-recovery: #5a9ed0;
+        --px-accent-soft: rgba(152, 112, 200, 0.14);
+        --px-energy-soft: rgba(90, 154, 96, 0.14);
+        --px-stress-soft: rgba(200, 112, 104, 0.12);
+        --px-recovery-soft: rgba(90, 158, 208, 0.12);
+        --px-button-surface: #ede5f8;
+        --px-button-surface-strong: #e0d5f0;
+        --px-button-shadow: rgba(48, 28, 76, 0.15);
       }
 
       body[data-theme="acrylic"] {
@@ -4598,35 +4631,37 @@
       }
 
       body[data-theme="light"] {
-        --px-bg: #eef3fb;
-        --px-bg-top: #fcfdff;
-        --px-bg-bottom: #dde7f5;
-        --px-surface: #f8fbff;
-        --px-surface-2: #e8f0fb;
-        --px-surface-3: #d7e3f2;
-        --px-panel: rgba(248, 251, 255, 0.96);
-        --px-panel-soft: rgba(232, 240, 251, 0.92);
-        --px-border: #8ba0ba;
-        --px-border-2: #6a83a3;
-        --px-text: #182232;
-        --px-muted: #53657b;
-        --px-good: #2f9e57;
-        --px-warn: #ad7a00;
-        --px-low: #c96b22;
-        --px-critical: #c75142;
-        --px-accent: #7f61d9;
-        --px-info: #2487d8;
-        --px-focus: #7f61d9;
-        --px-energy: #2f9e57;
-        --px-stress: #d56045;
-        --px-recovery: #2487d8;
-        --px-accent-soft: rgba(127, 97, 217, 0.12);
-        --px-energy-soft: rgba(47, 158, 87, 0.12);
-        --px-stress-soft: rgba(213, 96, 69, 0.12);
-        --px-recovery-soft: rgba(36, 135, 216, 0.12);
-        --px-button-surface: #dde7f5;
-        --px-button-surface-strong: #c9d7ea;
-        --px-button-shadow: rgba(79, 101, 130, 0.28);
+        background: var(--px-bg);
+        color: var(--px-text);
+        --px-bg: #faf8f5;
+        --px-bg-top: #faf8f5;
+        --px-bg-bottom: #f0ede8;
+        --px-surface: #f3f0eb;
+        --px-surface-2: #e9e5de;
+        --px-surface-3: #dedad2;
+        --px-panel: rgba(250, 248, 245, 0.97);
+        --px-panel-soft: rgba(237, 234, 227, 0.94);
+        --px-border: #c2bdb4;
+        --px-border-2: #8c857d;
+        --px-text: #1c1916;
+        --px-muted: #706960;
+        --px-good: #4c8c3a;
+        --px-warn: #9c6e16;
+        --px-low: #b65e26;
+        --px-critical: #a62e26;
+        --px-accent: #628c50;
+        --px-info: #3a7868;
+        --px-focus: #3a5c2c;
+        --px-energy: #628c50;
+        --px-stress: #b84636;
+        --px-recovery: #3a7868;
+        --px-accent-soft: rgba(98, 140, 80, 0.14);
+        --px-energy-soft: rgba(98, 140, 80, 0.14);
+        --px-stress-soft: rgba(184, 70, 54, 0.12);
+        --px-recovery-soft: rgba(58, 120, 104, 0.12);
+        --px-button-surface: #e8e4dc;
+        --px-button-surface-strong: #dad6ce;
+        --px-button-shadow: rgba(72, 66, 58, 0.16);
       }
 
       /* Battery frame / nub / digits pick up theme vars */
@@ -4959,7 +4994,7 @@
       }
 
       .tap-score {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
       }
 
       /* Chunky pixel focus outline — guide rule: :focus-visible must signal care */
@@ -5232,7 +5267,6 @@
         color: var(--px-accent);
       }
 
-      #demo-toggle-btn,
       .calib-actions .calib-submit,
       #help-close,
       .demo-help-modal-card .demo-help-close {
@@ -5500,27 +5534,13 @@
         text-transform: uppercase;
       }
 
-      .layer2-tank-title.is-vertical {
-        position: absolute;
-        top: 12px;
-        right: 10px;
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
-      }
-
-      .layer2-cells,
       .layer2-cells-vertical {
         display: grid;
         gap: 4px;
       }
 
-      .layer2-cells {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-      }
-
       .layer2-cells-vertical {
         grid-template-columns: 1fr;
-        margin-right: 24px;
       }
 
       .layer2-cell {
@@ -5835,31 +5855,9 @@
         padding: 12px;
       }
 
-      .layer2-tank-energy .layer2-tank-title,
-      .layer2-tank-code {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .layer2-tank-code {
-        min-height: 26px;
-        padding: 0 8px;
-        border: 2px solid var(--px-border);
-        background: rgba(255, 255, 255, 0.04);
-        font-family: var(--px-font-ui);
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .layer2-cells {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        align-content: end;
-      }
-
       .layer2-cells-vertical {
         grid-template-rows: repeat(8, minmax(0, 1fr));
+        flex: 1;
         min-height: 196px;
       }
 
@@ -5873,16 +5871,10 @@
 
       .layer2-viz-row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 12px;
         align-items: stretch;
         min-height: 440px;
-      }
-
-      .layer2-viz-row #model-viz-panel {
-        min-width: 0;
-        min-height: 100%;
-        display: flex;
       }
 
       .layer2-viz-row .phase-portrait-card {
@@ -5909,17 +5901,15 @@
 
       @media (max-width: 920px) {
         .layer2-viz-row {
-          grid-template-columns: 1fr;
           min-height: unset;
         }
-        .layer2-viz-row #model-viz-panel,
         .layer2-viz-row .phase-portrait-card {
           width: 100%;
         }
       }
 
       .layer2-formula-v2 {
-        min-height: 100%;
+        min-height: 0;
         font-family: var(--px-font-body);
       }
 
@@ -6558,26 +6548,19 @@
         display: flex;
         flex-direction: column;
         gap: 0;
-        padding: 0 12px 12px;
-        margin-top: auto;
+        padding: 0;
       }
 
       .demo-timeline-meter-row {
-        display: grid;
-        grid-template-columns: minmax(220px, 0.95fr) minmax(0, 1.35fr);
-        align-items: stretch;
-        gap: 12px;
-        padding: 12px 0 0;
-      }
-
-      .demo-battery-pair {
         display: flex;
-        align-items: stretch;
-        gap: 12px;
-        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 0 0;
       }
 
       .demo-timeline-pane {
+        flex: 1 1 0;
         min-width: 0;
       }
 
@@ -6673,9 +6656,8 @@
       }
 
       .tap-score {
-        min-width: 48px;
-        min-height: 56px;
-        font-size: 1.7rem;
+        min-height: 48px;
+        font-size: 1.5rem;
       }
 
       .stepper-btn,
@@ -6747,10 +6729,6 @@
           justify-content: flex-end;
         }
 
-        .demo-battery-pair {
-          flex-direction: column;
-        }
-
         #theme-picker {
           position: fixed;
           top: auto;
@@ -6798,10 +6776,11 @@
         .demo-activity-view {
           grid-template-columns: minmax(0, 3.2fr) minmax(360px, 2fr);
           gap: 18px;
+          align-items: stretch;
         }
 
         .demo-scene-frame {
-          min-height: 450px;
+          min-height: 0;
         }
 
         .demo-timeline-svg {
@@ -6840,7 +6819,7 @@
               aria-pressed="false"
             >
               <span class="timeline-toggle-icon" aria-hidden="true"
-                >&#8635;</span
+                >WINDOW</span
               >
               <span class="timeline-toggle-value">4H</span>
             </button>
@@ -6941,13 +6920,6 @@
               >
               <span class="theme-mode-label" data-theme-mode-label>LIGHT</span>
             </button>
-            <button
-              id="calib-btn"
-              type="button"
-              title="Tune your battery (5 questions)"
-            >
-              TUNE
-            </button>
           </div>
         </details>
         <button
@@ -7020,14 +6992,19 @@
           <div id="battery-pct-display" aria-live="polite">
             --<span class="pct-sup">%</span>
           </div>
-          <div class="battery-expand-hint" aria-hidden="true">
-            TAP TO EXPAND<span class="pix-arrow">&#9660;</span>
-          </div>
         </div>
       </button>
 
       <div id="battery-meta">
         <span id="model-status-text">Waiting for model or ActivityWatch</span>
+        <div
+          class="battery-expand-hint"
+          aria-hidden="true"
+          role="button"
+          tabindex="-1"
+        >
+          TAP TO EXPAND<span class="pix-arrow">&#9660;</span>
+        </div>
         <span id="last-tick-text">No recent tick</span>
       </div>
 
@@ -7082,14 +7059,16 @@
                     class="layer2-tank layer2-tank-energy"
                   >
                     <div class="layer2-tank-title">Energy</div>
-                    <div class="layer2-tank-code">E</div>
-                    <div id="layer2-energy-cells" class="layer2-cells"></div>
+                    <div
+                      id="layer2-energy-cells"
+                      class="layer2-cells-vertical"
+                    ></div>
                   </div>
                   <div
                     id="layer2-stress-tank"
                     class="layer2-tank layer2-tank-stress"
                   >
-                    <div class="layer2-tank-title is-vertical">Stress</div>
+                    <div class="layer2-tank-title">Stress</div>
                     <div
                       id="layer2-stress-cells"
                       class="layer2-cells-vertical"
@@ -7124,7 +7103,6 @@ P = drain - 0.5*recovery</pre
           </div>
 
           <div class="layer2-viz-row">
-            <div id="model-viz-panel"></div>
             <div class="layer-card phase-portrait-card">
               <div class="section-title">
                 <span
@@ -10242,7 +10220,7 @@ P = drain - 0.5*recovery</pre
         const tip = isFast
           ? "2-minute accelerated demo window. Click for the 4-hour rolling window."
           : "4-hour rolling window. Click for the 2-minute accelerated demo view.";
-        DOM.timelineToggleBtn.innerHTML = `<span class="timeline-toggle-icon" aria-hidden="true">&#8635;</span><span class="timeline-toggle-value">${label}</span>`;
+        DOM.timelineToggleBtn.innerHTML = `<span class="timeline-toggle-icon" aria-hidden="true">WINDOW</span><span class="timeline-toggle-value">${label}</span>`;
         DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
         DOM.timelineToggleBtn.setAttribute("aria-label", `${label}. ${tip}`);
         DOM.timelineToggleBtn.title = tip;
@@ -11266,6 +11244,9 @@ P = drain - 0.5*recovery</pre
               ${stepIndicator}
               <span>${stepCaption}</span>
             </div>
+            <div class="demo-scene-footer">
+              <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
+            </div>
           </div>
           <div class="demo-pipeline-panel is-${activity.kind}">
             <div class="demo-pipeline-head">
@@ -11331,17 +11312,15 @@ P = drain - 0.5*recovery</pre
               <div class="demo-why-body">${activity.whyResearch || ""}</div>
             </details>
             <div class="demo-packet-layer" data-demo-packets></div>
+            <div class="demo-timeline-strip">
+              <div class="demo-tl-header">Timeline</div>
+              <div class="demo-timeline-meter-row">
+                <div class="demo-battery-pair" data-demo-battery-pair></div>
+                <div class="demo-timeline-pane" data-demo-timeline></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="demo-back-wrap is-visible">
-          <button type="button" class="demo-continue-btn" data-demo-back>← Back to activities</button>
-        </div>
-        <div class="demo-timeline-strip">
-          <div class="demo-timeline-meter-row">
-            <div class="demo-battery-pair" data-demo-battery-pair></div>
-            <div class="demo-timeline-pane" data-demo-timeline></div>
           </div>
-        </div>
         </div>
       `;
 
@@ -12485,11 +12464,12 @@ P = drain - 0.5*recovery</pre
         line.style.opacity = "0.65";
         svg.appendChild(line);
 
-        // 2) Energy + Stress overlays from tick history (last 24h, by time-of-day)
+        // 2) Energy + Stress overlays — scatter dots from tick history (last 24h)
+        // Using dots instead of polylines so flat data (e.g. steady stress) reads
+        // as a dot trail rather than a misleading horizontal bar.
         const overlayHistory = loadTickHistory();
         const overlayCutoff = Date.now() - 24 * 3600 * 1000;
-        const energyPts = [];
-        const stressPts = [];
+        const overlaySamples = [];
         overlayHistory.forEach((entry) => {
           if (!entry || !entry.payload) return;
           const ts =
@@ -12499,33 +12479,37 @@ P = drain - 0.5*recovery</pre
           const sampleHour = d.getHours() + d.getMinutes() / 60;
           const e = Number(entry.payload.E);
           const s = Number(entry.payload.S);
-          if (Number.isFinite(e))
-            energyPts.push(`${scaleX(sampleHour)},${scaleY(e)}`);
-          if (Number.isFinite(s))
-            stressPts.push(`${scaleX(sampleHour)},${scaleY(s)}`);
+          overlaySamples.push({ sampleHour, e, s, isCurrent: false });
         });
         if (payload) {
-          energyPts.push(`${scaleX(hour)},${scaleY(currentEnergy)}`);
-          stressPts.push(`${scaleX(hour)},${scaleY(currentStress)}`);
+          overlaySamples.push({
+            sampleHour: hour,
+            e: currentEnergy,
+            s: currentStress,
+            isCurrent: true,
+          });
         }
-        if (energyPts.length >= 2) {
-          const energyLine = document.createElementNS(SVG_NS, "polyline");
-          energyLine.setAttribute("points", energyPts.join(" "));
-          energyLine.style.fill = "none";
-          energyLine.style.stroke = "var(--px-energy)";
-          energyLine.style.strokeWidth = "2.5";
-          energyLine.style.strokeLinejoin = "round";
-          svg.appendChild(energyLine);
-        }
-        if (stressPts.length >= 2) {
-          const stressLine = document.createElementNS(SVG_NS, "polyline");
-          stressLine.setAttribute("points", stressPts.join(" "));
-          stressLine.style.fill = "none";
-          stressLine.style.stroke = "var(--px-stress)";
-          stressLine.style.strokeWidth = "2.5";
-          stressLine.style.strokeLinejoin = "round";
-          svg.appendChild(stressLine);
-        }
+        overlaySamples.forEach(({ sampleHour, e, s, isCurrent }) => {
+          const r = isCurrent ? 5 : 3;
+          if (Number.isFinite(e)) {
+            const ec = document.createElementNS(SVG_NS, "circle");
+            ec.setAttribute("cx", String(scaleX(sampleHour)));
+            ec.setAttribute("cy", String(scaleY(e)));
+            ec.setAttribute("r", String(r));
+            ec.style.fill = "var(--px-energy)";
+            ec.style.opacity = isCurrent ? "1" : "0.55";
+            svg.appendChild(ec);
+          }
+          if (Number.isFinite(s)) {
+            const sc = document.createElementNS(SVG_NS, "circle");
+            sc.setAttribute("cx", String(scaleX(sampleHour)));
+            sc.setAttribute("cy", String(scaleY(s)));
+            sc.setAttribute("r", String(r));
+            sc.style.fill = "var(--px-stress)";
+            sc.style.opacity = isCurrent ? "1" : "0.55";
+            svg.appendChild(sc);
+          }
+        });
 
         // 3) Current-time dot on circadian baseline
         dot.setAttribute("cx", String(scaleX(hour)));
@@ -12579,9 +12563,11 @@ P = drain - 0.5*recovery</pre
         DOM.layer2Circadian.replaceChildren(svg);
 
         DOM.layer2EnergyCells.innerHTML = Array.from(
-          { length: 10 },
+          { length: 8 },
           (_, index) => {
-            const active = index < Math.round(currentEnergy / 10);
+            // bottom-up fill: bars[7] is bottom, bars[0] is top
+            const filled = Math.round(currentEnergy / 12.5);
+            const active = 8 - index <= filled;
             return `<div class="layer2-cell${active ? " is-on" : ""}" style="--cell-tone:${levelColor(currentEnergy)}"></div>`;
           },
         ).join("");
@@ -12589,7 +12575,8 @@ P = drain - 0.5*recovery</pre
         DOM.layer2StressCells.innerHTML = Array.from(
           { length: 8 },
           (_, index) => {
-            const active = index < Math.round(currentStress / 12.5);
+            const filled = Math.round(currentStress / 12.5);
+            const active = 8 - index <= filled;
             return `<div class="layer2-cell${active ? " is-on" : ""}" style="--cell-tone:${stressColor(currentStress)}"></div>`;
           },
         ).join("");
@@ -12968,19 +12955,39 @@ P = drain - 0.5*recovery</pre
         if (DOM.connectionPillDisplayLabel) {
           DOM.connectionPillDisplayLabel.textContent = displayMeta.short;
         }
-        // Drive the simplified pill via data-* attributes for our CSS color rules
-        DOM.connectionPill.dataset.source = sourceMeta.key;
-        DOM.connectionPill.dataset.status = displayMeta.key;
-        DOM.connectionPill.style.color = color;
-        DOM.connectionPill.title = subtitle
+        const titleStr = subtitle
           ? `${subtitle}. ${tip} Data source ${sourceMeta.long}. ${sourceMeta.tip} Display write ${displayMeta.long}. ${displayMeta.tip}`
           : `${tip} Data source ${sourceMeta.long}. ${sourceMeta.tip} Display write ${displayMeta.long}. ${displayMeta.tip}`;
-        DOM.connectionPill.setAttribute(
-          "aria-label",
-          subtitle
-            ? `${text}. ${subtitle}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`
-            : `${text}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`,
-        );
+        const ariaStr = subtitle
+          ? `${text}. ${subtitle}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`
+          : `${text}. ${tip}. Data source ${sourceMeta.long}. ${sourceMeta.tip}. Display write ${displayMeta.long}. ${displayMeta.tip}`;
+        if (DOM.connectionPill) {
+          DOM.connectionPill.dataset.source = sourceMeta.key;
+          DOM.connectionPill.dataset.status = displayMeta.key;
+          DOM.connectionPill.style.color = color;
+          DOM.connectionPill.title = titleStr;
+          DOM.connectionPill.setAttribute("aria-label", ariaStr);
+        }
+        // Surface the same hover info on the Source label next to the dropdown.
+        const srcCtl = document.querySelector(".header-source-control");
+        if (srcCtl) {
+          srcCtl.title = titleStr;
+          srcCtl.setAttribute("aria-label", ariaStr);
+          srcCtl.dataset.source = sourceMeta.key;
+          srcCtl.dataset.status = displayMeta.key;
+        }
+        const headerStatus =
+          activeKey === "demo"
+            ? "demo"
+            : activeKey === "live" || activeKey === "aw"
+              ? "live"
+              : activeKey === "cached"
+                ? "cached"
+                : "offline";
+        const srcLabel = document.querySelector(".header-source-label");
+        if (srcLabel) {
+          srcLabel.textContent = `Source · ${headerStatus}`;
+        }
         const pop = DOM.connectionPillPopover;
         if (pop) {
           const cur = pop.querySelector(".cpp-current");
@@ -14208,8 +14215,9 @@ P = drain - 0.5*recovery</pre
       const THEME_KEY = "pb_theme";
       const LAST_DARK_THEME_KEY = "pb_last_dark_theme";
       const LIGHT_THEME = "light";
-      const DARK_THEMES = ["arcade", "pastel", "acrylic"];
-      const VALID_THEMES = [...DARK_THEMES, LIGHT_THEME];
+      const DARK_THEMES = ["arcade", "acrylic"];
+      const LIGHT_THEMES = ["light", "pastel"];
+      const VALID_THEMES = [...DARK_THEMES, ...LIGHT_THEMES];
       const THEME_LABELS = {
         arcade: "ARCADE",
         pastel: "PASTEL",
@@ -14266,7 +14274,7 @@ P = drain - 0.5*recovery</pre
         if (DARK_THEMES.includes(t)) rememberDarkTheme(t);
         document.body.setAttribute(
           "data-color-mode",
-          t === LIGHT_THEME ? "light" : "dark",
+          LIGHT_THEMES.includes(t) ? "light" : "dark",
         );
         document.querySelectorAll(".theme-swatch").forEach((btn) => {
           btn.setAttribute(
@@ -14280,7 +14288,7 @@ P = drain - 0.5*recovery</pre
       }
 
       function initTheme() {
-        const stored = localStorage.getItem(THEME_KEY) || "arcade";
+        const stored = localStorage.getItem(THEME_KEY) || "light";
         applyTheme(stored);
         const picker = document.getElementById("theme-picker");
         document.querySelectorAll(".theme-swatch").forEach((btn) => {
@@ -14293,8 +14301,8 @@ P = drain - 0.5*recovery</pre
         });
         if (DOM.themeModeToggle) {
           DOM.themeModeToggle.addEventListener("click", () => {
-            const current = localStorage.getItem(THEME_KEY) || "arcade";
-            if (current === LIGHT_THEME) {
+            const current = localStorage.getItem(THEME_KEY) || "light";
+            if (LIGHT_THEMES.includes(current)) {
               setThemePreference(getPreferredDarkTheme());
             } else {
               rememberDarkTheme(
@@ -14596,6 +14604,13 @@ P = drain - 0.5*recovery</pre
             void refreshAwData({ reason: "expand" });
           }
         });
+
+        // TAP TO EXPAND hint lives in battery-meta (outside the button) — forward its click
+        document
+          .querySelector(".battery-expand-hint")
+          ?.addEventListener("click", () => {
+            DOM.batteryToggle.click();
+          });
 
         DOM.openDiagnostics.addEventListener("click", () => {
           APP.uiLayer = 2;
