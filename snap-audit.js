@@ -173,22 +173,23 @@ async function hideSplash(page) {
   await page.click("[data-demo-help-close]", { force: true }).catch(() => {});
   await page.waitForTimeout(200);
 
-  // ========== DEMO activity (recovery: outside)
+  // ========== DEMO activity (recovery: go_outside)
   await page
-    .click('[data-demo-activity="outside"]', { force: true })
+    .click('[data-demo-activity="go_outside"]', { force: true })
     .catch(() => {});
-  await page.waitForTimeout(700);
+  await page.waitForTimeout(900);
   await snap(page, "14-demo-activity-outside");
   await snap(page, "14b-demo-activity-outside-full", true);
 
-  // ========== DEMO activity (drain: zoom)
+  // ========== DEMO activity (drain: zoom_meeting)
   await page.click("[data-demo-back]", { force: true }).catch(() => {});
   await page.waitForTimeout(400);
   await page
-    .click('[data-demo-activity="zoom"]', { force: true })
+    .click('[data-demo-activity="zoom_meeting"]', { force: true })
     .catch(() => {});
-  await page.waitForTimeout(700);
+  await page.waitForTimeout(900);
   await snap(page, "15-demo-activity-zoom");
+  await snap(page, "15b-demo-activity-zoom-full", true);
 
   await browser.close();
 })().catch((err) => {
