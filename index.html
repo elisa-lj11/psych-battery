@@ -1015,7 +1015,7 @@
       }
 
       .demo-right-bar {
-        width: 340px;
+        width: 400px;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
@@ -1023,6 +1023,43 @@
         border-left: 2px solid var(--px-border);
         padding: 0 0 0 16px;
         overflow-y: auto;
+      }
+
+      .demo-rb-delta {
+        display: flex;
+        gap: 8px;
+        padding: 4px 0;
+        border-top: 1px solid var(--px-border);
+        border-bottom: 1px solid var(--px-border);
+      }
+
+      .demo-rb-dE,
+      .demo-rb-dS {
+        font-family: var(--px-font-body);
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1;
+        flex: 1 1 0;
+        text-align: center;
+        padding: 8px 4px;
+        border: 2px solid var(--px-border);
+      }
+
+      .demo-rb-dE.is-pos {
+        color: var(--px-good);
+        border-color: var(--px-good);
+      }
+      .demo-rb-dE.is-neg {
+        color: var(--px-critical);
+        border-color: var(--px-critical);
+      }
+      .demo-rb-dS.is-pos {
+        color: var(--px-good);
+        border-color: var(--px-good);
+      }
+      .demo-rb-dS.is-neg {
+        color: var(--px-accent);
+        border-color: var(--px-accent);
       }
 
       .demo-rb-label {
@@ -6942,11 +6979,11 @@
       }
 
       .demo-batt-svg {
-        height: 44px;
+        height: 56px;
       }
 
       .demo-timeline-svg {
-        height: 170px;
+        height: 200px;
       }
 
       .demo-timeline-legend {
@@ -7113,8 +7150,12 @@
           padding: 20px 20px 12px;
         }
 
+        .demo-right-bar {
+          width: 440px;
+        }
+
         .demo-activity-view {
-          grid-template-columns: minmax(0, 3.2fr) minmax(360px, 2fr);
+          grid-template-columns: minmax(0, 3.5fr) minmax(300px, 1.8fr);
           gap: 18px;
           align-items: stretch;
         }
@@ -7123,8 +7164,12 @@
           min-height: 0;
         }
 
+        .demo-batt-svg {
+          height: 64px;
+        }
+
         .demo-timeline-svg {
-          height: 224px;
+          height: 230px;
         }
       }
     </style>
@@ -11260,7 +11305,7 @@ P = drain - 0.5*recovery</pre
         const PAD_T = 22;
         const PAD_B = 32;
         const viewW = 400;
-        const viewH = 170;
+        const viewH = 200;
         const plotW = viewW - PAD_L - PAD_R;
         const plotH = viewH - PAD_T - PAD_B;
         const events = [...(APP.demo.completedActivities || [])].sort(
@@ -11346,7 +11391,7 @@ P = drain - 0.5*recovery</pre
         const eY = toY(currentE);
         const sY = toY(currentS);
         target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 170" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 400 200" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join("")}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(" ")}"></polyline>` : ""}
@@ -11568,10 +11613,13 @@ P = drain - 0.5*recovery</pre
           )
           .join("");
         const isDone = activity.step === "done";
+        const showDelta = ["model", "battery", "done"].includes(activity.step);
         const unchangedFeatureCount = Math.max(
           0,
           getDemoFeatureItems().length - activity.changedKeys.length,
         );
+        const dESign = activity.deltaE >= 0 ? "+" : "";
+        const dSSign = activity.deltaS >= 0 ? "+" : "";
 
         DOM.demoLayout.innerHTML = `
         ${topbar}
@@ -11599,44 +11647,6 @@ P = drain - 0.5*recovery</pre
                   <div class="demo-stage-label">Diagnostics</div>
                   <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
                 </div>
-                <div class="demo-big-batt-section">
-                  <div class="demo-big-batt-row is-energy">
-                    <div class="demo-big-batt-head">
-                      <span class="bbl">Energy</span>
-                      <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</span>
-                    </div>
-                    <div class="demo-big-batt-track">
-                      <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)))}%"></div>
-                    </div>
-                  </div>
-                  <div class="demo-big-batt-row is-stress">
-                    <div class="demo-big-batt-head">
-                      <span class="bbl">Stress</span>
-                      <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</span>
-                    </div>
-                    <div class="demo-big-batt-track">
-                      <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)))}%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="demo-kpis">
-                  <div class="demo-kpi is-energy">
-                    <div class="demo-kpi-label">Energy</div>
-                    <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</div>
-                  </div>
-                  <div class="demo-kpi is-stress">
-                    <div class="demo-kpi-label">Stress</div>
-                    <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</div>
-                  </div>
-                  <div class="demo-kpi is-erest">
-                    <div class="demo-kpi-label">E_rest</div>
-                    <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
-                  </div>
-                  <div class="demo-kpi is-pressure" title="Drain pressure: weighted sum of active drain inputs. 0% = no load detected yet.">
-                    <div class="demo-kpi-label">Pressure</div>
-                    <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
-                  </div>
-                </div>
                 <div class="demo-feature-list">${rows}</div>
                 ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
                 <div class="demo-model-node${activity.step === "model" || activity.step === "battery" ? " is-pulsing" : ""}" data-demo-model>
@@ -11645,8 +11655,8 @@ P = drain - 0.5*recovery</pre
                     <div class="demo-model-title">ΔE &amp; ΔS</div>
                   </div>
                   <div class="demo-model-deltas">
-                    <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${activity.deltaE >= 0 ? "+" : ""}${activity.deltaE.toFixed(1)}</div>
-                    <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${activity.deltaS >= 0 ? "+" : ""}${activity.deltaS.toFixed(1)}</div>
+                    <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${dESign}${activity.deltaE.toFixed(1)}</div>
+                    <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${dSSign}${activity.deltaS.toFixed(1)}</div>
                   </div>
                 </div>
                 <div class="demo-data-sources">
@@ -11664,6 +11674,15 @@ P = drain - 0.5*recovery</pre
           <div class="demo-right-bar">
             <div class="demo-rb-label">Current state</div>
             <div class="demo-battery-pair" data-demo-battery-pair></div>
+            ${
+              showDelta
+                ? `
+            <div class="demo-rb-delta">
+              <span class="demo-rb-dE ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${dESign}${activity.deltaE.toFixed(1)}</span>
+              <span class="demo-rb-dS ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${dSSign}${activity.deltaS.toFixed(1)}</span>
+            </div>`
+                : ""
+            }
             <div class="demo-timeline-pane" data-demo-timeline></div>
           </div>
         </div>
