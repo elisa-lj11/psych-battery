@@ -998,17 +998,47 @@
       .demo-stage-body {
         display: flex;
         flex: 1 1 0;
-        flex-direction: column;
-        gap: 16px;
+        flex-direction: row;
+        gap: 0;
         min-height: 0;
         overflow: hidden;
+      }
+
+      .demo-main-col {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        padding-right: 16px;
+      }
+
+      .demo-right-bar {
+        width: 340px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border-left: 2px solid var(--px-border);
+        padding: 0 0 0 16px;
+        overflow-y: auto;
+      }
+
+      .demo-rb-label {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--px-border);
       }
 
       .demo-menu,
       .demo-activity-view {
         flex: 1 1 0;
         min-height: 0;
-        overflow: auto;
       }
 
       .brand-home,
@@ -1599,13 +1629,32 @@
       .demo-menu {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
 
       .demo-menu-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        gap: 10px;
+      }
+
+      .demo-instructions {
+        margin-top: 8px;
+        padding: 12px 14px;
+        border: 2px solid var(--px-border);
+        background: var(--px-surface-2);
+        font-family: var(--px-font-copy);
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--px-muted);
+      }
+
+      .demo-instructions p {
+        margin: 0 0 6px;
+      }
+
+      .demo-instructions p:last-child {
+        margin-bottom: 0;
       }
 
       .demo-card {
@@ -3522,6 +3571,13 @@
         padding-bottom: 96px;
       }
 
+      /* Allow position:sticky on .layer-back-top to work — battery-card's
+         overflow:hidden clips the sticky context when layers are expanded. */
+      body[data-layer="1"] #battery-card,
+      body[data-layer="2"] #battery-card {
+        overflow: visible;
+      }
+
       #metrics-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4433,6 +4489,21 @@
       }
 
       @media (max-width: 720px) {
+        .demo-stage-body {
+          flex-direction: column;
+        }
+
+        .demo-right-bar {
+          width: 100%;
+          border-left: none;
+          border-top: 2px solid var(--px-border);
+          padding: 12px 0 0;
+        }
+
+        .demo-main-col {
+          padding-right: 0;
+        }
+
         .demo-activity-view {
           grid-template-columns: 1fr;
         }
@@ -6062,10 +6133,49 @@
 
       .layer2-viz-row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-        align-items: stretch;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+        gap: 16px;
+        align-items: start;
         min-height: 440px;
+      }
+
+      .layer2-model-explain {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .layer2-explain-title {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+      }
+
+      .layer2-explain-body {
+        font-family: var(--px-font-copy);
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--px-text);
+      }
+
+      .layer2-explain-body p {
+        margin: 0 0 10px;
+      }
+
+      .layer2-explain-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .layer2-explain-formula {
+        font-family: var(--px-font-body);
+        font-size: 1.1rem;
+        line-height: 1.1;
+        padding: 10px 12px;
+        background: var(--px-surface-2);
+        border: 2px solid var(--px-border);
+        white-space: pre;
       }
 
       .layer2-viz-row .phase-portrait-card {
@@ -6092,6 +6202,7 @@
 
       @media (max-width: 920px) {
         .layer2-viz-row {
+          grid-template-columns: 1fr;
           min-height: unset;
         }
         .layer2-viz-row .phase-portrait-card {
@@ -7299,6 +7410,64 @@ P = drain - 0.5*recovery</pre
           </div>
 
           <div class="layer2-viz-row">
+            <div class="layer2-model-explain">
+              <div class="layer2-explain-title">How the model works</div>
+              <div class="layer2-explain-body">
+                <p>
+                  <strong>Energy (E)</strong> tracks remaining cognitive fuel —
+                  100% is fully rested, 0% is depleted. It decays under pressure
+                  and recovers toward a circadian baseline (Erest) that shifts
+                  with your chronotype throughout the day.
+                </p>
+                <p>
+                  <strong>Stress (S)</strong> tracks active load on your nervous
+                  system. It rises with meetings, notifications, and
+                  context-switching, then decays slowly over time as load
+                  clears.
+                </p>
+                <p>
+                  <strong>Drain pressure (P)</strong> is a weighted sum of your
+                  active drain inputs (meetings, async comms, deep work) minus a
+                  fraction of recovery inputs. Higher P means faster energy burn
+                  and faster stress accumulation.
+                </p>
+                <p>
+                  The
+                  <span
+                    class="jargon-tip"
+                    data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
+                    tabindex="0"
+                    >vector field</span
+                  >
+                  on the right shows drift direction at each (E, S) point. The
+                  <span
+                    class="jargon-tip"
+                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
+                    tabindex="0"
+                    >nullclines</span
+                  >
+                  mark where change stops, and your
+                  <span
+                    class="jargon-tip"
+                    data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
+                    tabindex="0"
+                    >trajectory</span
+                  >
+                  traces the last 24 ticks. The
+                  <span
+                    class="jargon-tip"
+                    data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
+                    tabindex="0"
+                    >circadian curve</span
+                  >
+                  shifts Erest over the day.
+                </p>
+              </div>
+              <div class="layer2-explain-formula">
+                Model B + D dE/dt = −0.05 · P · E + (Erest − E) / 120 dS/dt =
+                1.5 · P − S / 4320 P = drain − 0.5 · recovery
+              </div>
+            </div>
             <div class="layer-card phase-portrait-card">
               <div class="section-title">
                 <span
@@ -7316,37 +7485,6 @@ P = drain - 0.5*recovery</pre
                 </div>
               </div>
               <div id="phase-portrait-legend-host"></div>
-              <p class="phase-portrait-caption">
-                This
-                <span
-                  class="jargon-tip"
-                  data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
-                  tabindex="0"
-                  >vector field</span
-                >
-                shows drift, the
-                <span
-                  class="jargon-tip"
-                  data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
-                  tabindex="0"
-                  >nullclines</span
-                >
-                mark where change stops, and your
-                <span
-                  class="jargon-tip"
-                  data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
-                  tabindex="0"
-                  >trajectory</span
-                >
-                traces the last 24 ticks. The
-                <span
-                  class="jargon-tip"
-                  data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
-                  tabindex="0"
-                  >circadian curve</span
-                >
-                shifts the resting target over the day.
-              </p>
             </div>
           </div>
 
@@ -8605,9 +8743,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: 8,
           targetDeltaS: -3,
           dataSources: [
-            "Apple Health · steps + location",
-            "GPS",
-            "Daylight sensor",
+            "Apple Health · outdoor workout / steps",
+            "GPS · location change detected",
+            "Manual recovery log",
           ],
           whyResearch:
             "Daylight exposure resets your circadian clock and boosts serotonin. Even 10–20 min outdoors lowers cortisol and improves mood (Liberman et al., 2019). Walking adds light cardiovascular load that helps clear stress hormones.",
@@ -8622,10 +8760,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: 6,
           targetDeltaS: -4,
           dataSources: [
-            "Phone call logs",
-            "Zoom · 1:1 meetings",
-            "Slack DMs",
-            "Calendar · social blocks",
+            "Calendar · social / 1:1 blocks",
+            "Manual recovery log",
+            "Phone · call duration",
           ],
           whyResearch:
             "Quality social contact triggers oxytocin release and dampens the HPA stress axis (Holt-Lunstad et al., 2010). Perceived social connection is among the strongest predictors of well-being and longevity in longitudinal studies.",
@@ -8640,9 +8777,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: 5,
           targetDeltaS: -1,
           dataSources: [
-            "Apple Health · active energy",
-            "Kitchen iBeacon",
-            "Manual meal log",
+            "Manual recovery log",
+            "Calendar · meal / lunch blocks",
+            "Apple Health · dietary logs",
           ],
           whyResearch:
             "Stable blood glucose supports prefrontal cortex performance (Gailliot & Baumeister, 2007). Skipping meals correlates with attentional lapses, irritability, and worse self-control on cognitively demanding tasks.",
@@ -8657,9 +8794,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: 12,
           targetDeltaS: -6,
           dataSources: [
+            "Manual recovery log",
             "Apple Health · sleep stages",
-            "HRV (Watch)",
-            "Screen-lock duration",
+            "Screen-off duration",
           ],
           whyResearch:
             "10–30 minute naps improve alertness, working memory, and reaction time without sleep inertia (Brooks & Lack, 2006). Naps over ~45 min risk grogginess from waking in slow-wave sleep.",
@@ -8675,8 +8812,8 @@ P = drain - 0.5*recovery</pre
           targetDeltaS: 8,
           dataSources: [
             "Google Calendar · meeting blocks",
-            "Zoom logs",
-            "Microphone activity",
+            "ActivityWatch · Zoom window focus",
+            "Manual drain log",
           ],
           whyResearch:
             'Continuous video calls cause "Zoom fatigue": close-up eye contact, self-view mirroring, and reduced mobility tax cognitive resources (Bailenson, 2021). Synchronous load also blocks deep recovery between focus blocks.',
@@ -8691,9 +8828,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: -22,
           targetDeltaS: 18,
           dataSources: [
-            "Slack · message count",
-            "GitHub PR comments",
-            "ActivityWatch · app switches",
+            "ActivityWatch · app switches + browser tabs",
+            "Slack · message count (via API)",
+            "Manual drain log",
           ],
           whyResearch:
             "Each interruption costs ~23 minutes to fully refocus (Mark et al., 2008). Chronic notification load elevates cortisol and is associated with reduced perceived productivity even when output is similar.",
@@ -8708,9 +8845,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: -10,
           targetDeltaS: 4,
           dataSources: [
-            "ActivityWatch · focus apps",
-            "No-notification windows",
-            "Keystroke rate",
+            "ActivityWatch · focus app window time",
+            "ActivityWatch · notification suppression windows",
+            "Manual drain log",
           ],
           whyResearch:
             "Sustained focus depletes cognitive resources but builds skill (Newport, 2016). 90-minute blocks roughly align with the ultradian rhythm — after which recovery (break, food, movement) is needed before the next block.",
@@ -8729,9 +8866,9 @@ P = drain - 0.5*recovery</pre
           targetDeltaE: -25,
           targetDeltaS: 12,
           dataSources: [
-            "ActivityWatch · AI tool usage",
-            "System clock · after-hours flag",
-            "Screen time",
+            "ActivityWatch · AI tool + browser window time",
+            "System clock · after-hours detection (>9pm)",
+            "Manual drain log",
           ],
           whyResearch:
             "Evening blue-light exposure suppresses melatonin and shifts circadian phase later (Chang et al., 2015). Frequent context switching at night compounds cognitive cost and degrades sleep quality the same night.",
@@ -10974,10 +11111,7 @@ P = drain - 0.5*recovery</pre
         const color = isStress
           ? stressColor(clamped ?? 0)
           : levelColor(clamped ?? 0);
-        const textFill =
-          !isStress && rounded != null && rounded >= 60
-            ? "var(--px-bg)"
-            : "var(--px-text)";
+        const textFill = "var(--px-text)";
         const full = hasValue ? Math.floor(clamped / 10) : 0;
         const partial = hasValue ? clamped / 10 - full : 0;
         let cells = "";
@@ -11097,7 +11231,7 @@ P = drain - 0.5*recovery</pre
           : startDate;
         const dayStartMs = dayStart.getTime();
         const DAY_MS = 24 * 60 * 60 * 1000;
-        const PAD_L = 4;
+        const PAD_L = 22;
         const PAD_R = 4;
         const PAD_T = 22;
         const PAD_B = 32;
@@ -11179,6 +11313,14 @@ P = drain - 0.5*recovery</pre
             return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="14">${icon}</text>`;
           })
           .join("");
+        const currentE = events.length
+          ? events[events.length - 1].batteryAfter
+          : (APP.demo?.E ?? 70);
+        const currentS = events.length
+          ? events[events.length - 1].stressAfter
+          : (APP.demo?.S ?? 30);
+        const eY = toY(currentE);
+        const sY = toY(currentS);
         target.innerHTML = `
         <svg class="demo-timeline-svg" viewBox="0 0 400 140" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
@@ -11187,11 +11329,9 @@ P = drain - 0.5*recovery</pre
           ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="3" points="${stressPoints.join(" ")}"></polyline>` : ""}
           ${icons}
           ${tickLabels.join("")}
+          <text x="10" y="${eY}" dominant-baseline="middle" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" font-weight="700" fill="var(--px-good)">E</text>
+          <text x="10" y="${sY}" dominant-baseline="middle" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" font-weight="700" fill="var(--px-accent)">S</text>
         </svg>
-        <div class="demo-timeline-legend">
-          <span class="demo-tl-e">E</span>
-          <span class="demo-tl-s">S</span>
-        </div>
       `;
       }
 
@@ -11285,10 +11425,6 @@ P = drain - 0.5*recovery</pre
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
-            <div class="demo-window-toggle" role="group" aria-label="Activity window">
-              <button type="button" class="demo-window-btn" data-demo-window-hours="${FAST_DEMO_WINDOW_HOURS}" aria-pressed="false">2 MIN (FAST DEMO)</button>
-              <button type="button" class="demo-window-btn" data-demo-window-hours="${LIVE_WINDOW_HOURS}" aria-pressed="false">4 HR (LIVE)</button>
-            </div>
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
@@ -11299,42 +11435,47 @@ P = drain - 0.5*recovery</pre
           DOM.demoLayout.innerHTML = `
           ${topbar}
           <div class="demo-stage-body">
-            <div class="demo-menu">
-            <div class="demo-menu-head">
-              <div class="demo-stage-label">Choose an activity to see how the meter fill responds.</div>
-            </div>
-            ${menuRows
-              .map(
-                (row) => `
-              <div class="demo-row-label ${row.css}">${row.label}</div>
-              <div class="demo-menu-row">
-                ${row.items
-                  .map((item) => {
-                    const sign = (item.targetDeltaE ?? 0) >= 0 ? "+" : "";
-                    const dE = item.targetDeltaE ?? 0;
-                    return `
-                  <button type="button" class="demo-card" data-demo-activity="${item.id}" data-kind="${item.kind}">
-                    <div class="demo-card-top">
-                      <span class="demo-card-label">${item.label}</span>
-                      <span class="demo-card-duration">${item.durationMin} min · ${sign}${dE} E</span>
-                    </div>
-                    <div class="demo-card-bottom">
-                      ${renderDemoSceneSvg(item.id)}
-                    </div>
-                  </button>
-                `;
-                  })
+            <div class="demo-main-col">
+              <div class="demo-menu">
+                <div class="demo-menu-head">
+                  <div class="demo-stage-label">Choose an activity to see how the meter fill responds.</div>
+                </div>
+                ${menuRows
+                  .map(
+                    (row) => `
+                <div class="demo-row-label ${row.css}">${row.label}</div>
+                <div class="demo-menu-row">
+                  ${row.items
+                    .map((item) => {
+                      const sign = (item.targetDeltaE ?? 0) >= 0 ? "+" : "";
+                      const dE = item.targetDeltaE ?? 0;
+                      return `
+                    <button type="button" class="demo-card" data-demo-activity="${item.id}" data-kind="${item.kind}">
+                      <div class="demo-card-top">
+                        <span class="demo-card-label">${item.label}</span>
+                        <span class="demo-card-duration">${item.durationMin} min · ${sign}${dE} E</span>
+                      </div>
+                      <div class="demo-card-bottom">
+                        ${renderDemoSceneSvg(item.id)}
+                      </div>
+                    </button>
+                  `;
+                    })
+                    .join("")}
+                </div>
+              `,
+                  )
                   .join("")}
+                <div class="demo-instructions">
+                  <p><strong>How this works:</strong> Each activity card shows a simulated energy impact. Click one to see how the model responds — features update, the ODE runs, and the meter shifts.</p>
+                  <p>Energy = remaining cognitive capacity. Stress = active load. Recovery activities restore energy; drain activities spend it.</p>
+                </div>
               </div>
-            `,
-              )
-              .join("")}
             </div>
-            <div class="demo-timeline-strip">
-              <div class="demo-timeline-meter-row">
-                <div class="demo-battery-pair" data-demo-battery-pair></div>
-                <div class="demo-timeline-pane" data-demo-timeline></div>
-              </div>
+            <div class="demo-right-bar">
+              <div class="demo-rb-label">Current state</div>
+              <div class="demo-battery-pair" data-demo-battery-pair></div>
+              <div class="demo-timeline-pane" data-demo-timeline></div>
             </div>
           </div>
         `;
@@ -11411,95 +11552,95 @@ P = drain - 0.5*recovery</pre
         DOM.demoLayout.innerHTML = `
         ${topbar}
         <div class="demo-stage-body">
-          <div class="demo-activity-view">
-            <div class="demo-scene-panel is-${activity.kind}">
-            <div class="demo-scene-meta">
-              <div class="demo-scene-title">${activity.label}</div>
-              <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === "recovery" ? "Recovery" : "Drain"}</div>
-            </div>
-            <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
-              <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
-            </div>
-            <div class="demo-step-indicator">
-              ${stepIndicator}
-              <span>${stepCaption}</span>
-            </div>
-            <div class="demo-scene-footer">
-              <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
-            </div>
-          </div>
-          <div class="demo-pipeline-panel is-${activity.kind}">
-            <div class="demo-pipeline-head">
-              <div class="demo-stage-label">Diagnostics</div>
-              <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
-            </div>
-            <div class="demo-big-batt-section">
-              <div class="demo-big-batt-row is-energy">
-                <div class="demo-big-batt-head">
-                  <span class="bbl">Energy</span>
-                  <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</span>
+          <div class="demo-main-col">
+            <div class="demo-activity-view">
+              <div class="demo-scene-panel is-${activity.kind}">
+                <div class="demo-scene-meta">
+                  <div class="demo-scene-title">${activity.label}</div>
+                  <div class="demo-stage-label">${activity.durationMin} min · ${activity.kind === "recovery" ? "Recovery" : "Drain"}</div>
                 </div>
-                <div class="demo-big-batt-track">
-                  <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)))}%"></div>
+                <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
+                  <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
+                </div>
+                <div class="demo-step-indicator">
+                  ${stepIndicator}
+                  <span>${stepCaption}</span>
+                </div>
+                <div class="demo-scene-footer">
+                  <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
                 </div>
               </div>
-              <div class="demo-big-batt-row is-stress">
-                <div class="demo-big-batt-head">
-                  <span class="bbl">Stress</span>
-                  <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</span>
+              <div class="demo-pipeline-panel is-${activity.kind}">
+                <div class="demo-pipeline-head">
+                  <div class="demo-stage-label">Diagnostics</div>
+                  <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
                 </div>
-                <div class="demo-big-batt-track">
-                  <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)))}%"></div>
+                <div class="demo-big-batt-section">
+                  <div class="demo-big-batt-row is-energy">
+                    <div class="demo-big-batt-head">
+                      <span class="bbl">Energy</span>
+                      <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</span>
+                    </div>
+                    <div class="demo-big-batt-track">
+                      <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)))}%"></div>
+                    </div>
+                  </div>
+                  <div class="demo-big-batt-row is-stress">
+                    <div class="demo-big-batt-head">
+                      <span class="bbl">Stress</span>
+                      <span class="bbp">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</span>
+                    </div>
+                    <div class="demo-big-batt-track">
+                      <div class="demo-big-batt-fill" style="width:${Math.min(100, Math.max(0, Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)))}%"></div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="demo-kpis">
-              <div class="demo-kpi is-energy">
-                <div class="demo-kpi-label">Energy</div>
-                <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</div>
-              </div>
-              <div class="demo-kpi is-stress">
-                <div class="demo-kpi-label">Stress</div>
-                <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</div>
-              </div>
-              <div class="demo-kpi is-erest">
-                <div class="demo-kpi-label">E_rest</div>
-                <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
-              </div>
-              <div class="demo-kpi is-pressure" title="Drain pressure: weighted sum of active drain inputs. 0% = no load detected yet.">
-                <div class="demo-kpi-label">Pressure</div>
-                <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
-              </div>
-            </div>
-            <div class="demo-feature-list">${rows}</div>
-            ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
-            <div class="demo-model-node${activity.step === "model" || activity.step === "battery" ? " is-pulsing" : ""}" data-demo-model>
-              <div>
-                <div class="demo-model-label">Model B output</div>
-                <div class="demo-model-title">ΔE &amp; ΔS</div>
-              </div>
-              <div class="demo-model-deltas">
-                <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${activity.deltaE >= 0 ? "+" : ""}${activity.deltaE.toFixed(1)}</div>
-                <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${activity.deltaS >= 0 ? "+" : ""}${activity.deltaS.toFixed(1)}</div>
-              </div>
-            </div>
-            <div class="demo-data-sources">
-              <div class="demo-data-sources-title">Where this data comes from</div>
-              <div class="demo-data-sources-list">${dataChips}</div>
-            </div>
-            <details class="demo-why" ${isDone ? "open" : ""}>
-              <summary>Why? · How does this affect my energy level?</summary>
-              <div class="demo-why-body">${activity.whyResearch || ""}</div>
-            </details>
-            <div class="demo-packet-layer" data-demo-packets></div>
-            <div class="demo-timeline-strip">
-              <div class="demo-tl-header">Timeline</div>
-              <div class="demo-timeline-meter-row">
-                <div class="demo-battery-pair" data-demo-battery-pair></div>
-                <div class="demo-timeline-pane" data-demo-timeline></div>
+                <div class="demo-kpis">
+                  <div class="demo-kpi is-energy">
+                    <div class="demo-kpi-label">Energy</div>
+                    <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeBattery + activity.deltaE : activity.beforeBattery)}%</div>
+                  </div>
+                  <div class="demo-kpi is-stress">
+                    <div class="demo-kpi-label">Stress</div>
+                    <div class="demo-kpi-value">${Math.round(activity.step === "done" ? activity.beforeStress + activity.deltaS : activity.beforeStress)}%</div>
+                  </div>
+                  <div class="demo-kpi is-erest">
+                    <div class="demo-kpi-label">E_rest</div>
+                    <div class="demo-kpi-value">${Math.round(activity.eRest)}%</div>
+                  </div>
+                  <div class="demo-kpi is-pressure" title="Drain pressure: weighted sum of active drain inputs. 0% = no load detected yet.">
+                    <div class="demo-kpi-label">Pressure</div>
+                    <div class="demo-kpi-value">${Math.round(activity.pressure * 100)}%</div>
+                  </div>
+                </div>
+                <div class="demo-feature-list">${rows}</div>
+                ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
+                <div class="demo-model-node${activity.step === "model" || activity.step === "battery" ? " is-pulsing" : ""}" data-demo-model>
+                  <div>
+                    <div class="demo-model-label">Model B output</div>
+                    <div class="demo-model-title">ΔE &amp; ΔS</div>
+                  </div>
+                  <div class="demo-model-deltas">
+                    <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${activity.deltaE >= 0 ? "+" : ""}${activity.deltaE.toFixed(1)}</div>
+                    <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${activity.deltaS >= 0 ? "+" : ""}${activity.deltaS.toFixed(1)}</div>
+                  </div>
+                </div>
+                <div class="demo-data-sources">
+                  <div class="demo-data-sources-title">Where this data comes from</div>
+                  <div class="demo-data-sources-list">${dataChips}</div>
+                </div>
+                <details class="demo-why" ${isDone ? "open" : ""}>
+                  <summary>Why? · How does this affect my energy level?</summary>
+                  <div class="demo-why-body">${activity.whyResearch || ""}</div>
+                </details>
+                <div class="demo-packet-layer" data-demo-packets></div>
               </div>
             </div>
           </div>
+          <div class="demo-right-bar">
+            <div class="demo-rb-label">Current state</div>
+            <div class="demo-battery-pair" data-demo-battery-pair></div>
+            <div class="demo-timeline-pane" data-demo-timeline></div>
           </div>
         </div>
       `;
