@@ -1189,7 +1189,7 @@
         flex-direction: column;
         gap: 10px;
         flex: 0 0 auto;
-        width: 240px;
+        width: 100%;
         justify-content: center;
       }
 
@@ -2240,9 +2240,13 @@
 
       .demo-scene-footer {
         position: absolute;
-        bottom: 14px;
+        bottom: 10px;
         left: 14px;
         z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
       }
 
       .demo-scene-panel {
@@ -2283,7 +2287,7 @@
 
       .demo-timeline-svg {
         width: 100%;
-        height: 140px;
+        height: 170px;
         display: block;
       }
 
@@ -3765,7 +3769,8 @@
         margin-top: 12px;
         border: none;
         background: transparent;
-        padding: 0;
+        padding: 10px 28px;
+        gap: 10px;
         color: var(--px-accent);
         cursor: pointer;
         display: none;
@@ -5092,6 +5097,20 @@
       #stress-btn {
         border-color: var(--px-border);
         color: var(--px-text);
+        outline: 2px solid var(--px-text);
+        outline-offset: 1px;
+      }
+
+      .dock-log-tag {
+        font-family: var(--px-font-ui);
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        padding: 1px 4px;
+        background: var(--px-text);
+        color: var(--px-bg);
+        margin-left: 4px;
+        flex-shrink: 0;
       }
 
       #energy-btn {
@@ -6135,7 +6154,7 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
         gap: 16px;
-        align-items: start;
+        align-items: stretch;
         min-height: 440px;
       }
 
@@ -6170,12 +6189,13 @@
 
       .layer2-explain-formula {
         font-family: var(--px-font-body);
-        font-size: 1.1rem;
-        line-height: 1.1;
-        padding: 10px 12px;
+        font-size: 1rem;
+        line-height: 1.35;
+        padding: 12px 14px;
         background: var(--px-surface-2);
         border: 2px solid var(--px-border);
         white-space: pre;
+        overflow-x: auto;
       }
 
       .layer2-viz-row .phase-portrait-card {
@@ -6198,6 +6218,13 @@
       .layer2-viz-row .phase-portrait-card #phase-portrait {
         width: 100%;
         height: auto;
+        flex: 1 1 auto;
+      }
+
+      .layer2-viz-row .phase-portrait-frame {
+        aspect-ratio: unset;
+        flex: 1 1 auto;
+        min-height: 220px;
       }
 
       @media (max-width: 920px) {
@@ -6359,6 +6386,9 @@
       .phase-portrait-axis-label.is-y {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       @media (min-width: 720px) {
@@ -6913,7 +6943,7 @@
       }
 
       .demo-timeline-svg {
-        height: 130px;
+        height: 170px;
       }
 
       .demo-timeline-legend {
@@ -7091,7 +7121,7 @@
         }
 
         .demo-timeline-svg {
-          height: 184px;
+          height: 224px;
         }
       }
     </style>
@@ -7496,15 +7526,6 @@ P = drain - 0.5*recovery</pre
 
       <section id="layer-2" class="panel" aria-hidden="true">
         <div class="layer-panel-block layer-panel-block-v2">
-          <button
-            type="button"
-            class="layer-back-top"
-            data-layer-back
-            aria-label="Collapse to battery"
-          >
-            <span class="layer-back-arrow">&#9664;</span
-            ><span>Back to battery</span>
-          </button>
           <div class="layer-card layer-card-pressure">
             <div class="layer1-pressure-head">
               <div class="layer-copy-stack">
@@ -7570,11 +7591,11 @@ P = drain - 0.5*recovery</pre
     <div id="self-log-dock">
       <button id="energy-btn" type="button" data-kind="energy_rating">
         <span class="dock-icon dock-icon-energy" aria-hidden="true">⚡</span>
-        Energy
+        Energy<span class="dock-log-tag" aria-hidden="true">LOG</span>
       </button>
       <button id="stress-btn" type="button" data-kind="stress_rating">
         <span class="dock-icon dock-icon-stress" aria-hidden="true">🌀</span>
-        Stress
+        Stress<span class="dock-log-tag" aria-hidden="true">LOG</span>
       </button>
       <button id="recovery-trigger" type="button">
         <span class="dock-icon" aria-hidden="true">⟲</span>
@@ -11236,7 +11257,7 @@ P = drain - 0.5*recovery</pre
         const PAD_T = 22;
         const PAD_B = 32;
         const viewW = 400;
-        const viewH = 140;
+        const viewH = 170;
         const plotW = viewW - PAD_L - PAD_R;
         const plotH = viewH - PAD_T - PAD_B;
         const events = [...(APP.demo.completedActivities || [])].sort(
@@ -11322,7 +11343,7 @@ P = drain - 0.5*recovery</pre
         const eY = toY(currentE);
         const sY = toY(currentS);
         target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 140" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 400 170" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join("")}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(" ")}"></polyline>` : ""}
@@ -11562,12 +11583,12 @@ P = drain - 0.5*recovery</pre
                 <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
                   <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
                 </div>
-                <div class="demo-step-indicator">
-                  ${stepIndicator}
-                  <span>${stepCaption}</span>
-                </div>
                 <div class="demo-scene-footer">
                   <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
+                  <div class="demo-step-indicator">
+                    ${stepIndicator}
+                    <span>${stepCaption}</span>
+                  </div>
                 </div>
               </div>
               <div class="demo-pipeline-panel is-${activity.kind}">
