@@ -13,6 +13,9 @@ SKY       = ( 74, 120, 192, 255)
 SKY_HOR   = (130, 180, 220, 255)
 GRASS     = ( 58, 150,  58, 255)
 GRASS_D   = ( 40, 110,  40, 255)
+DIRT      = (172, 140,  96, 255)
+PATH      = (200, 170, 120, 255)
+TRUNK     = (100,  64,  24, 255)
 WALL      = (200, 190, 175, 255)
 WALL_D    = (175, 162, 145, 255)
 FLOOR     = (180, 155, 120, 255)
@@ -55,6 +58,11 @@ DESK_L    = (190, 145,  90, 255)
 WOOD_D    = (110,  72,  32, 255)
 LEAF      = ( 36, 128,  36, 255)
 LEAF_L    = ( 64, 160,  64, 255)
+SUN       = (252, 212,  40, 255)
+SUN_GLOW  = (255, 240, 120, 255)
+CLOUD     = (220, 232, 248, 255)
+CLOUD_D   = (180, 200, 230, 255)
+BIRD      = ( 30,  50, 100, 255)
 COFFEE    = (100,  64,  28, 255)
 COFFEE_RIM= (200, 140,  70, 255)
 STEAM     = (190, 195, 210, 255)
@@ -150,12 +158,87 @@ def person_sit(g, px0, y0, shirt, pants, skin=SKIN, hair=HAIR_BR):
     # thighs horizontal
     rect(g, px0, y0+9, 7, 3, pants)
 
+# Scene 0: go_outside
+def scene_go_outside():
+    g = new_grid(SKY)
+    # sky + horizon
+    rect(g, 0, 0, W, 42, SKY)
+    rect(g, 0, 42, W, 6, SKY_HOR)
+    # sun + clouds
+    for dy in range(-1, 9):
+        for dx in range(-1, 9):
+            if 0 <= dx <= 7 and 0 <= dy <= 7:
+                px(g, 62 + dx, 4 + dy, SUN_GLOW)
+    rect(g, 63, 5, 6, 6, SUN)
+    hline(g, 26, 8, 24, CLOUD_D)
+    rect(g, 10, 20, 14, 6, CLOUD)
+    rect(g, 8, 22, 18, 4, CLOUD)
+    rect(g, 14, 18, 8, 4, CLOUD)
+    hline(g, 18, 38, 50, CLOUD_D)
+    rect(g, 40, 13, 10, 4, CLOUD)
+    rect(g, 38, 15, 14, 4, CLOUD)
+    rect(g, 44, 11, 6, 4, CLOUD)
+    for bx, by in [(50, 8), (56, 12), (30, 10)]:
+        px(g, bx, by, BIRD)
+        px(g, bx + 1, by - 1, BIRD)
+        px(g, bx + 2, by, BIRD)
+    # grass strip + dirt foreground
+    rect(g, 0, 48, W, 6, GRASS)
+    hline(g, 48, 0, W - 1, GRASS_D)
+    for x in range(0, W, 3):
+        px(g, x, 47, GRASS)
+    for x in range(1, W, 4):
+        px(g, x, 46, GRASS)
+    rect(g, 0, 54, W, 26, DIRT)
+    # path with perspective
+    for y in range(54, 80):
+        t = (y - 54) / 25
+        width = round(8 + 14 * t)
+        x0 = int(round(40 - width / 2))
+        x1 = x0 + width - 1
+        hline(g, y, x0, x1, PATH)
+        if y in {58, 64, 70, 76} and x1 - x0 > 4:
+            hline(g, y, x0 + 2, x1 - 2, (220, 192, 144, 255))
+    # round-canopy deciduous trees
+    rect(g, 9, 42, 4, 10, TRUNK)
+    rect(g, 2, 28, 18, 16, LEAF)
+    rect(g, 4, 22, 14, 8, LEAF)
+    rect(g, 4, 30, 14, 6, LEAF_L)
+    rect(g, 6, 25, 10, 4, LEAF_L)
+    rect(g, 3, 50, 12, 4, GRASS_D)
+    rect(g, 5, 48, 8, 3, LEAF)
+    rect(g, 67, 42, 4, 10, TRUNK)
+    rect(g, 60, 28, 18, 16, LEAF)
+    rect(g, 62, 22, 14, 8, LEAF)
+    rect(g, 62, 30, 14, 6, LEAF_L)
+    rect(g, 64, 25, 10, 4, LEAF_L)
+    rect(g, 65, 50, 12, 4, GRASS_D)
+    rect(g, 67, 48, 8, 3, LEAF)
+    # larger walker centered on the path
+    rect(g, 36, 34, 4, 4, SKIN)
+    hline(g, 34, 36, 39, HAIR_BR)
+    px(g, 36, 35, HAIR_BR)
+    px(g, 37, 35, HAIR_BR)
+    px(g, 39, 35, (40, 30, 20, 255))
+    rect(g, 37, 38, 2, 1, SKIN)
+    rect(g, 34, 39, 8, 8, SHIRT_T)
+    rect(g, 32, 40, 2, 6, SHIRT_T)
+    rect(g, 42, 41, 2, 5, SHIRT_T)
+    rect(g, 32, 45, 2, 2, SKIN)
+    rect(g, 42, 45, 2, 2, SKIN)
+    rect(g, 35, 47, 3, 8, PANTS_B)
+    rect(g, 39, 47, 3, 7, PANTS_B)
+    rect(g, 34, 55, 4, 2, SHOE)
+    rect(g, 39, 54, 4, 2, SHOE)
+    hline(g, 57, 34, 42, GRASS_D)
+    return grid_to_png_b64(g), g
+
 # ════════════════════════════════════════════════════════════════════════
 # Scene 1: connect_people
 # Two people at a round/small café table, speech bubble between them
 # ════════════════════════════════════════════════════════════════════════
 def scene_connect_people():
-    g = new_grid(WALL)
+    g = new_grid((210, 198, 182, 255))
     # floor
     rect(g, 0, 54, W, 26, FLOOR)
     hline(g, 54, 0, W-1, FLOOR_D)
@@ -185,32 +268,38 @@ def scene_connect_people():
     rect(g, 36, 56, 8, 16, WOOD_D)  # pedestal
     rect(g, 32, 70, 16, 4, WOOD_D)  # base
     # coffee cups on table
-    rect(g, 30, 44, 4, 5, COFFEE)
-    hline(g, 44, 30, 33, COFFEE_RIM)
-    px(g, 34, 46, COFFEE)
-    rect(g, 46, 44, 4, 5, COFFEE)
-    hline(g, 44, 46, 49, COFFEE_RIM)
-    px(g, 45, 46, COFFEE)
+    rect(g, 33, 46, 3, 4, COFFEE)
+    hline(g, 46, 33, 35, COFFEE_RIM)
+    px(g, 36, 47, COFFEE)
+    rect(g, 44, 46, 3, 4, COFFEE)
+    hline(g, 46, 44, 46, COFFEE_RIM)
+    px(g, 43, 47, COFFEE)
     # person left (orange shirt, facing right)
-    person_stand(g, 9, 30, SHIRT_O, PANTS_B, face_right=True)
+    person_stand(g, 10, 22, SHIRT_O, PANTS_B, face_right=True)
+    rect(g, 15, 25, 1, 5, SHIRT_O)
+    px(g, 16, 26, SHIRT_O)
+    px(g, 16, 27, SHIRT_O)
+    rect(g, 14, 30, 2, 5, PANTS_B)
+    rect(g, 14, 35, 3, 2, SHOE)
     # person right (purple shirt, facing left)
-    person_stand(g, 62, 30, SHIRT_P, PANTS_G, face_right=False)
+    person_stand(g, 60, 22, SHIRT_P, PANTS_G, face_right=False)
+    rect(g, 65, 25, 1, 5, SHIRT_P)
+    px(g, 66, 26, SHIRT_P)
+    px(g, 66, 27, SHIRT_P)
+    rect(g, 64, 30, 2, 5, PANTS_G)
+    rect(g, 64, 35, 3, 2, SHOE)
     # speech bubble between them
-    rect(g, 22, 18, 36, 14, BUBBLE)
-    rect(g, 23, 17, 34, 16, BUBBLE)
-    hline(g, 17, 23, 56, BUBBLE_D)
-    hline(g, 32, 23, 56, BUBBLE_D)
-    vline(g, 22, 18, 31, BUBBLE_D)
-    vline(g, 57, 18, 31, BUBBLE_D)
-    # bubble tail pointing right (toward right person)
-    rect(g, 50, 32, 5, 3, BUBBLE)
-    px(g, 53, 35, BUBBLE)
-    px(g, 52, 36, BUBBLE)
+    rect(g, 28, 12, 24, 10, BUBBLE)
+    hline(g, 12, 28, 51, BUBBLE_D)
+    hline(g, 21, 28, 51, BUBBLE_D)
+    vline(g, 28, 12, 21, BUBBLE_D)
+    vline(g, 51, 12, 21, BUBBLE_D)
+    rect(g, 44, 22, 4, 2, BUBBLE)
+    px(g, 46, 24, BUBBLE)
     # text lines inside bubble
-    hline(g, 21, 26, 52, BUBBLE_D)
-    hline(g, 24, 26, 46, BUBBLE_D)
-    hline(g, 27, 26, 50, BUBBLE_D)
-    hline(g, 30, 26, 44, BUBBLE_D)
+    hline(g, 15, 31, 47, BUBBLE_D)
+    hline(g, 18, 31, 43, BUBBLE_D)
+    hline(g, 20, 31, 45, BUBBLE_D)
     return grid_to_png_b64(g), g
 
 # ════════════════════════════════════════════════════════════════════════
@@ -219,9 +308,9 @@ def scene_connect_people():
 # ════════════════════════════════════════════════════════════════════════
 def scene_eat_food():
     g = new_grid(WALL)
-    rect(g, 0, 52, W, 28, FLOOR)
-    hline(g, 52, 0, W-1, FLOOR_D)
-    hline(g, 53, 0, W-1, WALL_D)
+    rect(g, 0, 56, W, 24, FLOOR)
+    hline(g, 56, 0, W-1, FLOOR_D)
+    hline(g, 57, 0, W-1, WALL_D)
     # window
     rect(g, 8, 5, 18, 20, WALL_D)
     rect(g, 9, 6, 16, 18, SKY_HOR)
@@ -229,44 +318,51 @@ def scene_eat_food():
     rect(g, 16, 6, 2, 18, WALL_D)
     hline(g, 18, 10, 14, GRASS)
     hline(g, 19, 10, 14, GRASS)
-    # table top
-    rect(g, 14, 48, 58, 6, WOOD_L)
-    hline(g, 48, 14, 71, WOOD)
-    rect(g, 14, 54, 4, 22, WOOD)  # left leg
-    rect(g, 68, 54, 4, 22, WOOD)  # right leg
-    hline(g, 53, 14, 71, WOOD_D)
-    # plate (oval-ish)
-    rect(g, 36, 38, 20, 12, PLATE)
-    rect(g, 34, 40, 24, 8, PLATE)
-    hline(g, 38, 34, 57, PLATE_D)
-    hline(g, 49, 34, 57, PLATE_D)
+    # table top with perspective
+    for y in range(44, 54):
+        t = (y - 44) / 9
+        width = round(44 + 14 * t)
+        x0 = int(round(40 - width / 2))
+        x1 = x0 + width - 1
+        hline(g, y, x0, x1, WOOD_L)
+    rect(g, 9, 54, 62, 3, WOOD_D)
+    rect(g, 12, 56, 5, 20, WOOD)
+    rect(g, 63, 56, 5, 20, WOOD)
+    hline(g, 44, 18, 61, WOOD)
+    # plate (larger, oval-ish)
+    rect(g, 38, 36, 18, 14, PLATE)
+    rect(g, 36, 38, 22, 10, PLATE)
+    hline(g, 36, 40, 53, PLATE_D)
+    hline(g, 37, 38, 55, PLATE_D)
+    hline(g, 48, 38, 55, PLATE_D)
+    hline(g, 49, 40, 53, PLATE_D)
+    vline(g, 36, 40, 45, PLATE_D)
+    vline(g, 57, 40, 45, PLATE_D)
     # food on plate: steak-like + veggies
-    rect(g, 38, 40, 10, 6, FOOD_R)    # protein
-    rect(g, 40, 41, 6, 4, (180,50,30,255))  # darker center
-    rect(g, 50, 41, 6, 4, FOOD_G)     # greens
-    rect(g, 52, 39, 4, 2, (120,220,90,255))
-    rect(g, 37, 42, 4, 3, FOOD_Y)     # yellow (corn?)
-    # fork (left of plate)
-    rect(g, 30, 38, 2, 12, FORK_C)
-    rect(g, 28, 38, 6, 2, FORK_C)
-    px(g, 28, 40, FORK_C); px(g, 32, 40, FORK_C); px(g, 34, 40, FORK_C)
-    # knife (right)
-    rect(g, 58, 38, 2, 14, FORK_C)
-    rect(g, 58, 38, 4, 3, FORK_C)
+    rect(g, 41, 40, 8, 6, FOOD_R)
+    rect(g, 43, 41, 4, 4, (180, 50, 30, 255))
+    rect(g, 50, 41, 5, 5, FOOD_G)
+    rect(g, 39, 43, 3, 3, FOOD_Y)
+    # fork aligned to the overlay animation anchor
+    rect(g, 58, 46, 2, 10, FORK_C)
+    rect(g, 56, 46, 6, 2, FORK_C)
+    px(g, 56, 48, FORK_C)
+    px(g, 58, 48, FORK_C)
+    px(g, 60, 48, FORK_C)
     # coffee mug (right side of table)
-    rect(g, 64, 36, 8, 10, COFFEE)
-    hline(g, 36, 64, 71, COFFEE_RIM)
-    rect(g, 72, 39, 3, 5, COFFEE)  # handle
-    rect(g, 65, 38, 6, 2, (160,100,40,255))  # liquid
+    rect(g, 63, 36, 7, 10, COFFEE)
+    hline(g, 36, 63, 69, COFFEE_RIM)
+    rect(g, 70, 39, 3, 5, COFFEE)
+    rect(g, 64, 38, 5, 2, (160, 100, 40, 255))
     # steam above mug
-    for i in range(3):
-        px(g, 67+i*2, 32, STEAM)
-        px(g, 67+i*2, 30, STEAM)
+    px(g, 64, 31, STEAM)
+    px(g, 66, 29, STEAM)
+    px(g, 68, 27, STEAM)
     # person sitting at table (left side)
-    person_sit(g, 14, 28, SHIRT_T, PANTS_B)
+    person_sit(g, 8, 24, SHIRT_T, PANTS_B)
     # their arm forward onto table
-    rect(g, 20, 43, 10, 3, SKIN)
-    rect(g, 20, 43, 4, 3, SHIRT_T)
+    rect(g, 14, 40, 14, 3, SKIN)
+    rect(g, 14, 40, 4, 3, SHIRT_T)
     return grid_to_png_b64(g), g
 
 # ════════════════════════════════════════════════════════════════════════
@@ -276,7 +372,7 @@ def scene_eat_food():
 def scene_take_nap():
     g = new_grid(ROOM_D)
     # floor
-    rect(g, 0, 62, W, 18, (55, 45, 35, 255))
+    rect(g, 0, 62, W, 18, (40, 32, 22, 255))
     # walls
     rect(g, 0, 0, W, 62, (38, 34, 52, 255))
     # window (upper right) showing night sky
@@ -295,6 +391,8 @@ def scene_take_nap():
     rect(g, 74, 5, 4, 32, (100, 60, 80, 255))
     # small lamp on nightstand
     rect(g, 6, 46, 10, 16, (80,70,55,255))  # nightstand
+    rect(g, 7, 35, 8, 12, (255, 215, 128, 90))
+    rect(g, 6, 38, 10, 6, (255, 200, 110, 70))
     rect(g, 8, 36, 6, 10, (220,180,80,255)) # lamp shade
     px(g, 11, 45, (255,230,150,255))         # warm glow
     px(g, 10, 45, (255,230,150,255))
@@ -346,6 +444,8 @@ def scene_zoom_meeting():
     rect(g, 0, 54, W, 26, FLOOR)
     hline(g, 54, 0, W-1, FLOOR_D)
     hline(g, 55, 0, W-1, WALL_D)
+    # person sitting at desk (left of center, facing monitor)
+    person_sit(g, 14, 28, SHIRT_T, PANTS_B)
     # desk
     rect(g, 10, 50, 60, 5, DESK_L)
     hline(g, 50, 10, 69, DESK)
@@ -388,14 +488,12 @@ def scene_zoom_meeting():
     # monitor neck + base
     rect(g, 38, 42, 4, 8, MONITOR)
     rect(g, 32, 49, 16, 3, MONITOR)
-    # person sitting at desk (left of center, facing monitor)
-    person_sit(g, 12, 32, SHIRT_T, PANTS_B)
     # keyboard on desk
     rect(g, 22, 48, 20, 3, (160,165,175,255))
     hline(g, 49, 22, 41, (140,145,155,255))
     # subtle screen glow on person's face
-    px(g, 14, 34, (200,220,255,255))
-    px(g, 15, 33, (200,220,255,255))
+    px(g, 15, 30, (200,220,255,255))
+    px(g, 16, 31, (200,220,255,255))
     return grid_to_png_b64(g), g
 
 # ════════════════════════════════════════════════════════════════════════
@@ -407,6 +505,9 @@ def scene_heavy_async():
     rect(g, 0, 54, W, 26, FLOOR)
     hline(g, 54, 0, W-1, FLOOR_D)
     hline(g, 55, 0, W-1, WALL_D)
+    for x, y, col in [(6, 6, NOTIF), (73, 6, NOTIF_Y), (6, 68, NOTIF_B), (73, 68, NOTIF)]:
+        rect(g, x, y, 1, 3, col)
+        px(g, x, y + 4, col)
     # desk
     rect(g, 8, 50, 62, 5, DESK_L)
     hline(g, 50, 8, 69, DESK)
@@ -459,10 +560,10 @@ def scene_heavy_async():
     px(g, 54, 12, (255,255,255,255))
     # person sitting at desk (stressed posture - head in hands)
     # body
-    person_sit(g, 14, 30, SHIRT_O, PANTS_B)
+    person_sit(g, 12, 26, SHIRT_O, PANTS_B)
     # hands up near face (stressed)
-    rect(g, 12, 27, 3, 3, SKIN)
-    rect(g, 20, 27, 3, 3, SKIN)
+    rect(g, 10, 24, 5, 4, SKIN)
+    rect(g, 20, 24, 5, 4, SKIN)
     return grid_to_png_b64(g), g
 
 # ════════════════════════════════════════════════════════════════════════
@@ -503,6 +604,7 @@ def scene_deep_work():
     # monitor
     rect(g, 22, 14, 36, 26, MONITOR)
     rect(g, 23, 15, 34, 24, SCREEN)
+    rect(g, 20, 14, 6, 6, (240,220,60,255))
     # code on screen (neat, structured)
     code_lines = [
         (17,25,18,CODE_G),(17,45,8, CODE_B),
@@ -536,9 +638,9 @@ def scene_deep_work():
     # body
     person_sit(g, 14, 30, SHIRT_W, PANTS_G)
     # headphone arc
-    rect(g, 14, 27, 12, 2, HEAD_PHONE)
-    rect(g, 14, 27, 3, 5, HEAD_PHONE)  # left cup
-    rect(g, 23, 27, 3, 5, HEAD_PHONE)  # right cup
+    rect(g, 12, 26, 14, 3, HEAD_PHONE)
+    rect(g, 12, 26, 4, 7, HEAD_PHONE)
+    rect(g, 22, 26, 4, 7, HEAD_PHONE)
     # screen glow on face (subtle blue tint)
     px(g, 16, 32, (210,225,250,255))
     px(g, 17, 31, (210,225,250,255))
@@ -564,7 +666,8 @@ def scene_late_night_ai():
     # stars
     for sx, sy in [(7,10),(12,14),(8,25),(20,24),(6,18),(22,18)]:
         px(g, sx, sy, STAR_C)
-        px(g, sx, sy, STAR_C)
+    px(g, 8, 12, STAR_C)
+    px(g, 18, 8, STAR_C)
     # curtains (hanging down)
     rect(g, 2, 6, 4, 32, (80,50,70,255))
     rect(g, 26, 6, 4, 32, (80,50,70,255))
@@ -592,6 +695,7 @@ def scene_late_night_ai():
     # cursor at bottom
     rect(g, 38, 38, 20, 2, (30,40,60,255))
     rect(g, 38, 38, 2, 2, (100,180,255,255))
+    rect(g, 36, 42, 36, 3, (60,120,200,60))
     # monitor glow (blue-white spill on desk and person)
     for gx in range(36, 72):
         alpha_val = max(0, 40 - abs(gx - 54) * 2)
@@ -608,24 +712,24 @@ def scene_late_night_ai():
     # body in dark room, blue-lit face
     px0, y0 = 28, 32
     # head lit by screen glow
-    rect(g, px0+1, y0, 3, 3, (190,200,220,255))  # blue-tinted skin
-    hline(g, y0, px0+1, px0+3, (50,40,30,255))
-    px(g, px0+3, y0+1, (40,50,70,255))  # eye (tired)
-    px(g, px0+2, y0+1, (40,50,70,255))
+    rect(g, px0+1, y0, 4, 4, (170,195,230,255))
+    hline(g, y0, px0+1, px0+4, (50,40,30,255))
+    px(g, px0+3, y0+2, (40,50,70,255))
+    px(g, px0+4, y0+2, (40,50,70,255))
     # body
-    rect(g, px0, y0+3, 5, 6, (40,50,80,255))  # dark hoodie
-    rect(g, px0-1, y0+3, 2, 3, (40,50,80,255))
-    rect(g, px0+5, y0+3, 2, 3, (40,50,80,255))
+    rect(g, px0, y0+4, 6, 6, (40,50,80,255))
+    rect(g, px0-1, y0+4, 2, 3, (40,50,80,255))
+    rect(g, px0+6, y0+4, 2, 3, (40,50,80,255))
     # thighs
-    rect(g, px0, y0+9, 7, 3, (30,35,55,255))
+    rect(g, px0, y0+10, 8, 3, (30,35,55,255))
     # coffee mug on desk (right of monitor)
-    rect(g, 72, 40, 6, 10, (70,50,30,255))
-    hline(g, 40, 72, 77, (160,110,60,255))
-    rect(g, 78, 43, 3, 5, (70,50,30,255))  # handle
+    rect(g, 72, 40, 5, 10, (70,50,30,255))
+    hline(g, 40, 72, 76, (160,110,60,255))
+    rect(g, 77, 43, 2, 5, (70,50,30,255))
     # steam (faint, night)
-    px(g, 74, 37, (100,100,110,255))
-    px(g, 76, 36, (100,100,110,255))
-    px(g, 75, 35, (100,100,110,255))
+    px(g, 72, 34, (100,100,110,255))
+    px(g, 74, 32, (100,100,110,255))
+    px(g, 73, 30, (100,100,110,255))
     # keyboard
     rect(g, 36, 48, 22, 3, (40,42,55,255))
     hline(g, 49, 36, 57, (30,32,45,255))
@@ -636,6 +740,7 @@ def scene_late_night_ai():
 # ════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     scenes = {
+        "go_outside":      scene_go_outside,
         "connect_people": scene_connect_people,
         "eat_food":        scene_eat_food,
         "take_nap":        scene_take_nap,
@@ -644,6 +749,7 @@ if __name__ == "__main__":
         "deep_work":       scene_deep_work,
         "late_night_ai":   scene_late_night_ai,
     }
+    os.makedirs("/tmp", exist_ok=True)
     for name, fn in scenes.items():
         print(f"Generating {name}...")
         b64, grid = fn()
