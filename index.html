@@ -1002,6 +1002,7 @@
         gap: 0;
         min-height: 0;
         overflow: hidden;
+        position: relative;
       }
 
       .demo-main-col {
@@ -1015,14 +1016,22 @@
       }
 
       .demo-right-bar {
-        width: 400px;
+        width: 560px;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 6px;
         border-left: 2px solid var(--px-border);
         padding: 0 0 0 16px;
         overflow-y: auto;
+      }
+
+      .demo-rb-pipe {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        border-top: 2px solid var(--px-border);
+        padding-top: 8px;
       }
 
       .demo-rb-delta {
@@ -1223,11 +1232,15 @@
 
       .demo-battery-pair {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
         flex: 0 0 auto;
         width: 100%;
-        justify-content: center;
+      }
+
+      .demo-battery-pair .demo-batt-wrap {
+        flex: 1 1 0;
+        min-width: 0;
       }
 
       .demo-batt-wrap {
@@ -1446,10 +1459,10 @@
       .demo-data-sources {
         border: 2px dashed var(--px-border-2);
         background: var(--px-panel-soft);
-        padding: 10px 12px;
+        padding: 6px 10px;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
 
       .demo-data-sources-title {
@@ -1557,6 +1570,25 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--px-muted);
+      }
+
+      .demo-step-dots {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .demo-step-caption {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-chrome);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        padding: 5px 2px 0;
+      }
+
+      .demo-step-caption.is-complete {
+        color: var(--px-good);
       }
 
       .demo-step-dot {
@@ -1789,15 +1821,9 @@
 
       .demo-activity-view {
         display: grid;
-        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        grid-template-columns: 1fr;
         gap: 14px;
         align-items: stretch;
-      }
-
-      @media (max-width: 720px) {
-        .demo-activity-view {
-          grid-template-columns: 1fr;
-        }
       }
 
       .demo-scene-panel,
@@ -1961,7 +1987,8 @@
 
       .demo-scene-svg .scene-bubble-a,
       .demo-scene-svg .scene-bubble-b {
-        animation: demo-bubble-pulse 1500ms steps(4, end) infinite;
+        animation: demo-bubble-appear 4000ms steps(8, end) infinite;
+        transform-origin: bottom left;
       }
 
       .demo-scene-svg .scene-steam-a,
@@ -1971,7 +1998,7 @@
       }
 
       .demo-scene-svg .scene-fork {
-        animation: demo-fork-bite 1500ms steps(5, end) infinite;
+        animation: demo-fork-bite 4000ms steps(8, end) infinite;
         transform-origin: left center;
       }
 
@@ -1987,7 +2014,7 @@
       }
 
       .demo-scene-svg .scene-speaker {
-        animation: demo-speaker-pulse 1000ms steps(4, end) infinite;
+        animation: demo-speaker-pulse 600ms steps(2, end) infinite;
       }
 
       .demo-scene-svg .scene-blink-a,
@@ -2017,6 +2044,35 @@
         animation: demo-late-glow 1500ms steps(4, end) infinite;
       }
 
+      .demo-scene-svg .scene-recdot {
+        animation: demo-recdot-pulse 1500ms steps(3, end) infinite;
+        transform-origin: center;
+      }
+
+      .demo-scene-svg .scene-code-scroll {
+        animation: demo-code-scroll 10000ms linear infinite;
+      }
+
+      .demo-scene-svg .scene-coffee-steam {
+        animation: demo-steam-rise 2400ms steps(6, end) infinite;
+      }
+
+      .demo-scene-svg .scene-star-a {
+        animation: demo-star-twinkle 2400ms steps(3, end) infinite;
+      }
+
+      .demo-scene-svg .scene-star-b {
+        animation: demo-star-twinkle 2400ms steps(3, end) infinite;
+      }
+
+      .demo-scene-svg .scene-star-c {
+        animation: demo-star-twinkle 2400ms steps(3, end) infinite;
+      }
+
+      .demo-scene-svg .scene-star-d {
+        animation: demo-star-twinkle 2400ms steps(3, end) infinite;
+      }
+
       .demo-scene-svg .scene-leaf-a,
       .demo-scene-svg .scene-bubble-a,
       .demo-scene-svg .scene-steam-a,
@@ -2028,7 +2084,11 @@
       .demo-scene-svg .scene-talk-a,
       .demo-scene-svg .scene-thumb,
       .demo-scene-svg .scene-cursor,
-      .demo-scene-svg .scene-late-glow {
+      .demo-scene-svg .scene-late-glow,
+      .demo-scene-svg .scene-recdot,
+      .demo-scene-svg .scene-code-scroll,
+      .demo-scene-svg .scene-coffee-steam,
+      .demo-scene-svg .scene-star-a {
         animation-delay: var(--scene-loop-offset, 0ms);
       }
 
@@ -2041,7 +2101,7 @@
       }
 
       .demo-scene-svg .scene-bubble-b {
-        animation-delay: calc(var(--scene-loop-offset, 0ms) - 700ms);
+        animation-delay: calc(var(--scene-loop-offset, 0ms) - 2000ms);
       }
 
       .demo-scene-svg .scene-steam-b {
@@ -2058,6 +2118,18 @@
 
       .demo-scene-svg .scene-z-c {
         animation-delay: calc(var(--scene-loop-offset, 0ms) - 1200ms);
+      }
+
+      .demo-scene-svg .scene-star-b {
+        animation-delay: calc(var(--scene-loop-offset, 0ms) - 600ms);
+      }
+
+      .demo-scene-svg .scene-star-c {
+        animation-delay: calc(var(--scene-loop-offset, 0ms) - 1200ms);
+      }
+
+      .demo-scene-svg .scene-star-d {
+        animation-delay: calc(var(--scene-loop-offset, 0ms) - 1800ms);
       }
 
       .demo-scene-svg .scene-blink-b {
@@ -2356,7 +2428,8 @@
       }
 
       .demo-scene-frame.animating[data-activity="connect_people"] .anim-bubble {
-        animation: pulse-scale 1.2s steps(3, end) infinite;
+        animation: demo-bubble-appear 4000ms steps(8, end) infinite;
+        transform-origin: bottom left;
       }
 
       .demo-scene-frame.animating[data-activity="eat_food"] .anim-steam {
@@ -3473,15 +3546,23 @@
         }
       }
 
-      @keyframes demo-bubble-pulse {
+      @keyframes demo-bubble-appear {
         0%,
         100% {
-          transform: scale(1);
-          opacity: 0.8;
+          transform: scale(0);
+          opacity: 0;
         }
-        50% {
-          transform: scale(1.08);
+        10% {
+          transform: scale(1);
           opacity: 1;
+        }
+        60% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        75% {
+          transform: scale(0);
+          opacity: 0;
         }
       }
 
@@ -3507,8 +3588,11 @@
         100% {
           transform: translate(0, 0);
         }
-        50% {
-          transform: translate(-10px, -12px);
+        25% {
+          transform: translate(-20px, -10px);
+        }
+        55% {
+          transform: translate(-20px, -10px);
         }
       }
 
@@ -3527,11 +3611,11 @@
           transform: translate(0, 0);
           opacity: 0;
         }
-        20% {
+        15% {
           opacity: 0.85;
         }
         100% {
-          transform: translate(4px, -16px);
+          transform: translate(6px, -40px);
           opacity: 0;
         }
       }
@@ -3539,12 +3623,12 @@
       @keyframes demo-speaker-pulse {
         0%,
         100% {
-          opacity: 0.35;
-          transform: scale(1);
+          transform: translateY(0);
+          opacity: 0.7;
         }
         50% {
+          transform: translateY(-2px);
           opacity: 1;
-          transform: scale(1.06);
         }
       }
 
@@ -3599,6 +3683,36 @@
           opacity: 0.55;
         }
         50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes demo-recdot-pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes demo-code-scroll {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-6px);
+        }
+      }
+
+      @keyframes demo-star-twinkle {
+        0%,
+        40%,
+        100% {
+          opacity: 0.3;
+        }
+        20% {
           opacity: 1;
         }
       }
@@ -6932,8 +7046,8 @@
       }
 
       .demo-why > summary {
-        min-height: 44px;
-        padding: 12px;
+        min-height: 32px;
+        padding: 8px 12px;
         font-size: 15px;
       }
 
@@ -6981,8 +7095,8 @@
       }
 
       .demo-timeline-pane {
-        flex: 0 1 520px;
-        max-width: 520px;
+        flex: 0 0 auto;
+        width: 100%;
         min-width: 0;
       }
 
@@ -7028,7 +7142,8 @@
       }
 
       .demo-timeline-svg {
-        height: 200px;
+        height: 150px;
+        width: 100%;
       }
 
       .demo-timeline-legend {
@@ -7196,13 +7311,11 @@
         }
 
         .demo-right-bar {
-          width: 440px;
+          width: 560px;
         }
 
         .demo-activity-view {
-          grid-template-columns: minmax(0, 3.5fr) minmax(300px, 1.8fr);
-          gap: 18px;
-          align-items: stretch;
+          grid-template-columns: 1fr;
         }
 
         .demo-scene-frame {
@@ -7210,11 +7323,11 @@
         }
 
         .demo-batt-svg {
-          height: 64px;
+          height: 44px;
         }
 
         .demo-timeline-svg {
-          height: 230px;
+          height: 150px;
         }
       }
     </style>
@@ -7249,9 +7362,9 @@
               aria-pressed="false"
             >
               <span class="timeline-toggle-icon" aria-hidden="true"
-                >WINDOW</span
+                >UPDATE TIME</span
               >
-              <span class="timeline-toggle-value">4H</span>
+              <span class="timeline-toggle-value">(4H)</span>
             </button>
             <button id="tour-btn" type="button" title="App tour">TOUR</button>
             <button
@@ -7521,7 +7634,7 @@
             </div>
 
             <div class="layer2-formula layer2-formula-v2">
-              <div class="section-title">Model B + D</div>
+              <div class="section-title">Energy model</div>
               <pre>
 dE/dt = -0.05*P*E + (Erest-E)/120
 dS/dt = 1.5*P - S/4320
@@ -7585,10 +7698,31 @@ P = drain - 0.5*recovery</pre
                   >
                   shifts Erest over the day.
                 </p>
-              </div>
-              <div class="layer2-explain-formula">
-                Model B + D dE/dt = −0.05 · P · E + (Erest − E) / 120 dS/dt =
-                1.5 · P − S / 4320 P = drain − 0.5 · recovery
+                <p>
+                  <strong>Time constants</strong> reveal a key asymmetry: energy
+                  recovers toward Erest with a ~2-hour time constant — two hours
+                  of low-pressure activity brings you most of the way back.
+                  Stress decays far more slowly, with a natural half-life around
+                  3 days. This means stress accumulated during a demanding week
+                  persists into the weekend even after energy has recovered,
+                  explaining why feeling rested but still wired is
+                  physiologically normal rather than a paradox.
+                </p>
+                <p>
+                  The <strong>equilibrium point</strong> — where the two
+                  <span
+                    class="jargon-tip"
+                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
+                    tabindex="0"
+                    >nullclines</span
+                  >
+                  intersect — shows where your state would land if today's
+                  activity pattern continued indefinitely. A high-drain pattern
+                  shifts the equilibrium toward low-E, high-S (lower-right on
+                  the map). Protective no-pressure blocks pull it back toward
+                  the upper-left. Tracking where your equilibrium sits is more
+                  informative than watching the instantaneous dot.
+                </p>
               </div>
             </div>
             <div class="layer-card phase-portrait-card">
@@ -7922,10 +8056,10 @@ P = drain - 0.5*recovery</pre
               </dd>
             </div>
             <div class="gloss-row">
-              <dt>Model B</dt>
+              <dt>Energy model</dt>
               <dd>
-                The two-tank math that updates energy and stress every tick. It
-                turns recovery, drain, pressure, and resting baseline into meter
+                The math that updates energy and stress every tick. It turns
+                recovery, drain, pressure, and resting baseline into meter
                 movement.
               </dd>
             </div>
@@ -8237,7 +8371,7 @@ P = drain - 0.5*recovery</pre
         <h3>How activities change things</h3>
         <p>
           Each activity card flips a small set of feature inputs (right-side
-          panel). Those flow through the same Model B + D math the live app
+          panel). Those flow through the same energy model math the live app
           uses. The right panel only shows the features the activity actually
           moves — others stay neutral.
         </p>
@@ -9204,20 +9338,62 @@ P = drain - 0.5*recovery</pre
       }
 
       function personGroup(x, y, fill, className = "anim-bob") {
-        return `<g transform="translate(${x} ${y})"${className ? ` class="${className}"` : ""}>
-        ${pxRects(
-          [
-            [8, 0, 16, 16],
-            [4, 16, 24, 8],
-            [8, 24, 16, 24],
-            [0, 24, 8, 16],
-            [24, 24, 8, 16],
-            [8, 48, 8, 20],
-            [16, 48, 8, 20],
-          ],
-          fill,
-        )}
-      </g>`;
+        const hair = "#3a2c1a";
+        const face = "#e8b88a";
+        const pant = "#2244cc";
+        const shoe = "#332211";
+        const cls = className ? ` class="${className}"` : "";
+        return `<g transform="translate(${x} ${y})"${cls} shape-rendering="crispEdges">
+          ${pxRects(
+            [
+              [8, 0, 8, 2],
+              [6, 2, 12, 2],
+              [6, 4, 2, 4],
+              [18, 4, 2, 4],
+              [8, 8, 2, 2],
+              [16, 8, 2, 2],
+            ],
+            hair,
+          )}
+          ${pxRects(
+            [
+              [8, 4, 10, 4],
+              [10, 8, 6, 2],
+            ],
+            face,
+          )}
+          ${pxRects(
+            [
+              [8, 10, 8, 2],
+              [6, 12, 12, 4],
+              [8, 16, 8, 4],
+              [8, 20, 8, 2],
+              [6, 16, 2, 4],
+              [16, 16, 2, 4],
+            ],
+            fill,
+          )}
+          ${pxRects(
+            [
+              [10, 22, 4, 4],
+              [8, 26, 8, 2],
+              [8, 28, 4, 10],
+              [14, 28, 4, 10],
+              [6, 38, 6, 2],
+              [14, 38, 6, 2],
+            ],
+            pant,
+          )}
+          ${pxRects(
+            [
+              [6, 40, 6, 2],
+              [14, 40, 6, 2],
+              [4, 42, 8, 2],
+              [14, 42, 8, 2],
+            ],
+            shoe,
+          )}
+        </g>`;
       }
 
       function deskGroup(x, y, tone) {
@@ -9381,7 +9557,6 @@ P = drain - 0.5*recovery</pre
               surface,
             )}
             ${pxRects([[30, 100, 100, 10]], "#c8b898")}
-            ${personGroup(62, 54, text, "scene-person")}
             ${pxRects(
               [
                 [24, 16, 20, 8, "anim-layer anim-cloud"],
@@ -9410,8 +9585,8 @@ P = drain - 0.5*recovery</pre
             art = `
             ${sky}
             ${floor}
-            ${personGroup(22, 58, "#6aacda", "scene-person")}
-            ${personGroup(92, 58, good, "scene-person")}
+            ${personGroup(22, 54, "#6aacda", "scene-person")}
+            ${personGroup(92, 54, good, "scene-person")}
             ${bubbleGlyph(36, 22, text, "scene-bubble-a anim-layer anim-bubble")}
             ${bubbleGlyph(104, 20, accent, "scene-bubble-b anim-layer anim-bubble")}
             ${pxRects(
@@ -9695,9 +9870,9 @@ P = drain - 0.5*recovery</pre
                 <rect x="8" y="8" width="14" height="2"></rect>
               </g>
             </g>
-            ${zGlyph(108, 68, 1, "scene-z-a anim-layer anim-z")}
-            ${zGlyph(122, 46, 0.8, "scene-z-b anim-layer anim-z anim-z-2")}
-            ${zGlyph(136, 28, 0.6, "scene-z-c anim-layer anim-z")}
+            ${zGlyph(108, 88, 1, "scene-z-a anim-layer anim-z")}
+            ${zGlyph(122, 88, 0.8, "scene-z-b anim-layer anim-z anim-z-2")}
+            ${zGlyph(136, 88, 0.6, "scene-z-c anim-layer anim-z")}
           `;
             break;
           case "zoom_meeting":
@@ -9712,10 +9887,10 @@ P = drain - 0.5*recovery</pre
               ],
               border,
             )}
-            ${personGroup(18, 48, text, "scene-person")}
+            ${personGroup(18, 54, text, "scene-person")}
             ${pxRects([[68, 12, 78, 60]], border)}
             ${pxRects([[72, 16, 70, 52]], bg)}
-            ${pxRects([[74, 15, 4, 4]], critical)}
+            <g class="scene-anim scene-recdot anim-layer anim-recdot" transform="translate(74 15)"><rect x="0" y="0" width="4" height="4" fill="${critical}"></rect></g>
             ${pxRects(
               [
                 [82, 14, 2, 10],
@@ -9859,7 +10034,7 @@ P = drain - 0.5*recovery</pre
             ${sky}
             ${floor}
             ${deskGroup(42, 92, borderDark)}
-            ${personGroup(44, 48, text, "scene-person")}
+            ${personGroup(44, 54, text, "scene-person")}
             ${pxRects(
               [
                 [52, 46, 16, 2],
@@ -9885,12 +10060,14 @@ P = drain - 0.5*recovery</pre
             )}
             ${pxRects([[82, 22, 50, 34]], borderDark)}
             ${pxRects([[86, 26, 42, 26]], bg)}
-            ${pxRects([[90, 30, 10, 2]], good)}
-            ${pxRects([[102, 30, 14, 2]], info)}
-            ${pxRects([[90, 36, 18, 2]], accent)}
-            ${pxRects([[110, 36, 10, 2]], good)}
-            ${pxRects([[90, 42, 16, 2]], info)}
-            ${pxRects([[108, 42, 4, 8, "scene-anim scene-cursor anim-layer anim-cursor"]], warn)}
+            <g class="scene-anim scene-code-scroll anim-layer anim-code-scroll">
+              ${pxRects([[90, 30, 10, 2]], good)}
+              ${pxRects([[102, 30, 14, 2]], info)}
+              ${pxRects([[90, 36, 18, 2]], accent)}
+              ${pxRects([[110, 36, 10, 2]], good)}
+              ${pxRects([[90, 42, 16, 2]], info)}
+              ${pxRects([[108, 42, 4, 8, "scene-anim scene-cursor anim-layer anim-cursor"]], warn)}
+            </g>
             ${pxRects(
               [
                 [82, 58, 50, 4],
@@ -9909,72 +10086,62 @@ P = drain - 0.5*recovery</pre
             break;
           case "late_night_ai":
             art = `
-            ${pxRects([[0, 0, 160, 160]], bg)}
-            ${pxRects([[0, 0, 160, 92]], surfaceDark)}
-            ${pxRects([[0, 92, 160, 68]], surface)}
-            ${pxRects([[108, 12, 34, 40]], borderDark)}
+            ${pxRects([[0, 0, 160, 98]], surfaceDark)}
+            ${pxRects([[0, 98, 160, 62]], bg)}
+            ${pxRects([[6, 10, 42, 52]], border)}
+            ${pxRects([[8, 12, 38, 48]], borderDark)}
+            ${pxRects([[6, 34, 42, 2]], border)}
+            ${pxRects([[26, 10, 2, 52]], border)}
+            ${pxRects([[32, 16, 10, 10]], "#d4d0a0")}
+            ${pxRects([[36, 17, 5, 7]], borderDark)}
             ${pxRects(
               [
-                [112, 16, 8, 20],
-                [124, 16, 10, 20],
+                [12, 20, 2, 2],
+                [18, 40, 2, 2],
+                [10, 50, 2, 2],
               ],
-              "#334455",
+              "#c0d8ff",
             )}
-            ${pxRects(
-              [
-                [116, 18, 2, 14],
-                [126, 18, 6, 2],
-                [130, 20, 2, 4],
-                [126, 24, 6, 2],
-                [126, 26, 2, 4],
-                [126, 30, 6, 2],
-                [126, 34, 6, 2],
-              ],
-              "#3399ff",
-            )}
-            ${deskGroup(38, 92, borderDark)}
-            ${personGroup(42, 48, text, "scene-person")}
-            <g transform="translate(78 22)">
+            ${pxRects([[82, 22, 52, 36]], borderDark)}
+            ${pxRects([[84, 24, 48, 32]], "#050d14")}
+            ${pxRects([[88, 28, 12, 2]], good)}
+            ${pxRects([[102, 28, 20, 2]], info)}
+            ${pxRects([[88, 34, 26, 2]], accent)}
+            ${pxRects([[116, 34, 8, 2]], good)}
+            ${pxRects([[88, 40, 18, 2]], info)}
+            ${pxRects([[108, 40, 14, 2]], warn)}
+            ${pxRects([[88, 46, 28, 2]], accent)}
+            ${pxRects([[118, 46, 4, 8, "scene-anim scene-cursor anim-layer anim-cursor"]], warn)}
+            ${pxRects([[102, 58, 10, 6]], borderDark)}
+            ${pxRects([[96, 64, 22, 4]], borderDark)}
+            <g transform="translate(82 22)">
               <g class="scene-anim scene-late-glow anim-layer anim-glow">
-                <rect x="0" y="0" width="48" height="28" fill="${critical}" opacity="0.18"></rect>
-                <rect x="6" y="6" width="14" height="2" fill="${warn}"></rect>
-                <rect x="22" y="10" width="18" height="2" fill="${info}"></rect>
-                <rect x="10" y="16" width="20" height="2" fill="${accent}"></rect>
-                <rect x="16" y="22" width="12" height="2" fill="${warn}"></rect>
-                <rect x="0" y="34" width="24" height="16" fill="${critical}" opacity="0.22"></rect>
-                <rect x="4" y="38" width="16" height="2" fill="${warn}"></rect>
-                <rect x="6" y="44" width="10" height="2" fill="${info}"></rect>
+                <rect x="0" y="0" width="52" height="36" fill="${info}" opacity="0.10"></rect>
+                <rect x="6" y="6" width="12" height="2" fill="${good}"></rect>
+                <rect x="20" y="10" width="20" height="2" fill="${info}"></rect>
+                <rect x="6" y="16" width="26" height="2" fill="${accent}"></rect>
+                <rect x="6" y="22" width="30" height="2" fill="${warn}"></rect>
               </g>
             </g>
-            ${pxRects(
-              [
-                [92, 32, 2, 12],
-                [100, 32, 2, 12],
-                [94, 32, 6, 2],
-                [94, 38, 6, 2],
-                [108, 32, 8, 2],
-                [111, 34, 2, 8],
-                [108, 42, 8, 2],
-              ],
-              warn,
-            )}
-            ${pxRects(
-              [
-                [18, 16, 2, 2],
-                [30, 24, 2, 2],
-                [96, 12, 2, 2],
-                [146, 18, 2, 2],
-              ],
-              warn,
-            )}
-            ${pxRects(
-              [
-                [70, 98, 10, 8],
-                [80, 100, 2, 4],
-              ],
-              "#7a5838",
-            )}
-            ${pxRects([[72, 98, 6, 2]], "#c87840")}
+            ${deskGroup(38, 92, borderDark)}
+            ${pxRects([[94, 116, 56, 8]], borderDark)}
+            ${pxRects([[138, 124, 8, 18]], borderDark)}
+            ${personGroup(42, 54, text, "scene-person")}
+            ${pxRects([[58, 88, 26, 4]], borderDark)}
+            ${pxRects([[60, 89, 22, 2]], "#334455")}
+            ${pxRects([[134, 84, 12, 10]], "#7a5838")}
+            ${pxRects([[146, 86, 2, 6]], "#7a5838")}
+            ${pxRects([[136, 84, 8, 2]], "#c87840")}
+            <g class="scene-anim scene-coffee-steam anim-layer anim-coffee-steam" transform="translate(137 74)">
+              <g fill="#c0c8d4">
+                <rect x="0" y="0" width="2" height="6"></rect>
+                <rect x="3" y="2" width="2" height="5"></rect>
+              </g>
+            </g>
+            <g class="scene-anim scene-star-a anim-layer anim-star" transform="translate(58 6)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
+            <g class="scene-anim scene-star-b anim-layer anim-star" transform="translate(148 8)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
+            <g class="scene-anim scene-star-c anim-layer anim-star" transform="translate(66 14)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
+            <g class="scene-anim scene-star-d anim-layer anim-star" transform="translate(154 4)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
           `;
             break;
           default:
@@ -10651,7 +10818,7 @@ P = drain - 0.5*recovery</pre
         const tip = isFast
           ? "2-minute accelerated demo window. Click for the 4-hour rolling window."
           : "4-hour rolling window. Click for the 2-minute accelerated demo view.";
-        DOM.timelineToggleBtn.innerHTML = `<span class="timeline-toggle-icon" aria-hidden="true">WINDOW</span><span class="timeline-toggle-value">${label}</span>`;
+        DOM.timelineToggleBtn.innerHTML = `<span class="timeline-toggle-icon" aria-hidden="true">UPDATE TIME</span><span class="timeline-toggle-value">(${label})</span>`;
         DOM.timelineToggleBtn.setAttribute("aria-pressed", String(isFast));
         DOM.timelineToggleBtn.setAttribute("aria-label", `${label}. ${tip}`);
         DOM.timelineToggleBtn.title = tip;
@@ -11325,7 +11492,7 @@ P = drain - 0.5*recovery</pre
           case "features":
             return "Feature packets";
           case "model":
-            return "Model B";
+            return "Model";
           case "battery":
             return "Battery";
           case "done":
@@ -11436,7 +11603,7 @@ P = drain - 0.5*recovery</pre
         const eY = toY(currentE);
         const sY = toY(currentS);
         target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 200" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join("")}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(" ")}"></polyline>` : ""}
@@ -11581,7 +11748,7 @@ P = drain - 0.5*recovery</pre
                   )
                   .join("")}
                 <div class="demo-instructions">
-                  <p><strong>How this works:</strong> Each activity card shows a simulated energy impact. Click one to see how the model responds — features update, the ODE runs, and the meter shifts.</p>
+                  <p><strong>How this works:</strong> Each activity card shows a simulated energy impact. Click one to see how your meter would respond — signals update, the model runs, and the meter shifts.</p>
                   <p>Energy = remaining cognitive capacity. Stress = active load. Recovery activities restore energy; drain activities spend it.</p>
                 </div>
               </div>
@@ -11632,7 +11799,7 @@ P = drain - 0.5*recovery</pre
           .join("");
 
         const stepOrder = ["scene", "features", "model", "battery", "done"];
-        const stepLabels = ["Scene", "Features", "Model B", "Battery", "Done"];
+        const stepLabels = ["Scene", "Features", "Model", "Battery", "Done"];
         const currentStepIdx = Math.max(0, stepOrder.indexOf(activity.step));
         const stepIndicator = stepOrder
           .slice(0, 4)
@@ -11679,58 +11846,43 @@ P = drain - 0.5*recovery</pre
                 <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
                   <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
                   ${activity.id === "go_outside" ? '<div class="px-walker" aria-hidden="true"></div>' : ""}
-                </div>
-                <div class="demo-scene-footer">
-                  <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
-                  <div class="demo-step-indicator">
-                    ${stepIndicator}
-                    <span>${stepCaption}</span>
+                  <div class="demo-scene-footer">
+                    <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
+                    <div class="demo-step-dots">${stepIndicator}</div>
                   </div>
                 </div>
-              </div>
-              <div class="demo-pipeline-panel is-${activity.kind}">
-                <div class="demo-pipeline-head">
-                  <div class="demo-stage-label">Diagnostics</div>
-                  <div class="demo-clock">${formatDemoClock(activity.afterClock)}</div>
-                </div>
-                <div class="demo-feature-list">${rows}</div>
-                ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
-                <div class="demo-model-node${activity.step === "model" || activity.step === "battery" ? " is-pulsing" : ""}" data-demo-model>
-                  <div>
-                    <div class="demo-model-label">Model B output</div>
-                    <div class="demo-model-title">ΔE &amp; ΔS</div>
-                  </div>
-                  <div class="demo-model-deltas">
-                    <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${dESign}${activity.deltaE.toFixed(1)}</div>
-                    <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${dSSign}${activity.deltaS.toFixed(1)}</div>
-                  </div>
-                </div>
-                <div class="demo-data-sources">
-                  <div class="demo-data-sources-title">Where this data comes from</div>
-                  <div class="demo-data-sources-list">${dataChips}</div>
-                </div>
-                <details class="demo-why" ${isDone ? "open" : ""}>
-                  <summary>Why? · How does this affect my energy level?</summary>
-                  <div class="demo-why-body">${activity.whyResearch || ""}</div>
-                </details>
-                <div class="demo-packet-layer" data-demo-packets></div>
+                <div class="demo-step-caption${activity.step === "done" ? " is-complete" : ""}">${stepCaption}</div>
               </div>
             </div>
           </div>
           <div class="demo-right-bar">
             <div class="demo-rb-label">Current state</div>
             <div class="demo-battery-pair" data-demo-battery-pair></div>
-            ${
-              showDelta
-                ? `
-            <div class="demo-rb-delta">
-              <span class="demo-rb-dE ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${dESign}${activity.deltaE.toFixed(1)}</span>
-              <span class="demo-rb-dS ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${dSSign}${activity.deltaS.toFixed(1)}</span>
-            </div>`
-                : ""
-            }
             <div class="demo-timeline-pane" data-demo-timeline></div>
+            <div class="demo-rb-pipe">
+              <div class="demo-feature-list">${rows}</div>
+              ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
+              <div class="demo-model-node${activity.step === "model" || activity.step === "battery" ? " is-pulsing" : ""}" data-demo-model>
+                <div>
+                  <div class="demo-model-label">Energy impact</div>
+                  <div class="demo-model-title">ΔE &amp; ΔS</div>
+                </div>
+                <div class="demo-model-deltas">
+                  <div class="demo-delta ${activity.deltaE >= 0 ? "is-pos" : "is-neg"}">ΔE ${dESign}${activity.deltaE.toFixed(1)}</div>
+                  <div class="demo-delta ${activity.deltaS <= 0 ? "is-pos" : "is-neg"}">ΔS ${dSSign}${activity.deltaS.toFixed(1)}</div>
+                </div>
+              </div>
+              <div class="demo-data-sources">
+                <div class="demo-data-sources-title">Where this data comes from</div>
+                <div class="demo-data-sources-list">${dataChips}</div>
+              </div>
+              <details class="demo-why">
+                <summary>Why? · How does this affect my energy level?</summary>
+                <div class="demo-why-body">${activity.whyResearch || ""}</div>
+              </details>
+            </div>
           </div>
+          <div class="demo-packet-layer" data-demo-packets></div>
         </div>
       `;
 
@@ -12409,11 +12561,11 @@ P = drain - 0.5*recovery</pre
           });
         });
 
-        appendSvgText(svg, plotRight + 6, plotBottom + 18, "E", {
+        appendSvgText(svg, plotRight + 6, plotBottom + 30, "E", {
           fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
           fontSize: "10px",
         });
-        appendSvgText(svg, 8, plotTop + 10, "S", {
+        appendSvgText(svg, 5, plotTop - 6, "S", {
           fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
           fontSize: "10px",
         });
@@ -12839,8 +12991,8 @@ P = drain - 0.5*recovery</pre
         const margin = { top: 16, right: 20, bottom: 28, left: 36 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
-        const yMin = 20;
-        const yMax = 80;
+        const yMin = 0;
+        const yMax = 100;
         const scaleX = (plotHour) => margin.left + (plotHour / 24) * innerWidth;
         const scaleY = (value) => {
           const clipped = clamp(value, yMin, yMax);
@@ -12875,9 +13027,7 @@ P = drain - 0.5*recovery</pre
         line.style.opacity = "0.65";
         svg.appendChild(line);
 
-        // 2) Energy + Stress overlays — scatter dots from tick history (last 24h)
-        // Using dots instead of polylines so flat data (e.g. steady stress) reads
-        // as a dot trail rather than a misleading horizontal bar.
+        // 2) Energy + Stress overlays — lines + dots from tick history (last 24h)
         const overlayHistory = loadTickHistory();
         const overlayCutoff = Date.now() - 24 * 3600 * 1000;
         const overlaySamples = [];
@@ -12900,6 +13050,36 @@ P = drain - 0.5*recovery</pre
             isCurrent: true,
           });
         }
+        // Sort by time so polylines connect in chronological order
+        overlaySamples.sort((a, b) => a.sampleHour - b.sampleHour);
+
+        // Draw connecting lines first (behind dots)
+        const eLinePts = overlaySamples
+          .filter((s) => Number.isFinite(s.e))
+          .map((s) => `${scaleX(s.sampleHour)},${scaleY(s.e)}`);
+        if (eLinePts.length >= 2) {
+          const eLine = document.createElementNS(SVG_NS, "polyline");
+          eLine.setAttribute("points", eLinePts.join(" "));
+          eLine.style.fill = "none";
+          eLine.style.stroke = "var(--px-energy)";
+          eLine.style.strokeWidth = "1.5";
+          eLine.style.opacity = "0.5";
+          svg.appendChild(eLine);
+        }
+        const sLinePts = overlaySamples
+          .filter((s) => Number.isFinite(s.s))
+          .map((s) => `${scaleX(s.sampleHour)},${scaleY(s.s)}`);
+        if (sLinePts.length >= 2) {
+          const sLine = document.createElementNS(SVG_NS, "polyline");
+          sLine.setAttribute("points", sLinePts.join(" "));
+          sLine.style.fill = "none";
+          sLine.style.stroke = "var(--px-stress)";
+          sLine.style.strokeWidth = "1.5";
+          sLine.style.opacity = "0.5";
+          svg.appendChild(sLine);
+        }
+
+        // Draw dots on top of lines; current point is an open circle
         overlaySamples.forEach(({ sampleHour, e, s, isCurrent }) => {
           const r = isCurrent ? 5 : 3;
           if (Number.isFinite(e)) {
@@ -12907,8 +13087,14 @@ P = drain - 0.5*recovery</pre
             ec.setAttribute("cx", String(scaleX(sampleHour)));
             ec.setAttribute("cy", String(scaleY(e)));
             ec.setAttribute("r", String(r));
-            ec.style.fill = "var(--px-energy)";
-            ec.style.opacity = isCurrent ? "1" : "0.55";
+            if (isCurrent) {
+              ec.style.fill = "none";
+              ec.style.stroke = "var(--px-energy)";
+              ec.style.strokeWidth = "2";
+            } else {
+              ec.style.fill = "var(--px-energy)";
+              ec.style.opacity = "0.6";
+            }
             svg.appendChild(ec);
           }
           if (Number.isFinite(s)) {
@@ -12916,8 +13102,14 @@ P = drain - 0.5*recovery</pre
             sc.setAttribute("cx", String(scaleX(sampleHour)));
             sc.setAttribute("cy", String(scaleY(s)));
             sc.setAttribute("r", String(r));
-            sc.style.fill = "var(--px-stress)";
-            sc.style.opacity = isCurrent ? "1" : "0.55";
+            if (isCurrent) {
+              sc.style.fill = "none";
+              sc.style.stroke = "var(--px-stress)";
+              sc.style.strokeWidth = "2";
+            } else {
+              sc.style.fill = "var(--px-stress)";
+              sc.style.opacity = "0.6";
+            }
             svg.appendChild(sc);
           }
         });
@@ -12967,8 +13159,8 @@ P = drain - 0.5*recovery</pre
           });
         });
 
-        appendSvgText(svg, 8, margin.top + 8, "80%", { fontSize: "11px" });
-        appendSvgText(svg, 8, height - margin.bottom, "20%", {
+        appendSvgText(svg, 8, margin.top + 8, "100%", { fontSize: "11px" });
+        appendSvgText(svg, 8, height - margin.bottom, "0%", {
           fontSize: "11px",
         });
         DOM.layer2Circadian.replaceChildren(svg);
@@ -13017,7 +13209,7 @@ P = drain - 0.5*recovery</pre
             popTitle: "Internal Energy (E)",
             popBody:
               "Your modeled mental energy tank, tracked on a 0-100 scale. This drives the meter fill. Lower values mean depletion; higher values mean more usable energy. Updated every 5 min from live signals.",
-            popFormula: "E_internal from ODE tick",
+            popFormula: "Updated every 5 min from live signals",
           },
           {
             id: "stress",
@@ -13025,8 +13217,8 @@ P = drain - 0.5*recovery</pre
             value: payload ? `${currentStress.toFixed(1)}%` : "--%",
             popTitle: "Stress State (S)",
             popBody:
-              "Your modeled cognitive stress load, 0–100. High stress erodes energy faster via the ODE coupling term. Stress rises with sustained drain pressure and falls slowly during low-pressure periods.",
-            popFormula: "dS/dt = 1.5 × Pressure − S / 4320",
+              "Your modeled cognitive stress load, 0–100. High stress erodes energy faster. Stress builds under sustained drain pressure and fades slowly during low-pressure periods.",
+            popFormula: "Rises under pressure, fades slowly over time",
           },
           {
             id: "erest",

@@ -1,60 +1,35 @@
-# Current Task: Light-mode pass + UX fixes
+# Current Task
 
-**Goal:** Make the entire app work in light mode (no dark text on dark, no dark
-text on light, no dark backgrounds where they shouldn't be), plus a list of
-specific UX fixes the user enumerated. User is going to bed — work autonomously
-through the list, screenshot each fix, push when done.
+## Goal
 
-**Branch:** `feat/mental-meter-phase-portrait` (already 13 commits ahead of upstream)
+Fix live-data diagnostics + several UI improvements
 
-## Done this session
+## Items (verbatim from user)
 
-- Demo activity layout: 2-column, scene panel left, diagnostics+timeline+E/S right, Back button visible
-- CSS alias bug: replaced all 31 usages of `var(--surface)`/`var(--surface-2)`/`var(--border)` with their `--px-*` originals (the alias was frozen at arcade dark values because of how `:root`-level var() resolution works)
-- Demo toggle button no longer always-accent (now button-surface when not in demo)
-- Light + pastel themes redone: warm cream / lavender-white backgrounds, sage / lavender accents
-- Pastel moved from DARK_THEMES to LIGHT_THEMES
-- Default theme = light
-- Rating sheet: compact 1-10 row, no description text, centered
-- Commit `8b191e0`
+1. **Live data features not showing** — drain and recovery feature bars are all empty/0 in live data mode (NOT demo). Demo features work fine (different code path).
+2. **Circadian graph lines** — draw lines connecting E and S data points on the timeline graph
+3. **Open circle for current point** — the "now" data point on the circadian/timeline graph should be an open circle so it's visually distinct
+4. **Remove jargon** — "Model B + D" and similar technical labels → rename to plain English that a non-technical user understands
+5. **Animation planning (carry-over)** — research and plan each activity animation more intentionally (motion should match what the activity realistically looks like)
 
-## Remaining work (full list per user, in their order)
+## Completed this session (before this task)
 
-### Light-mode contrast pass (audit first, then fix)
+- 2-column layout when activity open (scene left, all info right)
+- Timeline widened to fill column width (width: 100%)
+- Battery pair horizontal layout
+- demo-rb-pipe (pipeline content in right bar)
 
-1. **1-10 rating buttons**: too thin, hard to read text. Apply to BOTH energy AND stress sheets (I only verified energy before).
-2. **Recovery exercise start dialogue**: bigger / more sans-serif. Hard to read currently.
-3. **Recovery back button**: invisible. Fix.
-4. **Calibration / TUNE dialog**: black text on dark, hard to see. Full pass.
-5. **Circadian model graph**: still dark in light mode, should match light bg.
-6. **State tanks**: still dark in light mode.
-7. **Phase portrait**: still dark in light mode.
-8. **Energy + stress mini graphs**: dots are fine; just make sure the empty space inside the box is filled (graph fills the box).
-9. **Empty space under Replay Last Tick / Run +1 Hour**: fill it.
-10. **Raw diagnostics bar in dropdown**: remove.
-11. **Collapse text size/type**: match Show Signal Breakdown.
-12. **Back to Battery button**: position: sticky / fixed at top of viewport on scroll.
+## Remaining steps
 
-### Demo box specific
-
-13. **Demo dialog window**: center it. Window text → match Interactive Demo text size/type.
-14. **Interactive demo overall**: still dark in light mode. Major color rework needed — DELEGATE TO CODEX.
-15. **E/S batteries**: wider, move both + timeline all the way to the right (more room for left animation).
-16. **Timeline**: too transparent, no overlap bar — just have a single bar on the right.
-
-### Process / meta
-
-17. Document recommendations for not losing long prompts (write `LONG-PROMPT-RECOMMENDATIONS.md`).
-18. Push everything once verified.
+1. Investigate live-data feature bar rendering (read layer2 diagnostics code + /state JSON)
+2. Fix live features (likely key mismatch or render bug)
+3. Add line segments to circadian/timeline graph
+4. Change current point to open circle
+5. Find + rename "Model B + D" and other jargon
+6. Plan animations per activity (separate pass)
 
 ## Verifier
 
-After each change: `node snap-demo.js` + `node snap-layer2.js` and check screenshots in `screenshots/` (must be in light mode — default).
-For calibration / recovery flows that need interaction, write targeted snap scripts in the same pattern.
-
-## Failure mode that triggered this
-
-User pointed out I was claiming things "done" without checking light-mode in
-every flow, and dropped multiple items on the floor across compaction events.
-The fix is THIS file + the TodoWrite list — both are durable and force me to
-re-anchor on the actual list every turn.
+- Live mode: open Layer 2, check feature bars show non-zero values when AW is running
+- Timeline: see connected line through E and S points
+- Jargon: "Model B + D" text gone from all visible UI
