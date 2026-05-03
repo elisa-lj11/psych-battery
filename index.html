@@ -7500,7 +7500,7 @@
               </li>
               <li data-key="live">
                 <span class="cpp-key">● LIVE DATA</span>
-                <span>Flask backend ticking the ODE model</span>
+                <span>Live energy model running</span>
               </li>
               <li data-key="aw">
                 <span class="cpp-key">● AW LIVE</span>
@@ -7579,7 +7579,7 @@
                     >
                   </div>
                   <div class="layer2-mini">
-                    Model D baseline with current E overlay
+                    Daily rhythm curve with current energy
                   </div>
                 </div>
                 <div id="layer2-clock" class="layer2-mini layer2-mini-readout">
@@ -7731,7 +7731,7 @@ P = drain - 0.5*recovery</pre
                   class="jargon-tip"
                   data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
                   tabindex="0"
-                  >Phase portrait</span
+                  >Energy-Stress map</span
                 >
               </div>
               <div class="phase-portrait-shell">
@@ -7780,7 +7780,7 @@ P = drain - 0.5*recovery</pre
           </div>
 
           <details class="layer-legacy" id="legacy-breakdown">
-            <summary>Legacy breakdown</summary>
+            <summary>Signal details</summary>
             <div class="layer-legacy-body">
               <div id="metrics-grid"></div>
 
@@ -8064,10 +8064,11 @@ P = drain - 0.5*recovery</pre
               </dd>
             </div>
             <div class="gloss-row">
-              <dt>Model D</dt>
+              <dt>Daily rhythm (circadian)</dt>
               <dd>
-                The circadian resting baseline E_rest over 24 hours. It says
-                what "rested" should feel like at this time of day.
+                Your 24-hour resting energy baseline. It says what "rested"
+                should feel like at this time of day — peaks mid-morning, dips
+                in the afternoon.
               </dd>
             </div>
             <div class="gloss-row">
@@ -9508,641 +9509,134 @@ P = drain - 0.5*recovery</pre
         switch (activityId) {
           case "go_outside":
             art = `
-            ${pxRects([[0, 0, 160, 80]], info)}
-            ${pxRects([[0, 80, 160, 20]], good)}
-            ${pxRects([[0, 100, 160, 60]], surface)}
-            ${pxRects(
-              [
-                [120, 12, 20, 20, "anim-layer anim-sun"],
-                [126, 8, 8, 8, "anim-layer anim-sun"],
-              ],
-              warn,
-            )}
-            ${pxRects(
-              [
-                [14, 48, 10, 52],
-                [14, 42, 28, 10],
-                [18, 52, 22, 10],
-              ],
-              "var(--px-border)",
-            )}
-            ${pxRects(
-              [
-                [24, 50, 12, 2],
-                [22, 54, 16, 2],
-              ],
-              good,
-            )}
-            ${pxRects(
-              [
-                [104, 42, 10, 58],
-                [104, 36, 30, 10],
-                [108, 46, 26, 10],
-              ],
-              "var(--px-border)",
-            )}
-            ${pxRects(
-              [
-                [114, 44, 14, 2],
-                [112, 48, 18, 2],
-              ],
-              good,
-            )}
-            ${pxRects(
-              [
-                [38, 100, 84, 10],
-                [48, 110, 64, 8],
-                [56, 118, 48, 8],
-              ],
-              surface,
-            )}
-            ${pxRects([[30, 100, 100, 10]], "#c8b898")}
-            ${pxRects(
-              [
-                [24, 16, 20, 8, "anim-layer anim-cloud"],
-                [18, 22, 34, 8, "anim-layer anim-cloud"],
-                [38, 12, 18, 8, "anim-layer anim-cloud"],
-              ],
-              "#d8e4f0",
-            )}
-            ${pxRects(
-              [
-                [92, 24, 6, 2],
-                [96, 22, 2, 2],
-                [98, 24, 6, 2],
-                [110, 30, 6, 2],
-                [114, 28, 2, 2],
-                [116, 30, 6, 2],
-              ],
-              "#223060",
-            )}
-            ${leafGlyph(30, 22, warn, "scene-leaf-a")}
-            ${leafGlyph(90, 16, accent, "scene-leaf-b anim-layer anim-cloud")}
-            ${leafGlyph(128, 28, low, "scene-leaf-c")}
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADxElEQVR42u3dv0uUcRwH8M9ZgziFSEQc0hRHRDQ6ODWI5OLQ0BDSINF0NDT4JzQ4hEOTUzg0ONwiiIM0ODhGOBxOIhISIk3HDUUNKqTdnZ3Pec+Pe70W6bnzsXued2+/z/Oxs/R04fPvgJQMOQQIIAIIAogAggAigNAPNx2CwbK2sJ7o82feTWtANCA59+ug1tXzb5RnrQFxEQICiAByzXY2VmJnY0UAwVXwgDVfRMTDqRct/6wBQQP2vmmy4uLfp6jNpwHRgNZYaEA0YJHXWEtvJrp6fvX9dl/WtNc129WAaECyu6bt9c/zaUA04CDrdo3nvqEGRABBAMmAknfHyvaa76r3BTUgXMdV8O7wfKIveL+57KhnSNLzmfT8akB8C0YAYTAmIUmvIot+VagBwSw4uzSwBkQDRmYmERpJA4IAIoAQPf9pmF7PCi9af73jKjXyO/uNhLNhDUg+r4LL98uttx/sHTiqOZTW+dSAuAhBACFfa0BrvWJJ63xqQAZ7FlzfO+7Jfj7Udp1Na0DIWQNqLg0IkZlZcL9nheH/DUeRZr/dnl8NSL7WgO1mhuH+YBRpBmwWjIsQEECsAa3xwgxYA+JbMAggZsED6Ofas9YHcGbVwdGAhHfJL7alx7WOj1e/zDpIGhABBAFEAEEAEUAQQMIkJB8aleGW2+ebzzt/YuXkw0i96SBqQDSgBtWIGpDCN+Dd7c5ro28TnxzlHOrXedWA+BaMAEI6a8CJyXKiHexf8ms5ku6/3zaPjnq6v7y9/n6fVw2I+4BZ8mRsLFEjXvx8NCAaMP+NuLG8dW771Pxky+1xuh0NiACCAJKHAK7vz8X6/lzbJ172+GWS7j/tx5Mq+uu/6v41IOleBZ+lcnr84z+J/Xv72cd2z++U/CLsfyhetdzerJ9/f73a25OPs4ubuT4+D7poviR/fw1IqkqVaiXRe8NMfv3R8fGtR7cKcaBGNhpdPb8xNZLr19uv86oBSXcNOFoZTbaHS/6lJN5/RjTbNOBwtfVPhQzn/QX36bxqQMyCs+y4fvr7jNus6Rr140I2fpiEoAHRaBoQAQQBRABBACmS0uriy4H+PSHl8Tupfv2D/UMNCOE+YDaM3b7eRjz6fugga0A0YEZpKA2IAIIAIoAggAggCCDhPmCYhIT7jBoQDRgmIWhABBAEEAEEAUQAQQAJ9wHDJCTcZ9SAaMAwCUEDIoAggAggCCACiABCuA8YJiEaEDRgmIRoQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQPhffwAbfVZelp8SfAAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <rect x="124" y="8" width="18" height="18" fill="${warn}" class="anim-layer anim-sun" opacity="0.35"></rect>
+            <rect x="16" y="40" width="36" height="12" fill="#d8e4f0" class="anim-layer anim-cloud" opacity="0.5"></rect>
           `;
             break;
           case "connect_people":
             art = `
-            ${sky}
-            ${floor}
-            ${personGroup(22, 54, "#6aacda", "scene-person")}
-            ${personGroup(92, 54, good, "scene-person")}
-            ${bubbleGlyph(36, 22, text, "scene-bubble-a anim-layer anim-bubble")}
-            ${bubbleGlyph(104, 20, accent, "scene-bubble-b anim-layer anim-bubble")}
-            ${pxRects(
-              [
-                [44, 28, 4, 2],
-                [52, 28, 4, 2],
-                [46, 34, 10, 2],
-                [112, 26, 4, 2],
-                [120, 26, 4, 2],
-                [114, 32, 10, 2],
-              ],
-              bg,
-            )}
-            ${pxRects([[56, 80, 48, 4]], "#7a5838")}
-            ${pxRects([[60, 84, 40, 4]], "#5a4028")}
-            ${pxRects(
-              [
-                [62, 88, 6, 22],
-                [92, 88, 6, 22],
-              ],
-              "#4a3018",
-            )}
-            ${pxRects(
-              [
-                [68, 72, 8, 8],
-                [84, 72, 8, 8],
-              ],
-              "#c87840",
-            )}
-            ${pxRects(
-              [
-                [70, 70, 4, 2],
-                [86, 70, 4, 2],
-              ],
-              "#7a5838",
-            )}
-          `;
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAEBElEQVR42u3dP2iUdxwH4K+lXbLoEAoBCYVAEJcWF5cDsUOmUoQukgZcFJpAI0IpQekNEYoUoSSFRNBFkNBFFHHKYGm5QRdBBHuLDqE0UG7QRehkh+SgF+9Pcve+d++f51n07t7cvXnfjx9/v/d98+bQ40f33gWMyAc2AQKIAIIAIoAggAggDMOH+11w+6+tTH8jE0cn7U0NCCk1YNPNF58O9IEXjj9L9f3QgCCACCAIIAIIyc2CO3kw903L4y/v3LB1E5D1468x4PFYDUgxGpB03X5xONPrd+74G2NAStyAxnz5VKkcbIxZq02aBRMOw4AAYgzIaC1V6vta7lrtmAYEAUQAoe8xYNJXILuiWQOCACKA4KfijCE1IDgT0kt1dnr3b9OF3kET4ycjImLps05LzERExLWNTQ0IhW/AZvMdm5qw9/5naba/Jkz6+j4NiP+CQQAp9hjw9eTlAy1/ZOtHWxsNiFlwquovtwu5o4o669eA5LMBszqmc3xQA4Kfiiurfu/RogHRgGbB+R+r5u33pWhANKBZsFkwCCACCO6M0N10Kc4Fl2UsqwHJRwPm5fiSWbAGBAFEAGH4Z0KqFy+0fX555WaU+Vxw1samo95PGpBinwteuzIXERFffH/HLDiDtnYvG3z401zL8w1jQMrk0ONH994l+Ybj//ze9vnGx6eSXfPdu0ZFSa/meW+s23iSzf2kASn0GHBs42rL47edlos/dl6f/SGZNT/gv/jcmDqTyve/ubq3Wc92XX5mcVsDEg5EJ21s4+p7rUn2bK5OtGlNDYgxYKvmmE6rJaP+5H772fHJM11f76U5phtGq2lAnAnp1Zjsz6DN1y+zYDQg2R0ThsMwkKEGXGgstjy+vng4IiK+W229W9N123ykamPVlsfL5+cjIqJ6a33P71+a14CEMyEggAggCCACCAKIAIIAEqU/E7KwcLHDKysREfG2Xt2z/M6fa2srtv4Qdd5POxpP622XT3s/aUBcDTNUT9e7v35ivtifbwwIkd6dEbLu1vK3XV8/X/2l0J+vAcEV0b0bKukm6tV84TggaMCRS2sM1nxfTagBEUAQQMJxQDQgmAWnplG7nev1H6+c04CgAftUf/V3rte/UjEGBAFEAEEAEUBIbhb8vHbfVsiwou8fDchoG3D8kxOF/gbfvPoz1+tf9P2jAXEmJE1Tn3890Nf/tvHzQF9/evaSlGlAMtuAH/27bSukyPbVgAggCCACCAKIAIIAIoAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIIR7w/Rt8+6vI33/ma/OakAQQAQQBBABBAFEACEcB0xX2Y/DaUAEEAQQAQQBRABBABFAEEAEEASQQvoPqvbV4XUN3TEAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <rect x="22" y="34" width="36" height="10" fill="rgba(220,232,255,0.5)" class="anim-layer anim-bubble"></rect>
+            <rect x="22" y="36" width="36" height="6" fill="rgba(200,215,250,0.4)" class="anim-layer anim-bubble"></rect>
+          `
             break;
           case "eat_food":
             art = `
-            ${pxRects([[0, 0, 160, 68]], surfaceDark)}
-            ${pxRects([[0, 68, 160, 8]], borderDark)}
-            ${pxRects([[0, 76, 160, 8]], border)}
-            ${pxRects([[0, 84, 160, 10]], "#7a5838")}
-            ${pxRects([[4, 86, 152, 6]], "#6a4828")}
-            ${pxRects([[0, 94, 160, 10]], "#6a4828")}
-            ${pxRects([[4, 96, 152, 6]], "#7a5838")}
-            ${pxRects([[0, 104, 160, 56]], surface)}
-            ${pxRects([[18, 28, 22, 14]], "#d4b896")}
-            ${pxRects([[22, 24, 14, 4]], "#b89070")}
-            ${pxRects(
-              [
-                [24, 32, 2, 2],
-                [32, 32, 2, 2],
-                [28, 36, 4, 1],
-              ],
-              bg,
-            )}
-            ${pxRects([[20, 42, 18, 4]], "#c8a060")}
-            ${pxRects([[18, 50, 28, 30]], "#5a3020")}
-            ${pxRects([[20, 52, 24, 26]], "#4a2818")}
-            ${pxRects([[22, 54, 10, 4]], "#c87840")}
-            ${pxRects(
-              [
-                [44, 58, 16, 8],
-                [56, 62, 12, 6],
-              ],
-              "#5a3020",
-            )}
-            ${pxRects(
-              [
-                [70, 82, 54, 2],
-                [64, 84, 66, 4],
-                [60, 88, 74, 4],
-                [56, 92, 82, 10],
-                [58, 102, 78, 8],
-                [62, 110, 70, 6],
-                [68, 116, 58, 4],
-                [74, 120, 46, 2],
-              ],
-              "#c0b898",
-            )}
-            ${pxRects(
-              [
-                [76, 88, 42, 2],
-                [70, 90, 54, 4],
-                [66, 94, 62, 8],
-                [68, 102, 58, 8],
-                [72, 110, 50, 4],
-                [78, 114, 38, 2],
-              ],
-              "#c87d3a",
-            )}
-            ${pxRects(
-              [
-                [82, 92, 30, 2],
-                [78, 94, 38, 6],
-                [76, 100, 42, 8],
-                [78, 108, 38, 4],
-                [82, 112, 30, 2],
-              ],
-              "#7a3a1a",
-            )}
-            ${pxRects(
-              [
-                [84, 94, 26, 2],
-                [82, 98, 30, 4],
-                [84, 102, 26, 4],
-                [86, 106, 22, 2],
-              ],
-              "#e8c060",
-            )}
-            ${pxRects(
-              [
-                [88, 96, 18, 2],
-                [90, 100, 14, 2],
-              ],
-              "#b03030",
-            )}
-            ${pxRects(
-              [
-                [84, 90, 24, 2],
-                [90, 114, 12, 2],
-              ],
-              "#c8a878",
-            )}
-            <g class="scene-anim scene-steam-a anim-layer anim-steam" transform="translate(90 70)">
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD4UlEQVR42u3dTWgUZwAG4C9iQEIhtCyhKWWR6iGXXHLx4ELRgxTsoSIBq8X2kIAtVBF/UAo5xIOilVIKekgOErQUPKSHFMRDoLAFe8lFkBzMZSgEZBECEpQI8RD2sNP9mXU3u7OT57nI7MxudmZeXr4vMxP7nizObwbokl0OAQKIAIIAIoAggAggCCACCNtpd6sfsPpflKodGv4076xqQOhQA5Y9/ejoe71v9OVf2/I5aEAQQAQQBBABBAFEAEEAEUAQQAQQAQQBRABBAAnuBwzduh/PfX0aEAQQAQTPhBg7akAQQAQQ0jsGLHsUnU603Rf5OUcfDYgAIoCQkTGgsR0aEAEEAUQAQQARQBBAgmdCgvv60IBkpQH9vxxoQAQQBBABBAFk594PmNTUucmqr0//OuOsaEDIeAPe+embiuUvL993NjQg7JAGjFu4udWIJeckFdb794UQQhjYWEm0rAHRgPXkXvxdsTzx+kT1DaOtf2b3/FHxcmnoc2erg+LN1mhZA2ISQrbGgOVxXpJlAcQYEGNADYgGrKY8i70SDTe1PSYhIIAIIJgF02ZLd1t7/9j3GhANmNjbP5cTbXcxtvzz2UFnaxvMLjxr6f0TY8aAaMD0Km3kmto+P7je0/sbrQ3UXZ/rr37HZWH/B039nOLzV2bBaMDMWV+vbMCR0bGufp8ba1frrv8qGo+9MtDZMeT0j9XHhlO/aUA04P90azZbHvvUGhPG1xfGqv/Vr+jUsbZ+r/yD+ZbeH2/o4lL0Xp/TrjGdMSAaME1qzfpqra/VfDVnnaXmnuPL5+rPyr8rTja3g4XW9j+4FowGpPHseOXUVqNMV84yc2GrMZd+iBwkDYgGbLNGd1DHnx9upPThcWddA4IxIG2Q9IqHBkQD9rKBfQ9CCLWvhDT6/V5S9wozxoDQKX1PFuc3d9IOx68Fx68UdPvul1bFrwW7EgICiABCGmbBxbnrXd3hka9v1/0+xdj2E7cepvoEzl4ab2r/2q1w+qoGRAMmb6DPPknVAYh/n/yRyif9o5XlVJ/AI2euxZ6KS/fx1oC4EtJV/96uuzp6fLe39+/ABbNgEEAEEBrpm5n+tqPXgofDmqOeIathUAPSw7Pg3N7O3v3x+PdfHPUMOXTyvAakhxuw/81qR39g/uOhuutHDh52VlJk+Z/FuutbzY8GJPg1DAIIAogAggAigCCACCAIIAIIAogAggAigCCACCAIIAIIAogAggAigCCACCAIIAIIAogAggAigCCACCACCAKIAIIAIoAggAggCCACCAJINvUtzFzZdBjQgAggCCACCAKIAIIAkmnvAD9pxMvGQO8LAAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="scene-anim scene-steam-a anim-layer anim-steam" transform="translate(128 58)">
               <g fill="#c0c8d4">
                 <rect x="1" y="0" width="2" height="6"></rect>
                 <rect x="0" y="2" width="1" height="2"></rect>
                 <rect x="3" y="4" width="1" height="2"></rect>
                 <rect x="1" y="6" width="2" height="4"></rect>
-                <rect x="2" y="10" width="1" height="2"></rect>
               </g>
             </g>
-            <g class="scene-anim scene-steam-b anim-layer anim-steam anim-steam-2" transform="translate(100 66)">
+            <g class="scene-anim scene-steam-b anim-layer anim-steam anim-steam-2" transform="translate(136 54)">
               <g fill="#c0c8d4">
                 <rect x="1" y="0" width="2" height="6"></rect>
                 <rect x="0" y="2" width="1" height="2"></rect>
                 <rect x="3" y="4" width="1" height="2"></rect>
                 <rect x="1" y="6" width="2" height="4"></rect>
-                <rect x="2" y="10" width="1" height="2"></rect>
               </g>
             </g>
-            <g class="scene-anim scene-steam-c anim-layer anim-steam" transform="translate(110 72)">
-              <g fill="#c0c8d4">
-                <rect x="1" y="0" width="2" height="6"></rect>
-                <rect x="0" y="2" width="1" height="2"></rect>
-                <rect x="3" y="4" width="1" height="2"></rect>
-                <rect x="1" y="6" width="2" height="4"></rect>
-                <rect x="2" y="10" width="1" height="2"></rect>
+            <g class="scene-anim scene-fork anim-layer anim-fork" transform="translate(116 92)">
+              <g fill="#b0b8c0">
+                <rect x="0" y="0" width="10" height="2"></rect>
+                <rect x="0" y="2" width="2" height="6"></rect>
+                <rect x="3" y="2" width="2" height="6"></rect>
+                <rect x="6" y="2" width="2" height="6"></rect>
+                <rect x="4" y="8" width="2" height="12"></rect>
               </g>
             </g>
-            <g transform="translate(116 86)">
-              <g class="scene-anim scene-fork" fill="#b0b8c0">
-                <rect x="0" y="0" width="14" height="2"></rect>
-                <rect x="0" y="2" width="2" height="8"></rect>
-                <rect x="4" y="2" width="2" height="8"></rect>
-                <rect x="8" y="2" width="2" height="8"></rect>
-                <rect x="12" y="2" width="2" height="8"></rect>
-                <rect x="6" y="10" width="2" height="22"></rect>
-              </g>
-            </g>
-            ${pxRects(
-              [
-                [134, 82, 4, 26],
-                [132, 80, 8, 2],
-                [132, 108, 8, 2],
-              ],
-              "#9a7048",
-            )}
-            ${pxRects(
-              [
-                [130, 80, 12, 6],
-                [132, 78, 8, 2],
-              ],
-              "#88b8d0",
-            )}
-            ${pxRects([[133, 82, 6, 2]], "#d4a060")}
-          `;
+          `
             break;
           case "take_nap":
             art = `
-            ${pxRects([[0, 0, 160, 160]], surfaceDark)}
-            ${pxRects([[0, 104, 160, 56]], surface)}
-            ${pxRects(
-              [
-                [8, 60, 18, 10],
-                [8, 70, 10, 54],
-                [18, 70, 14, 8],
-                [18, 116, 14, 8],
-                [118, 88, 8, 28],
-              ],
-              border,
-            )}
-            ${pxRects([[20, 88, 104, 22]], accent)}
-            ${pxRects(
-              [
-                [20, 92, 104, 4],
-                [20, 100, 104, 4],
-              ],
-              info,
-            )}
-            ${pxRects([[24, 84, 22, 14]], warn)}
-            ${pxRects([[26, 86, 18, 10]], low)}
-            ${pxRects(
-              [
-                [28, 88, 2, 2],
-                [34, 88, 2, 2],
-                [30, 92, 4, 1],
-              ],
-              bg,
-            )}
-            ${pxRects(
-              [
-                [46, 84, 68, 8],
-                [48, 92, 64, 4],
-              ],
-              text,
-            )}
-            ${pxRects([[50, 86, 60, 4]], surfaceDark)}
-            ${pxRects(
-              [
-                [20, 110, 104, 4],
-                [26, 114, 92, 4],
-              ],
-              border,
-            )}
-            ${pxRects([[104, 8, 40, 40]], border)}
-            ${pxRects(
-              [
-                [108, 12, 16, 16],
-                [126, 12, 14, 14],
-                [108, 30, 14, 14],
-                [126, 30, 14, 14],
-              ],
-              info,
-            )}
-            ${pxRects(
-              [
-                [116, 16, 8, 8],
-                [118, 18, 4, 4],
-                [114, 20, 4, 4],
-              ],
-              "#d4d0a0",
-            )}
-            ${pxRects(
-              [
-                [120, 16, 6, 8],
-                [118, 20, 6, 6],
-              ],
-              surfaceDark,
-            )}
-            ${pxRects(
-              [
-                [92, 50, 56, 4],
-                [88, 54, 60, 4],
-                [84, 58, 64, 4],
-              ],
-              info,
-            )}
-            ${pxRects(
-              [
-                [130, 98, 16, 6],
-                [132, 104, 12, 14],
-              ],
-              "#5a4028",
-            )}
-            ${pxRects([[136, 90, 6, 12]], "#88b8d0")}
-            ${pxRects(
-              [
-                [138, 92, 2, 6],
-                [136, 98, 6, 2],
-              ],
-              "#c0d8e8",
-            )}
-            <g transform="translate(52 88)">
-              <g class="scene-anim scene-breathe" fill="${low}">
-                <rect x="0" y="0" width="28" height="4"></rect>
-                <rect x="4" y="4" width="22" height="4"></rect>
-                <rect x="8" y="8" width="14" height="2"></rect>
-              </g>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADfUlEQVR42u3cMUhUcRwH8J8VBGJI4FJIRIpJFDSYUUTQ0pAOuUSkeyhRQxFB4OAQEi1J2NBYTQ01ZENDgzUd4tKikiGH2CLEUVxFUS1doIjPy3d55/t8tuc7393935fv+797d6+ubV/Hr4ANssUQIIAIIAggAggCiACCACKAUEnbDMHGOrm7edX1YzNTNfV+utraV10/vjCvAdGArNG3H+lub2dD/ZLlj5+L5oA4CQEBxByQjHs/Pbrq+n37BzQgDsFskFzuTuRydwQQzAEzqLPzmkMwaECq4ix5vWfFGhCHYLJ7liyAmAOS3bNkDYgGpHqkfa1XA+IQDAKIAIIAIoAggAggCCDhSgix1jsZ1Nr2NSAOwSCAmANSvrTvXuXuWCCA4bcgVfK8Aog5IFGzvwVZ7/NqQMwByd5dsQQQc0Cye1csDYgAggAigAggCCACCAKIAIIAIoAggAggCCACCAKIAEL4RnQGbE95DxW/Fiu6fQ2IBiQ9OxoazAGhahvwxUhzWY8/c3neqKMBMQckIsYX5jP9fjQgDsEIIAggAggCiACCACKAIIAIIIRrwVTcycF7ERFx9kT7/ZXWP3sz1R8RMT50SQOiAWNwJF/W4ztaDfpm0NH6MyIiJt5t0YBksAGnXx4ei4joHZjsiohoaqw3mptA6TdzU/nFSWfBaMDlDrRujYiInoG3XRERSb2nGWtLPnwOSPggGgQQc8B1678xtGS5t6e7rP9//PR5qq/n/vCgva4B4T9fC87Pza7499Gbff/0f+Xas7fF3taAsEENWGqgpMbrvv5oyfLrV+dTfR2LhaK9rgEh5QZMapbSXK4xYTvPb/dVdA6oAVdXum41OXzuwYrrL4xqQDTgX6f7HyQ84vuatjM7MxcRES1te5csNzUdSfUNJ79eIiIiaZz+rJ+4elEDkuEGbG/ZFWl8v2J585WWCym/4eTXi7NgNGClFBLmdKU5X8G+0YCw6a6EgAYkOw04W9xjlNGACCAIIJtsDnjl1hOjiAZEAEEAydgc8NCxU0Yxw8ZzDzUgGW7AxQ95o4gGpDbVnT5+8JdhQAOSzTlg4dOXdW1gV9ddo5hhH8auaEAcgkEAEUAQQGpH3dFDLT4HRAMigCCACCAIIAIIAogAggAigCCACCAIIAIIAogAggAigCCACCAIIAIIAogAggAigCCAVJffGp+lhKPSW+0AAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="scene-anim scene-z-a anim-layer anim-z" transform="translate(74 54) scale(1)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
             </g>
-            ${zGlyph(108, 88, 1, "scene-z-a anim-layer anim-z")}
-            ${zGlyph(122, 88, 0.8, "scene-z-b anim-layer anim-z anim-z-2")}
-            ${zGlyph(136, 88, 0.6, "scene-z-c anim-layer anim-z")}
-          `;
+            <g class="scene-anim scene-z-b anim-layer anim-z anim-z-2" transform="translate(86 50) scale(0.8)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
+            </g>
+            <g class="scene-anim scene-z-c anim-layer anim-z" transform="translate(98 56) scale(0.6)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
+            </g>
+          `
             break;
           case "zoom_meeting":
             art = `
-            ${pxRects([[0, 0, 160, 72]], surface)}
-            ${pxRects([[0, 72, 160, 26]], surfaceDark)}
-            ${pxRects([[0, 98, 160, 62]], surface)}
-            ${pxRects(
-              [
-                [18, 118, 124, 8],
-                [30, 126, 100, 8],
-              ],
-              border,
-            )}
-            ${personGroup(18, 54, text, "scene-person")}
-            ${pxRects([[68, 12, 78, 60]], border)}
-            ${pxRects([[72, 16, 70, 52]], bg)}
-            <g class="scene-anim scene-recdot anim-layer anim-recdot" transform="translate(74 15)"><rect x="0" y="0" width="4" height="4" fill="${critical}"></rect></g>
-            ${pxRects(
-              [
-                [82, 14, 2, 10],
-                [84, 14, 4, 2],
-                [84, 18, 4, 2],
-                [88, 16, 2, 2],
-                [86, 20, 2, 4],
-                [88, 22, 2, 2],
-                [90, 14, 2, 10],
-                [92, 14, 4, 2],
-                [92, 18, 4, 2],
-                [92, 22, 4, 2],
-                [98, 14, 6, 2],
-                [98, 16, 2, 6],
-                [98, 22, 6, 2],
-              ],
-              text,
-            )}
-            ${pxRects([[104, 14, 6, 2]], low)}
-            ${participantTile(80, 26, info, warn, accent, borderDark, "scene-anim scene-blink-a", "")}
-            ${participantTile(108, 26, good, low, warn, critical, "scene-anim scene-blink-b", "scene-anim scene-talk-a")}
-            ${participantTile(80, 46, low, warn, info, borderDark, "scene-anim scene-blink-c", "")}
-            ${participantTile(108, 46, accent, good, low, borderDark, "scene-anim scene-blink-d", "")}
-            <g transform="translate(110 28)">
-              <g class="scene-anim scene-speaker" fill="${warn}">
-                <rect x="0" y="2" width="2" height="16"></rect>
-                <rect x="2" y="0" width="20" height="2"></rect>
-                <rect x="22" y="2" width="2" height="16"></rect>
-                <rect x="2" y="18" width="20" height="2"></rect>
-              </g>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADxklEQVR42u3dv2sUeRjA4TeHgliYZgjahIBNCkFYAjbC/QFnYbWIXLHF2VhEJAFXDq6wirgipkijRSo5coUpcq0gpFAIAb1DtjpkmpMwjXKEE0Qt1hQrZrPBnZ2Z3edp4maX5MvMxzcz+3Pi2ZPHnwIK8oNNgAARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESAIEAGCABEg9OOITXA4Vxfv9rx+pbVgI5mACHBMZFkWWZbZEAKkiibK/t4w9caNUq0nSaYOmIg7pVrv2uptExAqfxa88263JOt4XYntNXXiuGNAGLn7AWdOzpRqPa/fdCbi3Jm5iIhId9v5HMsd8AegfjycBYNHQvax2qz1vL6xtF3o+l6uNHte324sdV0+NzsbERHP2+1wPyCYgOOl6pPPBMQEpH9VPcs1AREgCBDHgEU42WxFRETzwNtdjoiIN0uLQ13fRq1zcJc+XO7rdhe2d8MEBAEiQBAgAgRnwd827LPawxq1s1oTEBMwhvAM5LLa+ee/8JoQExATMB97r72wPseAMH4TcDfdLtV6Xr372P2quNT7xJiAmIBlM3+596vilh8VO1k3Wud7Xn9hcdMEBAEiQBAgAgQBIkCIst8P+Nu1K9/8/q37D3L9vRdraxERkbYPul3n6/p2fag7YLqVRETE1Wj3dbt0MTMBoXITcOXXn7suZ3P3Ov9I1+0Fx4AwJo8F702+ZOt65/LUj/aCCQgjNgGTnaddl3/5/1LnH5vPv3zny+W08+Xhsd+7J+WAJuOwz2oPa9TOak1ATMAYwjOQy2br763wSUkmIP4EgwAZ92PAvbPYZnrqULfHBAQBIkAQIAKE6j4S8mG9v091/Pp9TFvzk1HFe/YxATEBB2dt9Xap1lNv3KjUek1AECAChCKOAb8+mwUTEAGCABEgAgQBIkAYuolnTx5/qtKC2/+We32zp0RlAhIeCclJlpX7vVTqN+9ElZ/tYwJiAn7XMdqfy7kuOKnNj9QOyHt7DfwY96d5ExATcF/T0zmfBmZ/DPTHNe4W+65WuW8vx4Dg84L3tbowpwITEAGCABm7Y8C/Ngf7SUWnvQRkpA26FxOQYidgMlMb6A9MX/T3P2Ty7EVbv0Te9rnfkgHvNxOQYifg0ffFPMGuqN9LufabCUi4GwYBggARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESACBAEiQBAg4dMyv0cye85WraCi9psJiD/BCBAEiABBgAgQBIgAIVefATpgsvMxHcRzAAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="scene-anim scene-recdot anim-layer anim-recdot" transform="translate(106 32)">
+              <rect x="0" y="0" width="6" height="6" fill="#e03030"></rect>
             </g>
-            ${pxRects([[78, 64, 58, 6]], border)}
-            ${pxRects([[82, 66, 8, 2]], good)}
-            ${pxRects([[94, 66, 8, 2]], accent)}
-            ${pxRects([[106, 66, 8, 2]], info)}
-            ${pxRects([[118, 65, 14, 4]], surface)}
-            ${pxRects(
-              [
-                [120, 66, 2, 4],
-                [118, 68, 6, 2],
-                [121, 70, 2, 4],
-              ],
-              text,
-            )}
-            ${pxRects(
-              [
-                [128, 65, 2, 2, "anim-layer anim-eye"],
-                [126, 67, 2, 2, "anim-layer anim-eye"],
-                [124, 69, 2, 2, "anim-layer anim-eye"],
-              ],
-              critical,
-            )}
-            ${pxRects(
-              [
-                [66, 72, 82, 10],
-                [74, 82, 66, 8],
-              ],
-              borderDark,
-            )}
-            ${pxRects([[70, 74, 74, 6]], surface)}
-            ${pxRects(
-              [
-                [74, 76, 6, 2],
-                [82, 76, 6, 2],
-                [90, 76, 6, 2],
-                [98, 76, 6, 2],
-                [106, 76, 6, 2],
-                [114, 76, 6, 2],
-                [122, 76, 6, 2],
-              ],
-              border,
-            )}
-            ${pxRects([[98, 83, 12, 6]], info)}
-            ${pxRects([[102, 85, 4, 2]], accent)}
-            ${pxRects([[78, 92, 50, 4]], "#334466")}
-            ${pxRects([[78, 92, 18, 4]], good)}
-          `;
+          `
             break;
           case "heavy_async":
             art = `
-            ${sky}
-            ${floor}
-            ${pxRects([[52, 16, 56, 92]], borderDark)}
-            ${pxRects([[58, 22, 44, 78]], bg)}
-            ${pxRects([[72, 18, 16, 2]], border)}
-            ${pxRects(
-              [
-                [64, 34, 4, 4],
-                [64, 50, 4, 4],
-                [70, 64, 4, 4],
-                [64, 80, 4, 4],
-              ],
-              "#cc6644",
-            )}
-            ${pxRects(
-              [
-                [72, 32, 20, 3],
-                [72, 48, 18, 3],
-                [78, 62, 14, 3],
-                [72, 78, 18, 3],
-              ],
-              text,
-            )}
-            ${pxRects(
-              [
-                [72, 37, 16, 2],
-                [72, 53, 12, 2],
-                [78, 67, 10, 2],
-                [72, 83, 14, 2],
-              ],
-              border,
-            )}
-            ${pxRects(
-              [
-                [18, 30, 24, 16, "anim-layer anim-badge"],
-                [112, 46, 26, 16, "anim-layer anim-badge anim-badge-2"],
-                [20, 80, 30, 18, "anim-layer anim-badge"],
-              ],
-              low,
-            )}
-            ${pxRects(
-              [
-                [22, 34, 14, 2],
-                [116, 50, 16, 2],
-                [24, 84, 18, 2],
-              ],
-              bg,
-            )}
-            <g transform="translate(86 58)">
-              <g class="scene-anim scene-thumb" fill="${low}">
-                <rect x="0" y="0" width="10" height="18"></rect>
-                <rect x="8" y="4" width="8" height="10"></rect>
-                <rect x="2" y="16" width="8" height="10"></rect>
-              </g>
-            </g>
-            ${pxRects([[76, 102, 8, 2]], border)}
-          `;
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAEjElEQVR42u3dPYgcZRwH4P9JbLZwm+VImnBoc4UiJOJV0RQWCwqaQisLLQSxOIWAChIL06gY0CuCYGEKsYjFKShsISF+FDlRQWJxlRxCiBzbrMWCVSziqrvcktmbz3fnebo9bmd3Z3/3u3ln3plZuXZl+1ZATe6yChBABBAEEAEEAUQAQQARQCjTEaugndY75xf6/d3xOQ2IBqRlzTf7vKKbUAOSRgOub11YbJth86y1iwYk8QZctPlmn6cJ09Dd+Gnq8WjnpAbEv2BaYrRzsrLWE0DS3w/Y3f5u+i/ozClrM+rbb1fWkQoNiAY8cJvhn8abbULS3xbUgGjAyrd1Mu5vbPt+xcn+ujpGrBoQDThvW5A0ttEmo2XzAaHJ8wEno2sNW455jVbWvD8NSCOtZL06VtnzAY2Cw2QEaOw24LzmqXve3zPPveZb/J/Ll97RgFDZKLio5su7nP0/x63+Ilfv6dgGBAFEAKH1V0boDx6q5XUH/R8jIuLq/WulLP/0r3saEDRgxiaqy7I1lQZEA7K86rr2jwZEA5bhw4+/SOJ9vvj8kxER8cdg9VDPP9rfr7T5ip4DoAHRgGU2SyryNplRMGhAouBzcqLksx81IGk04Ns/byy04NdP7NT6wco+Ftt//4daPtfglYcreZ2qrv2jAWl2Ay7afLPPq6sJyz4WW1UTGQVDyqPg3v43B/58uPpoJc+n2df+0YCk2YDbZ49NPT5z4WY4FhzlHSs+nW1Uv2sbECpowEnjzTahY8HlOHp1L9N5wZfjcOdjmw+IBizDvNHqmy+/cODP3/rgI6PdGtR17R8NSNoNeNjR78U3np16/MSrnxT6wX4brDVyhd/b3yv3vOVxNc2oAdGARfry3duNOCy4aaIl5y3/e3WsS2E/IBTWgJPZLHnnA84e0x1//e2Bz+vE7Z93HnvEaDjMhoFmbAPOm9dX97y/ebIeO42MRyCacmx52Y7waEDSHgU3rfmyHjtte/NoQKhyP+BkFNv59HyuY8hoQBBABBBcG4Yo9V56Zd97TgPSrgZ8abiZ7Re3RlMP39vsxjLeK60qi95Lr6r1qQGxDZjS/XHvtE2V2v16jYLRgLTHnWYJFX0MXQOiARcZzVKNbq8XERGj4TBsA6IBaZe6m08DogGJ5GeKa0A0IOlY/P4mOxoQDciSyHp/k/+uNWM+IBqQaMmd5Ks+/1kDogGJ1l5bRgOiASPhs8byLq/tM6g1IGk34O5XW9biEq+/2fe3/vhmaEA04MTx48cSXwU3an318tffjVzn+Zb9/jQgtVq5dmX7Vp4FjK9/Zi22SOeBpzUgYTcMCCDpj4Kvf/95rgXc5zTfVsmbFw1Isxqwt3Yi1wJ+/yXbX0T3waes7QYbZfweewV/jxqQehvw7r9uVvJCVb0OaX2PGpCwGwYBBAFEAEEAEUAQQAQQBBABBAFEAEEAEUAQQAQQBBABBAFEAEEAEUAQQAQQBBABBAFEAEEAEUAQQAQQAQQBRABBABFAEEAEEASQ5XYk7wJ66xvW4hKo63vUgPgXjACCACKAUKm/ATlqIm/jdtH9AAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <rect x="8" y="16" width="10" height="10" rx="3" fill="#e83030" class="anim-layer anim-bubble" opacity="0.85"></rect>
+            <rect x="124" y="12" width="10" height="10" rx="3" fill="#e8c030" class="anim-layer anim-bubble" opacity="0.85"></rect>
+            <rect x="8" y="52" width="10" height="10" rx="3" fill="#3080e8" class="anim-layer anim-bubble anim-bubble-2" opacity="0.85"></rect>
+            <rect x="128" y="44" width="10" height="10" rx="3" fill="#e83030" class="anim-layer anim-bubble anim-bubble-2" opacity="0.85"></rect>
+          `
             break;
           case "deep_work":
             art = `
-            ${sky}
-            ${floor}
-            ${deskGroup(42, 92, borderDark)}
-            ${personGroup(44, 54, text, "scene-person")}
-            ${pxRects(
-              [
-                [52, 46, 16, 2],
-                [50, 48, 2, 10],
-                [68, 48, 2, 10],
-              ],
-              border,
-            )}
-            ${pxRects(
-              [
-                [50, 54, 2, 6],
-                [68, 54, 2, 6],
-              ],
-              borderDark,
-            )}
-            ${pxRects([[84, 14, 34, 6]], "#cc4444")}
-            ${pxRects(
-              [
-                [88, 16, 8, 2],
-                [98, 16, 10, 2],
-              ],
-              "#ffaaaa",
-            )}
-            ${pxRects([[82, 22, 50, 34]], borderDark)}
-            ${pxRects([[86, 26, 42, 26]], bg)}
-            <g class="scene-anim scene-code-scroll anim-layer anim-code-scroll">
-              ${pxRects([[90, 30, 10, 2]], good)}
-              ${pxRects([[102, 30, 14, 2]], info)}
-              ${pxRects([[90, 36, 18, 2]], accent)}
-              ${pxRects([[110, 36, 10, 2]], good)}
-              ${pxRects([[90, 42, 16, 2]], info)}
-              ${pxRects([[108, 42, 4, 8, "scene-anim scene-cursor anim-layer anim-cursor"]], warn)}
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAE2klEQVR42u3dXWiVdRwH8J/ibka0iDEISqwR7KIhLMmCXRhE7Mp24cC7SorKJEIjEmyRCUFoWBgUyrqLgV6sITQlyEDohRGJEYdgJSuc2CjXxSAG2cXxyW2dc3aOO885z3n2+dzI8TzP2ePz//rd837WnRkfvR7QJOutAgQQAQQBRABBABFAEEAEEAQQAQQBRABBABFAqIcNK01wcfyjpi5g7/bnjJIGBAFEAEEAEUAQQAQQIt3jgIXpmaYuYK8x0oDQtAbs2XhXRET0FxZKvn++py0iIsY63y75/uDs/uL8g2XmH2szChoQMtqAWfPsnmGjVsHxYwc1IOS2ARNX/5o3eot03d5uGxAEEAGE3G8DLjcwsSWTyzUxMFlcvqPf1ufzXn5IA4IGLNM0mV2+nDWXBmRtNWByzrec5Jxv2fmd80UD4nrASOd6wHM7zt3S5287tS3Vvehk2/TDjz+ty+c9//QTmQrQya7Riu8PXd2pAcnB9YBjgx2lt/3G5orTFUpfD1jo2X9j/n1l5j9Sl39I0mRZ3YvOWnPZBoQ8HQckHS9+d6Dyb56BBzQgGjBz6nXuNRp0huTniU1VTX/fwCXbgKABc3buNW/NpgERQBBAbANm+Yroep+rjTV2huTcxA8V3x/q04Bk2Loz46PXo4FPyT9xfi7Vf9ClK1djLd8XXO8nI6x0JmQlH/Qd0oC4HnCRdms9w9787X17wWjAWH49YL2cny69DfhMf0dV35SUPB2rvf22lj4H7G45DYjjgDed/eZiREQ8vrVXo2Rp77qra+nrzvUaEL+C6+7w6ctx+PRlIyKAkONtwGRvd/CxzRERMf/IO8W92q9ejdWc8bh5RfGmqOa6u0Y9TSvv9wVrQDRgNZLG+8+WPcXmW5he8nowKabJY8U/57+OiIip9ofrekVxo5+m5b5gDYgAggDiTEj6bvVpWWlLnmFzavLXWHqd5IxnRENuG3Ds8wvFvdzXjtc0fd+T7xX/4s8fG/q0rHBVTEk9n1yr+P6juw5oQDRg3SzU2Hykq9BzR+lmLFyzDYgGpEo7ttyTyeV64+6Xlrz+YuRQxeazF4wGrMXu4d1VTln8XpGzoyMREbFv567Iw/fjogFppQZcflfaaiWNVquOn0ZSufO/VsldeeU0e/k0IORxL/jE6eLxwKG9Bq0ZbvU4nwZEAy62fG/25Luv1DR/uemH9h42mrYBQQARQBBABBAEEAEEAUQAIVr7iui8n/GY/mNpJ0xNTS153d3dHRERG+/8RwPCmr8nZHljpO31g4dWWJ7K8+eluTQgGjALZmdnW2p53xo+WlPDJtt8GhBasQFnvqz8bZv9D96/qs/r7H1hTQ7cSutVA0IWGnBjnb9r7n/mxmqa/Kkjk7kYuNTX6w2Fqd81ILF2vzF9tdp+GbeWW9jCvds1IOEwDAgg+dsLnv7+s1R/QHeHldzK0s6HBqS5Ddi5qS/d/0EXqjtO17F50Gg00FyV49KZ8rhoQJrbgG1/z2RiQbKyHDR2XDQg4TAMAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAIIAogAggAigCCACCAIIPm2Ie0f0Nmz1VrOoKyMiwZEABFAEEAEEBrqX9VmDr08gsQJAAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="scene-anim scene-steam-a anim-layer anim-steam" transform="translate(32 62)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+              </g>
             </g>
-            ${pxRects(
-              [
-                [82, 58, 50, 4],
-                [94, 62, 24, 4],
-              ],
-              border,
-            )}
-            ${pxRects(
-              [
-                [36, 38, 8, 8],
-                [126, 38, 8, 8],
-              ],
-              accent,
-            )}
-          `;
+            <g class="scene-anim scene-steam-b anim-layer anim-steam anim-steam-2" transform="translate(38 58)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+              </g>
+            </g>
+            <rect x="94" y="70" width="4" height="6" fill="#b8d8ff" class="anim-layer anim-cursor"></rect>
+          `
             break;
           case "late_night_ai":
             art = `
-            ${pxRects([[0, 0, 160, 98]], surfaceDark)}
-            ${pxRects([[0, 98, 160, 62]], bg)}
-            ${pxRects([[6, 10, 42, 52]], border)}
-            ${pxRects([[8, 12, 38, 48]], borderDark)}
-            ${pxRects([[6, 34, 42, 2]], border)}
-            ${pxRects([[26, 10, 2, 52]], border)}
-            ${pxRects([[32, 16, 10, 10]], "#d4d0a0")}
-            ${pxRects([[36, 17, 5, 7]], borderDark)}
-            ${pxRects(
-              [
-                [12, 20, 2, 2],
-                [18, 40, 2, 2],
-                [10, 50, 2, 2],
-              ],
-              "#c0d8ff",
-            )}
-            ${pxRects([[82, 22, 52, 36]], borderDark)}
-            ${pxRects([[84, 24, 48, 32]], "#050d14")}
-            ${pxRects([[88, 28, 12, 2]], good)}
-            ${pxRects([[102, 28, 20, 2]], info)}
-            ${pxRects([[88, 34, 26, 2]], accent)}
-            ${pxRects([[116, 34, 8, 2]], good)}
-            ${pxRects([[88, 40, 18, 2]], info)}
-            ${pxRects([[108, 40, 14, 2]], warn)}
-            ${pxRects([[88, 46, 28, 2]], accent)}
-            ${pxRects([[118, 46, 4, 8, "scene-anim scene-cursor anim-layer anim-cursor"]], warn)}
-            ${pxRects([[102, 58, 10, 6]], borderDark)}
-            ${pxRects([[96, 64, 22, 4]], borderDark)}
-            <g transform="translate(82 22)">
-              <g class="scene-anim scene-late-glow anim-layer anim-glow">
-                <rect x="0" y="0" width="52" height="36" fill="${info}" opacity="0.10"></rect>
-                <rect x="6" y="6" width="12" height="2" fill="${good}"></rect>
-                <rect x="20" y="10" width="20" height="2" fill="${info}"></rect>
-                <rect x="6" y="16" width="26" height="2" fill="${accent}"></rect>
-                <rect x="6" y="22" width="30" height="2" fill="${warn}"></rect>
-              </g>
-            </g>
-            ${deskGroup(38, 92, borderDark)}
-            ${pxRects([[94, 116, 56, 8]], borderDark)}
-            ${pxRects([[138, 124, 8, 18]], borderDark)}
-            ${personGroup(42, 54, text, "scene-person")}
-            ${pxRects([[58, 88, 26, 4]], borderDark)}
-            ${pxRects([[60, 89, 22, 2]], "#334455")}
-            ${pxRects([[134, 84, 12, 10]], "#7a5838")}
-            ${pxRects([[146, 86, 2, 6]], "#7a5838")}
-            ${pxRects([[136, 84, 8, 2]], "#c87840")}
-            <g class="scene-anim scene-coffee-steam anim-layer anim-coffee-steam" transform="translate(137 74)">
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAESElEQVR42u3dTWgcZRwH4H9iAjVsXROX1Ehdo4IiVCweKhT1JCgoxaNID5734qV49lgkFy85eyheeikFQTx4LBhEIvQQC9Yai7ZhaVmzXbdtTLwYaIbuR5qdndmd57ls23zsm5lffp133pndifnK4k5ARiZtAgQQAQQBRABBABFAEEAEEAQQAYQ0TCX/4WT1pa5f8NONP3P9A73+9DNdP35p/Yq9rgGhQwP20mxvDeSJK0+U9vy9/nfT3tCAIIAIIOT0GDBtV39Z7uvzXni5Zu9pQMgogCsrS7GysmQLogEp4DHgiRNnbD00IAIIAogAggBiJSSS5wvTmDV3WjH55N2zY7WDDpcPd/34ZmNTA0JuG9D5wsFqNBoREVEulx0DwthdDZM3j03nazzJ5st6fP/e14BowME56HV+by9WUxnX9MLxTLZHr4KZzuhQ8P5fq44BKeAkJOvrAF2HaCUEsjsGzPq8nvOKGhCya8DkKxoMSlrfd1A2rv4oLQ+YfXxKA+I8IClbPPZeps9/7fK3jgHRgDHoV7FK7dWx5ubGckdVKpWhPl+9XjcLJpyGAQFEAMPaLxoQ5wGHdNdbWPvNZFaqAdGAGio/0l6J0IBoQPpXOjaf6fM3L29oQNCAGZupDPd2tFa94RgQBBABBAFEAMEsOCPjOivVgGjAcbTeWouIiKOJWyuu1ycLvRKhAdGARbD01fcREVGrJV9/8Eq4DzjcF4wGLITl5b3vL/LRB++E+4DDfcFowL6UDg2mNNv32ql8311rMbPn77Xaw6/cnqs+/LWfb62vSscBnPrwVEREXLxwUQMyRg3Yvte01ehpt/l6NaEGxCyY8bkPONl4jgHJtYn5yuLOOP+AnWa5/c56d9+L7fY/WxERcfrcH3s+/t2Zt3L1827cuBbDfI1o7xVHuBgBBBCz4AI4d/pZG+EBX3x8dF+f/9nX1zUgZsFDc6h85JG+rt24mct3TM+bVxe29/X5q+uTGhDHgCPjjS9/m078sqb6+MOnz//eYzyv/P/H7Tw8ts4+d9csGA04rtbOf777G7+TaICJlB57jaeeGE+mj9V9bs/j1W0NiFkwHfSadR907XXQko3mGJCwFAcCiACCACKAIICElZDRMzd/ZKTGe2vjZq7H52oYNOAoabVaMcorKXlbOXEMiAbs5uSL+RrP2ubMSO3Qxt3NIW/P7h126VcNiAbsX2W2lKvxvDl750Bf/83PzYJvz6YGRAMW1vuvlWwEDYgAggAigCCAmAV3UL/d33mzXmfYiZFYsdKA+C8YAQQBRABBABFAEEAEEFI1VXlyayQXZ/I3botoj7KfNCDZxrh5p52vET3V3xXEuRt30QxoP2lATEIQQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAEUAQQApqorpQ2bEZ0IAU0n9xVQaWvb9s0QAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="scene-anim scene-steam-a anim-layer anim-steam" transform="translate(144 62)">
               <g fill="#c0c8d4">
-                <rect x="0" y="0" width="2" height="6"></rect>
-                <rect x="3" y="2" width="2" height="5"></rect>
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
               </g>
             </g>
-            <g class="scene-anim scene-star-a anim-layer anim-star" transform="translate(58 6)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
-            <g class="scene-anim scene-star-b anim-layer anim-star" transform="translate(148 8)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
-            <g class="scene-anim scene-star-c anim-layer anim-star" transform="translate(66 14)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
-            <g class="scene-anim scene-star-d anim-layer anim-star" transform="translate(154 4)"><rect x="0" y="0" width="2" height="2" fill="${warn}"></rect></g>
-          `;
+            <g class="scene-anim scene-steam-b anim-layer anim-steam anim-steam-2" transform="translate(150 58)">
+              <g fill="#c0c8d4">
+                <rect x="1" y="0" width="2" height="6"></rect>
+                <rect x="0" y="2" width="1" height="2"></rect>
+                <rect x="3" y="4" width="1" height="2"></rect>
+                <rect x="1" y="6" width="2" height="4"></rect>
+              </g>
+            </g>
+            <rect x="72" y="32" width="72" height="50" fill="rgba(80,160,255,0.06)" class="scene-anim scene-late-glow anim-layer anim-glow"></rect>
+            <rect x="14" y="18" width="2" height="2" fill="#d8d8b0" class="scene-anim scene-star-a anim-layer anim-star"></rect>
+            <rect x="24" y="28" width="2" height="2" fill="#d8d8b0" class="scene-anim scene-star-b anim-layer anim-star"></rect>
+            <rect x="10" y="36" width="2" height="2" fill="#d8d8b0" class="scene-anim scene-star-c anim-layer anim-star"></rect>
+          `
             break;
           default:
             art = `${sky}${floor}`;
@@ -11516,7 +11010,7 @@ P = drain - 0.5*recovery</pre
         const PAD_R = 4;
         const PAD_T = 22;
         const PAD_B = 32;
-        const viewW = 400;
+        const viewW = target.clientWidth || 400;
         const viewH = 200;
         const plotW = viewW - PAD_L - PAD_R;
         const plotH = viewH - PAD_T - PAD_B;
@@ -11602,12 +11096,20 @@ P = drain - 0.5*recovery</pre
           : (APP.demo?.S ?? 30);
         const eY = toY(currentE);
         const sY = toY(currentS);
+        const currentX = events.length
+          ? toX(events[events.length - 1].simClockAfter)
+          : toX(APP.demo.simClock || new Date().toISOString());
+        const nowCircles = events.length
+          ? `<circle cx="${currentX}" cy="${eY}" r="5" fill="none" stroke="var(--px-good)" stroke-width="2"></circle>
+             <circle cx="${currentX}" cy="${sY}" r="5" fill="none" stroke="var(--px-accent)" stroke-width="2"></circle>`
+          : "";
         target.innerHTML = `
-        <svg class="demo-timeline-svg" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges">
+        <svg class="demo-timeline-svg" viewBox="0 0 ${viewW} ${viewH}" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join("")}
           ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(" ")}"></polyline>` : ""}
           ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="3" points="${stressPoints.join(" ")}"></polyline>` : ""}
+          ${nowCircles}
           ${icons}
           ${tickLabels.join("")}
           <text x="10" y="${eY}" dominant-baseline="middle" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" font-weight="700" fill="var(--px-good)">E</text>
@@ -12986,7 +12488,7 @@ P = drain - 0.5*recovery</pre
         DOM.layer2PressureNode.style.borderColor = pressureTone;
         DOM.layer2PressureNode.style.color = pressureTone;
 
-        const width = 720;
+        const width = DOM.layer2Circadian.clientWidth || 720;
         const height = 160;
         const margin = { top: 16, right: 20, bottom: 28, left: 36 };
         const innerWidth = width - margin.left - margin.right;
@@ -13000,7 +12502,6 @@ P = drain - 0.5*recovery</pre
         };
 
         const svg = buildSvgRoot(width, height, `0 0 ${width} ${height}`);
-        svg.setAttribute("preserveAspectRatio", "none");
         const baselineY = scaleY(yMin);
         const area = document.createElementNS(SVG_NS, "polygon");
         const line = document.createElementNS(SVG_NS, "polyline");
@@ -13697,7 +13198,7 @@ P = drain - 0.5*recovery</pre
           subtitle = "ActivityWatch only";
           color = "var(--px-good)";
           tip =
-            "ActivityWatch connected — ODE model offline. Run the Flask backend at localhost:7070 for full scoring.";
+            "ActivityWatch connected — energy model offline. Run the Flask backend at localhost:7070 for full scoring.";
           key = "aw";
         }
 
