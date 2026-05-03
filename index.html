@@ -15,6 +15,16 @@
       href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap"
       rel="stylesheet"
     />
+    <link
+      id="editorial-fonts"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="
+        if (document.body && document.body.dataset.theme === 'editorial')
+          this.media = 'all';
+      "
+    />
     <style>
       :root {
         --bg: #0f0f13;
@@ -4958,6 +4968,71 @@
       }
 
       /* ─────────────────────────────────────────────────────────────
+         EDITORIAL THEME — glass + Manrope aesthetic from madison-ui
+         ───────────────────────────────────────────────────────────── */
+      body[data-theme="editorial"] {
+        --px-bg: #e8e8ec;
+        --px-bg-top: #eaeaef;
+        --px-bg-bottom: #dfe0e6;
+        --px-surface: rgba(255, 255, 255, 0.76);
+        --px-surface-2: rgba(255, 255, 255, 0.52);
+        --px-surface-3: rgba(255, 255, 255, 0.36);
+        --px-panel: rgba(255, 255, 255, 0.8);
+        --px-panel-soft: rgba(255, 255, 255, 0.55);
+        --px-border: rgba(170, 172, 200, 0.28);
+        --px-border-2: rgba(200, 202, 225, 0.55);
+        --px-text: #18182a;
+        --px-muted: #7878a0;
+        --px-good: #3d8a5e;
+        --px-warn: #9a6820;
+        --px-low: #b05530;
+        --px-critical: #923030;
+        --px-accent: #6e78c8;
+        --px-info: #3d7a9a;
+        --px-focus: #6e78c8;
+        --px-energy: #3d8a5e;
+        --px-stress: #923030;
+        --px-recovery: #3d7a9a;
+        --px-accent-soft: rgba(110, 120, 200, 0.1);
+        --px-energy-soft: rgba(61, 138, 94, 0.12);
+        --px-stress-soft: rgba(146, 48, 48, 0.1);
+        --px-recovery-soft: rgba(61, 122, 154, 0.1);
+        --px-button-surface: rgba(255, 255, 255, 0.72);
+        --px-button-surface-strong: rgba(255, 255, 255, 0.9);
+        --px-button-shadow: rgba(50, 50, 90, 0.12);
+        --px-font-ui:
+          "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+          Arial, sans-serif;
+        --px-font-body:
+          "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+          Arial, sans-serif;
+        --px-font-mono: "DM Mono", "SF Mono", monospace;
+        --panel-radius: 22px;
+        --panel-shadow:
+          0 2px 28px rgba(50, 50, 90, 0.07), 0 1px 6px rgba(50, 50, 90, 0.05);
+        background: var(--px-bg);
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+      }
+
+      /* Glass blur on panels for editorial */
+      body[data-theme="editorial"] #self-log-dock,
+      body[data-theme="editorial"] .header-shell,
+      body[data-theme="editorial"] #battery-card,
+      body[data-theme="editorial"] #layer-1,
+      body[data-theme="editorial"] #layer-2 {
+        backdrop-filter: blur(20px) saturate(120%);
+        -webkit-backdrop-filter: blur(20px) saturate(120%);
+      }
+
+      /* Hero battery number: DM Serif Display */
+      body[data-theme="editorial"] #battery-pct-display,
+      body[data-theme="editorial"] .battery-hero-num {
+        font-family: "DM Serif Display", Georgia, serif;
+        font-weight: 400;
+      }
+
+      /* ─────────────────────────────────────────────────────────────
          LIGHT-MODE OVERRIDES — apply to any theme that flips
          data-color-mode="light" (light + pastel). Keeps the original
          arcade aesthetic intact for dark themes; surgically lightens
@@ -7449,6 +7524,21 @@
               <span>LIGHT</span>
             </button>
             <button
+              type="button"
+              class="theme-swatch"
+              data-theme="editorial"
+              aria-pressed="false"
+              title="Editorial (glass)"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #e8e8ec"></span
+                ><span style="background: #6e78c8"></span>
+                <span style="background: #3d8a5e"></span
+                ><span style="background: #9a6820"></span>
+              </div>
+              <span>EDITORIAL</span>
+            </button>
+            <button
               id="theme-mode-toggle"
               type="button"
               aria-pressed="false"
@@ -9510,8 +9600,8 @@ P = drain - 0.5*recovery</pre
           case "go_outside":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAEaElEQVR42u3dMWgbZxgG4M9tBxM6GVMyGFE6BFE6dOjgwXQ0oemQoUMJxWTwUEowpZRiKHQopYRSSsjgyUMpIXTo4KEB4cFkyBBChwwehKcgPBRjPBoPLumgCmJV0kk+Sfff6XkWx6fz6Xz35tV/+iV57qPNxy8DCvKaQ4AAIoAggAggCCACCNPwhkMwWx5tNnL9/I271zUgGpCS++dwZ6T1X1+6aQyIixAQQASQCdvffRD7uw8EEFwFz1jzRUS8t/pZz+81IGjA8TdNKrr3p6rNpwHRgMZYaEA0YJXHWPe/XB5p/Y17T6cypp3U3K4GRAOS7ph23K/n04BowFk26hjP84YaEAEEASQBcz4dK+0x32WfF9SAIIAIIAggAgiRwExI3qvIql8VakAwF5wuDawBCTMhZgrQgAggCCAVHgMezK9PdYcan+8bE07QtM/ntbNtDYiHYBBABBAEkCjvXPDS20tj3YHDF4fOQoGKPp8aEK+GeVXzxcmlfm5r58DZNAaEkjegJtOAUFwDTnuuMOv+s+YSSWvud9TzqQEp1xjQ83bVUvT51ICk3YDjfqZcw0alZj7ynk8NiIdgBBAEEAEEAUQAIXw6VgLOH30y+ADe+MNB0oBowBmx9W37b7F9/E37r1K+45BoQCrcgLM+N9tpvG5//tRevvE8vPpFA+IhGAQQV8EVs/H8ZkRE3H9/p+dyNCAasDpO6/M9l6+ffXpxQb33z19pnjmIGhANWPLGQwOiAcnbqMaEGpCUG3B55eL7RA/+SmsHu/dv3PaOj0u9/1lSP58aEA/BCCCkcRW89kHjUhtq/bwy8Pba108c7QKkfj41IJ4HLNL2/O8xcM435/Yexh0p04AkH8BGay0arbW+K2bdniXv9id9+6Sl/vsXdX41IMWOATupvF777X+JfXV552u/9bNMavt59//hm3e6lre/393ufZW3ur4y8Pa11WdT3f9Jbf/dEZovz/5rQAo1V9+ovxxmxfOF83xVe1KuC+7F1mbP5ce1u0PdXnbTOt8akGLHgAv1haFWPDo6ynVHw95PMloZv0erIr9nwedbA5LmTMhJs+vv9ub8j929vao0RVUUdb41IOWYCy7bVSxRimctNCDhxQgIIAggAghTvdj56vRa71tqE77n07QPzL0+y39Z/DAiIr5oftd7hWb7y9b3tyIi4rD1dzmSUND51oB4T0hKftze++9fe33WuDXS9pZqV8vVhMaAaEAydcZ4aEA0YHWcrl4ZePvtJztDbefXFZ+irwHRgGXzQ235wtVrx+JbV0fazvGRq14NiAYsm+7m02gaEAEEAUQAyTO27De+FEAQQAQQBNBYUAAhzIQUOgMy6txvmBvWgGjAytBYGhANOLuvfkEDIoAggAggZkQEEAEEASQ8D1hZ454DjoyZlln/9CwNiAb0/l9jQBBABBCMAb36RQOCACKAIIBeHSOA4Co4Sjz3G959pwHRgOH9v/62nAZEAEEAMQY0B6wBoTD/AjAofVwdIZihAAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
-          `
-        
+          `;
+
           case "connect_people":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD/klEQVR42u3dTWgUdxwG4J+lXkKhRaTQSxDSguRi8Si5tIhQlCK0B7EBRWiQUkIqEtSipyIhSFukhKJSFETaQ0EkWiiBQgiBXkpVSBfaeMhBQUJpQAKVgj2se9h1d901M7vz8TyXsB8zmZ158+Y/M7uzm+4s3noS0CcvWQUIIAIIAogAggAigNALL3f6xOW//sz0Cxl68y1bUwNCSg1Yc3Fpx4Z+4cfDt1OdHxoQBBABBAFEACG5veBWbowerbv9/tVvrd0EZP34a2zweKwGpBgNSLquLL2a6eU7NLxmDEiJG9CYL59GRla6ev7CwqC9YMJhGBBAjAGzbv2Vt3P+CtofBzwxUuloLlML2zUglPY44PahN3K1vJXlB8aAkLkGTPodyN7RbC8YjAHLOsbK29hUA+JTcUX4VFzZm0cDgvcD5l9Wz3BoQDSgveDsjzWTfn+fBkQDhnPDaEAK3YD/DJ7q6vmvrZx1JkTzakCMAUt97rcs7/PTgBS7AZ83pvvv5of1t+Pp7eHTPX2BA49+7+sKHtzxXtvHV27/1JPlWL95vPn62XtOA6IBUzPz+WhEROybvGptR++vvVJz8lr15+z0aN39dx+vhQZEA6bVfDW1v7y7j8u1ghvHeLUxYadjv6S+/6Sx+bLy/SoakGI04NTqsfq9rrkWf9ExX3/H1i9L3YhpuT69peGeAx1Nt3/ybw1IOBDdK1Orx55pT/rn+vSWJu2pATEGjLafQluOQ9Ux3vyVcIWE/quN5XrZZhqQ4jZgx8eL5rtcgiNfPN07JkvNqQGxFwwCiDFgNz5ZHa+7PTP5evX+6YdNnz9jG6RqYeBM3e1zn05ERMTxb75uPgaMCQ2If8EggAggCCACCAKIAIIAEs6ENDp85GiLR6rfpL5eOdNiuurPy9/5xvUktd4eVau/VdpO16vtoQHxLxgBhL7YdGfx1hOrAQ2IAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAJIuD5gjq0vNr9e3sCuiUzOVwOCBkzOpdml5g/MjkVExPjZC13N7/ypsbaPj++yzjUgGjDrum2+xume14QaEAQQAYRwZYTErcxdyPXyD+4e04BgL/gFVe7dz3cDGgOCACKAIIAIICS4F/zr3A/WQoYVfftoQPrbgFu37Sz0C1y790eul7/o20cD4kxImobe/WhD0/9y7asNTf/Owc+kTAOS2Qbc/O8DayFF1q8GRABBABFAEEAEEAQQAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAIVwb5oX9/OP3fZ3/ng8OaEAQQAQQBBABBAFEACEcB0xX2Y/DaUAEEAQQAQQBRABBABFAEEAEEASQQvoffonNkHF2iSgAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -14306,13 +14396,14 @@ P = drain - 0.5*recovery</pre
       const LAST_DARK_THEME_KEY = "pb_last_dark_theme";
       const LIGHT_THEME = "light";
       const DARK_THEMES = ["arcade", "acrylic"];
-      const LIGHT_THEMES = ["light", "pastel"];
+      const LIGHT_THEMES = ["light", "pastel", "editorial"];
       const VALID_THEMES = [...DARK_THEMES, ...LIGHT_THEMES];
       const THEME_LABELS = {
         arcade: "ARCADE",
         pastel: "PASTEL",
         acrylic: "ACRYLIC",
         light: "LIGHT",
+        editorial: "EDITORIAL",
       };
 
       function getPreferredDarkTheme() {
@@ -14375,6 +14466,9 @@ P = drain - 0.5*recovery</pre
         const nameEl = document.querySelector("[data-theme-name]");
         if (nameEl) nameEl.textContent = THEME_LABELS[t] || t.toUpperCase();
         updateThemeModeToggle(t);
+        // Load editorial fonts on demand
+        const editorialFonts = document.getElementById("editorial-fonts");
+        if (editorialFonts && t === "editorial") editorialFonts.media = "all";
       }
 
       function initTheme() {
