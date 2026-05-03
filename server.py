@@ -56,7 +56,7 @@ _cache         = None   # (timestamp, battery, trend)
 CACHE_TTL      = 8      # seconds — both browser and display see the same value per cycle
 
 
-def _try_model_battery() -> tuple[int, str] | None:
+def _try_model_battery():
     """Try to get battery from Flask ODE model. Returns (battery_pct, trend) or None."""
     try:
         with urllib.request.urlopen(MODEL_URL, timeout=3) as r:
