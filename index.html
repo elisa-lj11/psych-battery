@@ -15543,61 +15543,61 @@ P = drain - 0.5*recovery</pre
         {
           targetId: "battery-card",
           title: "YOUR MENTAL METER",
-          body: "This pixel meter shows your current cognitive energy on a 0–100 scale. It updates every few minutes based on what ActivityWatch sees you doing — meetings, deep focus, context switching, sleep, and more.",
+          body: "This pixel bar shows your current cognitive energy on a 0–100 scale — think of it as your mental battery for the day. It updates every few minutes based on what ActivityWatch sees you doing: video calls, deep focus sessions, context-switching, idle time, and after-hours work all push it in different directions. When it drops below 30, the app shows a warning and suggests a recovery activity.",
           pos: "below",
         },
         {
           targetId: "battery-toggle",
-          title: "THREE LAYERS",
-          body: "Tap the meter to reveal more detail. Layer 1 now opens the full diagnostics view: circadian model, state tanks, energy dynamics, and phase portrait. Layer 2 adds the signal breakdown: pressure, drain rows, recovery rows, and the legacy activity window.",
+          title: "THREE LAYERS OF DETAIL",
+          body: "Tap the meter to drill down. Layer 1 opens diagnostics: a circadian daily-rhythm curve showing your expected energy peak, two state tanks (energy E and stress S), and an Energy-Stress map plotting where you are in the phase space right now. Layer 2 adds the full signal breakdown — which specific inputs are draining you most (meetings, async comms, after-hours work) and which recovery signals have been logged (focus blocks, AFK time, naps).",
           pos: "below",
         },
         {
           targetId: "energy-btn",
           title: "RATE YOUR ENERGY",
-          body: "Log your felt energy from 1–10 right now. These self-reports calibrate the model to your personal baseline — the more you log, the sharper the predictions get.",
+          body: "Tap E (or this button) to log your felt energy from 1–10. A quick tap takes about 2 seconds. These self-reports are used to calibrate the model to your personal baseline — the model's predictions are adjusted each time you log, so the more consistently you rate, the more accurate your meter becomes. Aim to log at least 2–3 times a day: morning, afternoon slump, and end of workday.",
           pos: "above",
         },
         {
           targetId: "stress-btn",
           title: "RATE YOUR STRESS",
-          body: "Log your felt stress from 1–10. Stress is a second tank in the model — when it fills up from back-to-back meetings or late-night work, it accelerates energy drain.",
+          body: "Tap S (or this button) to log your felt stress from 1–10. Stress is a separate tank from energy — you can feel low-energy but calm (depleted but not anxious) or high-stress but wired (like after a difficult meeting). When the stress tank is high, the energy drain rate accelerates, so catching a stress spike early lets you intervene with a recovery break before it compounds.",
           pos: "above",
         },
         {
           targetId: "recovery-trigger",
-          title: "LOG RECOVERY",
-          body: "Starting a walk, nap, meal, or break? Tap here to log it. The meter updates in real time as you recover. Choose from 10 activity types — timer-based, toggled, or instant.",
+          title: "LOG RECOVERY ACTIVITIES",
+          body: "Tap R (or this button) to log a recovery activity. The sheet offers 10 types: instant (hydrate, short break), timer-based (walk, nap, breathing — enters a full-screen focus mode with a countdown), and toggle (go home for the evening — stays active until you tap END). Each activity has a different delta E and delta S, calibrated to the research literature. Log early and often — recovery compounds.",
           pos: "above",
         },
         {
           targetId: "timeline-toggle-btn",
           title: "TIMELINE WINDOW",
-          body: "Switch between a 4-hour rolling window (normal view) and a 2-minute accelerated window. The fast mode compresses time so you can watch the model respond to actions in real time — useful for demos and debugging.",
+          body: "Switch the data window between 4 hours (normal view) and 2 minutes (accelerated demo mode). In 4H mode, the diagnostics reflect your actual rolling workday. In 2M mode, time is compressed 120× so you can watch the energy model respond to a logged activity in seconds — useful for seeing how the math works without waiting. The window toggle affects both live data and the demo profiles.",
           pos: "below",
         },
         {
           targetId: "connection-pill",
           title: "LIVE DATA STATUS",
-          body: "This pill shows whether the app has fresh live data, and the small Display chip shows whether the e-ink panel is actively receiving writes. Green = live, amber = stale, red = offline.",
+          body: "This pill shows your data pipeline health at a glance. Green means ActivityWatch is running and the server received fresh events in the last 5 minutes. Amber means data is stale (ActivityWatch may be paused or the watcher stopped). Red means the local server is offline. A second indicator tracks the e-ink display panel — it turns green when the CrowPanel successfully received the latest state write.",
           pos: "below",
         },
         {
           targetId: "demo-toggle-btn",
           title: "INTERACTIVE DEMO",
-          body: "No ActivityWatch running? Try demo mode — it loads a synthetic day profile so you can explore every layer, log activities, and watch the model respond across four different user archetypes.",
+          body: "Try demo mode even if ActivityWatch is running — it loads one of four synthetic day profiles (Sam: AI-heavy and busy; Maya: deep work, healthy; Alex: isolated and overloaded; Jordan: low-AI, tech-focused). In demo mode you can log activities, watch the timeline update, and explore every layer without affecting your live data. Use the Source selector at the top to switch between profiles mid-demo.",
           pos: "below",
         },
         {
           targetId: "theme-picker",
           title: "COLOR THEMES",
-          body: "Pick a visual theme — Arcade (default), Game Boy, Amber CRT, or Phosphor green. Your choice is saved locally.",
+          body: "Pick a visual theme from the gear menu. Arcade (default) is the dark pixel-art palette. Pastel is a softer dark variant. Acrylic is a deep blue glass theme. Light is a clean off-white mode. Editorial is a glass-morphism theme with Manrope and DM Serif Display fonts inspired by editorial design. Your choice is saved in localStorage and persists across sessions.",
           pos: "below",
         },
         {
           targetId: "help-trigger",
           title: "HELP & SHORTCUTS",
-          body: "Open this panel any time for keyboard shortcuts (E, S, R, Space, D, ?), a full glossary of model terms, and a plain-English explanation of how the energy and stress tanks work.",
+          body: "Open this panel (or press ?) any time for everything you need. Shortcuts tab: all keyboard shortcuts (E energy, S stress, R recovery, Space pause, D demo, ← → tour). Glossary tab: plain-English definitions of every model term — E, S, circadian curve, drain features, focus block, AFK. How It Works tab: a walkthrough of the ODE model that powers the energy and stress tanks, with references to the research papers behind each design decision.",
           pos: "below",
         },
       ];
@@ -15607,6 +15607,10 @@ P = drain - 0.5*recovery</pre
       function startTour() {
         const overlay = document.getElementById("tour-overlay");
         if (!overlay) return;
+        // Collapse to layer 0 so the battery card and toggle are visible for step 1+2
+        if (DOM.body.dataset.layer !== "0") {
+          DOM.body.setAttribute("data-layer", "0");
+        }
         _tourIdx = 0;
         overlay.removeAttribute("hidden");
         showTourStep(0);
