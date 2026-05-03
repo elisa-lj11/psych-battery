@@ -12,6 +12,7 @@ import urllib.error
 import urllib.parse
 import json
 from datetime import datetime, timezone, timedelta
+import statistics as _statistics
 
 AW_BASE             = 'http://localhost:5600/api/0'
 MODEL_URL           = 'http://localhost:7070/state'  # Flask ODE model (browser source of truth)
@@ -95,6 +96,102 @@ def _next_trend(battery_pct: int) -> str:
     return trend
 
 
+def _is_after_hours(ts_str: str) -> bool:
+    """Return True if timestamp falls outside M–F 9am–6pm (weekends always True)."""
+    try:
+        dt = datetime.fromisoformat(ts_str.replace('Z', '+00:00')).astimezone()
+        if dt.weekday() >= 5:
+            return True
+        h = dt.hour + dt.minute / 60
+        return h < 9.0 or h >= 18.0
+    except Exception:
+        return False
+
+
+def _enrich_last_feats(payload: dict) -> dict:
+    """Replace sparse 5-min last_feats with 4-hour rolling AW features for display."""
+    try:
+        now   = datetime.now(timezone.utc)
+        start = now - timedelta(hours=NORMAL_WINDOW_HOURS)
+        buckets = _fetch_json(AW_BASE + '/buckets/', timeout=5)
+        window_bucket = next((k for k in buckets if k.startswith('aw-watcher-window_')), None)
+        afk_bucket    = next((k for k in buckets if k.startswith('aw-watcher-afk_')), None)
+        if not window_bucket:
+            return payload
+
+        s = urllib.parse.quote(start.isoformat())
+        e = urllib.parse.quote(now.isoformat())
+
+        # Window events → context switches + focus blocks
+        wurl = f'{AW_BASE}/buckets/{urllib.parse.quote(window_bucket)}/events?start={s}&end={e}&limit=-1'
+        wevents = _fetch_json(wurl, timeout=10)
+
+        last_app = None
+        context_switches = 0
+        session_mins = []
+        cur_min = 0.0
+        for ev in wevents:
+            app  = ev['data'].get('app', '')
+            mins = ev['duration'] / 60
+            if app != last_app:
+                if last_app is not None:
+                    if cur_min > 0:
+                        session_mins.append(cur_min)
+                    context_switches += 1
+                cur_min  = mins
+                last_app = app
+            else:
+                cur_min += mins
+        if cur_min > 0:
+            session_mins.append(cur_min)
+
+        focus_block_min = sum(m for m in session_mins if m >= 10)
+        frag_std = _statistics.stdev(session_mins) if len(session_mins) >= 2 else 0.0
+        fragmentation_dev = (frag_std / 10.0 - 1.0)  # baseline = 10 min stddev
+
+        # AFK events → active + afk_10plus
+        active_min = 0.0
+        afk_10plus_min = 0.0
+        if afk_bucket:
+            aurl = f'{AW_BASE}/buckets/{urllib.parse.quote(afk_bucket)}/events?start={s}&end={e}&limit=-1'
+            aevents = _fetch_json(aurl, timeout=10)
+            afk_blocks = []
+            for ev in aevents:
+                dur    = ev['duration']
+                status = ev['data'].get('status', '')
+                if status == 'afk':
+                    afk_blocks.append(dur)
+                else:
+                    active_min += dur / 60
+            afk_10plus_min = sum(d for d in afk_blocks if d >= 10 * 60) / 60
+
+            after_hours_min = 0.0
+            for ev in aevents:
+                if ev['data'].get('status', '') != 'afk':
+                    ts = ev.get('timestamp', '')
+                    if ts and _is_after_hours(ts):
+                        after_hours_min += ev['duration'] / 60
+            after_hours_frac = round(after_hours_min / active_min, 3) if active_min > 0 else 0.0
+        else:
+            after_hours_frac = 0.0
+
+        feats = dict(payload.get('last_feats', {}))
+        feats.update({
+            'context_switches':  float(context_switches),
+            'focus_block_min':   round(focus_block_min, 1),
+            'afk_10plus_min':    round(afk_10plus_min, 1),
+            'fragmentation_dev': round(fragmentation_dev, 3),
+            'after_hours_frac':  after_hours_frac,
+        })
+        if active_min > 0:
+            feats['active_min'] = round(active_min, 1)
+        payload = dict(payload)
+        payload['last_feats'] = feats
+    except Exception:
+        pass
+    return payload
+
+
 def _fetch_model_state() -> dict | None:
     """Return the live Flask model payload plus derived battery_pct/trend."""
     try:
@@ -106,7 +203,7 @@ def _fetch_model_state() -> dict | None:
             payload['trend'] = _next_trend(payload['battery_pct'])
             payload['aw_connected'] = _aw_connected()
             payload['source'] = 'model'
-            return payload
+            return _enrich_last_feats(payload)
     except Exception:
         pass
     return None
@@ -218,7 +315,7 @@ def _build_aw_fallback_state() -> dict:
     """Compute the legacy AW battery when the Flask model is unavailable."""
     window_hours = DEMO_WINDOW_HOURS if _accelerated else NORMAL_WINDOW_HOURS
     now   = datetime.now(timezone.utc)
-    start = max(SERVER_START, now - timedelta(hours=window_hours))
+    start = now - timedelta(hours=window_hours)
 
     buckets = _fetch_json(AW_BASE + '/buckets/', timeout=10)
 
