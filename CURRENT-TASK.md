@@ -2,34 +2,35 @@
 
 ## Goal
 
-Fix live-data diagnostics + several UI improvements
+Multi-part: fix server.py drain/recovery data, remove go_outside animation sprite, dispatch Madison-ui aesthetic Codex task, write animation plan for activity scenes
 
-## Items (verbatim from user)
+## Completed this session (prior compaction)
 
-1. **Live data features not showing** — drain and recovery feature bars are all empty/0 in live data mode (NOT demo). Demo features work fine (different code path).
-2. **Circadian graph lines** — draw lines connecting E and S data points on the timeline graph
-3. **Open circle for current point** — the "now" data point on the circadian/timeline graph should be an open circle so it's visually distinct
-4. **Remove jargon** — "Model B + D" and similar technical labels → rename to plain English that a non-technical user understands
-5. **Animation planning (carry-over)** — research and plan each activity animation more intentionally (motion should match what the activity realistically looks like)
+- Killed 3 stale server.py processes and restarted live features
+- Added open circle at current E/S endpoint on demo timeline
+- Renamed all jargon labels (Model D, Legacy breakdown, Phase portrait, etc.)
+- Updated CLAUDE.md with CURRENT-TASK.md first-action rule
+- Rebuilt all 8 activity scenes as Python-generated pixel art PNGs via gen_all_scenes.py + patch_scenes.py
+- Dispatched Codex bfc61wz9p to improve scene compositions
+- Found madison-ui branch on elisa-lj11 repo, analyzed aesthetic
+- Pushed working version to Vercel (psych-battery.vercel.app)
 
-## Completed this session (before this task)
+## Remaining items
 
-- 2-column layout when activity open (scene left, all info right)
-- Timeline widened to fill column width (width: 100%)
-- Battery pair horizontal layout
-- demo-rb-pipe (pipeline content in right bar)
+1. **Fix server.py**:
+   - Add `after_hours_frac` computation from AW event timestamps (weekend = 1.0, weekday outside 9am-6pm = after hours)
+   - Lower `focus_block_min` threshold from 25 min → 10 min
+   - Restart server after
 
-## Remaining steps
+2. **Remove go_outside sprite**: Remove `anim-cloud` and `anim-sun` overlay rects from patch_scenes.py go_outside entry, re-run patch_scenes.py, commit
 
-1. Investigate live-data feature bar rendering (read layer2 diagnostics code + /state JSON)
-2. Fix live features (likely key mismatch or render bug)
-3. Add line segments to circadian/timeline graph
-4. Change current point to open circle
-5. Find + rename "Model B + D" and other jargon
-6. Plan animations per activity (separate pass)
+3. **Dispatch Codex for madison-ui aesthetic**: Full plan written and dispatched as separate worktree task
+
+4. **Write animation plan**: Per-activity discrete animations as response text
 
 ## Verifier
 
-- Live mode: open Layer 2, check feature bars show non-zero values when AW is running
-- Timeline: see connected line through E and S points
-- Jargon: "Model B + D" text gone from all visible UI
+- `curl http://localhost:3131/state` → `after_hours_frac` > 0 on Saturday evening
+- `curl http://localhost:3131/state` → `focus_block_min` non-zero if any 10+ min focused session
+- go_outside scene in app: no moving cloud or sun rect
+- Server running, app interactive at http://localhost:3131

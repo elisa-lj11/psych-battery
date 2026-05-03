@@ -39,10 +39,7 @@ scenes = {}
 
 # ── go_outside ─────────────────────────────────────────────────────────
 scenes["go_outside"] = (
-    img(read_b64("go_outside")) +
-    """
-            <rect x="124" y="8" width="18" height="18" fill="#f4d030" class="anim-layer anim-sun" opacity="0.35"></rect>
-            <rect x="16" y="40" width="36" height="12" fill="#d8e4f0" class="anim-layer anim-cloud" opacity="0.5"></rect>"""
+    img(read_b64("go_outside"))
 )
 
 # ── connect_people ─────────────────────────────────────────────────────
