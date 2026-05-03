@@ -543,7 +543,9 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 if __name__ == '__main__':
-    addr = ('', 3131)
-    print('Mental Meter running at http://localhost:3131')
-    print('  Battery state: http://localhost:3131/state')
+    import os
+    port = int(os.environ.get('PORT', 3131))
+    addr = ('', port)
+    print(f'Mental Meter running at http://localhost:{port}')
+    print(f'  Battery state: http://localhost:{port}/state')
     ThreadedHTTPServer(addr, Handler).serve_forever()
