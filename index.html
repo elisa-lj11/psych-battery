@@ -5119,49 +5119,99 @@
         font-weight: 400;
       }
 
-      /* ── Stress arc — ambient light strip to the right of battery ── */
-      body[data-theme="editorial"] #battery-visual {
-        position: relative;
-        overflow: visible;
+      /* ── Editorial battery: vertical pill matching physical device ── */
+
+      /* Hide the horizontal pixel-art SVG */
+      body[data-theme="editorial"] #battery-visual svg {
+        display: none !important;
       }
-      /* Faint full-spectrum track (always visible) */
+
+      /* Vertical pill battery shell */
+      body[data-theme="editorial"] #battery-visual {
+        position: relative !important;
+        width: 82px !important;
+        height: 196px !important;
+        min-width: 82px !important;
+        margin: 0 !important;
+        border-radius: 41px !important;
+        overflow: hidden;
+        border: 1.5px solid rgba(120, 100, 230, 0.22) !important;
+        background: rgba(242, 240, 255, 0.55) !important;
+        backdrop-filter: blur(12px) saturate(110%);
+        -webkit-backdrop-filter: blur(12px) saturate(110%);
+        flex-shrink: 0 !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.8),
+          0 2px 16px rgba(100, 80, 200, 0.1) !important;
+      }
+
+      /* Energy fill — grows from bottom, driven by --battery-pct (0–1) */
       body[data-theme="editorial"] #battery-visual::before {
         content: "";
         position: absolute;
-        right: -14px;
-        top: 30%;
-        height: 40%;
-        width: 6px;
-        border-radius: 999px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(var(--battery-pct, 0) * 100%);
         background: linear-gradient(
-          to bottom,
-          hsl(0, 78%, 60%) 0%,
-          hsl(300, 68%, 62%) 50%,
-          hsl(270, 65%, 65%) 100%
+          to top,
+          hsl(240, 68%, 62%) 0%,
+          hsl(255, 60%, 70%) 55%,
+          hsl(265, 50%, 78%) 100%
         );
-        opacity: 0.18;
-        pointer-events: none;
-        z-index: 2;
+        transition: height 700ms cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 0 39px 39px;
       }
-      /* Dynamic glow — color shifts with --stress-pct (0=purple, 1=red)
-         hue: 270 (purple) → 315 (pink) → 360 (red), short arc of color wheel */
+
+      /* Stress glow ring at top — hue: purple (low) → red (high) */
       body[data-theme="editorial"] #battery-visual::after {
         content: "";
         position: absolute;
-        right: -14px;
-        top: 30%;
-        height: 40%;
-        width: 6px;
+        top: 10px;
+        left: 14px;
+        right: 14px;
+        height: 7px;
         border-radius: 999px;
-        background: hsl(calc(270 + var(--stress-pct, 0.5) * 90), 72%, 62%);
+        background: hsl(calc(270 + var(--stress-pct, 0.5) * 90) 78% 64%);
         box-shadow:
           0 0 10px 5px
-            hsl(calc(270 + var(--stress-pct, 0.5) * 90), 80%, 64%, 0.62),
-          0 0 22px 12px
-            hsl(calc(270 + var(--stress-pct, 0.5) * 90), 68%, 70%, 0.24);
-        opacity: 0.88;
-        pointer-events: none;
-        z-index: 2;
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90) 82% 66% / 0.7),
+          0 0 22px 10px
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90) 70% 72% / 0.35);
+        z-index: 1;
+      }
+
+      /* Stress metric display — below energy % in battery-copy */
+      #battery-stress-display {
+        display: none;
+      }
+      body[data-theme="editorial"] #battery-stress-display {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(120, 100, 200, 0.14);
+      }
+      body[data-theme="editorial"] .stress-display-label {
+        font-family: var(--px-font-ui, "Silkscreen", monospace);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        opacity: 0.7;
+      }
+      body[data-theme="editorial"] #stress-pct-value {
+        font-family: "DM Serif Display", Georgia, serif;
+        font-weight: 400;
+        font-size: 2rem;
+        line-height: 1;
+        color: hsl(calc(270 + var(--stress-pct, 0.5) * 90) 62% 48%);
+        transition: color 600ms ease;
+      }
+      body[data-theme="editorial"] #stress-pct-value .pct-sup {
+        font-size: 0.55em;
+        opacity: 0.7;
       }
 
       /* ── Popover glass styling (editorial) ── */
@@ -7788,6 +7838,10 @@
           <div id="battery-pct-display" aria-live="polite">
             --<span class="pct-sup">%</span>
           </div>
+          <div id="battery-stress-display" aria-hidden="true">
+            <span class="stress-display-label">Stress</span>
+            <div id="stress-pct-value">—<span class="pct-sup">%</span></div>
+          </div>
         </div>
       </button>
 
@@ -9006,6 +9060,7 @@ P = drain - 0.5*recovery</pre
         batteryCard: document.getElementById("battery-card"),
         batteryToggle: document.getElementById("battery-toggle"),
         batteryVisual: document.getElementById("battery-visual"),
+        stressDisplay: document.getElementById("stress-pct-value"),
         modelStatusText: document.getElementById("model-status-text"),
         lastTickText: document.getElementById("last-tick-text"),
         demoShell: document.getElementById("demo-shell"),
@@ -13549,16 +13604,42 @@ P = drain - 0.5*recovery</pre
           (APP.model.stale || (!APP.model.online && !payload));
         DOM.batteryCard.classList.toggle("is-stale", staleBattery);
 
-        // ── Stress arc: update --stress-pct CSS variable (editorial mode) ──
+        // ── Editorial CSS variables: stress ring + vertical battery fill ──
         const sRaw = APP.demo.enabled
           ? (APP.demo.S ?? 50)
           : payload?.S != null
             ? Number(payload.S)
             : 50;
+        const sPct = clamp(sRaw, 0, 100) / 100;
         document.documentElement.style.setProperty(
           "--stress-pct",
-          (clamp(sRaw, 0, 100) / 100).toFixed(3),
+          sPct.toFixed(3),
         );
+
+        // Battery fill level (0–1) for the vertical editorial pill
+        const eLvl = APP.demo.enabled
+          ? clamp(getDemoDisplayPercent(), 0, 100)
+          : clamp(
+              payload?.battery_pct ??
+                (payload?.E_display != null ? payload.E_display * 100 : 0),
+              0,
+              100,
+            );
+        document.documentElement.style.setProperty(
+          "--battery-pct",
+          (eLvl / 100).toFixed(3),
+        );
+
+        // Update stress metric display (editorial only)
+        if (DOM.stressDisplay) {
+          const sInt = Math.round(sRaw);
+          const hasS = APP.demo.enabled
+            ? APP.demo.S != null
+            : payload?.S != null;
+          DOM.stressDisplay.innerHTML = hasS
+            ? `${sInt}<span class="pct-sup">%</span>`
+            : `—<span class="pct-sup">%</span>`;
+        }
       }
 
       function startDemoSceneAnimator() {
@@ -14645,7 +14726,7 @@ P = drain - 0.5*recovery</pre
       }
 
       function initTheme() {
-        const stored = localStorage.getItem(THEME_KEY) || "light";
+        const stored = localStorage.getItem(THEME_KEY) || "editorial";
         applyTheme(stored);
         const picker = document.getElementById("theme-picker");
         document.querySelectorAll(".theme-swatch").forEach((btn) => {
