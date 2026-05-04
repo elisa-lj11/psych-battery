@@ -11,6 +11,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import json
+import logging
 from datetime import datetime, timezone, timedelta
 import statistics as _statistics
 
@@ -189,8 +190,8 @@ def _enrich_last_feats(payload: dict) -> dict:
             feats['active_min'] = round(active_min, 1)
         payload = dict(payload)
         payload['last_feats'] = feats
-    except Exception:
-        pass
+    except Exception as exc:
+        logging.warning('_enrich_last_feats failed: %s', exc)
     return payload
 
 

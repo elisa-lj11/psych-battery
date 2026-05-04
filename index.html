@@ -10226,6 +10226,7 @@ P = drain - 0.5*recovery</pre
       let screensaverWidth = 0;
       let screensaverHeight = 0;
       let lastTimerText = "";
+      let _layer2Rects = null;
 
       // ── Drain rules ───────────────────────────────────────────────────────────
       // Patterns match app name OR window title (case-insensitive, substring).
@@ -10534,7 +10535,9 @@ P = drain - 0.5*recovery</pre
       }
 
       function modelUrl(path) {
-        return `${MODEL_BASE.replace(/\/$/, "")}${path}`;
+        const base = MODEL_BASE.replace(/\/$/, "");
+        if (base && !/^https?:\/\/localhost(:\d+)?$/.test(base)) return path;
+        return `${base}${path}`;
       }
 
       function getCachedState() {
@@ -13101,10 +13104,20 @@ P = drain - 0.5*recovery</pre
           APP.layer2.lastStepTs = timestamp;
           APP.layer2.step = (APP.layer2.step + 1) % 16;
 
-          const fieldRect = DOM.layer2ParticleField.getBoundingClientRect();
-          const pressureRect = DOM.layer2PressureNode.getBoundingClientRect();
-          const energyRect = DOM.layer2EnergyTank.getBoundingClientRect();
-          const stressRect = DOM.layer2StressTank.getBoundingClientRect();
+          if (!_layer2Rects) {
+            _layer2Rects = {
+              field: DOM.layer2ParticleField.getBoundingClientRect(),
+              pressure: DOM.layer2PressureNode.getBoundingClientRect(),
+              energy: DOM.layer2EnergyTank.getBoundingClientRect(),
+              stress: DOM.layer2StressTank.getBoundingClientRect(),
+            };
+          }
+          const {
+            field: fieldRect,
+            pressure: pressureRect,
+            energy: energyRect,
+            stress: stressRect,
+          } = _layer2Rects;
           const start = {
             x: pressureRect.left + pressureRect.width / 2 - fieldRect.left,
             y: pressureRect.bottom - fieldRect.top + 4,
@@ -14899,6 +14912,7 @@ P = drain - 0.5*recovery</pre
         renderApp();
 
         const syncLayer2Motion = () => {
+          _layer2Rects = null;
           APP.layer2.lastStepTs = 0;
           if (APP.uiLayer >= 1) {
             renderLayer2Static();
@@ -14926,6 +14940,16 @@ P = drain - 0.5*recovery</pre
           attributes: true,
           attributeFilter: ["data-layer"],
         });
+        window
+          .matchMedia("(prefers-reduced-motion: reduce)")
+          .addEventListener("change", syncLayer2Motion);
+        window.addEventListener(
+          "resize",
+          () => {
+            _layer2Rects = null;
+          },
+          { passive: true },
+        );
 
         windowHours = APP.aw.windowHours || LIVE_WINDOW_HOURS;
         DOM.windowSelect.value = String(windowHours);

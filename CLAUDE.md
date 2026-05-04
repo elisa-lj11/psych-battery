@@ -4,7 +4,7 @@
 
 ## What this repo is
 
-A UC Berkeley PhD research app: a single-file vanilla JS web app (`index.html`, 4650 lines, no build step) that visualizes a user's mental energy as a pixel-art battery. Fork of `elisa-lj11/psych-battery`.
+A UC Berkeley PhD research app: a single-file vanilla JS web app (`index.html`, 16,286 lines, no build step) that visualizes a user's mental energy as a pixel-art battery. Fork of `elisa-lj11/psych-battery`.
 
 **Live:** https://psych-battery.vercel.app  
 **Repo:** https://github.com/douglaspmcgowan/psych-battery (private fork)  
@@ -144,19 +144,11 @@ The `editorial` theme overrides the pixel-art SVG battery with a CSS-drawn verti
 { "kind": "outside"|"walk"|"with_people"|"detach"|"energy_rating"|"stress_rating", "minutes": float, "value": int }
 ```
 
-## Known bugs (as of Apr 24 2026 — fix these)
+## Known bugs (as of May 4 2026)
 
-1. **[P1] Toggle-recovery state corruption** (lines ~4500–4505): Starting a new timed recovery while a toggle is active overwrites startTs/logKind/theme without clearing toggleActive. Guard this path or explicitly end the existing toggle first.
+1. **[P2] No tap affordance on battery** (battery-toggle button in layer 0): First-time users have no way to know tapping the battery expands it. Add a small "TAP TO EXPAND" hint or a visible chevron below the battery in layer 0.
 
-2. **[P2] Particle loop runs during screensaver** (lines ~3342–3345): When entering screensaver from layer 2, APP.uiLayer stays 2 so the particle rAF loop keeps running invisibly. Add `APP.mode` to the stop condition, or cancel from `startScreensaver()`.
-
-3. **[P2] prefers-reduced-motion not respected for particle field** (lines ~4331–4334): CSS query only stops CSS animations; the rAF loop always starts. Gate on `matchMedia('(prefers-reduced-motion: reduce)')`.
-
-4. **[P2] Theme picker overlaps `?` help button** (lines ~1062–1067 vs ~1390–1408): Both are `position: fixed; top: ~10px; right: ~16px`. Help button is buried. Move help trigger left of theme picker, or give it a different corner.
-
-5. **[P2] No tap affordance on battery** (battery-toggle button in layer 0): First-time users have no way to know tapping the battery expands it. Add a small "TAP TO EXPAND" hint or a visible chevron below the battery in layer 0.
-
-6. **[P3] Toggle banner END button below 44px touch target** (lines ~767–769): `.toggle-banner-end` has no min-height. Add `min-height: 44px` to match the rest of the app.
+Previously listed bugs that are now fixed: toggle-recovery state corruption (awaits endToggleRecovery before overwriting — line 15206), particle loop during screensaver (mode check in loop guard — line 13087), prefers-reduced-motion dynamic changes (matchMedia change listener added), theme picker / help button overlap (help trigger moved to top row — line 7590), toggle banner touch target (min-height: 44px already set — line 4469).
 
 ## Coding rules
 
