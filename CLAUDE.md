@@ -50,7 +50,7 @@ Demo mode works with zero setup — pick a profile from the dropdown. ActivityWa
 
 | File                             | Purpose                                                                 |
 | -------------------------------- | ----------------------------------------------------------------------- |
-| `index.html`                     | Entire frontend (4650 lines, vanilla JS)                                |
+| `index.html`                     | Entire frontend (16 k lines, vanilla JS)                                |
 | `server.py`                      | Minimal Python proxy: serves index.html, forwards `/aw/*` → AW at :5600 |
 | `run-local.sh` / `run-local.bat` | One-command launchers (Mac/Linux, Windows)                              |
 | `check-health.py`                | Stdlib health check for both servers                                    |
@@ -111,7 +111,9 @@ Four synthetic profiles selectable from header dropdown: Sam, Maya, Alex, Jordan
 
 ### Themes
 
-Four CSS var themes: `arcade` (default), `gameboy`, `amber`, `phosphor`. Stored in localStorage `pb_theme`. Applied via `body[data-theme]`.
+Five CSS var themes: `editorial` (default), `arcade`, `gameboy`, `amber`, `phosphor`. Stored in localStorage `pb_theme`. Applied via `body[data-theme]`.
+
+The `editorial` theme overrides the pixel-art SVG battery with a CSS-drawn vertical device: `clip-path: path()` battery+tip shape, B&W inner screen fill via `@property --battery-pct`, LED stress ring via `::after`. See lines ~5122–5230 in `index.html`.
 
 ### Polling
 
@@ -178,6 +180,14 @@ Four CSS var themes: `arcade` (default), `gameboy`, `amber`, `phosphor`. Stored 
 --px-font-mono: 'VT323', monospace;
 --px-accent, --px-good, --px-warn, --px-critical, --px-border, etc.
 ```
+
+## Tests
+
+```bash
+node e2e/editorial-full.mjs   # Playwright walkthrough — server must be on :3131
+```
+
+80 steps, ~0 issues expected. Run after any index.html change. If server was already running before your edit, restart it first (`pkill -f "python server.py" && python server.py &`) — it caches index.html at startup.
 
 ## Brief files (for handing off to other agents)
 
