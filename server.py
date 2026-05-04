@@ -15,7 +15,8 @@ from datetime import datetime, timezone, timedelta
 import statistics as _statistics
 
 AW_BASE             = 'http://localhost:5600/api/0'
-MODEL_URL           = 'http://localhost:7070/state'  # Flask ODE model (browser source of truth)
+FLASK_BASE          = 'http://localhost:7070'
+MODEL_URL           = FLASK_BASE + '/state'          # Flask ODE model (browser source of truth)
 NORMAL_WINDOW_HOURS = 4        # 4-hour rolling window (normal use)
 DEMO_WINDOW_HOURS   = 2 / 60   # 2-minute rolling window (accelerated demo)
 DEMO_STATE_TTL_SEC  = 10 * 60  # UI agent must refresh demo override before this expires
@@ -84,15 +85,16 @@ def _fetch_json(url: str, timeout: int = 10):
 
 def _next_trend(battery_pct: int) -> str:
     global _prev_battery
-    if _prev_battery is None:
-        trend = 'flat'
-    elif battery_pct > _prev_battery:
-        trend = 'up'
-    elif battery_pct < _prev_battery:
-        trend = 'down'
-    else:
-        trend = 'flat'
-    _prev_battery = battery_pct
+    with _STATE_LOCK:
+        if _prev_battery is None:
+            trend = 'flat'
+        elif battery_pct > _prev_battery:
+            trend = 'up'
+        elif battery_pct < _prev_battery:
+            trend = 'down'
+        else:
+            trend = 'flat'
+        _prev_battery = battery_pct
     return trend
 
 
@@ -403,16 +405,14 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         global _accelerated
         if self.path == '/accelerate':
-            _accelerated = not _accelerated
-            label = 'demo (2 min)' if _accelerated else 'normal (4 hr)'
+            with _STATE_LOCK:
+                _accelerated = not _accelerated
+                new_val = _accelerated
+            label = 'demo (2 min)' if new_val else 'normal (4 hr)'
             print(f'[mode] switched to {label}')
-            data = json.dumps({'accelerated': _accelerated}).encode()
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.send_header('Content-Length', str(len(data)))
-            self.end_headers()
-            self.wfile.write(data)
+            self._send_json({'accelerated': new_val})
+        elif self.path == '/log':
+            self._proxy_post(FLASK_BASE + '/log')
         else:
             self.send_response(404)
             self.end_headers()
@@ -524,6 +524,35 @@ class Handler(SimpleHTTPRequestHandler):
             msg = str(e).encode()
             self.send_response(502)
             self.send_header('Content-Type', 'text/plain')
+            self.send_header('Content-Length', str(len(msg)))
+            self.end_headers()
+            self.wfile.write(msg)
+
+    def _proxy_post(self, dest_url: str):
+        """Forward a POST request body to dest_url and relay the response."""
+        length = int(self.headers.get('Content-Length', '0') or '0')
+        body = self.rfile.read(length) if length > 0 else b''
+        content_type = self.headers.get('Content-Type', 'application/json')
+        req = urllib.request.Request(
+            dest_url,
+            data=body,
+            headers={'Content-Type': content_type},
+            method='POST',
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = resp.read()
+            self.send_response(resp.status)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-Length', str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+        except urllib.error.URLError as exc:
+            msg = str(exc).encode()
+            self.send_response(502)
+            self.send_header('Content-Type', 'text/plain')
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-Length', str(len(msg)))
             self.end_headers()
             self.wfile.write(msg)
