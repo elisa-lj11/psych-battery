@@ -2,35 +2,49 @@
 
 ## Goal
 
-Multi-part: fix server.py drain/recovery data, remove go_outside animation sprite, dispatch Madison-ui aesthetic Codex task, write animation plan for activity scenes
+No active task. Last session: editorial battery redesign (visual polish).
 
-## Completed this session (prior compaction)
+## What was just done (session ending 2026-05-04)
 
-- Killed 3 stale server.py processes and restarted live features
-- Added open circle at current E/S endpoint on demo timeline
-- Renamed all jargon labels (Model D, Legacy breakdown, Phase portrait, etc.)
-- Updated CLAUDE.md with CURRENT-TASK.md first-action rule
-- Rebuilt all 8 activity scenes as Python-generated pixel art PNGs via gen_all_scenes.py + patch_scenes.py
-- Dispatched Codex bfc61wz9p to improve scene compositions
-- Found madison-ui branch on elisa-lj11 repo, analyzed aesthetic
-- Pushed working version to Vercel (psych-battery.vercel.app)
+All changes on branch `feat/mental-meter-phase-portrait`, deployed to https://psych-battery.vercel.app.
 
-## Remaining items
+- `fix(editorial): battery tip via clip-path, deeper inset, B&W display`
+  - `clip-path: path()` on `#battery-visual` creates battery body + positive-terminal nub at top center
+  - Corner radius reduced from 22px → 16px in the clip-path
+  - `filter: drop-shadow` replaces `box-shadow` (traces clip-path outline)
+  - Inner screen inset increased 7px → 10px all sides
+  - Inner screen gradient changed from purple/blue to B&W (white fill, near-black empty) — e-ink display aesthetic
+  - LED bar `top` adjusted 22px → 24px (tip 8 + radius 16)
+  - Playwright test `editorial-battery-rounded` updated: checks `clip-path` presence instead of `border-radius` value
+- Prior session: HSL alpha syntax fix, stress display condition fix, LED bar below corner radius, 6am timeline label fix, editorial as default theme
 
-1. **Fix server.py**:
-   - Add `after_hours_frac` computation from AW event timestamps (weekend = 1.0, weekday outside 9am-6pm = after hours)
-   - Lower `focus_block_min` threshold from 25 min → 10 min
-   - Restart server after
+## Active branch
 
-2. **Remove go_outside sprite**: Remove `anim-cloud` and `anim-sun` overlay rects from patch_scenes.py go_outside entry, re-run patch_scenes.py, commit
+`feat/mental-meter-phase-portrait` — ahead of upstream/main by many commits. Has not been merged to main.
 
-3. **Dispatch Codex for madison-ui aesthetic**: Full plan written and dispatched as separate worktree task
+## Key file locations
 
-4. **Write animation plan**: Per-activity discrete animations as response text
+| File                     | Notes                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| `index.html`             | 16,286 lines — entire frontend                                                        |
+| `server.py`              | Proxy server, port 3131. **Restart after any index.html edit** — it caches at startup |
+| `e2e/editorial-full.mjs` | Playwright test suite (run: `node e2e/editorial-full.mjs`, server must be up)         |
+| `CLAUDE.md`              | Project instructions for agents — read this first                                     |
 
 ## Verifier
 
-- `curl http://localhost:3131/state` → `after_hours_frac` > 0 on Saturday evening
-- `curl http://localhost:3131/state` → `focus_block_min` non-zero if any 10+ min focused session
-- go_outside scene in app: no moving cloud or sun rect
-- Server running, app interactive at http://localhost:3131
+```bash
+# Restart server after any index.html edit
+pkill -f "python server.py"; cd ~/psych-battery && python server.py &
+
+# Run tests
+node e2e/editorial-full.mjs
+
+# Deploy
+vercel deploy --prod
+```
+
+## Pending items from prior sessions (not this session)
+
+See `CLAUDE.md` → "Known bugs" section for P1/P2 items that predate this session.
+No new items were added this session.
