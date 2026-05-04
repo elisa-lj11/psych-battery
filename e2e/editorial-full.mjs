@@ -848,16 +848,15 @@ await check("editorial-battery-portrait", async () => {
   console.log(`    battery-visual: ${dims.w}×${dims.h}px ✓`);
 });
 
-// 3. Battery has rounded-rect border-radius (≥ 8px, not fully pill)
+// 3. Battery uses clip-path for battery+tip shape (border-radius is 0; clip-path drives shape)
 await check("editorial-battery-rounded", async () => {
-  const br = await page.evaluate(() => {
+  const cp = await page.evaluate(() => {
     const bv = document.getElementById("battery-visual");
-    return getComputedStyle(bv).borderRadius;
+    return getComputedStyle(bv).clipPath;
   });
-  const val = parseFloat(br);
-  if (val < 8)
-    throw new Error(`border-radius ${br} — expected rounded rect (≥ 8px)`);
-  console.log(`    border-radius: ${br} ✓`);
+  if (!cp || cp === "none")
+    throw new Error(`clip-path is "${cp}" — expected battery+tip path`);
+  console.log(`    clip-path: set ✓`);
 });
 
 // 4. --battery-pct CSS variable is set on documentElement
