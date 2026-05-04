@@ -2427,16 +2427,6 @@
         color: var(--px-accent);
       }
 
-      .demo-scene-frame.animating[data-activity="go_outside"] .anim-sun {
-        animation: spin-slow 8s steps(8, end) infinite;
-        transform-box: view-box;
-        transform-origin: 80px 40px;
-      }
-
-      .demo-scene-frame.animating[data-activity="go_outside"] .anim-cloud {
-        animation: drift-right 4s steps(4, end) infinite alternate;
-      }
-
       .demo-scene-frame.animating[data-activity="connect_people"] .anim-bubble {
         animation: demo-bubble-appear 4000ms steps(8, end) infinite;
         transform-origin: bottom left;
@@ -2512,51 +2502,6 @@
       }
       .scene-talk-a.is-closed {
         transform: scaleY(0.15);
-      }
-
-      /* ─── Piskel+CSS spritesheet walker ───────────────────────────────────────
-         Workflow: draw frames in Piskel → export spritestrip PNG → embed as
-         base64 data URI → animate background-position-x with steps(N, end).
-         Spritesheet: sprites/walk-outside.png  64×24px, 4 frames of 16×24.
-         Displayed at 3× scale: 48×72px container, 192×72px background strip. */
-      .px-walker {
-        position: absolute;
-        bottom: 30%;
-        left: 0;
-        width: 32px;
-        height: 48px;
-        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAYCAYAAABKtPtEAAABAUlEQVR42u1WOw7CMAzNFVgZO7OxMTNxKmbOw8BpmLlFqiBFCsGE+L0EpyqWPFR5H9tJ0zqXxWG39Wk6ZbB8Nij/nKwVYflsA7R/AD9ul7eMayi/togWG8D4N2lgyXxRBDmGKL9FA2z97nQ/+zS1lxDLZxug/HOyVoTlsw3Q/tYDMN8ARuATd4QBVGusfgAjXILW/GdMx6sPif6OLp1PCaRcVMfUP5IQssTR6lj7wxMsYVEdC3+ogG+43gNo6a8uoBVmFP8uO4BqWfh3eQe1RzX3/9kQmAJC7KeND4lgpNtf+0Vg/F8WIyB/rhGuLUDCmfqnC1IBJeFaXAlr7f+PtcYM6cjAmAGx0FQAAAAASUVORK5CYII=");
-        background-size: 128px 48px;
-        background-repeat: no-repeat;
-        background-position: 0px 0px;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        z-index: 4;
-        pointer-events: none;
-      }
-
-      .demo-scene-frame.animating .px-walker {
-        animation:
-          px-walk-cycle 480ms steps(4, end) infinite,
-          px-walk-across 7s linear infinite;
-      }
-
-      @keyframes px-walk-cycle {
-        from {
-          background-position-x: 0px;
-        }
-        to {
-          background-position-x: -128px;
-        }
-      }
-
-      @keyframes px-walk-across {
-        from {
-          transform: translateX(-40px);
-        }
-        to {
-          transform: translateX(600px);
-        }
       }
 
       /* Tour button */
@@ -5108,6 +5053,27 @@
       body[data-theme="editorial"] #screensaver-done {
         border-radius: 999px !important;
       }
+      body[data-theme="editorial"] .layer-back-top {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+      body[data-theme="editorial"] .demo-exit-btn {
+        border-radius: 999px !important;
+      }
+      body[data-theme="editorial"] .calib-yesno button {
+        border-radius: 8px !important;
+      }
+      body[data-theme="editorial"] .sheet-close-btn {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+      body[data-theme="editorial"] .activity-mode-tag {
+        border-radius: 999px !important;
+      }
+      body[data-theme="editorial"] .calib-actions button {
+        border-radius: 8px !important;
+        box-shadow: none !important;
+      }
       body[data-theme="editorial"] #help-sheet {
         border-radius: var(--panel-radius) var(--panel-radius) 0 0 !important;
       }
@@ -5122,11 +5088,111 @@
         background: rgba(255, 255, 255, 0.88);
       }
 
+      /* backdrop-filter on #battery-card traps position:fixed children (CSS
+         containing-block quirk). Strip it in demo mode so #demo-shell can
+         cover the full viewport. */
+      body.is-demo[data-theme="editorial"] #battery-card {
+        backdrop-filter: none !important;
+      }
+
+      /* ── Demo activity detail: rounded scene frame + pill back button ── */
+      body[data-theme="editorial"] .demo-scene-frame {
+        border-radius: var(--panel-radius) !important;
+      }
+      body[data-theme="editorial"] .demo-back-btn {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+      body[data-theme="editorial"] #demo-header-badge {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+      body[data-theme="editorial"] .demo-help-btn {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+
       /* ── Typography: DM Serif Display on hero number ── */
       body[data-theme="editorial"] #battery-pct-display,
       body[data-theme="editorial"] .battery-hero-num {
         font-family: "DM Serif Display", Georgia, serif;
         font-weight: 400;
+      }
+
+      /* ── Stress arc — ambient light strip to the right of battery ── */
+      body[data-theme="editorial"] #battery-visual {
+        position: relative;
+        overflow: visible;
+      }
+      /* Faint full-spectrum track (always visible) */
+      body[data-theme="editorial"] #battery-visual::before {
+        content: "";
+        position: absolute;
+        right: -14px;
+        top: 30%;
+        height: 40%;
+        width: 6px;
+        border-radius: 999px;
+        background: linear-gradient(
+          to bottom,
+          hsl(0, 78%, 60%) 0%,
+          hsl(300, 68%, 62%) 50%,
+          hsl(270, 65%, 65%) 100%
+        );
+        opacity: 0.18;
+        pointer-events: none;
+        z-index: 2;
+      }
+      /* Dynamic glow — color shifts with --stress-pct (0=purple, 1=red)
+         hue: 270 (purple) → 315 (pink) → 360 (red), short arc of color wheel */
+      body[data-theme="editorial"] #battery-visual::after {
+        content: "";
+        position: absolute;
+        right: -14px;
+        top: 30%;
+        height: 40%;
+        width: 6px;
+        border-radius: 999px;
+        background: hsl(calc(270 + var(--stress-pct, 0.5) * 90), 72%, 62%);
+        box-shadow:
+          0 0 10px 5px
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90), 80%, 64%, 0.62),
+          0 0 22px 12px
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90), 68%, 70%, 0.24);
+        opacity: 0.88;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* ── Popover glass styling (editorial) ── */
+      body[data-theme="editorial"] .diag-popover {
+        border-radius: 14px !important;
+        backdrop-filter: blur(20px) saturate(130%);
+        -webkit-backdrop-filter: blur(20px) saturate(130%);
+        background: rgba(255, 255, 255, 0.88) !important;
+        border: 1px solid rgba(255, 255, 255, 0.72) !important;
+        box-shadow:
+          0 8px 32px rgba(100, 80, 200, 0.14),
+          0 1px 0 rgba(255, 255, 255, 0.8) inset !important;
+        color: #2a2540 !important;
+      }
+      body[data-theme="editorial"] .diag-popover strong {
+        color: #6366f1 !important;
+      }
+      body[data-theme="editorial"] .layer-feature-popover {
+        border-radius: 14px !important;
+        backdrop-filter: blur(20px) saturate(130%);
+        -webkit-backdrop-filter: blur(20px) saturate(130%);
+        background: rgba(255, 255, 255, 0.88) !important;
+        border: 1px solid rgba(255, 255, 255, 0.72) !important;
+        box-shadow: 0 8px 32px rgba(100, 80, 200, 0.14) !important;
+        color: #2a2540 !important;
+      }
+      body[data-theme="editorial"] .layer-feature-popover h4 {
+        color: #6366f1 !important;
+      }
+      body[data-theme="editorial"] .diag-help-btn {
+        border-radius: 999px !important;
       }
 
       /* ─────────────────────────────────────────────────────────────
@@ -8647,8 +8713,7 @@ P = drain - 0.5*recovery</pre
     <div id="toast-stack" aria-live="polite"></div>
 
     <script>
-      const MODEL_BASE =
-        localStorage.getItem("pb_api") || "http://localhost:7070";
+      const MODEL_BASE = localStorage.getItem("pb_api") || "";
       const AW = "/aw";
       const STATE_CACHE_KEY = "pb_state";
       const MODEL_POLL_MS = 30_000;
@@ -9701,7 +9766,7 @@ P = drain - 0.5*recovery</pre
             break;
           case "connect_people":
             art = `
-            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD/klEQVR42u3dTWgUdxwG4J+lXkKhRaTQSxDSguRi8Si5tIhQlCK0B7EBRWiQUkIqEtSipyIhSFukhKJSFETaQ0EkWiiBQgiBXkpVSBfaeMhBQUJpQAKVgj2se9h1d901M7vz8TyXsB8zmZ158+Y/M7uzm+4s3noS0CcvWQUIIAIIAogAggAigNALL3f6xOW//sz0Cxl68y1bUwNCSg1Yc3Fpx4Z+4cfDt1OdHxoQBBABBAFEACG5veBWbowerbv9/tVvrd0EZP34a2zweKwGpBgNSLquLL2a6eU7NLxmDEiJG9CYL59GRla6ev7CwqC9YMJhGBBAjAGzbv2Vt3P+CtofBzwxUuloLlML2zUglPY44PahN3K1vJXlB8aAkLkGTPodyN7RbC8YjAHLOsbK29hUA+JTcUX4VFzZm0cDgvcD5l9Wz3BoQDSgveDsjzWTfn+fBkQDhnPDaEAK3YD/DJ7q6vmvrZx1JkTzakCMAUt97rcs7/PTgBS7AZ83pvvv5of1t+Pp7eHTPX2BA49+7+sKHtzxXtvHV27/1JPlWL95vPn62XtOA6IBUzPz+WhEROybvGptR++vvVJz8lr15+z0aN39dx+vhQZEA6bVfDW1v7y7j8u1ghvHeLUxYadjv6S+/6Sx+bLy/SoakGI04NTqsfq9rrkWf9ExX3/H1i9L3YhpuT69peGeAx1Nt3/ybw1IOBDdK1Orx55pT/rn+vSWJu2pATEGjLafQluOQ9Ux3vyVcIWE/quN5XrZZhqQ4jZgx8eL5rtcgiNfPN07JkvNqQGxFwwCiDFgNz5ZHa+7PTP5evX+6YdNnz9jG6RqYeBM3e1zn05ERMTxb75uPgaMCQ2If8EggAggCCACCAKIAIIAEs6ENDp85GiLR6rfpL5eOdNiuurPy9/5xvUktd4eVau/VdpO16vtoQHxLxgBhL7YdGfx1hOrAQ2IAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAJIuD5gjq0vNr9e3sCuiUzOVwOCBkzOpdml5g/MjkVExPjZC13N7/ypsbaPj++yzjUgGjDrum2+xume14QaEAQQAYRwZYTErcxdyPXyD+4e04BgL/gFVe7dz3cDGgOCACKAIIAIICS4F/zr3A/WQoYVfftoQPrbgFu37Sz0C1y790eul7/o20cD4kxImobe/WhD0/9y7asNTf/Owc+kTAOS2Qbc/O8DayFF1q8GRABBABFAEEAEEAQQAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAIVwb5oX9/OP3fZ3/ng8OaEAQQAQQBBABBAFEACEcB0xX2Y/DaUAEEAQQAQQBRABBABFAEEAEEASQQvoffonNkHF2iSgAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD70lEQVR42u3dv2sbZxzA4a+LS8CLaNHixRQMRUsWQaBDl2RwBy9O/oGkYEoJpYXEEHdIhwQaF5xAPIRSDKk7ZEy9GFpDm6EeOolChoiAIYhAFlHQEujUDq2grZXo7uzT3emeZwkRJ5909/H73p1+eObJL9/9GVCQN2wCBIgAQYAIEASIAEGACBDyNFuXJ/po72HlHvPZ5QtGQBAgpuBpsrCyWdrH1ttdMwKCADEF10F/4/hTXnN9U0lGQAQIAsQxYA1t73cy33d1qW0EBAEiQBAgAgQBIkAQIOFC9JTyRgIBFmq7u5H5vqutdQWZghEgCBABggARIAgQAUK4ED0RdX5bvREQI2BlRy4vpwkwfAGQKRgESO3M+GOFOAbMweHg3SO3LTaeVv52UzCYgjECQhmOAT//7Erm+966e6ewY8Lh8VRVbs/TB+c/znzfH7//2giIs+BMGoNnERExaLyT+7peNZJU5fY8t79jQIyAQzfXrtgqJJa2l+ubd/Kbgu/d+NQeqaBfv033jqD3Lm2EKZhwHTCDc5e34tzlLVu+ZIraL0em4IX5Zqof0O31Uy3/8z3TdBll3S9pezEF46U4ECAChNxfitvfHf0nrJZWfI62TIraT7kHKLRqKGo/zXr1gzjGKydb2w+KCbDXHn65d+fYT+jmo7cjIuL62d/t3Qk4vP0wIiLaq8cf9d6PVkREHES3mBFwrWOKrarOdiecBRMuw4AAESCEb0aIrJ9jmMRnS2wDIyBGwHwMrwe+zmb7mb0W46/xGQFBgAgQBIiTkBMy6rXnur2JYXippWonHEZABAgCxDHgKN6Qms7i1QtR9YvVtf1TXTtfXBu7zMUbX1V2faZgECAChNcdA/b7/dI8mJ3bX/7n/8sXP8ptXa35xthlTnLbTHp9/7a3802M+iRbEf7/HI2AlOssuPci2W9hd393/G/90kri5dKse5THe/dTLT+Xw8+c9PpOL3+YaLkj23X+7382Yvz2Xo9mouUWMu67fC/D7F2KeHMl2XJMzIMXB/+E2Eq27HzLSQheCSm1ZmMu3R0aJzNtlnZ9VQnw4KcfSvvg0jy2xVP123ll3ndJH/OREfD0mWTf9dL9LcFB8pl24uXIz6u2b+/5y0T3TbqcY0AqZ+bWJ0tT8QerF08NarfzDv9oVP45zDbfakzH3nhZvwCnYd9NzVnwYG7BfBbejAACRIAgQAQIAkSAIEAECAJEgCBABIgAQYAIEASIAEGACBAEiABBgAgQBIgAQYAIEASIAEGACBAEiABBgAgQBIgAQYAIEASIAEGACBAEiAARIAgQAYIAESAIEAGCABEgCBABggARIAiQafAXjX8Crbl3XjgAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
             <rect x="50" y="18" width="60" height="16" rx="3" fill="rgba(235,240,255,0.70)" class="anim-bubble"></rect>
             <rect x="52" y="20" width="56" height="10" rx="2" fill="rgba(210,220,255,0.55)" class="anim-bubble anim-bubble-2"></rect>
             <rect x="62" y="34" width="6" height="4" fill="rgba(235,240,255,0.70)" class="anim-bubble"></rect>
@@ -9709,7 +9774,7 @@ P = drain - 0.5*recovery</pre
             break;
           case "eat_food":
             art = `
-            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADp0lEQVR42u3dPUiUcRwH8L+RENIUIhlxQ9fg4uLiciA0uDS1Jr0MBTlERBC2ONhQBCHS4KBDCUWbDbY4CMERtkhwEA7dcgSGSFMcRIMNYnBm53n6vN7ns53cPff4PF++93teTrtWVxa3AyTkhE2AACKAIIAIIAggAggCiABClE4edQEb32qp+oX6zxfsVQ0IMTXgrsqZy229bvDH+0iWgwYEAUQAQQARQBBABBAEEAEEAUQAEUAQQAQQBJDgfsCQ1P147uvTgCCACCD4TojZUQNCehtw93u4/aHS3gJ6Gr/HW6nbKRoQBBABBAFEAEEAEUAQQAQQBBABBAFEACEkfD9gSNl3S9CAkL0G9H8+NCAIIAIIAkiy6t3FUO8uCiCOgulAPb+rPoIxA2LmE0DMgJj5NCBmQMx8AogZEDOfBsQMCAKIAIIAIoAggATnAfNmYHCo4XGtuh7r+xeKAw2P1ytr7S1obba91w2Na0A0YMeKu/Giev/5pS9tve7WkBkQDdi5M1/aHXYmLF083dLzyl9/OgpGA9Lh5qfu7j8bTr7QgOSgAXs3P+TqF9zqGzmWo86959/+ed7YlSO9T+H1YiJHx1HNdhqQbDbgURvjIBO1/uYzxqm3udiwta2t5o3X27vvz2+Wb7e0/JelueBaMAggAghZOQ/4tLDR/Kg1jGRiw9WrY41nD6Z6dtZ/si5VGhAN2KbywpNUrc/onceZ2qEHbb/S9UdHWn67Vzw0IBqw6exXfhVCCGHgwrlcbNj/neeL2kHbb3c7mwEhhNC1urK4nYbmS6vS+Ey6Z7612uFe8On5zlF76YYGBPcDdqi9nzxJNaIGpDMbMO2z398Za/Ze49Ht6HjK1rCnYbYLww+azn7BlRBIsAGz0nyhxb9MkPRfRqjtaeh2m293v8Q9C2pAHAVnSfmgxolYLcTzCRVXE2pA8t2AWZ/50IAIIKEDr5TE8eklgORzBjT75euacVRHxRqQfDTgm2f3bc0UGB1ufLz88fPxLHjPcq4+nNaAOAoGASTDM2Cl/C7SNyic7WvpebXvm/bGMVievhbLfjmu3GhAEtW1uDAT6bfiqiuvW3pe8dKYvRGjtOwXDUiyM2D3r41UrEha1oN494sGJDgNgwCCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAogAggDSmbqW5ia2bQY0IAIIAogAggAigCCA5Nof4VfIhacXpKcAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADNklEQVR42u3dMUgbYRiA4T/FQpGCIrcIJRSEklmELtKhFKFbpuLo0EkkUsjQLiW41EEoSMnk4OgYOrRFSoeSwUJxDsVCyZylUEKhUDtp0QT1MLm7XJ5n0jQ55O71++/MWQtHB3vHAVJywy5AgAgQBIgAQYAIEJIwYReMpv3GXua/xqXysgmIJRgswXlWLG9d6/XtRnVg2zq/PRMQSzAIEAGCABEgCBABggARIAIEASJAECACBAEiQAjuiCYM6g7kJLdlAmIJBktwznXnn1/r9ZOHmwPb1vntmYBYgkGACBAEiABBgAgQBIgAESAIEAGCABEgCBABggAJbsknu+LcAp/ktq6icHSwd+wQBn8jLqTzd+MswTgHRICQj4uQ6uralZ+7VX/jCAiQPJzMj32AcSbf6SV/51sIIYRudE9ZzgHBEsyQdaYenH4c/fyczwDrGxVHmuEG+HJ9zd4z7UZvCX64uh1CCOFT3ZRMQ9ZCTDxA4ZmKLkJMu9GfgMXZ6MznrXbHETftTECcA2IqJh+gn/2ZdqkE2CzthhBCqIR9R9y0S28CPmkuxX7NbvmHSsZ8KroZARchjO85oAmIABEgCBAXIYk7+b2QfvyuSDw7L54NZDtPX702AbEED91K464jIEDwg+jMieYWMvu1db5/7ft4aXZqINtvbtf6Pr5YqeUvwIveQ87Ce8Xtdjsz4RWLxWS++YpRb/RDuuHYBIyhu17tPVgbF7+m2rk8mo25iiV4nDRbvae+i6W/vsNGIcCdzZq9hqtg8qFw8K7u/4jGBESAIEAECImZaH54G/tFh1/+vxXUulm+9PmlP40zn8/fXwilyV/2/phodW+bgGR0AkYz09fawMl0W3r8qO+/77//2PNYNDMdwm8TcFxc1JgJiIsQBAgCxN0wyV+iX+FGx1KfGyTJx/FKLcDOrTsnH8V4Lukb7PGyBOMcEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAIEASJAECACBAEyJgq7teVjuwETEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABQlz/ADs6mzAuLmp2AAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
             <g class="anim-steam" transform="translate(128 58)">
               <g fill="#c0c8d4">
                 <rect x="1" y="0" width="2" height="6"></rect>
@@ -11517,7 +11582,6 @@ P = drain - 0.5*recovery</pre
                 </div>
                 <div class="demo-scene-frame is-entering is-${activity.kind} animating" data-activity="${activity.id}">
                   <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
-                  ${activity.id === "go_outside" ? '<div class="px-walker" aria-hidden="true"></div>' : ""}
                   <div class="demo-scene-footer">
                     <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
                     <div class="demo-step-dots">${stepIndicator}</div>
@@ -13484,6 +13548,17 @@ P = drain - 0.5*recovery</pre
           !APP.aw.online &&
           (APP.model.stale || (!APP.model.online && !payload));
         DOM.batteryCard.classList.toggle("is-stale", staleBattery);
+
+        // ── Stress arc: update --stress-pct CSS variable (editorial mode) ──
+        const sRaw = APP.demo.enabled
+          ? (APP.demo.S ?? 50)
+          : payload?.S != null
+            ? Number(payload.S)
+            : 50;
+        document.documentElement.style.setProperty(
+          "--stress-pct",
+          (clamp(sRaw, 0, 100) / 100).toFixed(3),
+        );
       }
 
       function startDemoSceneAnimator() {
@@ -15344,6 +15419,33 @@ P = drain - 0.5*recovery</pre
             closeCalibModal();
           }
         });
+
+        // ── Fix: diag-popover native-popover corner bug ──────────────────────
+        // backdrop-filter on ancestor elements breaks the browser's auto-anchor
+        // positioning, causing popovers to render at 0,0. Use beforetoggle
+        // (fires before render) to set position from the trigger button's rect.
+        document.addEventListener(
+          "beforetoggle",
+          (e) => {
+            const pop = e.target;
+            if (!pop.classList.contains("diag-popover")) return;
+            if (e.newState !== "open") return;
+            const btn = document.querySelector(`[popovertarget="${pop.id}"]`);
+            if (!btn) return;
+            const r = btn.getBoundingClientRect();
+            const popW = 280;
+            const margin = 8;
+            let left = r.right - popW;
+            if (left < margin) left = r.left;
+            left = Math.max(
+              margin,
+              Math.min(left, window.innerWidth - popW - margin),
+            );
+            pop.style.top = r.bottom + 6 + "px";
+            pop.style.left = left + "px";
+          },
+          true,
+        );
 
         const tourBtn = document.getElementById("tour-btn");
         if (tourBtn) tourBtn.addEventListener("click", startTour);
