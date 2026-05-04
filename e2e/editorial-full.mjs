@@ -886,8 +886,8 @@ await check("editorial-stress-ring-css", async () => {
       position: cs.position,
     };
   });
-  if (styles.overflow !== "visible")
-    throw new Error(`overflow is "${styles.overflow}", expected "visible"`);
+  if (styles.overflow !== "hidden")
+    throw new Error(`overflow is "${styles.overflow}", expected "hidden"`);
   if (styles.position !== "relative")
     throw new Error(`position is "${styles.position}", expected "relative"`);
 });

@@ -5132,64 +5132,61 @@
         display: none !important;
       }
 
-      /* Vertical battery shell — rounded rect (not pill), matches device casing */
+      /* Outer shell — white casing with rounded corners; inner elements clip to it */
       body[data-theme="editorial"] #battery-visual {
         position: relative !important;
         width: 92px !important;
         height: 230px !important;
         min-width: 92px !important;
-        /* top margin = nub height so layout isn't surprised by the protrusion */
-        margin: 12px 0 0 0 !important;
-        border-radius: 14px !important;
-        overflow: visible !important;
+        margin: 0 !important;
+        border-radius: 22px !important;
+        overflow: hidden !important;
         border: 1.5px solid rgba(120, 100, 230, 0.22) !important;
         flex-shrink: 0 !important;
-        /* Animated fill gradient — hard stop at battery-pct creates sharp fill edge */
+        /* White-lavender casing — the fill lives in ::before, not here */
+        background: rgba(236, 233, 255, 0.88) !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 2px 20px rgba(100, 80, 200, 0.12) !important;
+        /* Animate fill via @property on computed --battery-pct */
+        transition: --battery-pct 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      /* Inner screen — distinct dark rectangle below the LED bar, fill from bottom */
+      body[data-theme="editorial"] #battery-visual::before {
+        content: "";
+        position: absolute;
+        /* top: LED bar top (22px) + LED bar height (12px) + bezel gap (8px) */
+        top: 42px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+        border-radius: 3px;
+        /* Hard-stop fill: dark empty screen above, gradient fill from below */
         background: linear-gradient(
           to top,
           hsl(240 68% 62%) 0%,
           hsl(255 60% 70%) calc(var(--battery-pct) * 60%),
           hsl(265 50% 78%) calc(var(--battery-pct) * 100%),
-          rgba(210, 205, 245, 0.35) calc(var(--battery-pct) * 100%),
-          rgba(242, 240, 255, 0.4) 100%
-        ) !important;
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.8),
-          0 2px 20px rgba(100, 80, 200, 0.12) !important;
-        /* Smooth fill animation via @property interpolation */
-        transition: --battery-pct 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+          rgba(22, 16, 52, 0.88) calc(var(--battery-pct) * 100%),
+          rgba(22, 16, 52, 0.88) 100%
+        );
       }
 
-      /* Battery nub — positive terminal tip protruding above the shell */
-      body[data-theme="editorial"] #battery-visual::before {
-        content: "";
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 28px;
-        height: 12px;
-        background: rgba(228, 224, 255, 0.78);
-        border-radius: 6px 6px 0 0;
-        border: 1.5px solid rgba(120, 100, 230, 0.22);
-        border-bottom: none;
-        box-shadow: 0 -2px 6px rgba(100, 80, 200, 0.08);
-      }
-
-      /* Stress LED ring — full-width bar across the top of the shell */
+      /* Stress LED ring — full width, positioned BELOW the top corner radius */
       body[data-theme="editorial"] #battery-visual::after {
         content: "";
         position: absolute;
-        top: 0;
+        /* Sits exactly at the end of the 22px top corner curve */
+        top: 22px;
         left: 0;
         right: 0;
-        height: 14px;
-        border-radius: 13px 13px 0 0;
+        height: 12px;
         background: hsl(calc(270 + var(--stress-pct, 0.5) * 90) 78% 64%);
         box-shadow:
           0 0 10px 5px
             hsl(calc(270 + var(--stress-pct, 0.5) * 90) 82% 66% / 0.7),
-          0 0 22px 10px
+          0 0 20px 8px
             hsl(calc(270 + var(--stress-pct, 0.5) * 90) 70% 72% / 0.35);
         z-index: 1;
       }
@@ -11318,7 +11315,7 @@ P = drain - 0.5*recovery</pre
         const dayStartMs = dayStart.getTime();
         const DAY_MS = 24 * 60 * 60 * 1000;
         const PAD_L = 22;
-        const PAD_R = 4;
+        const PAD_R = 18;
         const PAD_T = 22;
         const PAD_B = 32;
         const viewW = target.clientWidth || 400;
