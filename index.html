@@ -5164,13 +5164,13 @@
         right: 10px;
         bottom: 10px;
         border-radius: 3px;
-        /* B&W hard-stop: white fill from bottom, near-black for empty screen above */
+        /* B&W hard-stop: black fill from bottom, white for empty screen above */
         background: linear-gradient(
           to top,
-          #ffffff 0%,
-          #f0f0f0 calc(var(--battery-pct) * 100%),
+          #1a1a1a 0%,
           #1e1e1e calc(var(--battery-pct) * 100%),
-          #1e1e1e 100%
+          #f0f0f0 calc(var(--battery-pct) * 100%),
+          #ffffff 100%
         );
       }
 
