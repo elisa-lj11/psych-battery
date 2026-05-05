@@ -8038,28 +8038,20 @@ P = drain - 0.5*recovery</pre
                   <div>
                     <dt>E — Energy</dt>
                     <dd>
-                      Your cognitive fuel. Drains under pressure, recovers
-                      toward a circadian baseline over ~2 hours.
+                      Cognitive fuel. Drains under load; recovers in ~2 h.
                     </dd>
                   </div>
                   <div>
                     <dt>S — Stress</dt>
-                    <dd>
-                      Nervous system load. Builds fast with meetings and
-                      context-switching; decays slowly over days.
-                    </dd>
+                    <dd>Nervous-system load. Builds fast; decays over days.</dd>
                   </div>
                   <div>
                     <dt>P — Pressure</dt>
-                    <dd>
-                      Weighted sum of drain inputs minus recovery. Higher P =
-                      faster burn on both tanks.
-                    </dd>
+                    <dd>Drain rate. High P burns E and S faster.</dd>
                   </div>
                 </dl>
                 <p class="model-mini-footer">
-                  The map on the right shows where you're heading. Tap
-                  <strong>?</strong> → How it works for the full math.
+                  Tap <strong>?</strong> → How it works for the math.
                 </p>
               </div>
             </div>
@@ -15727,10 +15719,11 @@ P = drain - 0.5*recovery</pre
             document.body.appendChild(pop);
             const r = helpBtn.getBoundingClientRect();
             pop.style.top = window.scrollY + r.bottom + 6 + "px";
+            const popW = 320;
             pop.style.left =
               Math.max(
                 8,
-                Math.min(window.innerWidth - 340, window.scrollX + r.left - 8),
+                Math.min(window.innerWidth - popW - 8, window.scrollX + r.left),
               ) + "px";
             activeFeaturePopover = pop;
             return;
