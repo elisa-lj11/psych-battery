@@ -3948,11 +3948,13 @@
         justify-content: center;
         gap: 10px;
         padding: 12px 16px calc(env(safe-area-inset-bottom, 8px) + 12px);
-        background: var(--px-bg);
+        background: rgba(15, 15, 19, 0.72);
         border: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
         border-radius: 0;
-        box-shadow: none;
-        backdrop-filter: none;
+        box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(16px) saturate(160%);
+        -webkit-backdrop-filter: blur(16px) saturate(160%);
         z-index: 30;
       }
 
@@ -6722,6 +6724,34 @@
         margin-bottom: 0;
       }
 
+      .model-mini-dl {
+        margin: 0 0 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .model-mini-dl dt {
+        font-family: var(--px-font-ui);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--px-accent);
+        margin-bottom: 2px;
+      }
+      .model-mini-dl dd {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--px-text);
+      }
+      .model-mini-footer {
+        margin: 0;
+        font-size: 0.88rem;
+        color: var(--px-muted);
+        border-top: 1px solid var(--px-border);
+        padding-top: 10px;
+      }
+
       .layer2-explain-formula {
         font-family: var(--px-font-body);
         font-size: 1rem;
@@ -8004,15 +8034,32 @@ P = drain - 0.5*recovery</pre
             <div class="layer2-model-explain">
               <div class="layer2-explain-title">How the model works</div>
               <div class="layer2-explain-body">
-                <p>
-                  <strong>Energy (E)</strong> depletes under pressure and
-                  recovers toward your circadian baseline over ~2 hours.
-                  <strong>Stress (S)</strong> builds with cognitive load and
-                  decays slowly — days, not hours.
-                </p>
-                <p>
-                  The map shows where your state is heading. Tap
-                  <strong>?</strong> → How it works for the full model detail.
+                <dl class="model-mini-dl">
+                  <div>
+                    <dt>E — Energy</dt>
+                    <dd>
+                      Your cognitive fuel. Drains under pressure, recovers
+                      toward a circadian baseline over ~2 hours.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>S — Stress</dt>
+                    <dd>
+                      Nervous system load. Builds fast with meetings and
+                      context-switching; decays slowly over days.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>P — Pressure</dt>
+                    <dd>
+                      Weighted sum of drain inputs minus recovery. Higher P =
+                      faster burn on both tanks.
+                    </dd>
+                  </div>
+                </dl>
+                <p class="model-mini-footer">
+                  The map on the right shows where you're heading. Tap
+                  <strong>?</strong> → How it works for the full math.
                 </p>
               </div>
             </div>
