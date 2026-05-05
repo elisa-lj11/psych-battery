@@ -6,12 +6,15 @@ Mental Meter local server.
 """
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
-from threading import Lock
+from threading import Lock, Thread
 import urllib.request
 import urllib.error
 import urllib.parse
 import json
 import logging
+import os
+import subprocess as _subprocess
+import sys
 from datetime import datetime, timezone, timedelta
 import statistics as _statistics
 
@@ -27,6 +30,20 @@ HIGH_DRAIN          = 15.0     # max drain rate (normalises battery to 0%)
 AFK_RECHARGE        = 7.5      # recharge rate while AFK (drain units per minute)
 
 _accelerated = False   # toggled via POST /accelerate
+
+# ── CrowPanel management ───────────────────────────────────────────────────────
+_BASE_DIR          = os.path.dirname(os.path.abspath(__file__))
+CROWPANEL_PORT     = 'COM4'
+CROWPANEL_FQBN     = 'esp32:esp32:esp32s3'
+_ARDUINO_CLI       = os.path.join(
+    os.environ.get('LOCALAPPDATA', r'C:\Users\dougl\AppData\Local'),
+    r'Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe',
+)
+_BRIDGE_SCRIPT     = os.path.join(_BASE_DIR, 'crowpanel', 'charge_sender.py')
+_CROWPANEL_SKETCH_DIR = os.path.join(_BASE_DIR, 'crowpanel', 'psych_battery_crowpanel')
+_bridge_proc: '_subprocess.Popen | None' = None
+_BRIDGE_LOCK       = Lock()
+_flash_status: dict = {'state': 'idle', 'message': ''}
 
 DRAIN_RULES = [
     {'patterns': ['claude', 'chatgpt', 'gemini', 'copilot', 'cursor', 'perplexity', 'gpt', 'mistral', 'openai'], 'rate': 15.0},
@@ -44,6 +61,73 @@ DRAIN_RULES = [
     {'patterns': ['explorer', 'finder', 'terminal', 'cmd', 'powershell', 'bash', 'wt', 'iterm'],                 'rate':  4.0},
     {'patterns': [],                                                                                                'rate':  8.0},
 ]
+
+
+def _crowpanel_is_bridge_running() -> bool:
+    global _bridge_proc
+    with _BRIDGE_LOCK:
+        return _bridge_proc is not None and _bridge_proc.poll() is None
+
+
+def _crowpanel_kill_bridge() -> None:
+    global _bridge_proc
+    with _BRIDGE_LOCK:
+        if _bridge_proc is not None and _bridge_proc.poll() is None:
+            _bridge_proc.terminate()
+            try:
+                _bridge_proc.wait(timeout=5)
+            except Exception:
+                _bridge_proc.kill()
+        _bridge_proc = None
+
+
+def _crowpanel_start_bridge() -> int:
+    """Kill any running bridge, start a fresh one, return its PID."""
+    _crowpanel_kill_bridge()
+    with _BRIDGE_LOCK:
+        global _bridge_proc
+        _bridge_proc = _subprocess.Popen(
+            [sys.executable, _BRIDGE_SCRIPT],
+            stdout=_subprocess.DEVNULL,
+            stderr=_subprocess.DEVNULL,
+        )
+        return _bridge_proc.pid
+
+
+def _crowpanel_flash_bg() -> None:
+    """Run compile + upload in a background thread; update _flash_status."""
+    global _flash_status
+    try:
+        _flash_status = {'state': 'compiling', 'message': 'Compiling firmware…'}
+        result = _subprocess.run(
+            [_ARDUINO_CLI, 'compile', '--fqbn', CROWPANEL_FQBN, _CROWPANEL_SKETCH_DIR],
+            capture_output=True, text=True, timeout=180,
+        )
+        if result.returncode != 0:
+            _flash_status = {
+                'state': 'error',
+                'message': 'Compile failed: ' + (result.stderr or result.stdout)[:300],
+            }
+            return
+
+        _flash_status = {'state': 'uploading', 'message': 'Uploading to CrowPanel…'}
+        result = _subprocess.run(
+            [_ARDUINO_CLI, 'upload', '--port', CROWPANEL_PORT,
+             '--fqbn', CROWPANEL_FQBN, _CROWPANEL_SKETCH_DIR],
+            capture_output=True, text=True, timeout=90,
+        )
+        if result.returncode != 0:
+            _flash_status = {
+                'state': 'error',
+                'message': 'Upload failed: ' + (result.stderr or result.stdout)[:300],
+            }
+            return
+
+        _flash_status = {'state': 'done', 'message': 'Firmware flashed successfully.'}
+        logging.info('CrowPanel flash complete.')
+    except Exception as exc:
+        _flash_status = {'state': 'error', 'message': str(exc)[:300]}
+        logging.exception('CrowPanel flash failed')
 
 
 def _match_rate(app: str, title: str) -> float:
@@ -398,6 +482,8 @@ class Handler(SimpleHTTPRequestHandler):
             self._state()
         elif self.path == '/mode':
             self._mode()
+        elif self.path == '/crowpanel/status':
+            self._crowpanel_status()
         elif self.path.startswith('/aw/'):
             self._proxy(self.path[3:])
         else:
@@ -414,6 +500,10 @@ class Handler(SimpleHTTPRequestHandler):
             self._send_json({'accelerated': new_val})
         elif self.path == '/log':
             self._proxy_post(FLASK_BASE + '/log')
+        elif self.path == '/crowpanel/bridge/restart':
+            self._crowpanel_bridge_restart()
+        elif self.path == '/crowpanel/flash':
+            self._crowpanel_flash()
         else:
             self.send_response(404)
             self.end_headers()
@@ -557,6 +647,34 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_header('Content-Length', str(len(msg)))
             self.end_headers()
             self.wfile.write(msg)
+
+    def _crowpanel_status(self):
+        self._send_json({
+            'port': CROWPANEL_PORT,
+            'bridge_running': _crowpanel_is_bridge_running(),
+            'flash': _flash_status,
+        })
+
+    def _crowpanel_bridge_restart(self):
+        try:
+            pid = _crowpanel_start_bridge()
+            self._send_json({'ok': True, 'pid': pid, 'message': 'Bridge process restarted.'})
+        except Exception as exc:
+            self._send_json({'ok': False, 'error': str(exc)}, status=500)
+
+    def _crowpanel_flash(self):
+        global _flash_status
+        if _flash_status.get('state') in ('compiling', 'uploading', 'starting'):
+            self._send_json({'ok': False, 'error': 'Flash already in progress.'}, status=409)
+            return
+        _crowpanel_kill_bridge()          # release the COM port before flashing
+        _flash_status = {'state': 'starting', 'message': 'Starting…'}
+        Thread(target=_crowpanel_flash_bg, daemon=True).start()
+        self._send_json({
+            'ok': True,
+            'status': 'started',
+            'message': 'Flashing in background. Poll /crowpanel/status for progress.',
+        })
 
     def log_message(self, fmt, *args):
         pass
