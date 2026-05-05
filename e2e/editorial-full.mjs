@@ -313,7 +313,7 @@ await page.screenshot({ path: snap("dock-default") });
 
 // Energy sheet
 await check("dock-energy-open", async () => {
-  await domClick("#energy-btn");
+  await domClick("#log-btn");
   await waitVisible(".tap-score", 4000);
 });
 await page.screenshot({ path: snap("dock-energy-sheet") });
@@ -333,7 +333,7 @@ await page.screenshot({ path: snap("dock-energy-tapped-7") });
 
 // Re-open energy sheet, switch to stress tab
 await check("dock-energy-stress-tab", async () => {
-  await domClick("#energy-btn");
+  await domClick("#log-btn");
   await waitVisible('.tab-btn[data-kind="stress_rating"]', 3000);
   await page.locator('.tab-btn[data-kind="stress_rating"]').click();
   await page.waitForTimeout(300);
@@ -344,7 +344,7 @@ await page.waitForTimeout(300);
 
 // Stress sheet directly
 await check("dock-stress-open", async () => {
-  await domClick("#stress-btn");
+  await domClick("#log-btn");
   await waitVisible(".tap-score", 4000);
 });
 await page.screenshot({ path: snap("dock-stress-sheet") });
@@ -802,7 +802,7 @@ await cleanLoad();
 await dismissSplash();
 
 // Open a bottom sheet (energy) and check styles
-await domClick("#energy-btn");
+await domClick("#log-btn");
 await page.waitForTimeout(400);
 const sheetInfo = await page.evaluate(() => {
   const sheet = document.querySelector(".bottom-sheet, [class*='sheet']");
