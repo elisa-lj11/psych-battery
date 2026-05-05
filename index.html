@@ -267,6 +267,55 @@
         font-size: 11px;
         opacity: 0.75;
       }
+      .cpp-crowpanel {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--px-border, #2a2a3a);
+      }
+      .cpp-crowpanel-label {
+        font-size: 10px;
+        font-family: var(--px-font-ui);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        margin-bottom: 6px;
+      }
+      .cpp-crowpanel-btns {
+        display: flex;
+        gap: 6px;
+      }
+      .cpp-crowpanel-btn {
+        flex: 1;
+        padding: 5px 8px;
+        font-size: 11px;
+        font-family: var(--px-font-ui);
+        letter-spacing: 0.04em;
+        background: var(--px-button, #1e1e2e);
+        border: 1px solid var(--px-border, #2a2a3a);
+        color: var(--px-text, #e0e0f0);
+        cursor: pointer;
+        border-radius: 2px;
+        text-align: center;
+        transition:
+          background 0.15s,
+          opacity 0.15s;
+        white-space: nowrap;
+      }
+      .cpp-crowpanel-btn:hover {
+        background: var(--px-accent-dim, rgba(129, 140, 248, 0.15));
+        border-color: var(--px-accent, #818cf8);
+      }
+      .cpp-crowpanel-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .cpp-flash-status {
+        margin-top: 6px;
+        font-size: 11px;
+        font-family: var(--px-font-copy);
+        opacity: 0.8;
+        min-height: 14px;
+      }
 
       #header-controls {
         display: flex;
@@ -8024,6 +8073,28 @@
               Run <code>python server.py</code> + Flask backend at
               <code>localhost:7070</code> for full data.
             </p>
+            <div class="cpp-crowpanel" id="cpp-crowpanel-actions" hidden>
+              <div class="cpp-crowpanel-label">⬛ CrowPanel e-ink display</div>
+              <div class="cpp-crowpanel-btns">
+                <button
+                  class="cpp-crowpanel-btn"
+                  id="cpp-bridge-restart"
+                  type="button"
+                  title="Restarts charge_sender.py — the Python script that reads energy from server.py and sends it over USB Serial (COM4) to the CrowPanel e-ink display. Use this if the display stopped updating but the USB cable is still connected."
+                >
+                  ↺ Restart bridge
+                </button>
+                <button
+                  class="cpp-crowpanel-btn"
+                  id="cpp-flash-btn"
+                  type="button"
+                  title="Recompiles and uploads the CrowPanel firmware via arduino-cli. Use this to recover from a corrupt flash, after a firmware update, or if the display shows garbled content. Takes ~60 s. The bridge is automatically stopped first and restarted when done."
+                >
+                  ⬇ Flash firmware
+                </button>
+              </div>
+              <div class="cpp-flash-status" id="cpp-flash-status" hidden></div>
+            </div>
           </div>
         </div>
       </div>
@@ -16693,6 +16764,99 @@ P = drain − 0.5·recovery</pre
         }
         setTimeout(doTalk, 1200);
       }
+
+      // ── CrowPanel management buttons ──────────────────────────────────────────
+      // Only visible when running on localhost (server.py must be up).
+      (function initCrowPanelControls() {
+        const isLocal =
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1";
+        if (!isLocal) return;
+
+        const panel = document.getElementById("cpp-crowpanel-actions");
+        const bridgeBtn = document.getElementById("cpp-bridge-restart");
+        const flashBtn = document.getElementById("cpp-flash-btn");
+        const statusEl = document.getElementById("cpp-flash-status");
+        if (!panel || !bridgeBtn || !flashBtn || !statusEl) return;
+
+        panel.removeAttribute("hidden");
+
+        function setFlashStatus(msg, show) {
+          statusEl.textContent = msg;
+          statusEl.toggleAttribute("hidden", !show);
+        }
+
+        async function pollCrowPanelStatus() {
+          try {
+            const res = await fetch("/crowpanel/status");
+            if (!res.ok) return;
+            const data = await res.json();
+            const flash = data.flash || {};
+            const state = flash.state || "idle";
+            const inProgress =
+              state === "starting" ||
+              state === "compiling" ||
+              state === "uploading";
+            flashBtn.disabled = inProgress;
+            bridgeBtn.disabled = inProgress;
+            if (state === "compiling" || state === "uploading") {
+              setFlashStatus("⏳ " + flash.message, true);
+              setTimeout(pollCrowPanelStatus, 2000);
+            } else if (state === "done") {
+              setFlashStatus("✓ " + flash.message, true);
+            } else if (state === "error") {
+              setFlashStatus("✗ " + flash.message, true);
+            } else if (state === "starting") {
+              setFlashStatus("⏳ Starting…", true);
+              setTimeout(pollCrowPanelStatus, 1500);
+            }
+          } catch (_) {}
+        }
+
+        bridgeBtn.addEventListener("click", async () => {
+          bridgeBtn.disabled = true;
+          setFlashStatus("↺ Restarting bridge…", true);
+          try {
+            const res = await fetch("/crowpanel/bridge/restart", {
+              method: "POST",
+            });
+            const data = await res.json();
+            if (data.ok) {
+              setFlashStatus("✓ Bridge restarted (PID " + data.pid + ")", true);
+            } else {
+              setFlashStatus("✗ " + (data.error || "Failed"), true);
+            }
+          } catch (e) {
+            setFlashStatus("✗ " + e.message, true);
+          } finally {
+            bridgeBtn.disabled = false;
+          }
+        });
+
+        flashBtn.addEventListener("click", async () => {
+          flashBtn.disabled = true;
+          bridgeBtn.disabled = true;
+          setFlashStatus("⏳ Starting flash…", true);
+          try {
+            const res = await fetch("/crowpanel/flash", { method: "POST" });
+            const data = await res.json();
+            if (data.ok) {
+              pollCrowPanelStatus();
+            } else {
+              setFlashStatus("✗ " + (data.error || "Failed"), true);
+              flashBtn.disabled = false;
+              bridgeBtn.disabled = false;
+            }
+          } catch (e) {
+            setFlashStatus("✗ " + e.message, true);
+            flashBtn.disabled = false;
+            bridgeBtn.disabled = false;
+          }
+        });
+
+        // Initial status check
+        pollCrowPanelStatus();
+      })();
 
       start();
       startZoomBlinks();
