@@ -3,7 +3,9 @@
  * Hardware: ELECROW CrowPanel DIS08792E (dual SSD1683, 792x272 B/W)
  *
  * MODE: Serial (USB) only — no WiFi needed.
- * Send a number 0-100 over Serial at 115200 baud to update the display.
+ * Send "NN trend status\n" over Serial at 115200 baud to update the display.
+ * trend: up | down | flat
+ * status: live | stale | offline
  * The Python script charge_sender.py does this automatically from the model.
  *
  * FILE STRUCTURE — put these files in the same sketch folder:
@@ -18,7 +20,7 @@
  * To send data from Python:
  *   import serial
  *   ser = serial.Serial('COM3', 115200)   # adjust port (COMx on Windows, /dev/tty... on Mac)
- *   ser.write(b'75\n')                    # send any integer 0-100
+ *   ser.write(b'75 up live\n')            # "NN trend status"
  */
 
 #include "EPD.h"        // Includes EPD_Init.h internally; all drawing functions here
@@ -42,13 +44,24 @@ const int BH   = 172;   // battery body height
 const int PAD  = 8;     // inner fill padding
 const int NUB  = 22;    // terminal nub width
 
+// ── Arrow constants ───────────────────────────────────────────────────────────
+// Solid filled triangle placed below the battery, centered.
+// ARROW_W is the half-width at the base; full base = 2*ARROW_W.
+const int ARROW_CX = BX + BW / 2;  // x center
+const int ARROW_Y  = BY + BH + 10; // top of the arrow zone
+const int ARROW_H  = 30;           // triangle height in pixels
+const int ARROW_W  = 38;           // triangle half-width (base = 76px)
+
 // ── State ─────────────────────────────────────────────────────────────────────
 int  currentCharge  = 100;
+char currentTrend[8] = "flat";   // "up" | "down" | "flat"
 bool needsRedraw    = true;
 int  refreshCount   = 0;
 
 // ── Forward declarations ───────────────────────────────────────────────────────
-void drawChargeBar(int pct);
+void drawChargeBar(int pct, const char* trend);
+void drawFilledTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t color);
+void drawTrendArrow(const char* trend, uint16_t color);
 void fullRefresh();
 void fastRefresh();
 
@@ -56,13 +69,12 @@ void fastRefresh();
 void setup() {
   Serial.begin(115200);
   delay(300);
-  Serial.println("Psych_Battery CrowPanel ready. Send 0-100 over Serial.");
+  Serial.println("Psych_Battery CrowPanel ready. Send \"NN trend status\" over Serial.");
 
-  // Initialize display and show 100% on boot
   EPD_Init();
   Paint_NewImage(ImageBW, EPD_W, EPD_H, 0, WHITE);
   Paint_Clear(WHITE);
-  drawChargeBar(currentCharge);
+  drawChargeBar(currentCharge, currentTrend);
   EPD_Display(ImageBW);
   EPD_Update();
   EPD_DeepSleep();
@@ -70,26 +82,34 @@ void setup() {
 
 // ── loop ───────────────────────────────────────────────────────────────────────
 void loop() {
-  // Read charge level from Serial
   if (Serial.available() > 0) {
     String line = Serial.readStringUntil('\n');
     line.trim();
     if (line.length() > 0) {
-      int val = line.toInt();
-      if (val >= 0 && val <= 100 && val != currentCharge) {
+      // Parse: "NN trend status"
+      char trendBuf[16]  = "flat";
+      char statusBuf[16] = "offline";
+      int  val           = 0;
+      sscanf(line.c_str(), "%d %15s %15s", &val, trendBuf, statusBuf);
+
+      if (val >= 0 && val <= 100) {
+        bool changed = (val != currentCharge) || (strcmp(trendBuf, currentTrend) != 0);
         currentCharge = val;
-        needsRedraw   = true;
+        strncpy(currentTrend, trendBuf, sizeof(currentTrend) - 1);
+        currentTrend[sizeof(currentTrend) - 1] = '\0';
+        if (changed) needsRedraw = true;
         Serial.print("ACK ");
-        Serial.println(currentCharge);
+        Serial.print(currentCharge);
+        Serial.print(" ");
+        Serial.println(currentTrend);
       }
     }
   }
 
   if (needsRedraw) {
     Paint_Clear(WHITE);
-    drawChargeBar(currentCharge);
+    drawChargeBar(currentCharge, currentTrend);
 
-    // Full refresh every 10 draws to clear ghosting; fast otherwise
     refreshCount++;
     if (refreshCount % 10 == 0) {
       fullRefresh();
@@ -116,9 +136,67 @@ void fastRefresh() {
   EPD_DeepSleep();
 }
 
+// ── Filled triangle via horizontal scan lines ─────────────────────────────────
+// Vertices can be in any order; they are sorted by y internally.
+void drawFilledTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t color) {
+  // Sort by y: y0 <= y1 <= y2
+  if (y0 > y1) { int t; t=x0;x0=x1;x1=t; t=y0;y0=y1;y1=t; }
+  if (y0 > y2) { int t; t=x0;x0=x2;x2=t; t=y0;y0=y2;y2=t; }
+  if (y1 > y2) { int t; t=x1;x1=x2;x2=t; t=y1;y1=y2;y2=t; }
+
+  int totalH = y2 - y0;
+  if (totalH == 0) return;
+
+  for (int y = y0; y <= y2; y++) {
+    bool lowerHalf = (y >= y1) || (y1 == y0);
+    int segH = lowerHalf ? y2 - y1 : y1 - y0;
+    if (segH == 0) segH = 1;
+
+    // ax: interpolate along the long edge (y0→y2)
+    int ax = x0 + (int)((long)(x2 - x0) * (y - y0) / totalH);
+    // bx: interpolate along the short edge (y0→y1 or y1→y2)
+    int bx = lowerHalf
+      ? x1 + (int)((long)(x2 - x1) * (y - y1) / segH)
+      : x0 + (int)((long)(x1 - x0) * (y - y0) / segH);
+
+    if (ax > bx) { int t = ax; ax = bx; bx = t; }
+    EPD_DrawLine(ax, y, bx, y, color);
+  }
+}
+
+// ── Trend arrow ───────────────────────────────────────────────────────────────
+// Draws a solid filled triangle below the battery.
+//   up   → ▲ (apex at top, base at bottom)
+//   down → ▼ (apex at bottom, base at top)
+//   flat → ━ (thin filled rectangle)
+void drawTrendArrow(const char* trend, uint16_t color) {
+  int cx = ARROW_CX;
+  int y0 = ARROW_Y;
+  int y1 = ARROW_Y + ARROW_H;
+
+  if (strcmp(trend, "up") == 0) {
+    // Apex top-center, base bottom-left + bottom-right
+    drawFilledTriangle(cx, y0, cx - ARROW_W, y1, cx + ARROW_W, y1, color);
+
+  } else if (strcmp(trend, "down") == 0) {
+    // Apex bottom-center, base top-left + top-right
+    drawFilledTriangle(cx, y1, cx - ARROW_W, y0, cx + ARROW_W, y0, color);
+
+  } else {
+    // Flat: a squat filled rectangle centered vertically in the arrow zone
+    int barH  = 10;
+    int barMid = y0 + ARROW_H / 2;
+    EPD_DrawRectangle(
+      cx - ARROW_W, barMid - barH / 2,
+      cx + ARROW_W, barMid + barH / 2,
+      color, 1
+    );
+  }
+}
+
 // ── Battery drawing ────────────────────────────────────────────────────────────
 
-void drawChargeBar(int pct) {
+void drawChargeBar(int pct, const char* trend) {
   pct = constrain(pct, 0, 100);
   bool isAlert = (pct < 20);
 
@@ -126,57 +204,47 @@ void drawChargeBar(int pct) {
     // Alert mode: invert — black background, white elements
     Paint_Clear(BLACK);
 
-    // Battery outline in white
     EPD_DrawRectangle(BX, BY, BX + BW, BY + BH, WHITE, 0);
-
-    // Terminal nub
     EPD_DrawRectangle(BX + BW, BY + 50, BX + BW + NUB, BY + BH - 50, WHITE, 1);
 
-    // Fill bar (white)
     int fillW = (BW - PAD * 2) * pct / 100;
     if (fillW > 0) {
       EPD_DrawRectangle(BX + PAD, BY + PAD, BX + PAD + fillW, BY + BH - PAD, WHITE, 1);
     }
 
-    // Percentage — large, centered in battery
-    // EPD_ShowNum: (x, y, number, digits, font_size, color)
     char buf[4];
     snprintf(buf, sizeof(buf), "%d", pct);
-    int textX = BX + BW / 2 - (strlen(buf) * 24 + 12) / 2;  // rough center for 48px font
+    int textX = BX + BW / 2 - (strlen(buf) * 24 + 12) / 2;
     EPD_ShowNum(textX, BY + BH / 2 - 24, pct, 3, 48, WHITE);
     EPD_ShowString(textX + strlen(buf) * 24, BY + BH / 2 - 24, "%", 48, WHITE);
 
-    // "RECHARGE" label below battery
     EPD_ShowString(BX + BW / 2 - 72, BY + BH + 10, "RECHARGE", 16, WHITE);
 
   } else {
     // Normal mode: black on white
-    // Battery outline
     EPD_DrawRectangle(BX, BY, BX + BW, BY + BH, BLACK, 0);
-
-    // Terminal nub (filled, black)
     EPD_DrawRectangle(BX + BW, BY + 50, BX + BW + NUB, BY + BH - 50, BLACK, 1);
 
-    // Fill bar
     int fillW = (BW - PAD * 2) * pct / 100;
     if (fillW > 0) {
       EPD_DrawRectangle(BX + PAD, BY + PAD, BX + PAD + fillW, BY + BH - PAD, BLACK, 1);
     }
 
-    // Percentage — centered in the battery body
-    // Use white text if fill extends past center, black otherwise
-    int centerX = BX + BW / 2;
+    int centerX  = BX + BW / 2;
     int fillRight = BX + PAD + fillW;
     uint16_t textColor = (fillRight > centerX - 20) ? WHITE : BLACK;
 
     char buf[4];
     snprintf(buf, sizeof(buf), "%d", pct);
-    int numW  = strlen(buf) * 24;   // approx width at size 48 (24px per char)
-    int unitW = 12;                 // "%" width at size 48
+    int numW   = strlen(buf) * 24;
+    int unitW  = 12;
     int totalW = numW + unitW;
     int textX  = centerX - totalW / 2;
 
     EPD_ShowNum(textX, BY + BH / 2 - 24, pct, 3, 48, textColor);
     EPD_ShowString(textX + numW, BY + BH / 2 - 24, "%", 48, textColor);
+
+    // Trend arrow below battery (black on white)
+    drawTrendArrow(trend, BLACK);
   }
 }

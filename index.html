@@ -4024,11 +4024,23 @@
         overscroll-behavior: contain;
       }
 
-      body[data-mode="rating"] #rating-sheet,
-      body[data-mode="recovery-menu"] #recovery-sheet {
-        transform: translateY(0);
+      body[data-mode="rating"] #rating-sheet {
+        transform: translateX(-50%) translateY(0);
         pointer-events: auto;
         visibility: visible;
+      }
+
+      body[data-mode="recovery-menu"] #recovery-sheet {
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+        visibility: visible;
+      }
+
+      #recovery-sheet {
+        left: 50%;
+        right: auto;
+        width: min(640px, calc(100% - 48px));
+        transform: translateX(-50%) translateY(100%);
       }
 
       #rating-sheet {
@@ -4036,10 +4048,6 @@
         right: auto;
         width: min(720px, calc(100% - 24px));
         transform: translateX(-50%) translateY(100%);
-      }
-
-      body[data-mode="rating"] #rating-sheet {
-        transform: translateX(-50%) translateY(0);
       }
 
       .sheet-head {
@@ -5045,8 +5053,7 @@
       }
       body[data-theme="editorial"] .stepper-btn,
       body[data-theme="editorial"] .start-btn,
-      body[data-theme="editorial"] #energy-btn,
-      body[data-theme="editorial"] #stress-btn,
+      body[data-theme="editorial"] #log-btn,
       body[data-theme="editorial"] #recovery-trigger,
       body[data-theme="editorial"] #collapse-btn,
       body[data-theme="editorial"] #open-diagnostics,
@@ -5595,13 +5602,17 @@
         align-items: center;
       }
 
-      /* Self-log dock buttons should also re-tint by theme */
-      #energy-btn,
-      #stress-btn {
+      /* Self-log dock log button — color tracks active kind */
+      #log-btn {
         border-color: var(--px-border);
-        color: var(--px-text);
+        background: var(--px-energy-soft);
+        color: var(--px-energy);
         outline: 2px solid var(--px-text);
         outline-offset: 1px;
+      }
+      #log-btn[data-active-kind="stress_rating"] {
+        background: var(--px-stress-soft);
+        color: var(--px-stress);
       }
 
       .dock-log-tag {
@@ -5614,16 +5625,6 @@
         color: var(--px-bg);
         margin-left: 4px;
         flex-shrink: 0;
-      }
-
-      #energy-btn {
-        background: var(--px-energy-soft);
-        color: var(--px-energy);
-      }
-
-      #stress-btn {
-        background: var(--px-stress-soft);
-        color: var(--px-stress);
       }
       /* Emoji icons in self-log buttons follow the active theme accent
          instead of the OS-default colored emoji glyph. Using
@@ -5709,8 +5710,7 @@
       .activity-btn,
       .stepper-btn,
       .start-btn,
-      #energy-btn,
-      #stress-btn,
+      #log-btn,
       #recovery-trigger,
       #collapse-btn,
       #open-diagnostics,
@@ -5985,6 +5985,35 @@
       }
       .help-howitworks li {
         margin-bottom: 10px;
+      }
+      .help-section-sub {
+        font-family: var(--px-font-ui);
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        margin: 24px 0 10px;
+      }
+      .help-model-dl {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .help-model-dl dt {
+        font-family: var(--px-font-ui);
+        font-size: 0.82rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--px-accent);
+        margin-bottom: 3px;
+      }
+      .help-model-dl dd {
+        margin: 0;
+        font-family: var(--px-font-copy);
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--px-text);
       }
       @media (min-width: 520px) {
         .gloss-row {
@@ -7976,78 +8005,14 @@ P = drain - 0.5*recovery</pre
               <div class="layer2-explain-title">How the model works</div>
               <div class="layer2-explain-body">
                 <p>
-                  <strong>Energy (E)</strong> tracks remaining cognitive fuel —
-                  100% is fully rested, 0% is depleted. It decays under pressure
-                  and recovers toward a circadian baseline (Erest) that shifts
-                  with your chronotype throughout the day.
+                  <strong>Energy (E)</strong> depletes under pressure and
+                  recovers toward your circadian baseline over ~2 hours.
+                  <strong>Stress (S)</strong> builds with cognitive load and
+                  decays slowly — days, not hours.
                 </p>
                 <p>
-                  <strong>Stress (S)</strong> tracks active load on your nervous
-                  system. It rises with meetings, notifications, and
-                  context-switching, then decays slowly over time as load
-                  clears.
-                </p>
-                <p>
-                  <strong>Drain pressure (P)</strong> is a weighted sum of your
-                  active drain inputs (meetings, async comms, deep work) minus a
-                  fraction of recovery inputs. Higher P means faster energy burn
-                  and faster stress accumulation.
-                </p>
-                <p>
-                  The
-                  <span
-                    class="jargon-tip"
-                    data-tip="Tiny arrows showing which way energy and stress drift from any starting point."
-                    tabindex="0"
-                    >vector field</span
-                  >
-                  on the right shows drift direction at each (E, S) point. The
-                  <span
-                    class="jargon-tip"
-                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
-                    tabindex="0"
-                    >nullclines</span
-                  >
-                  mark where change stops, and your
-                  <span
-                    class="jargon-tip"
-                    data-tip="The path your state has taken -- your last 24 ticks plotted on the map."
-                    tabindex="0"
-                    >trajectory</span
-                  >
-                  traces the last 24 ticks. The
-                  <span
-                    class="jargon-tip"
-                    data-tip="Your built-in 24-hour rhythm -- energy peaks late morning, dips mid-afternoon."
-                    tabindex="0"
-                    >circadian curve</span
-                  >
-                  shifts Erest over the day.
-                </p>
-                <p>
-                  <strong>Time constants</strong> reveal a key asymmetry: energy
-                  recovers toward Erest with a ~2-hour time constant — two hours
-                  of low-pressure activity brings you most of the way back.
-                  Stress decays far more slowly, with a natural half-life around
-                  3 days. This means stress accumulated during a demanding week
-                  persists into the weekend even after energy has recovered,
-                  explaining why feeling rested but still wired is
-                  physiologically normal rather than a paradox.
-                </p>
-                <p>
-                  The <strong>equilibrium point</strong> — where the two
-                  <span
-                    class="jargon-tip"
-                    data-tip="The curves where energy or stress would stop changing. Cross both = equilibrium."
-                    tabindex="0"
-                    >nullclines</span
-                  >
-                  intersect — shows where your state would land if today's
-                  activity pattern continued indefinitely. A high-drain pattern
-                  shifts the equilibrium toward low-E, high-S (lower-right on
-                  the map). Protective no-pressure blocks pull it back toward
-                  the upper-left. Tracking where your equilibrium sits is more
-                  informative than watching the instantaneous dot.
+                  The map shows where your state is heading. Tap
+                  <strong>?</strong> → How it works for the full model detail.
                 </p>
               </div>
             </div>
@@ -8142,13 +8107,10 @@ P = drain - 0.5*recovery</pre
     ></div>
 
     <div id="self-log-dock">
-      <button id="energy-btn" type="button" data-kind="energy_rating">
-        <span class="dock-icon dock-icon-energy" aria-hidden="true">⚡</span>
-        Energy<span class="dock-log-tag" aria-hidden="true">LOG</span>
-      </button>
-      <button id="stress-btn" type="button" data-kind="stress_rating">
-        <span class="dock-icon dock-icon-stress" aria-hidden="true">🌀</span>
-        Stress<span class="dock-log-tag" aria-hidden="true">LOG</span>
+      <button id="log-btn" type="button" data-active-kind="energy_rating">
+        <span class="dock-icon" aria-hidden="true" id="log-btn-icon">⚡</span>
+        <span id="log-btn-kind">Energy</span>
+        <span class="dock-log-tag" aria-hidden="true">LOG</span>
       </button>
       <button id="recovery-trigger" type="button">
         <span class="dock-icon" aria-hidden="true">⟲</span>
@@ -8439,6 +8401,49 @@ P = drain - 0.5*recovery</pre
               detail layers show the math underneath if you want to look.
             </li>
           </ol>
+          <h3 class="help-section-sub">The math</h3>
+          <dl class="help-model-dl">
+            <div>
+              <dt>Energy (E)</dt>
+              <dd>
+                Tracks cognitive fuel — 100% is fully rested, 0% is depleted. It
+                decays under pressure (P) and recovers toward a circadian
+                baseline (Erest) with a ~2-hour time constant. Two hours of
+                low-pressure activity brings you most of the way back.
+              </dd>
+            </div>
+            <div>
+              <dt>Stress (S)</dt>
+              <dd>
+                Tracks load on your nervous system. It rises with meetings,
+                notifications, and context-switching, then decays slowly — a
+                natural half-life of around 3 days. Stress from a demanding week
+                persists into the weekend even after energy has recovered, which
+                is why feeling rested but still wired is physiologically normal.
+              </dd>
+            </div>
+            <div>
+              <dt>Drain pressure (P)</dt>
+              <dd>
+                A weighted sum of active drain inputs (meetings, async comms,
+                deep work) minus a fraction of recovery inputs. Higher P means
+                faster energy burn and faster stress accumulation.
+              </dd>
+            </div>
+            <div>
+              <dt>Energy-Stress map</dt>
+              <dd>
+                The phase portrait in layer 2 shows drift direction at every (E,
+                S) point. The nullclines mark where each variable would stop
+                changing; their intersection is the equilibrium — where your
+                state would land if today's activity pattern continued
+                indefinitely. A high-drain pattern pulls the equilibrium toward
+                low-E, high-S. Recovery blocks shift it back. Watching where the
+                equilibrium sits is often more useful than watching the
+                instantaneous dot.
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
 
@@ -9112,8 +9117,7 @@ P = drain - 0.5*recovery</pre
         btnReplayTick: document.getElementById("btn-replay-tick"),
         btnRunHour: document.getElementById("btn-run-hour"),
         collapseBtn: document.getElementById("collapse-btn"),
-        energyBtn: document.getElementById("energy-btn"),
-        stressBtn: document.getElementById("stress-btn"),
+        logBtn: document.getElementById("log-btn"),
         recoveryTrigger: document.getElementById("recovery-trigger"),
         backdrop: document.getElementById("backdrop"),
         ratingSheet: document.getElementById("rating-sheet"),
@@ -13885,8 +13889,19 @@ P = drain - 0.5*recovery</pre
         ).join("");
       }
 
+      function renderLogBtn() {
+        if (!DOM.logBtn) return;
+        const isStress = APP.rating.kind === "stress_rating";
+        DOM.logBtn.dataset.activeKind = APP.rating.kind;
+        const icon = DOM.logBtn.querySelector("#log-btn-icon");
+        const label = DOM.logBtn.querySelector("#log-btn-kind");
+        if (icon) icon.textContent = isStress ? "🌀" : "⚡";
+        if (label) label.textContent = isStress ? "Stress" : "Energy";
+      }
+
       function openRatingSheet(kind) {
         APP.rating.kind = kind;
+        renderLogBtn();
         renderRatingSheet();
         APP.mode = "rating";
         applyState();
@@ -14105,6 +14120,20 @@ P = drain - 0.5*recovery</pre
           screenScene = { stars };
           return;
         }
+        if (theme === "home") {
+          const stars = [];
+          for (let i = 0; i < 80; i++) {
+            stars.push({
+              x: Math.random() * screensaverWidth,
+              y: Math.random() * (screensaverHeight * 0.65),
+              r: 0.5 + Math.random() * 1.5,
+              phase: Math.random() * Math.PI * 2,
+              speed: 0.5 + Math.random() * 2,
+            });
+          }
+          screenScene = { stars };
+          return;
+        }
         screenScene = {};
       }
 
@@ -14243,21 +14272,154 @@ P = drain - 0.5*recovery</pre
       }
 
       function drawHome(time) {
-        drawBackground("#090910", "#090910");
-        const pulse = 0.18 + Math.sin(time / 6000) * 0.08;
-        const gradient = screensaverCtx.createRadialGradient(
-          screensaverWidth / 2,
-          screensaverHeight / 2,
-          0,
-          screensaverWidth / 2,
-          screensaverHeight / 2,
-          Math.min(screensaverWidth, screensaverHeight) * 0.4,
+        const ctx = screensaverCtx;
+        const w = screensaverWidth;
+        const h = screensaverHeight;
+        drawBackground("#06091a", "#0c1228");
+        // Twinkling stars
+        for (const star of screenScene.stars || []) {
+          const alpha =
+            0.45 + Math.sin((time / 1000) * star.speed + star.phase) * 0.4;
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = "#d8d8ff";
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        // Moon
+        const moonX = w * 0.8;
+        const moonY = h * 0.17;
+        const moonR = Math.min(w, h) * 0.065;
+        const moonGlow = ctx.createRadialGradient(
+          moonX,
+          moonY,
+          moonR * 0.3,
+          moonX,
+          moonY,
+          moonR * 2.5,
         );
-        gradient.addColorStop(0, `rgba(245,158,11,${pulse + 0.07})`);
-        gradient.addColorStop(0.5, `rgba(245,158,11,${pulse})`);
-        gradient.addColorStop(1, "rgba(245,158,11,0)");
-        screensaverCtx.fillStyle = gradient;
-        screensaverCtx.fillRect(0, 0, screensaverWidth, screensaverHeight);
+        moonGlow.addColorStop(0, "rgba(255,243,190,0.18)");
+        moonGlow.addColorStop(1, "rgba(255,243,190,0)");
+        ctx.fillStyle = moonGlow;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#fef3c7";
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+        ctx.fill();
+        // Ground
+        const groundY = h * 0.72;
+        const groundGrad = ctx.createLinearGradient(0, groundY, 0, h);
+        groundGrad.addColorStop(0, "#162016");
+        groundGrad.addColorStop(1, "#0a100a");
+        ctx.fillStyle = groundGrad;
+        ctx.fillRect(0, groundY, w, h - groundY);
+        // House geometry
+        const houseW = Math.min(w * 0.44, 210);
+        const houseH = houseW * 0.6;
+        const houseX = w / 2 - houseW / 2;
+        const houseY = groundY - houseH;
+        // Window ambient glow on ground
+        const winPulse = 0.07 + Math.sin(time / 4200) * 0.025;
+        const groundGlow = ctx.createRadialGradient(
+          w / 2,
+          groundY,
+          0,
+          w / 2,
+          groundY,
+          houseW * 0.9,
+        );
+        groundGlow.addColorStop(0, `rgba(245,168,30,${winPulse})`);
+        groundGlow.addColorStop(1, "rgba(245,168,30,0)");
+        ctx.fillStyle = groundGlow;
+        ctx.fillRect(houseX - houseW * 0.5, groundY - 20, houseW * 2, 60);
+        // House body
+        ctx.fillStyle = "#181826";
+        ctx.fillRect(houseX, houseY, houseW, houseH);
+        // Roof
+        ctx.fillStyle = "#111120";
+        ctx.beginPath();
+        ctx.moveTo(houseX - houseW * 0.07, houseY);
+        ctx.lineTo(w / 2, houseY - houseH * 0.52);
+        ctx.lineTo(houseX + houseW + houseW * 0.07, houseY);
+        ctx.closePath();
+        ctx.fill();
+        // Chimney
+        const chimneyW = houseW * 0.1;
+        const chimneyH = houseH * 0.38;
+        const chimneyX = houseX + houseW * 0.72;
+        const chimneyTop = houseY - houseH * 0.32 - chimneyH;
+        ctx.fillStyle = "#181826";
+        ctx.fillRect(chimneyX, chimneyTop, chimneyW, chimneyH + 6);
+        // Windows
+        const winAlpha = 0.78 + Math.sin(time / 3500) * 0.1;
+        const winW = houseW * 0.21;
+        const winH = houseH * 0.27;
+        const winY = houseY + houseH * 0.22;
+        for (const winX of [houseX + houseW * 0.12, houseX + houseW * 0.67]) {
+          const wg = ctx.createRadialGradient(
+            winX + winW / 2,
+            winY + winH / 2,
+            0,
+            winX + winW / 2,
+            winY + winH / 2,
+            winW * 1.6,
+          );
+          wg.addColorStop(0, `rgba(253,200,60,${winAlpha * 0.45})`);
+          wg.addColorStop(1, "rgba(253,200,60,0)");
+          ctx.fillStyle = wg;
+          ctx.fillRect(
+            winX - winW * 0.8,
+            winY - winH * 0.8,
+            winW * 2.6,
+            winH * 2.6,
+          );
+          ctx.fillStyle = `rgba(253,210,60,${winAlpha})`;
+          ctx.fillRect(winX, winY, winW, winH);
+          // window cross
+          ctx.strokeStyle = `rgba(10,10,20,${winAlpha * 0.7})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(winX + winW / 2, winY);
+          ctx.lineTo(winX + winW / 2, winY + winH);
+          ctx.moveTo(winX, winY + winH / 2);
+          ctx.lineTo(winX + winW, winY + winH / 2);
+          ctx.stroke();
+        }
+        // Door
+        const doorW = houseW * 0.17;
+        const doorH = houseH * 0.37;
+        const doorX = w / 2 - doorW / 2;
+        const doorY = groundY - doorH;
+        ctx.fillStyle = "#1e1008";
+        ctx.fillRect(doorX, doorY, doorW, doorH);
+        ctx.fillStyle = "rgba(245,158,11,0.65)";
+        ctx.beginPath();
+        ctx.arc(
+          doorX + doorW * 0.7,
+          doorY + doorH * 0.55,
+          doorW * 0.09,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+        // Smoke from chimney
+        const smokeT = time / 1000;
+        for (let i = 0; i < 4; i++) {
+          const offset = (smokeT * 0.35 + i * 0.9) % 4;
+          const sx =
+            chimneyX +
+            chimneyW / 2 +
+            Math.sin(smokeT * 0.6 + i * 1.8) * 10 * (offset / 4);
+          const sy = chimneyTop - offset * 32;
+          const sa = 0.3 * (1 - offset / 4);
+          const sr = 5 + offset * 7;
+          ctx.fillStyle = `rgba(160,160,190,${sa})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
       }
 
       // Guided 4-4-4-4 box breathing. Circle expands on inhale, holds, contracts
@@ -15127,14 +15289,8 @@ P = drain - 0.5*recovery</pre
           });
         });
 
-        DOM.energyBtn.addEventListener("click", () => {
-          APP.rating.kind = "energy_rating";
-          openRatingSheet("energy_rating");
-        });
-
-        DOM.stressBtn.addEventListener("click", () => {
-          APP.rating.kind = "stress_rating";
-          openRatingSheet("stress_rating");
+        DOM.logBtn.addEventListener("click", () => {
+          openRatingSheet(APP.rating.kind);
         });
 
         DOM.recoveryTrigger.addEventListener("click", () => {
@@ -15165,6 +15321,7 @@ P = drain - 0.5*recovery</pre
         DOM.ratingTabs.forEach((tab) => {
           tab.addEventListener("click", () => {
             APP.rating.kind = tab.dataset.kind;
+            renderLogBtn();
             renderRatingSheet();
           });
         });
@@ -15877,15 +16034,9 @@ P = drain - 0.5*recovery</pre
           pos: "below",
         },
         {
-          targetId: "energy-btn",
-          title: "RATE YOUR ENERGY",
-          body: "Tap E (or this button) to log your felt energy from 1–10. A quick tap takes about 2 seconds. These self-reports are used to calibrate the model to your personal baseline — the model's predictions are adjusted each time you log, so the more consistently you rate, the more accurate your meter becomes. Aim to log at least 2–3 times a day: morning, afternoon slump, and end of workday.",
-          pos: "above",
-        },
-        {
-          targetId: "stress-btn",
-          title: "RATE YOUR STRESS",
-          body: "Tap S (or this button) to log your felt stress from 1–10. Stress is a separate tank from energy — you can feel low-energy but calm (depleted but not anxious) or high-stress but wired (like after a difficult meeting). When the stress tank is high, the energy drain rate accelerates, so catching a stress spike early lets you intervene with a recovery break before it compounds.",
+          targetId: "log-btn",
+          title: "LOG ENERGY OR STRESS",
+          body: "Tap LOG (or press E for energy, S for stress) to rate how you feel from 1–10. Use the tabs inside the sheet to switch between energy and stress. Energy and stress are separate tanks — you can be depleted but calm, or wired but high-energy. Log 2–3 times a day; each rating calibrates the model to your personal baseline.",
           pos: "above",
         },
         {
