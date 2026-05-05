@@ -207,11 +207,58 @@ void drawBattery(int pct, const String& trend) {
   drawTrendArrow(trend, textX + 96, EPD_H / 2 - 24);
 }
 
+// Solid filled triangle via horizontal scan lines in buffer space.
+// Vertices are in buffer (bx, by) coordinates.
+void drawFilledTriangleBuf(int x0, int y0, int x1, int y1, int x2, int y2) {
+  // Sort by buffer-y (y0 <= y1 <= y2) so scan goes top-to-bottom in buffer-y.
+  if (y0 > y1) { int t; t=x0;x0=x1;x1=t; t=y0;y0=y1;y1=t; }
+  if (y0 > y2) { int t; t=x0;x0=x2;x2=t; t=y0;y0=y2;y2=t; }
+  if (y1 > y2) { int t; t=x1;x1=x2;x2=t; t=y1;y1=y2;y2=t; }
+  int totalH = y2 - y0;
+  if (totalH == 0) return;
+  for (int by = y0; by <= y2; by++) {
+    bool lower = (by >= y1) || (y1 == y0);
+    int segH = lower ? y2 - y1 : y1 - y0;
+    if (segH == 0) segH = 1;
+    int ax = x0 + (int)((long)(x2 - x0) * (by - y0) / totalH);
+    int bx = lower
+      ? x1 + (int)((long)(x2 - x1) * (by - y1) / segH)
+      : x0 + (int)((long)(x1 - x0) * (by - y0) / segH);
+    if (ax > bx) { int t = ax; ax = bx; bx = t; }
+    // Fill-aware: pixels in the charged region use WHITE on black, others BLACK on white
+    for (int px = ax; px <= bx; px++) {
+      uint16_t col = (px >= EPD_W - g_fillW) ? WHITE : BLACK;
+      setPixelSafe(px, by, col);
+    }
+  }
+}
+
+// Draw solid trend arrow. Display is CCW-rotated, so buffer-x maps to physical-down.
+// "up" (energy rising)  → physical UP = increasing buffer-x → ► in buffer
+// "down" (energy falling) → physical DOWN = decreasing buffer-x → ◄ in buffer
+// "flat" → horizontal bar (= vertical bar on physical display)
 void drawTrendArrow(const String& trend, int x, int y) {
-  char ch = 0;
-  if (trend == "up") ch = '^';
-  else if (trend == "down") ch = 'V';
-  if (ch) drawCharRotatedCCW(x, y, 0, 0, 48, ch, 48);
+  const int H  = 44;   // span in buffer-x direction (= physical height of arrow)
+  const int HW = 20;   // half-width in buffer-y direction (base = 40px physical width)
+  int midY = y + HW;   // buffer-y center of the arrow block
+
+  if (trend == "up") {
+    // ► in buffer: apex right, base left
+    drawFilledTriangleBuf(x + H, midY, x, midY - HW, x, midY + HW);
+  } else if (trend == "down") {
+    // ◄ in buffer: apex left, base right
+    drawFilledTriangleBuf(x, midY, x + H, midY - HW, x + H, midY + HW);
+  } else {
+    // Flat: short horizontal bar in buffer (= vertical bar on physical)
+    int barX0 = x + H / 4, barX1 = x + 3 * H / 4;
+    int barY0 = midY - 5, barY1 = midY + 5;
+    for (int px = barX0; px <= barX1; px++) {
+      for (int py = barY0; py <= barY1; py++) {
+        uint16_t col = (px >= EPD_W - g_fillW) ? WHITE : BLACK;
+        setPixelSafe(px, py, col);
+      }
+    }
+  }
 }
 
 uint16_t fontByte(char chr, uint16_t size, uint16_t idx) {

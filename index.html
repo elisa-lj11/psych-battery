@@ -12901,7 +12901,7 @@ P = drain - 0.5*recovery</pre
           if (!Number.isFinite(ts) || ts < overlayCutoff) return;
           const d = new Date(ts);
           const sampleHour = d.getHours() + d.getMinutes() / 60;
-          const e = Number(entry.payload.E);
+          const e = Number(entry.payload.E_internal ?? entry.payload.E);
           const s = Number(entry.payload.S);
           overlaySamples.push({ sampleHour, e, s, isCurrent: false });
         });
