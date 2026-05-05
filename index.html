@@ -1141,6 +1141,52 @@
         justify-content: flex-end;
       }
 
+      .demo-theme-swatches {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .demo-theme-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+        padding: 0;
+        transition:
+          transform 80ms ease,
+          border-color 80ms ease;
+      }
+
+      .demo-theme-swatch:hover {
+        transform: scale(1.15);
+      }
+
+      .demo-theme-swatch[data-active="true"] {
+        border-color: var(--px-accent, #fff);
+        transform: scale(1.2);
+      }
+
+      .demo-theme-swatch[data-set-theme="editorial"] {
+        background: #f0f0f0;
+        border-color: #ccc;
+      }
+      .demo-theme-swatch[data-set-theme="arcade"] {
+        background: #0f0f13;
+      }
+      .demo-theme-swatch[data-set-theme="acrylic"] {
+        background: #1a1a2e;
+      }
+      .demo-theme-swatch[data-set-theme="light"] {
+        background: #f7f7f7;
+        border-color: #ccc;
+      }
+      .demo-theme-swatch[data-set-theme="pastel"] {
+        background: #fde8f0;
+        border-color: #e0a0b8;
+      }
+
       .demo-window-toggle {
         display: inline-flex;
         align-items: center;
@@ -1676,7 +1722,7 @@
 
       .demo-big-batt-track {
         width: 100%;
-        height: 22px;
+        height: 26px;
         background: var(--px-bg);
         border: 2px solid var(--px-border);
         box-sizing: border-box;
@@ -1723,8 +1769,8 @@
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
         font-family: var(--px-font-copy);
-        font-size: 13px;
-        line-height: 1.55;
+        font-size: 15px;
+        line-height: 1.6;
         color: var(--px-muted);
       }
 
@@ -5062,6 +5108,22 @@
       body[data-theme="editorial"] #screensaver-done {
         border-radius: 999px !important;
       }
+      body[data-theme="editorial"] #self-log-dock #log-btn,
+      body[data-theme="editorial"] #self-log-dock #recovery-trigger,
+      body[data-theme="editorial"] #self-log-dock #tune-trigger {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.55) !important;
+        color: #1a1a2e !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      body[data-theme="editorial"] #self-log-dock #log-btn:hover,
+      body[data-theme="editorial"] #self-log-dock #recovery-trigger:hover,
+      body[data-theme="editorial"] #self-log-dock #tune-trigger:hover {
+        background: rgba(255, 255, 255, 0.5) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+      }
       body[data-theme="editorial"] .layer-back-top {
         border-radius: 999px !important;
         box-shadow: none !important;
@@ -6752,6 +6814,68 @@
         padding-top: 10px;
       }
 
+      .model-mini-math {
+        font-family: var(--px-font-body);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: var(--px-muted);
+        background: var(--px-surface-2);
+        border: 1px solid var(--px-border);
+        padding: 8px 10px;
+        margin: 8px 0 0;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .layer2-averages {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .avg-section-title {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        margin-bottom: 2px;
+      }
+
+      .avg-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-family: var(--px-font-body);
+        font-size: 0.88rem;
+        color: var(--px-muted);
+        padding: 3px 0;
+        border-bottom: 1px solid var(--px-border);
+      }
+
+      .avg-row:last-child {
+        border-bottom: none;
+      }
+
+      .avg-label {
+        flex: 0 0 auto;
+      }
+
+      .avg-values {
+        display: flex;
+        gap: 12px;
+        font-family: var(--px-font-ui);
+        font-size: 0.82rem;
+      }
+
+      .avg-e {
+        color: var(--px-good);
+      }
+      .avg-s {
+        color: var(--px-critical);
+      }
+
       .layer2-explain-formula {
         font-family: var(--px-font-body);
         font-size: 1rem;
@@ -7426,7 +7550,7 @@
       }
 
       .demo-big-batt-track {
-        height: 28px;
+        height: 34px;
       }
 
       .demo-feature-footnote {
@@ -7709,10 +7833,10 @@
           <span class="header-source-label">Source</span>
           <select id="demo-select" aria-label="Data source">
             <option value="">Live data</option>
-            <option value="sam">Demo · Sam (busy + AI)</option>
-            <option value="maya">Demo · Maya (deep work, healthy)</option>
-            <option value="alex">Demo · Alex (isolated, unhealthy)</option>
-            <option value="jordan">Demo · Jordan (tech, low AI)</option>
+            <option value="sam">Sam</option>
+            <option value="maya">Maya</option>
+            <option value="alex">Alex</option>
+            <option value="jordan">Jordan</option>
           </select>
         </label>
         <details id="demo-dropdown">
@@ -8002,7 +8126,6 @@
                       class="layer2-cells-vertical"
                     ></div>
                   </div>
-                  <div id="layer2-particle-field" aria-hidden="true"></div>
                 </div>
               </div>
             </div>
@@ -8010,22 +8133,25 @@
 
           <div class="layer2-bottom layer2-bottom-v2">
             <div class="layer2-action-stack">
-              <button id="btn-replay-tick" class="layer2-action" type="button">
+              <button
+                id="btn-replay-tick"
+                class="layer2-action"
+                type="button"
+                title="Load the previous model snapshot — rewinds the displayed E and S values to the state from the tick before last."
+              >
                 Replay last tick
               </button>
-              <button id="btn-run-hour" class="layer2-action" type="button">
+              <button
+                id="btn-run-hour"
+                class="layer2-action"
+                type="button"
+                title="Simulate 60 minutes of model time at current drain pressure — useful for seeing how E and S would evolve without actually waiting."
+              >
                 Run +1 hour
               </button>
             </div>
 
-            <div class="layer2-formula layer2-formula-v2">
-              <div class="section-title">Energy model</div>
-              <pre>
-dE/dt = -0.05*P*E + (Erest-E)/120
-dS/dt = 1.5*P - S/4320
-P = drain - 0.5*recovery</pre
-              >
-            </div>
+            <div id="layer2-averages" class="layer2-averages"></div>
 
             <div id="layer2-readout" class="layer2-readout"></div>
           </div>
@@ -8038,20 +8164,39 @@ P = drain - 0.5*recovery</pre
                   <div>
                     <dt>E — Energy</dt>
                     <dd>
-                      Cognitive fuel. Drains under load; recovers in ~2 h.
+                      Cognitive fuel, 0–100. Drains under load; mean-reverts
+                      toward Erest in ~2 h.
                     </dd>
                   </div>
                   <div>
                     <dt>S — Stress</dt>
-                    <dd>Nervous-system load. Builds fast; decays over days.</dd>
+                    <dd>
+                      Nervous-system load, 0–100. Builds fast under pressure;
+                      decays over days, not hours.
+                    </dd>
                   </div>
                   <div>
                     <dt>P — Pressure</dt>
-                    <dd>Drain rate. High P burns E and S faster.</dd>
+                    <dd>
+                      Weighted drain signal (0–1). High P burns E faster and
+                      keeps S elevated.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Erest — Circadian floor</dt>
+                    <dd>
+                      Expected E at this hour based on your chronotype. E pulls
+                      toward it when pressure is low.
+                    </dd>
                   </div>
                 </dl>
+                <pre class="model-mini-math">
+dE/dt = −0.05·P·E + (Erest−E)/120
+dS/dt = 1.5·P − S/4320
+P = drain − 0.5·recovery</pre
+                >
                 <p class="model-mini-footer">
-                  Tap <strong>?</strong> → How it works for the math.
+                  Tap <strong>?</strong> → How it works for full details.
                 </p>
               </div>
             </div>
@@ -8146,10 +8291,14 @@ P = drain - 0.5*recovery</pre
     ></div>
 
     <div id="self-log-dock">
-      <button id="log-btn" type="button" data-active-kind="energy_rating">
+      <button
+        id="log-btn"
+        type="button"
+        data-active-kind="energy_rating"
+        title="Log energy or stress rating (toggles E/S each tap)"
+      >
         <span class="dock-icon" aria-hidden="true" id="log-btn-icon">⚡</span>
-        <span id="log-btn-kind">Energy</span>
-        <span class="dock-log-tag" aria-hidden="true">LOG</span>
+        LOG
       </button>
       <button id="recovery-trigger" type="button">
         <span class="dock-icon" aria-hidden="true">⟲</span>
@@ -10176,6 +10325,36 @@ P = drain - 0.5*recovery</pre
           unit: "min",
           source: "aw",
         },
+        {
+          key: "outside_min",
+          label: "Go outside",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "walk_min",
+          label: "Walk",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "social_min",
+          label: "With people",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "nap_min",
+          label: "Nap",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "detach_min",
+          label: "Detach / rest",
+          unit: "min",
+          source: "log",
+        },
       ];
 
       const FEAT_HELP = {
@@ -10739,7 +10918,11 @@ P = drain - 0.5*recovery</pre
           ? "EXIT DEMO"
           : "Interactive Demo";
         DOM.collapseBtn.tabIndex = APP.uiLayer === 0 ? -1 : 0;
-        DOM.openDiagnostics.disabled = APP.uiLayer === 2;
+        DOM.openDiagnostics.disabled = false;
+        DOM.openDiagnostics.innerHTML =
+          APP.uiLayer === 2
+            ? 'Hide signal breakdown <span class="pix-arrow-down">&#9650;</span>'
+            : 'Show signal breakdown <span class="pix-arrow-down">&#9660;</span>';
         // Keep the live dot in #phase-portrait aligned with the latest model state.
         renderPhasePortrait();
         if (APP.uiLayer === 0) dismissActiveLayerHint();
@@ -11556,6 +11739,7 @@ P = drain - 0.5*recovery</pre
           },
         ];
 
+        const currentTheme = document.body.dataset.theme || "arcade";
         const topbar = `
         <div class="demo-topbar">
           <div class="demo-topbar-copy">
@@ -11563,6 +11747,14 @@ P = drain - 0.5*recovery</pre
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
+            <div class="demo-theme-swatches" aria-label="Theme">
+              ${["editorial", "arcade", "acrylic", "light", "pastel"]
+                .map(
+                  (t) =>
+                    `<button type="button" class="demo-theme-swatch" data-set-theme="${t}" data-active="${t === currentTheme}" title="${t[0].toUpperCase() + t.slice(1)} theme"></button>`,
+                )
+                .join("")}
+            </div>
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
@@ -12265,9 +12457,13 @@ P = drain - 0.5*recovery</pre
         if (options.anchor) el.setAttribute("text-anchor", options.anchor);
         el.textContent = text;
         el.style.fill = options.fill || "var(--px-muted)";
+        const isEditorial = document.body.dataset.theme === "editorial";
         el.style.fontFamily =
-          options.fontFamily || "Silkscreen, ui-monospace, monospace";
-        el.style.fontSize = options.fontSize || "12px";
+          options.fontFamily ||
+          (isEditorial
+            ? "Manrope, system-ui, sans-serif"
+            : "Silkscreen, ui-monospace, monospace");
+        el.style.fontSize = options.fontSize || (isEditorial ? "11px" : "12px");
         svg.appendChild(el);
         return el;
       }
@@ -12666,7 +12862,6 @@ P = drain - 0.5*recovery</pre
               <div class="layer-feature-bar" style="--layer-tone:${toneColor}">
                 ${Array.from({ length: 12 }, (_, index) => `<span class="layer-feature-seg${index < fillCount ? " is-on" : ""}"></span>`).join("")}
               </div>
-              <div class="layer-feature-hint">${getFeatureHint(group, norm, zero)}</div>
             </div>
           `;
             })
@@ -13039,14 +13234,6 @@ P = drain - 0.5*recovery</pre
           },
         ).join("");
 
-        if (!DOM.layer2ParticleField.childElementCount) {
-          DOM.layer2ParticleField.innerHTML = Array.from(
-            { length: 10 },
-            (_, index) =>
-              `<div class="layer2-particle" data-path="${index % 2 === 0 ? "energy" : "stress"}" style="opacity:0"></div>`,
-          ).join("");
-        }
-
         const readouts = [
           {
             id: "pressure",
@@ -13123,15 +13310,68 @@ P = drain - 0.5*recovery</pre
           )
           .join("");
 
+        renderAverages();
         renderPhasePortrait();
         renderModelViz();
+      }
+
+      function renderAverages() {
+        const el = document.getElementById("layer2-averages");
+        if (!el) return;
+        const history = loadTickHistory();
+        const now = Date.now();
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const weekAgo = now - 7 * 24 * 3600 * 1000;
+
+        const todaySamples = [],
+          weekSamples = [];
+        history.forEach((entry) => {
+          if (!entry?.payload) return;
+          const ts =
+            entry.savedAt || Date.parse(entry.payload.last_tick_iso || "");
+          if (!Number.isFinite(ts)) return;
+          const e = Number(entry.payload.E_internal ?? entry.payload.E);
+          const s = Number(entry.payload.S);
+          if (!Number.isFinite(e) || !Number.isFinite(s)) return;
+          if (ts >= todayStart.getTime()) todaySamples.push({ e, s });
+          if (ts >= weekAgo) weekSamples.push({ e, s });
+        });
+
+        const avg = (arr, key) =>
+          arr.length
+            ? (arr.reduce((sum, v) => sum + v[key], 0) / arr.length).toFixed(0)
+            : "--";
+
+        const dayE = avg(todaySamples, "e"),
+          dayS = avg(todaySamples, "s");
+        const wkE = avg(weekSamples, "e"),
+          wkS = avg(weekSamples, "s");
+
+        el.innerHTML = `
+          <div class="avg-section-title">Averages</div>
+          <div class="avg-row">
+            <span class="avg-label">Today</span>
+            <span class="avg-values">
+              <span class="avg-e">E ${dayE}%</span>
+              <span class="avg-s">S ${dayS}%</span>
+            </span>
+          </div>
+          <div class="avg-row">
+            <span class="avg-label">7-day</span>
+            <span class="avg-values">
+              <span class="avg-e">E ${wkE}%</span>
+              <span class="avg-s">S ${wkS}%</span>
+            </span>
+          </div>
+        `;
       }
 
       function layer2AnimLoop(timestamp = 0) {
         if (
           APP.uiLayer < 1 ||
           APP.mode === "screensaver" ||
-          !DOM.layer2ParticleField.childElementCount
+          !DOM.layer2ParticleField?.childElementCount
         ) {
           if (APP.layer2.frameId) {
             cancelAnimationFrame(APP.layer2.frameId);
@@ -13147,6 +13387,7 @@ P = drain - 0.5*recovery</pre
           APP.layer2.lastStepTs = timestamp;
           APP.layer2.step = (APP.layer2.step + 1) % 16;
 
+          if (!DOM.layer2ParticleField?.childElementCount) return;
           if (!_layer2Rects) {
             _layer2Rects = {
               field: DOM.layer2ParticleField.getBoundingClientRect(),
@@ -13932,10 +14173,9 @@ P = drain - 0.5*recovery</pre
         if (!DOM.logBtn) return;
         const isStress = APP.rating.kind === "stress_rating";
         DOM.logBtn.dataset.activeKind = APP.rating.kind;
+        DOM.logBtn.title = `Log ${isStress ? "stress" : "energy"} rating (tap to toggle)`;
         const icon = DOM.logBtn.querySelector("#log-btn-icon");
-        const label = DOM.logBtn.querySelector("#log-btn-kind");
         if (icon) icon.textContent = isStress ? "🌀" : "⚡";
-        if (label) label.textContent = isStress ? "Stress" : "Energy";
       }
 
       function openRatingSheet(kind) {
@@ -15244,6 +15484,17 @@ P = drain - 0.5*recovery</pre
             renderApp();
             return;
           }
+          const themeBtn = event.target.closest("[data-set-theme]");
+          if (themeBtn) {
+            setThemePreference(themeBtn.dataset.setTheme);
+            DOM.demoLayout.querySelectorAll("[data-set-theme]").forEach((b) => {
+              b.dataset.active =
+                b.dataset.setTheme === themeBtn.dataset.setTheme
+                  ? "true"
+                  : "false";
+            });
+            return;
+          }
           if (activityBtn) {
             playDemoActivity(activityBtn.dataset.demoActivity);
           }
@@ -15295,9 +15546,13 @@ P = drain - 0.5*recovery</pre
           });
 
         DOM.openDiagnostics.addEventListener("click", () => {
-          APP.uiLayer = 2;
+          if (APP.uiLayer === 2) {
+            APP.uiLayer = 1;
+          } else {
+            APP.uiLayer = 2;
+            void refreshAwData({ reason: "expand" });
+          }
           applyState();
-          void refreshAwData({ reason: "expand" });
         });
 
         DOM.btnReplayTick.addEventListener("click", () => {
@@ -15329,6 +15584,10 @@ P = drain - 0.5*recovery</pre
         });
 
         DOM.logBtn.addEventListener("click", () => {
+          APP.rating.kind =
+            APP.rating.kind === "energy_rating"
+              ? "stress_rating"
+              : "energy_rating";
           openRatingSheet(APP.rating.kind);
         });
 
@@ -15756,11 +16015,9 @@ P = drain - 0.5*recovery</pre
             const r = btn.getBoundingClientRect();
             const popW = 280;
             const margin = 8;
-            let left = r.right - popW;
-            if (left < margin) left = r.left;
-            left = Math.max(
+            const left = Math.max(
               margin,
-              Math.min(left, window.innerWidth - popW - margin),
+              Math.min(r.left, window.innerWidth - popW - margin),
             );
             pop.style.top = r.bottom + 6 + "px";
             pop.style.left = left + "px";
