@@ -199,12 +199,14 @@ void drawBattery(int pct, const String& trend) {
   char buf[4];
   snprintf(buf, sizeof(buf), "%d", pct);
   int numDigits = strlen(buf);
-  int percentBlockH = numDigits * 24 + 12;
-  int textX = EPD_W / 2 - 48;
-  int textY = EPD_H / 2 - percentBlockH / 2;
+  int blockW = numDigits * 24 + 12;  // buffer-y span of "NN%"
 
-  drawPercentRotatedCCW(textX, textY, pct);
-  drawTrendArrow(trend, textX + 96, EPD_H / 2 - 24);
+  // Editorial layout: number + arrow near physical bottom (low buffer-x),
+  // centered horizontally. Fill is the primary visual; data reads as a caption.
+  // Number at buffer-x 132 → physical-Y ~620-668 (~80% down the display).
+  // Arrow at buffer-x 56  → physical-Y ~700-744, centered below the number.
+  drawPercentRotatedCCW(132, EPD_H / 2 - blockW / 2, pct);
+  drawTrendArrow(trend, 56, EPD_H / 2 - 20);
 }
 
 // Solid filled triangle via horizontal scan lines in buffer space.
