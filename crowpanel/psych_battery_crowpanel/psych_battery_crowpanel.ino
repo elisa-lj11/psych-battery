@@ -21,6 +21,7 @@ int    g_fillW       = 0;  // visual fill width (0-792); pixels at x >= (792 - g
 #define LED_G 17  // Green anode
 #define LED_B 21  // Blue anode
 
+
 const unsigned long OFFLINE_TIMEOUT_MS = 60UL * 1000UL;
 
 enum SyncStatus {
@@ -38,7 +39,7 @@ void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW, char
 void fullRefresh();
 SyncStatus parseStatusToken(const String& token);
 const char* statusName(SyncStatus status);
-void writeLedPins(bool redOn, bool greenOn, bool blueOn);
+void setLedColor(uint8_t r, uint8_t g, uint8_t b);
 void updateStatusLed();
 bool parseSerialPayload(const String& line, int& chargeOut, String& trendOut, SyncStatus& statusOut);
 
@@ -48,6 +49,13 @@ void setup() {
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+
+  // Startup flash: R → G → B
+  setLedColor(255, 0, 0);  delay(200);
+  setLedColor(0, 255, 0);  delay(200);
+  setLedColor(0, 0, 255);  delay(200);
+  setLedColor(0, 0, 0);
+
   updateStatusLed();
 
   pinMode(7, OUTPUT);
@@ -122,29 +130,27 @@ const char* statusName(SyncStatus status) {
   }
 }
 
-void writeLedPins(bool redOn, bool greenOn, bool blueOn) {
-  digitalWrite(LED_R, redOn ? HIGH : LOW);
-  digitalWrite(LED_G, greenOn ? HIGH : LOW);
-  digitalWrite(LED_B, blueOn ? HIGH : LOW);
+void setLedColor(uint8_t r, uint8_t g, uint8_t b) {
+  analogWrite(LED_R, r);
+  analogWrite(LED_G, g);
+  analogWrite(LED_B, b);
 }
 
 void updateStatusLed() {
-  SyncStatus effectiveStatus = currentStatus;
-  if (lastPacketAtMs == 0 || (millis() - lastPacketAtMs) > OFFLINE_TIMEOUT_MS) {
-    effectiveStatus = STATUS_OFFLINE;
+  // Map charge 0–100 to hue 0–191 (red → orange → yellow → green → cyan → blue → violet)
+  // H in 0–255 spans 360°; 191 ≈ 270° so 100% lands near blue-purple.
+  uint8_t h = (uint8_t)((long)currentCharge * 191 / 100);
+  uint8_t region = h / 43;
+  uint8_t f = (h % 43) * 6;  // 0–255 progress within region
+  uint8_t r, g, b;
+  switch (region) {
+    case 0: r = 255;       g = f;         b = 0;         break; // red → yellow
+    case 1: r = 255 - f;   g = 255;       b = 0;         break; // yellow → green
+    case 2: r = 0;         g = 255;       b = f;         break; // green → cyan
+    case 3: r = 0;         g = 255 - f;   b = 255;       break; // cyan → blue
+    default: r = f;        g = 0;         b = 255;       break; // blue → violet
   }
-
-  switch (effectiveStatus) {
-    case STATUS_LIVE:
-      writeLedPins(false, true, false);  // GREEN
-      break;
-    case STATUS_STALE:
-      writeLedPins(true, true, false);   // AMBER = R + G
-      break;
-    default:
-      writeLedPins(true, false, false);  // RED
-      break;
-  }
+  setLedColor(r, g, b);
 }
 
 bool parseSerialPayload(const String& line, int& chargeOut, String& trendOut, SyncStatus& statusOut) {
