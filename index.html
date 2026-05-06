@@ -1196,6 +1196,15 @@
         gap: 6px;
       }
 
+      .demo-theme-label {
+        font-family: var(--px-font-ui);
+        font-size: var(--fs-label);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        flex-shrink: 0;
+      }
+
       .demo-theme-swatch {
         width: 22px;
         height: 22px;
@@ -1341,6 +1350,7 @@
         gap: 10px;
         flex: 0 0 auto;
         width: 100%;
+        justify-content: center;
       }
 
       .demo-battery-pair .demo-batt-wrap {
@@ -1888,9 +1898,9 @@
       .demo-card:focus-visible {
         border-color: var(--px-accent);
         outline: none;
-        transform: translate(-2px, -2px);
+        transform: translateY(-2px);
         box-shadow:
-          5px 5px 0 0 rgba(0, 0, 0, 0.6),
+          3px 5px 0 0 rgba(0, 0, 0, 0.6),
           0 0 0 1px var(--px-accent);
       }
 
@@ -4057,7 +4067,7 @@
       #self-log-dock button {
         flex: 1;
         min-height: 48px;
-        border-radius: 14px;
+        border-radius: 999px;
         border: 1px solid var(--px-border-2);
         background: var(--px-button-surface);
         color: var(--px-text);
@@ -5149,6 +5159,7 @@
       body[data-theme="editorial"] .start-btn,
       body[data-theme="editorial"] #log-btn,
       body[data-theme="editorial"] #recovery-trigger,
+      body[data-theme="editorial"] #tune-trigger,
       body[data-theme="editorial"] #collapse-btn,
       body[data-theme="editorial"] #open-diagnostics,
       body[data-theme="editorial"] #screensaver-done {
@@ -5290,8 +5301,8 @@
         /* B&W hard-stop: black fill from bottom, white for empty screen above */
         background: linear-gradient(
           to top,
-          #1a1a1a 0%,
-          #1e1e1e calc(var(--battery-pct) * 100%),
+          #555555 0%,
+          #5a5a5a calc(var(--battery-pct) * 100%),
           #f0f0f0 calc(var(--battery-pct) * 100%),
           #ffffff 100%
         );
@@ -5357,6 +5368,10 @@
       }
 
       /* ── Popover glass styling (editorial) ── */
+      body[data-color-mode="light"] .diag-popover {
+        color: var(--px-text);
+      }
+
       body[data-theme="editorial"] .diag-popover {
         border-radius: 14px !important;
         backdrop-filter: blur(20px) saturate(130%);
@@ -6628,7 +6643,7 @@
         min-width: 200px;
         font-family: var(--px-font-copy);
         font-size: 0.98rem;
-        color: var(--text, #e0e0f0);
+        color: var(--px-text, #e0e0f0);
         line-height: 1.55;
         box-shadow: 4px 4px 0 var(--px-button-shadow);
         z-index: 800;
@@ -7687,6 +7702,22 @@
         height: 56px;
       }
 
+      .demo-batt-svg-v {
+        width: 52px;
+        height: 200px;
+        flex: 0 0 auto;
+      }
+
+      .demo-batt-wrap-v {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: 2px solid var(--px-border);
+        background: var(--px-surface-2);
+      }
+
       .demo-timeline-svg {
         height: 150px;
         width: 100%;
@@ -7870,6 +7901,10 @@
 
         .demo-batt-svg {
           height: 44px;
+        }
+
+        .demo-batt-svg-v {
+          height: 200px;
         }
 
         .demo-timeline-svg {
@@ -8465,8 +8500,8 @@ P = drain − 0.5·recovery</pre
               <dd>
                 ActivityWatch runs locally on your machine and watches which
                 apps and windows are active. Mental Meter reads it every 5
-                minutes to estimate meeting load, typing intensity, focus
-                duration, and context switching — then feeds those into the
+                minutes to estimate meeting load, focus duration, and context
+                switching — then feeds those into the
                 energy model.
               </dd>
             </div>
@@ -8597,7 +8632,7 @@ P = drain − 0.5·recovery</pre
               <dt>Drain</dt>
               <dd>
                 Anything that pulls energy out: meetings, deep focus, context
-                switching, late hours, or high typing load. High drain makes the
+                switching, or late hours. High drain makes the
                 meter fall faster.
               </dd>
             </div>
@@ -10390,12 +10425,6 @@ P = drain − 0.5·recovery</pre
           unit: "×base",
           source: "aw",
         },
-        {
-          key: "kpm_p95_over_base",
-          label: "Typing intensity",
-          unit: "×base",
-          source: "aw",
-        },
       ];
 
       const RECOVERY_FEATS = [
@@ -10463,10 +10492,6 @@ P = drain − 0.5·recovery</pre
         context_switches: {
           title: "Context Switches",
           body: "Detected app-switching events from ActivityWatch. High fragmentation keeps your brain in shallow-work mode and elevates baseline drain pressure throughout the day.",
-        },
-        kpm_p95_over_base: {
-          title: "Typing Intensity",
-          body: "Your 95th-percentile keystrokes-per-minute versus your personal baseline. Elevated typing signals either high-output cognitive work or anxiety-driven activity — both raise drain.",
         },
         after_hours_frac: {
           title: "After-Hours Work",
@@ -11581,16 +11606,45 @@ P = drain − 0.5·recovery</pre
         target.innerHTML = buildBatterySvg(level, false);
       }
 
+      function buildBatterySvgVertical(level, isStress) {
+        const hasValue = level != null && !Number.isNaN(Number(level));
+        const clamped = hasValue ? clamp(Number(level), 0, 100) : null;
+        const rounded = hasValue ? Math.round(clamped) : null;
+        const color = isStress
+          ? stressColor(clamped ?? 0)
+          : levelColor(clamped ?? 0);
+        const full = hasValue ? Math.floor(clamped / 10) : 0;
+        const partial = hasValue ? clamped / 10 - full : 0;
+        let cells = "";
+        for (let index = 0; index < 10; index += 1) {
+          const filled =
+            hasValue && (index < full || (index === full && partial > 0));
+          const cellH =
+            filled && index === full && partial > 0
+              ? Math.max(2, Number((10 * partial).toFixed(2)))
+              : 10;
+          const slotY = 14 + (9 - index) * 11;
+          const cellY = cellH < 10 ? slotY + (10 - cellH) : slotY;
+          cells += `<rect x="7" y="${cellY}" width="20" height="${cellH}" fill="${filled ? color : "var(--px-surface-2)"}" opacity="${filled ? "1" : "0.45"}"></rect>`;
+        }
+        return `<svg class="demo-batt-svg demo-batt-svg-v" viewBox="0 0 34 132" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges"${isStress ? "" : " data-demo-battery"}>
+          <rect x="2" y="8" width="30" height="120" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
+          <rect x="10" y="0" width="14" height="8" fill="var(--px-border-2)"></rect>
+          ${cells}
+          <text x="17" y="68" text-anchor="middle" dominant-baseline="middle" font-family="VT323, monospace" font-size="14" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? "--" : rounded}%</text>
+        </svg>`;
+      }
+
       function renderDemoBatteryPair(target, energyLevel, stressLevel) {
         if (!target) return;
         target.innerHTML = `
-        <div class="demo-batt-wrap">
+        <div class="demo-batt-wrap-v">
+          ${buildBatterySvgVertical(energyLevel, false)}
           <div class="demo-batt-label">E</div>
-          ${buildBatterySvg(energyLevel, false)}
         </div>
-        <div class="demo-batt-wrap">
+        <div class="demo-batt-wrap-v">
+          ${buildBatterySvgVertical(stressLevel, true)}
           <div class="demo-batt-label">S</div>
-          ${buildBatterySvg(stressLevel, true)}
         </div>
       `;
       }
@@ -11877,6 +11931,7 @@ P = drain − 0.5·recovery</pre
           </div>
           <div class="demo-topbar-actions">
             <div class="demo-theme-swatches" aria-label="Theme">
+              <span class="demo-theme-label">Theme</span>
               ${["editorial", "arcade", "acrylic", "light", "pastel"]
                 .map(
                   (t) =>
