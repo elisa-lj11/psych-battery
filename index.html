@@ -5572,6 +5572,102 @@
         opacity: 0.7;
       }
 
+      /* ── Editorial-dark battery: same shape, dark color scheme ── */
+
+      body[data-theme="editorial-dark"] #battery-visual svg {
+        display: none !important;
+      }
+
+      body[data-theme="editorial-dark"] #battery-visual {
+        position: relative !important;
+        width: 92px !important;
+        height: 230px !important;
+        min-width: 92px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+        border: none !important;
+        flex-shrink: 0 !important;
+        background: rgba(18, 15, 44, 0.96) !important;
+        clip-path: path(
+          "M 36,0 L 56,0 L 56,8 L 76,8 A 16,16 0 0,1 92,24 L 92,214 A 16,16 0 0,1 76,230 L 16,230 A 16,16 0 0,1 0,214 L 0,24 A 16,16 0 0,1 16,8 L 36,8 Z"
+        ) !important;
+        filter: drop-shadow(0 0 2px rgba(160, 140, 255, 0.5))
+          drop-shadow(0 3px 16px rgba(100, 80, 200, 0.3)) !important;
+        transition: --battery-pct 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      /* Inner e-ink screen: light fill rises from bottom on dark background */
+      body[data-theme="editorial-dark"] #battery-visual::before {
+        content: "";
+        position: absolute;
+        top: 44px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border-radius: 3px;
+        background: linear-gradient(
+          to top,
+          #c8c4ff 0%,
+          #a8a2f0 calc(var(--battery-pct) * 100%),
+          #1c1838 calc(var(--battery-pct) * 100%),
+          #0e0c22 100%
+        );
+      }
+
+      /* Stress LED ring — identical to light mode */
+      body[data-theme="editorial-dark"] #battery-visual::after {
+        content: "";
+        position: absolute;
+        top: 24px;
+        left: 0;
+        right: 0;
+        height: 12px;
+        background: hsl(calc(270 + var(--stress-pct, 0.5) * 90) 78% 64%);
+        box-shadow:
+          0 0 10px 5px
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90) 82% 66% / 0.7),
+          0 0 20px 8px
+            hsl(calc(270 + var(--stress-pct, 0.5) * 90) 70% 72% / 0.35);
+        z-index: 1;
+      }
+
+      body[data-theme="editorial-dark"] #battery-toggle {
+        grid-template-columns: auto minmax(0, 1fr) !important;
+        gap: 24px !important;
+        min-height: 0 !important;
+        align-items: center !important;
+      }
+
+      body[data-theme="editorial-dark"] #battery-stress-display {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(160, 140, 255, 0.18);
+      }
+      body[data-theme="editorial-dark"] .stress-display-label {
+        font-family: var(--px-font-ui, "Silkscreen", monospace);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-muted);
+        opacity: 0.7;
+      }
+      body[data-theme="editorial-dark"] #stress-pct-value {
+        font-family: "DM Serif Display", Georgia, serif;
+        font-weight: 400;
+        font-size: 2rem;
+        line-height: 1;
+        color: hsl(calc(270 + var(--stress-pct, 0.5) * 90) 62% 72%);
+        transition: color 600ms ease;
+      }
+      body[data-theme="editorial-dark"] #stress-pct-value .pct-sup {
+        font-size: 0.55em;
+        opacity: 0.7;
+      }
+
       /* ── Popover glass styling (editorial) ── */
       body[data-color-mode="light"] .diag-popover {
         color: var(--px-text);
@@ -11591,8 +11687,9 @@ P = drain − 0.5·recovery</pre
       const BAT_CELL_BASE_Y = BAT_H - 6 - BAT_CELL_H; // = 206
 
       function ensureBatterySvg() {
-        const isEditorial = document.body.dataset.theme === "editorial";
-        if (isEditorial) return; // editorial uses CSS pseudo-elements, not SVG
+        const theme = document.body.dataset.theme;
+        const isEditorial = theme === "editorial" || theme === "editorial-dark";
+        if (isEditorial) return; // editorial themes use CSS pseudo-elements, not SVG
         if (DOM.batteryVisual.querySelector("svg")) return;
 
         let cellsSvg = "";
