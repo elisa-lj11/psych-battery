@@ -250,17 +250,8 @@ void drawTrendArrow(const String& trend, int x, int y) {
   } else if (trend == "down") {
     // ◄ in buffer: apex left, base right
     drawFilledTriangleBuf(x, midY, x + H, midY - HW, x + H, midY + HW);
-  } else {
-    // Flat: short horizontal bar in buffer (= vertical bar on physical)
-    int barX0 = x + H / 4, barX1 = x + 3 * H / 4;
-    int barY0 = midY - 5, barY1 = midY + 5;
-    for (int px = barX0; px <= barX1; px++) {
-      for (int py = barY0; py <= barY1; py++) {
-        uint16_t col = (px >= EPD_W - g_fillW) ? WHITE : BLACK;
-        setPixelSafe(px, py, col);
-      }
-    }
   }
+  // flat: draw nothing — only show an arrow when actively changing
 }
 
 uint16_t fontByte(char chr, uint16_t size, uint16_t idx) {

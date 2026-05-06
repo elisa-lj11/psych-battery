@@ -875,7 +875,6 @@
         font-weight: 700;
         letter-spacing: 0.04em;
         line-height: 1;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
       }
 
       .pct-sup {
@@ -5157,13 +5156,19 @@
       body[data-theme="editorial"] #screensaver-done {
         border-radius: 999px !important;
       }
+      /* Dock bar itself: light glass instead of dark bar */
+      body[data-theme="editorial"] #self-log-dock {
+        background: rgba(232, 232, 240, 0.72) !important;
+        border-top: 1px solid rgba(200, 200, 220, 0.35) !important;
+        box-shadow: 0 -4px 20px rgba(50, 50, 90, 0.08) !important;
+      }
       body[data-theme="editorial"] #self-log-dock #log-btn,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger,
       body[data-theme="editorial"] #self-log-dock #tune-trigger {
-        background: rgba(255, 255, 255, 0.3) !important;
-        border: 1px solid rgba(255, 255, 255, 0.55) !important;
+        background: rgba(255, 255, 255, 0.55) !important;
+        border: 1px solid rgba(255, 255, 255, 0.7) !important;
         color: #1a1a2e !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
       }
@@ -5852,8 +5857,8 @@
 
       .drain-row,
       .diag-row {
-        border: 2px solid var(--px-border);
-        background: var(--px-panel-soft);
+        border-bottom: 1px solid var(--px-border);
+        background: transparent;
       }
 
       #connection-pill,
@@ -5914,7 +5919,8 @@
         transition:
           fill 200ms steps(3),
           opacity 200ms steps(2),
-          width 200ms steps(4);
+          height 200ms steps(4),
+          y 200ms steps(4);
       }
       .bat-cell.is-low {
         animation: pulse 0.9s steps(3) infinite;
@@ -6456,7 +6462,7 @@
 
       .layer2-tank-title {
         font-family: var(--px-font-ui);
-        font-size: 0.74rem;
+        font-size: 0.82rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
       }
@@ -6897,7 +6903,7 @@
         justify-content: space-between;
         gap: 8px;
         font-family: var(--px-font-body);
-        font-size: 0.88rem;
+        font-size: 1rem;
         color: var(--px-muted);
         padding: 3px 0;
         border-bottom: 1px solid var(--px-border);
@@ -6915,7 +6921,7 @@
         display: flex;
         gap: 12px;
         font-family: var(--px-font-ui);
-        font-size: 0.82rem;
+        font-size: 0.95rem;
       }
 
       .avg-e {
@@ -7383,14 +7389,15 @@
       }
 
       #battery-toggle {
-        grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
-        gap: 20px;
-        min-height: 148px;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 24px;
+        min-height: 230px;
         align-items: center;
       }
 
       #battery-visual {
-        width: min(100%, 320px);
+        width: 92px;
+        flex-shrink: 0;
       }
 
       .battery-copy {
@@ -7836,13 +7843,13 @@
 
       @media (min-width: 1100px) {
         #battery-toggle {
-          grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
-          gap: 24px;
-          min-height: 160px;
+          grid-template-columns: auto minmax(0, 1fr);
+          gap: 28px;
+          min-height: 230px;
         }
 
         #battery-visual {
-          width: min(100%, 340px);
+          width: 92px;
         }
 
         #demo-layout {
@@ -9427,16 +9434,16 @@ P = drain − 0.5·recovery</pre
           10: "Peak",
         },
         stress_rating: {
-          1: "Maxed out",
-          2: "Maxed out",
-          3: "Heavy",
-          4: "Heavy",
+          1: "Effortless",
+          2: "Effortless",
+          3: "Manageable",
+          4: "Manageable",
           5: "Moderate",
           6: "Moderate",
-          7: "Manageable",
-          8: "Manageable",
-          9: "Effortless",
-          10: "Effortless",
+          7: "Heavy",
+          8: "Heavy",
+          9: "Maxed out",
+          10: "Maxed out",
         },
       };
 
@@ -11024,27 +11031,41 @@ P = drain − 0.5·recovery</pre
         else if (typeof maybeShowLayerHint === "function") maybeShowLayerHint();
       }
 
-      // Pixel-art battery: 10 discrete cells + a partial last cell that reflects
-      // sub-10% values. Sharp corners, crispEdges rendering, no anti-alias.
+      // Pixel-art battery: 10 discrete vertical cells, fills from bottom.
+      // Terminal nub at top centre — matches editorial portrait proportions.
+      // Not created for editorial (which uses CSS ::before/::after instead).
+      const BAT_W = 92,
+        BAT_H = 230;
+      const BAT_NUB_W = 20,
+        BAT_NUB_H = 8;
+      const BAT_CELL_X = 6,
+        BAT_CELL_W = 80,
+        BAT_CELL_H = 18,
+        BAT_CELL_GAP = 2;
+      const BAT_CELLS = 10;
+      // Cell 0 = bottommost; cell 9 = topmost.
+      // Bottom-most cell top-edge: H - bottom_border(6) - cell_height(18) = 206
+      const BAT_CELL_BASE_Y = BAT_H - 6 - BAT_CELL_H; // = 206
+
       function ensureBatterySvg() {
+        const isEditorial = document.body.dataset.theme === "editorial";
+        if (isEditorial) return; // editorial uses CSS pseudo-elements, not SVG
         if (DOM.batteryVisual.querySelector("svg")) return;
-        const CELL_W = 18;
-        const CELL_H = 66;
-        const CELL_X0 = 12;
-        const CELL_Y = 12;
-        const CELL_GAP = 2;
+
         let cellsSvg = "";
-        for (let i = 0; i < 10; i++) {
-          const x = CELL_X0 + i * (CELL_W + CELL_GAP);
-          cellsSvg += `<rect class="bat-cell" data-idx="${i}" x="${x}" y="${CELL_Y}" width="${CELL_W}" height="${CELL_H}" fill="#2a2a3a" opacity="0.35"></rect>`;
+        for (let i = 0; i < BAT_CELLS; i++) {
+          const cellY = BAT_CELL_BASE_Y - i * (BAT_CELL_H + BAT_CELL_GAP);
+          cellsSvg += `<rect class="bat-cell" data-idx="${i}" data-base-y="${cellY}" data-base-h="${BAT_CELL_H}" x="${BAT_CELL_X}" y="${cellY}" width="${BAT_CELL_W}" height="${BAT_CELL_H}" fill="#2a2a3a" opacity="0.35"></rect>`;
         }
+
+        const nubX = (BAT_W - BAT_NUB_W) / 2; // = 36 — centred
         DOM.batteryVisual.innerHTML = `
-        <svg width="240" height="90" viewBox="0 0 252 90" role="img" aria-hidden="true" shape-rendering="crispEdges">
-          <rect class="bat-frame" x="2" y="2" width="220" height="86" fill="none" stroke-width="4"></rect>
-          <rect class="bat-nub" x="228" y="28" width="14" height="34"></rect>
+        <svg width="${BAT_W}" height="${BAT_H}" viewBox="0 0 ${BAT_W} ${BAT_H}" role="img" aria-hidden="true" shape-rendering="crispEdges">
+          <rect class="bat-nub" x="${nubX}" y="0" width="${BAT_NUB_W}" height="${BAT_NUB_H}"></rect>
+          <rect class="bat-frame" x="0" y="${BAT_NUB_H}" width="${BAT_W}" height="${BAT_H - BAT_NUB_H}" fill="none" stroke-width="4"></rect>
           <g id="battery-fill-group">${cellsSvg}</g>
         </svg>
-      `;
+        `;
       }
 
       function renderBattery(level) {
@@ -11052,43 +11073,54 @@ P = drain − 0.5·recovery</pre
         const cells = DOM.batteryVisual.querySelectorAll(".bat-cell");
         let percentText = "--";
 
-        if (level == null) {
-          cells.forEach((cell) => {
-            cell.setAttribute("width", 18);
-            cell.style.fill = "var(--px-surface-2)";
-            cell.setAttribute("opacity", "0.5");
-          });
-        } else {
-          const rounded = Math.round(level);
-          const color = levelColor(level);
-          const full = Math.floor(level / 10);
-          const partialFrac = level / 10 - full;
-          const CELL_W = 18;
-
-          cells.forEach((cell, i) => {
-            if (i < full) {
-              cell.setAttribute("width", CELL_W);
-              cell.style.fill = color; // var() only works via inline style, not attr
-              cell.setAttribute("opacity", "1");
-            } else if (i === full && partialFrac > 0) {
-              cell.setAttribute(
-                "width",
-                Math.max(2, CELL_W * partialFrac).toFixed(2),
-              );
-              cell.style.fill = color;
-              cell.setAttribute("opacity", "1");
-            } else {
-              cell.setAttribute("width", CELL_W);
+        if (cells.length > 0) {
+          // Vertical pixel-art battery — fill cells from bottom (i=0) up
+          if (level == null) {
+            cells.forEach((cell) => {
+              cell.setAttribute("height", cell.dataset.baseH);
+              cell.setAttribute("y", cell.dataset.baseY);
               cell.style.fill = "var(--px-surface-2)";
               cell.setAttribute("opacity", "0.5");
-            }
-          });
+            });
+          } else {
+            const color = levelColor(level);
+            const full = Math.floor(level / 10);
+            const partialFrac = level / 10 - full;
 
-          // Low-power pulse on the last visible cell
-          const isLow = level < 20;
-          cells.forEach((cell, i) => {
-            cell.classList.toggle("is-low", isLow && i === Math.max(0, full));
-          });
+            cells.forEach((cell, i) => {
+              const baseY = Number(cell.dataset.baseY);
+              const baseH = Number(cell.dataset.baseH);
+              if (i < full) {
+                // Fully filled cell
+                cell.setAttribute("height", baseH);
+                cell.setAttribute("y", baseY);
+                cell.style.fill = color;
+                cell.setAttribute("opacity", "1");
+              } else if (i === full && partialFrac > 0) {
+                // Partial fill — anchor to bottom edge of the cell
+                const partH = Math.max(2, Math.round(baseH * partialFrac));
+                cell.setAttribute("height", partH);
+                cell.setAttribute("y", baseY + baseH - partH);
+                cell.style.fill = color;
+                cell.setAttribute("opacity", "1");
+              } else {
+                // Empty cell
+                cell.setAttribute("height", baseH);
+                cell.setAttribute("y", baseY);
+                cell.style.fill = "var(--px-surface-2)";
+                cell.setAttribute("opacity", "0.5");
+              }
+            });
+
+            // Low-power pulse on the last visible cell
+            const isLow = level < 20;
+            cells.forEach((cell, i) => {
+              cell.classList.toggle("is-low", isLow && i === Math.max(0, full));
+            });
+            percentText = `${Math.round(level <= 1 ? level * 100 : level)}`;
+          }
+        } else if (level != null) {
+          // Editorial (no cells) — still update percent text
           percentText = `${Math.round(level <= 1 ? level * 100 : level)}`;
         }
 
@@ -11932,13 +11964,16 @@ P = drain − 0.5·recovery</pre
               item.kind === "drain"
                 ? getPressureTone(fill)
                 : getFeatureTone("recovery", fill);
+            const rawVal = Math.round(fill * item.cap);
+            const unitStr = item.unit ? ` ${item.unit}` : "";
+            const tooltip = `${Math.round(fill * 100)}% of daily ceiling — ${rawVal}${unitStr} logged out of ${item.cap}${unitStr} max. Each feature is normalized to its typical daily ceiling so bars are comparable across features.`;
             return `
           <div class="demo-feature-row${activity.changedKeys.includes(item.key) && activity.step !== "scene" ? " is-active" : ""}" data-feature-key="${item.key}" style="--tone:${tone}">
             <div class="demo-feature-label">${featureLabelMap[item.key] || item.key}</div>
             <div class="demo-feature-bar">
               <div class="demo-feature-fill" style="--fill:${fill};--tone:${tone}"></div>
             </div>
-            <div class="demo-feature-value">${Math.round(fill * 100)}%</div>
+            <div class="demo-feature-value" title="${tooltip}">${Math.round(fill * 100)}%</div>
           </div>
         `;
           })
@@ -12701,22 +12736,22 @@ P = drain − 0.5·recovery</pre
           appendSvgText(svg, x, plotBottom + 18, String(tickValue), {
             anchor: "middle",
             fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-            fontSize: "9px",
+            fontSize: "11px",
           });
           appendSvgText(svg, plotLeft - 10, y + 3, String(tickValue), {
             anchor: "end",
             fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-            fontSize: "9px",
+            fontSize: "11px",
           });
         });
 
         appendSvgText(svg, plotRight + 6, plotBottom + 30, "E", {
           fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-          fontSize: "10px",
+          fontSize: "12px",
         });
         appendSvgText(svg, 5, plotTop - 6, "S", {
           fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-          fontSize: "10px",
+          fontSize: "12px",
         });
 
         if (hasPayload) {
@@ -13314,9 +13349,9 @@ P = drain − 0.5·recovery</pre
           });
         });
 
-        appendSvgText(svg, 8, margin.top + 8, "100%", { fontSize: "11px" });
+        appendSvgText(svg, 8, margin.top + 8, "100%", { fontSize: "13px" });
         appendSvgText(svg, 8, height - margin.bottom, "0%", {
-          fontSize: "11px",
+          fontSize: "13px",
         });
         DOM.layer2Circadian.replaceChildren(svg);
 
@@ -13610,10 +13645,39 @@ P = drain − 0.5·recovery</pre
       }
 
       function renderDiagnostics() {
-        if (DOM.diagDrain)
-          renderDiagnosticList(DOM.diagDrain, DRAIN_FEATS, "drain");
-        if (DOM.diagRecovery)
-          renderDiagnosticList(DOM.diagRecovery, RECOVERY_FEATS, "recover");
+        const feats = getLastFeats();
+        const inDemo = APP.demo.enabled || !!getActiveDemoProfile();
+
+        if (inDemo) {
+          // Demo mode: only show non-zero features, balanced drain vs recovery
+          const nonZeroDrain = DRAIN_FEATS.filter((item) => {
+            const raw = feats[item.key];
+            return hasFeatureValue(raw) && Number(raw) !== 0;
+          });
+          const nonZeroRecov = RECOVERY_FEATS.filter((item) => {
+            const raw = feats[item.key];
+            return hasFeatureValue(raw) && Number(raw) !== 0;
+          });
+          const cap = Math.min(nonZeroDrain.length, nonZeroRecov.length);
+          if (DOM.diagDrain)
+            renderDiagnosticList(
+              DOM.diagDrain,
+              nonZeroDrain.slice(0, cap),
+              "drain",
+            );
+          if (DOM.diagRecovery)
+            renderDiagnosticList(
+              DOM.diagRecovery,
+              nonZeroRecov.slice(0, cap),
+              "recover",
+            );
+        } else {
+          if (DOM.diagDrain)
+            renderDiagnosticList(DOM.diagDrain, DRAIN_FEATS, "drain");
+          if (DOM.diagRecovery)
+            renderDiagnosticList(DOM.diagRecovery, RECOVERY_FEATS, "recover");
+        }
+
         if (DOM.diagFooter) {
           const tick = getModelPayload()?.last_tick_iso
             ? formatTime(getModelPayload().last_tick_iso)
@@ -13996,7 +14060,7 @@ P = drain − 0.5·recovery</pre
         } else if (demo) {
           DOM.modelStatusText.textContent = `Demo: ${demo.tagline}`;
         } else if (source === "model") {
-          DOM.modelStatusText.textContent = "Live data · model ticking";
+          DOM.modelStatusText.textContent = "Live data";
         } else if (source === "cached-model") {
           DOM.modelStatusText.textContent =
             "Backend offline — showing your last known values";

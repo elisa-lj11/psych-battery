@@ -1,50 +1,61 @@
-# Current Task
+# Current Task — 2026-05-05
 
 ## Goal
 
-No active task. Last session: editorial battery redesign (visual polish).
+Multi-fix polish pass + push to Elisa's main + Vercel deploy.
 
-## What was just done (session ending 2026-05-04)
+## Items (in order)
 
-All changes on branch `feat/mental-meter-phase-portrait`, deployed to https://psych-battery.vercel.app.
+### CSS / text fixes (in index.html)
 
-- `fix(editorial): battery tip via clip-path, deeper inset, B&W display`
-  - `clip-path: path()` on `#battery-visual` creates battery body + positive-terminal nub at top center
-  - Corner radius reduced from 22px → 16px in the clip-path
-  - `filter: drop-shadow` replaces `box-shadow` (traces clip-path outline)
-  - Inner screen inset increased 7px → 10px all sides
-  - Inner screen gradient changed from purple/blue to B&W (white fill, near-black empty) — e-ink display aesthetic
-  - LED bar `top` adjusted 22px → 24px (tip 8 + radius 16)
-  - Playwright test `editorial-battery-rounded` updated: checks `clip-path` presence instead of `border-radius` value
-- Prior session: HSL alpha syntax fix, stress display condition fix, LED bar below corner radius, 6am timeline label fix, editorial as default theme
+- [x] .avg-row 0.88→1rem, .avg-values 0.82→0.95rem (done)
+- [ ] Phase portrait axis ticks 9px→11px, E/S labels 10px→12px
+- [ ] Circadian 100%/0% labels 11px→13px
+- [ ] .layer2-tank-title 0.74rem→0.82rem
+- [ ] Change "live data - model ticking" → "live data" (find text in HTML)
+- [ ] Remove drop shadow behind main battery numbers (editorial battery)
+- [ ] Take shading off non-clickable boxes (identify + fix)
+- [ ] Fix stress logging: 10/10 = HIGH stress, 1/10 = LOW stress (check if inverted)
 
-## Active branch
+### CrowPanel firmware (psych_battery_crowpanel.ino)
 
-`feat/mental-meter-phase-portrait` — ahead of upstream/main by many commits. Has not been merged to main.
+- [ ] Remove 100% rectangle: when trend=="flat", draw NOTHING (not the bar rect)
+- [ ] After firmware change, re-flash via arduino-cli
+
+### Website battery shape (pixel-art themes)
+
+- [ ] Mimic editorial tall-vertical portrait battery (clip-path, terminal tip) in all non-editorial themes
+  - Target themes: arcade, gameboy, amber, phosphor, pastel, acrylic, light
+  - Keep pixel-art crisp aesthetic (pixelated rendering, Silkscreen font)
+  - Fill from bottom, terminal nub at top
+
+### Live server / CrowPanel sync
+
+- [ ] Verify charge_sender.py is running / start via bridge-restart endpoint
+- [ ] Ensure display updates in sync with server.py (no lag or race)
+- [ ] Check OFFLINE_TIMEOUT_MS behavior
+
+### Test everything
+
+- [ ] Run `node e2e/editorial-full.mjs` (or screenshot pass)
+- [ ] Verify CrowPanel receives charge updates
+
+### Deploy
+
+- [ ] Push to `elisa-lj11/psych-battery` main branch (need to check push access / open PR)
+- [ ] `vercel deploy --prod`
 
 ## Key file locations
 
-| File                     | Notes                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------- |
-| `index.html`             | 16,286 lines — entire frontend                                                        |
-| `server.py`              | Proxy server, port 3131. **Restart after any index.html edit** — it caches at startup |
-| `e2e/editorial-full.mjs` | Playwright test suite (run: `node e2e/editorial-full.mjs`, server must be up)         |
-| `CLAUDE.md`              | Project instructions for agents — read this first                                     |
+| File                                                            | Notes                                                   |
+| --------------------------------------------------------------- | ------------------------------------------------------- |
+| `index.html`                                                    | ~16,800 lines — entire frontend                         |
+| `server.py`                                                     | Port 3131, restart after index.html edit                |
+| `crowpanel/psych_battery_crowpanel/psych_battery_crowpanel.ino` | CrowPanel firmware                                      |
+| `charge_sender.py`                                              | Bridge: reads energy from server, sends over USB Serial |
+| `e2e/editorial-full.mjs`                                        | Playwright test suite                                   |
 
-## Verifier
+## Git status
 
-```bash
-# Restart server after any index.html edit
-pkill -f "python server.py"; cd ~/psych-battery && python server.py &
-
-# Run tests
-node e2e/editorial-full.mjs
-
-# Deploy
-vercel deploy --prod
-```
-
-## Pending items from prior sessions (not this session)
-
-See `CLAUDE.md` → "Known bugs" section for P1/P2 items that predate this session.
-No new items were added this session.
+Current branch on elisa's repo: `feat/mental-meter-polish`
+Target: merge/push to `elisa-lj11/psych-battery` main

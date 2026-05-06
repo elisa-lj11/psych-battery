@@ -87,7 +87,7 @@ def _crowpanel_start_bridge() -> int:
     with _BRIDGE_LOCK:
         global _bridge_proc
         _bridge_proc = _subprocess.Popen(
-            [sys.executable, _BRIDGE_SCRIPT],
+            [sys.executable, _BRIDGE_SCRIPT, '--port', CROWPANEL_PORT],
             stdout=_subprocess.DEVNULL,
             stderr=_subprocess.DEVNULL,
         )
