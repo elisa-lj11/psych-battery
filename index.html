@@ -9101,6 +9101,8 @@ P = drain − 0.5·recovery</pre
               todoist_overdue_count: 12,
               continuous_sleep_h: 5.5,
               detach_block_min: 0,
+              exercise_min: 0,
+              nap_min: 0,
             },
           },
           aw: {
@@ -9147,6 +9149,8 @@ P = drain − 0.5·recovery</pre
               todoist_overdue_count: 2,
               continuous_sleep_h: 8.0,
               detach_block_min: 45,
+              exercise_min: 35,
+              nap_min: 0,
             },
           },
           aw: {
@@ -9194,6 +9198,8 @@ P = drain − 0.5·recovery</pre
               todoist_overdue_count: 18,
               continuous_sleep_h: 4.5,
               detach_block_min: 0,
+              exercise_min: 0,
+              nap_min: 25,
             },
           },
           aw: {
@@ -9239,6 +9245,8 @@ P = drain − 0.5·recovery</pre
               todoist_overdue_count: 3,
               continuous_sleep_h: 8.5,
               detach_block_min: 60,
+              exercise_min: 20,
+              nap_min: 0,
             },
           },
           aw: {
@@ -10384,6 +10392,7 @@ P = drain − 0.5·recovery</pre
       ];
 
       const RECOVERY_FEATS = [
+        // AW-derived (always present when AW is running)
         {
           key: "focus_block_min",
           label: "Focus blocks",
@@ -10396,33 +10405,40 @@ P = drain − 0.5·recovery</pre
           unit: "min",
           source: "aw",
         },
+        // User-logged via the Recovery sheet
         {
-          key: "outside_min",
+          key: "outside_log_min",
           label: "Go outside",
           unit: "min",
           source: "log",
         },
         {
-          key: "walk_min",
+          key: "walk_outside_min",
           label: "Walk",
           unit: "min",
           source: "log",
         },
         {
-          key: "social_min",
+          key: "exercise_min",
+          label: "Exercise",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "with_people_min",
           label: "With people",
+          unit: "min",
+          source: "log",
+        },
+        {
+          key: "detach_block_min",
+          label: "Quiet / detach",
           unit: "min",
           source: "log",
         },
         {
           key: "nap_min",
           label: "Nap",
-          unit: "min",
-          source: "log",
-        },
-        {
-          key: "detach_min",
-          label: "Detach / rest",
           unit: "min",
           source: "log",
         },
@@ -10492,6 +10508,14 @@ P = drain − 0.5·recovery</pre
         detach_block_min: {
           title: "Detach Blocks",
           body: "Logged detachment activities: walks, naps, meals away from desk, breathing sessions. Intentional separation from work tasks is the primary lever you can pull to raise energy quickly.",
+        },
+        exercise_min: {
+          title: "Exercise",
+          body: "Logged exercise minutes (runs, gym, sports, any intentional physical effort). Even a 20-minute session produces a measurable BDNF and endorphin response — one of the strongest same-day energy restorers.",
+        },
+        nap_min: {
+          title: "Nap",
+          body: "Logged nap duration from the Recovery sheet. A 20–30 minute nap restores alertness without sleep inertia. Longer naps (60+ min) add slow-wave recovery but require a longer wake window before it kicks in.",
         },
         continuous_sleep_h: {
           title: "Continuous Sleep",
@@ -11209,6 +11233,8 @@ P = drain − 0.5·recovery</pre
         social_voice_min: 120,
         with_people_min: 480,
         detach_block_min: 120,
+        exercise_min: 60,
+        nap_min: 90,
         continuous_sleep_h: 9,
         hrv_z: 4,
       };
@@ -12912,20 +12938,28 @@ P = drain − 0.5·recovery</pre
           const missingLabels = [];
           const rows = items
             .map((item) => {
+              // User-logged features default to 0 when not yet logged today
+              // (rather than collapsing to "N not logged"), so the user always
+              // sees the full recovery panel and can tell what they can log.
+              const rawVal = feats[item.key];
+              const effectiveRaw =
+                !hasFeatureValue(rawVal) && item.source === "log" ? 0 : rawVal;
               const { text, zero, missing } = formatFeatureValue(
                 item.key,
                 item.unit,
-                feats[item.key],
+                effectiveRaw,
               );
               if (missing) {
                 missingLabels.push(item.label);
                 return "";
               }
-              const norm = normalizeFeature(item.key, feats[item.key]);
+              const norm = normalizeFeature(item.key, effectiveRaw);
               const fillCount = Math.round(norm * 12);
               const toneColor = getFeatureTone(group, norm);
+              const dimStyle =
+                zero && item.source === "log" ? ' style="opacity:0.45"' : "";
               return `
-            <div class="layer-feature-row">
+            <div class="layer-feature-row"${dimStyle}>
               <div class="layer-feature-head">
                 <span class="layer-feature-label">${item.label}<button type="button" class="layer-feature-help-btn" data-feature-key="${item.key}" aria-label="Explain ${item.label}">?</button></span>
                 <span class="layer-feature-value" style="color:${toneColor}">${text}${item.unit ? item.unit : ""}</span>
