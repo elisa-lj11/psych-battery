@@ -1,61 +1,40 @@
-# Current Task — 2026-05-05
+# Current Task — 2026-05-06
 
 ## Goal
 
-Multi-fix polish pass + push to Elisa's main + Vercel deploy.
+Polish pass: finish pending JS wiring + new UI requests from user.
 
-## Items (in order)
+## Completed this session ✅
 
-### CSS / text fixes (in index.html)
+- [x] Wire demo/live source toggle JS event handlers
+- [x] Fix white corners on "Back to Battery" button (editorial theme)
+- [x] Make dark mode editorial theme — CSS + JS wired into picker
+- [x] Add editorial-dark swatch to main theme picker (removed pixel-art swatches from picker)
+- [x] Shelve pixel-art themes (arcade, pastel, acrylic) into ? menu "about" tab section
+- [x] When on pixel-art theme, mode toggle → LIGHT
+- [x] ? menu fully opaque in demo mode (body.is-demo background: var(--px-bg))
+- [x] Demo timeline: 8AM–10PM only
+- [x] Batteries LEFT of timeline, same height (demo-state-row flex layout)
+- [x] No green dots bottom-left in demo
+- [x] Back button top-left during demo (conditional in demo-topbar)
+- [x] Fix demo dropdown hover text visibility
+- [x] Replace upper-left "Mental Meter" text with logo (24,911 char base64 embed)
+- [x] Source toggle CSS: pill shape + correct hover in editorial/editorial-dark
 
-- [x] .avg-row 0.88→1rem, .avg-values 0.82→0.95rem (done)
-- [ ] Phase portrait axis ticks 9px→11px, E/S labels 10px→12px
-- [ ] Circadian 100%/0% labels 11px→13px
-- [ ] .layer2-tank-title 0.74rem→0.82rem
-- [ ] Change "live data - model ticking" → "live data" (find text in HTML)
-- [ ] Remove drop shadow behind main battery numbers (editorial battery)
-- [ ] Take shading off non-clickable boxes (identify + fix)
-- [ ] Fix stress logging: 10/10 = HIGH stress, 1/10 = LOW stress (check if inverted)
+## Remaining
 
-### CrowPanel firmware (psych_battery_crowpanel.ino)
-
-- [ ] Remove 100% rectangle: when trend=="flat", draw NOTHING (not the bar rect)
-- [ ] After firmware change, re-flash via arduino-cli
-
-### Website battery shape (pixel-art themes)
-
-- [ ] Mimic editorial tall-vertical portrait battery (clip-path, terminal tip) in all non-editorial themes
-  - Target themes: arcade, gameboy, amber, phosphor, pastel, acrylic, light
-  - Keep pixel-art crisp aesthetic (pixelated rendering, Silkscreen font)
-  - Fill from bottom, terminal nub at top
-
-### Live server / CrowPanel sync
-
-- [ ] Verify charge_sender.py is running / start via bridge-restart endpoint
-- [ ] Ensure display updates in sync with server.py (no lag or race)
-- [ ] Check OFFLINE_TIMEOUT_MS behavior
-
-### Test everything
-
-- [ ] Run `node e2e/editorial-full.mjs` (or screenshot pass)
-- [ ] Verify CrowPanel receives charge updates
-
-### Deploy
-
-- [ ] Push to `elisa-lj11/psych-battery` main branch (need to check push access / open PR)
+- [ ] Playwright results (running) — fix any failures
+- [ ] Commit + push to `elisa-lj11/psych-battery` main
 - [ ] `vercel deploy --prod`
 
 ## Key file locations
 
-| File                                                            | Notes                                                   |
-| --------------------------------------------------------------- | ------------------------------------------------------- |
-| `index.html`                                                    | ~16,800 lines — entire frontend                         |
-| `server.py`                                                     | Port 3131, restart after index.html edit                |
-| `crowpanel/psych_battery_crowpanel/psych_battery_crowpanel.ino` | CrowPanel firmware                                      |
-| `charge_sender.py`                                              | Bridge: reads energy from server, sends over USB Serial |
-| `e2e/editorial-full.mjs`                                        | Playwright test suite                                   |
+| File         | Notes                           |
+| ------------ | ------------------------------- |
+| `index.html` | ~17,500 lines — entire frontend |
+| `server.py`  | Port 3131, running              |
 
 ## Git status
 
-Current branch on elisa's repo: `feat/mental-meter-polish`
-Target: merge/push to `elisa-lj11/psych-battery` main
+Current branch: `feat/mental-meter-polish`
+Target: merge to `elisa-lj11/psych-battery` main

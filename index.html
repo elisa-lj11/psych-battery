@@ -347,6 +347,13 @@
         color: var(--px-accent);
         outline: none;
       }
+      /* In demo mode the button bg is accent — keep text visible on hover */
+      body.is-demo #demo-toggle-btn:hover,
+      body.is-demo #demo-toggle-btn:focus-visible {
+        color: var(--px-bg);
+        filter: brightness(1.12);
+        outline: none;
+      }
 
       #demo-header-badge {
         display: none;
@@ -791,7 +798,8 @@
       #timeline-toggle-btn:hover,
       #timeline-toggle-btn:focus-visible {
         border-color: var(--px-accent);
-        color: var(--px-accent);
+        color: var(--px-text);
+        background: var(--px-button-surface-strong);
         outline: none;
       }
 
@@ -974,8 +982,8 @@
       .header-source-control {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 4px 10px 4px 12px;
+        gap: 6px;
+        padding: 0;
         border: 2px solid var(--px-border);
         border-radius: 0;
         background: var(--px-panel);
@@ -985,12 +993,41 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         flex: 0 0 auto;
+        overflow: hidden;
       }
-      .header-source-label {
+      .source-switch {
+        display: flex;
+        flex: 0 0 auto;
+      }
+      .source-switch-btn {
+        padding: 5px 12px;
+        border: none;
+        border-right: 2px solid var(--px-border);
+        background: transparent;
         color: var(--px-muted);
-        font-size: 0.7rem;
+        font-family: var(--px-font-ui);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background 120ms steps(2),
+          color 120ms steps(2);
+        white-space: nowrap;
       }
-      #demo-select {
+      .source-switch-btn:last-child {
+        border-right: none;
+      }
+      .source-switch-btn.is-active {
+        background: var(--px-button-surface);
+        color: var(--px-text);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+      .source-switch-btn:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--px-text);
+      }
+      .source-persona-select {
         min-height: 32px;
         padding: 0 8px;
         border: none;
@@ -1000,11 +1037,9 @@
         font-size: 0.82rem;
         font-weight: 600;
         cursor: pointer;
-        max-width: 240px;
-        display: inline-flex;
-        align-items: center;
+        max-width: 140px;
       }
-      #demo-select:focus {
+      .source-persona-select:focus {
         outline: none;
       }
       .header-source-control:focus-within {
@@ -1171,6 +1206,13 @@
         outline: none;
       }
 
+      .brand-logo {
+        height: 32px;
+        width: auto;
+        display: block;
+        pointer-events: none;
+      }
+
       .demo-topbar {
         display: flex;
         align-items: center;
@@ -1243,6 +1285,10 @@
       .demo-theme-swatch[data-set-theme="pastel"] {
         background: #fde8f0;
         border-color: #e0a0b8;
+      }
+      .demo-theme-swatch[data-set-theme="editorial-dark"] {
+        background: #15152a;
+        border-color: #9aa0e8;
       }
 
       .demo-window-toggle {
@@ -1502,7 +1548,8 @@
         max-height: 90vh;
         overflow-y: auto;
         border: 2px solid var(--px-border);
-        background: var(--px-panel);
+        /* Force opaque — semi-transparent panel looks bad inside the dark overlay */
+        background: var(--px-bg);
         padding: 32px 36px;
         box-shadow: 4px 4px 0 0 var(--px-button-shadow);
         font-family: var(--px-font-copy);
@@ -4079,15 +4126,19 @@
         font-size: var(--fs-label, 0.82rem);
       }
       #self-log-dock #recovery-trigger {
-        background: var(--px-recovery-soft);
+        background: rgba(116, 199, 255, 0.52);
         border-color: var(--px-recovery);
         color: var(--px-recovery);
+        outline: 2px solid var(--px-recovery);
+        outline-offset: 1px;
       }
       #self-log-dock #tune-trigger {
-        background: var(--px-accent-soft);
+        background: rgba(176, 140, 255, 0.5);
         border-color: var(--px-accent);
         color: var(--px-accent);
         border-radius: 0;
+        outline: 2px solid var(--px-accent);
+        outline-offset: 1px;
       }
 
       #backdrop {
@@ -5096,6 +5147,135 @@
         font-family: var(--px-font-ui);
       }
 
+      /* ── Editorial Dark — same aesthetic, navy/charcoal bg ── */
+      body[data-theme="editorial-dark"] {
+        --px-bg: #15152a;
+        --px-bg-top: #1a1a34;
+        --px-bg-bottom: #0f0f22;
+        --px-surface: rgba(255, 255, 255, 0.07);
+        --px-surface-2: rgba(255, 255, 255, 0.11);
+        --px-surface-3: rgba(255, 255, 255, 0.05);
+        --px-panel: rgba(255, 255, 255, 0.08);
+        --px-panel-soft: rgba(255, 255, 255, 0.05);
+        --px-border: rgba(180, 185, 230, 0.18);
+        --px-border-2: rgba(180, 185, 230, 0.32);
+        --px-text: #e8e8f4;
+        --px-text-2: #b0b0cc;
+        --px-muted: #7878a0;
+        --px-good: #6ec48a;
+        --px-warn: #d4a84a;
+        --px-low: #e0804a;
+        --px-critical: #e06060;
+        --px-accent: #9aa0e8;
+        --px-accent-2: #bcc0f0;
+        --px-info: #6aaad4;
+        --px-focus: #9aa0e8;
+        --px-energy: #6ec48a;
+        --px-stress: #e06060;
+        --px-recovery: #6aaad4;
+        --px-accent-soft: rgba(154, 160, 232, 0.14);
+        --px-energy-soft: rgba(110, 196, 138, 0.14);
+        --px-stress-soft: rgba(224, 96, 96, 0.12);
+        --px-recovery-soft: rgba(106, 170, 212, 0.12);
+        --px-button-surface: rgba(255, 255, 255, 0.1);
+        --px-button-surface-strong: rgba(255, 255, 255, 0.16);
+        --px-button-shadow: rgba(0, 0, 0, 0.5);
+        --px-font-ui:
+          "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+          Arial, sans-serif;
+        --px-font-body:
+          "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+          Arial, sans-serif;
+        --px-font-mono: "DM Mono", "SF Mono", monospace;
+        --panel-radius: 22px;
+        --panel-shadow:
+          0 2px 28px rgba(0, 0, 20, 0.4), 0 1px 6px rgba(0, 0, 20, 0.3);
+        --halo-sm: 0 0 32px rgba(154, 160, 232, 0.12);
+        --halo-md: 0 0 64px rgba(154, 160, 232, 0.18);
+        --glass-blur: blur(20px);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        background:
+          radial-gradient(
+            ellipse 90% 50% at 50% -5%,
+            rgba(100, 110, 200, 0.22) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 45% 35% at 5% 95%,
+            rgba(80, 90, 190, 0.1) 0%,
+            transparent 55%
+          ),
+          #15152a;
+        background-attachment: fixed;
+        color: var(--px-text);
+        font-family: var(--px-font-ui);
+      }
+
+      /* Editorial-dark glass panels */
+      body[data-theme="editorial-dark"] #battery-card,
+      body[data-theme="editorial-dark"] #layer-1,
+      body[data-theme="editorial-dark"] #layer-2,
+      body[data-theme="editorial-dark"] .header-shell,
+      body[data-theme="editorial-dark"] #self-log-dock,
+      body[data-theme="editorial-dark"] .today-signal-tile,
+      body[data-theme="editorial-dark"] .metric-card,
+      body[data-theme="editorial-dark"] .demo-card,
+      body[data-theme="editorial-dark"] #demo-panel,
+      body[data-theme="editorial-dark"] .bottom-sheet,
+      body[data-theme="editorial-dark"] .calib-card,
+      body[data-theme="editorial-dark"] #story-card {
+        backdrop-filter: var(--glass-blur) saturate(130%);
+        -webkit-backdrop-filter: var(--glass-blur) saturate(130%);
+      }
+
+      /* Inherit editorial's rounded-corner overrides */
+      body[data-theme="editorial-dark"] #battery-card,
+      body[data-theme="editorial-dark"] #layer-1,
+      body[data-theme="editorial-dark"] #layer-2 {
+        border-radius: var(--panel-radius) !important;
+        border: var(--glass-border) !important;
+        box-shadow: var(--panel-shadow) !important;
+      }
+
+      body[data-theme="editorial-dark"] .tap-score,
+      body[data-theme="editorial-dark"] .activity-btn {
+        border-radius: 12px !important;
+      }
+
+      body[data-theme="editorial-dark"] .stepper-btn,
+      body[data-theme="editorial-dark"] .start-btn,
+      body[data-theme="editorial-dark"] #log-btn,
+      body[data-theme="editorial-dark"] #recovery-trigger,
+      body[data-theme="editorial-dark"] #tune-trigger,
+      body[data-theme="editorial-dark"] #collapse-btn,
+      body[data-theme="editorial-dark"] #open-diagnostics,
+      body[data-theme="editorial-dark"] #screensaver-done {
+        border-radius: 999px !important;
+      }
+
+      body[data-theme="editorial-dark"] .layer-back-top {
+        border-radius: 999px !important;
+        box-shadow: 0 1px 6px rgba(0, 0, 20, 0.4) !important;
+        background: rgba(30, 32, 60, 0.92) !important;
+        border: 1px solid rgba(180, 185, 230, 0.25) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      body[data-theme="editorial-dark"] #self-log-dock {
+        background: rgba(0, 0, 20, 0.2) !important;
+        border-top: 1px solid rgba(180, 185, 230, 0.1) !important;
+        box-shadow: none !important;
+      }
+
+      body[data-theme="editorial-dark"] #help-sheet {
+        border-radius: var(--panel-radius) var(--panel-radius) 0 0 !important;
+      }
+
+      body.is-demo[data-theme="editorial-dark"] #battery-card {
+        backdrop-filter: none !important;
+      }
+
       /* ── Glass surfaces: all major panels get blur + white glass bg ── */
       body[data-theme="editorial"] #battery-card,
       body[data-theme="editorial"] #layer-1,
@@ -5171,13 +5351,31 @@
         border-top: 1px solid rgba(200, 200, 220, 0.25) !important;
         box-shadow: none !important;
       }
-      body[data-theme="editorial"] #self-log-dock #log-btn,
-      body[data-theme="editorial"] #self-log-dock #recovery-trigger,
-      body[data-theme="editorial"] #self-log-dock #tune-trigger {
-        background: rgba(255, 255, 255, 0.55) !important;
-        border: 1px solid rgba(255, 255, 255, 0.7) !important;
+      body[data-theme="editorial"] #self-log-dock #log-btn {
+        background: rgba(127, 229, 140, 0.52) !important;
+        border: 1px solid rgba(127, 229, 140, 0.8) !important;
         color: #1a1a2e !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      body[data-theme="editorial"] #self-log-dock #recovery-trigger {
+        background: rgba(116, 199, 255, 0.52) !important;
+        border: 1px solid rgba(116, 199, 255, 0.8) !important;
+        color: #1a1a2e !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        outline: 2px solid rgba(116, 199, 255, 0.6) !important;
+        outline-offset: 1px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      body[data-theme="editorial"] #self-log-dock #tune-trigger {
+        background: rgba(176, 140, 255, 0.5) !important;
+        border: 1px solid rgba(176, 140, 255, 0.8) !important;
+        color: #1a1a2e !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        outline: 2px solid rgba(176, 140, 255, 0.6) !important;
+        outline-offset: 1px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
       }
@@ -5189,7 +5387,11 @@
       }
       body[data-theme="editorial"] .layer-back-top {
         border-radius: 999px !important;
-        box-shadow: none !important;
+        box-shadow: 0 1px 6px rgba(50, 50, 90, 0.1) !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        border: 1px solid rgba(160, 165, 210, 0.4) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
       body[data-theme="editorial"] .demo-exit-btn {
         border-radius: 999px !important;
@@ -5244,6 +5446,26 @@
       body[data-theme="editorial"] .demo-help-btn {
         border-radius: 999px !important;
         box-shadow: none !important;
+      }
+      /* Source toggle: pill shape in editorial themes */
+      body[data-theme="editorial"] .header-source-control,
+      body[data-theme="editorial-dark"] .header-source-control {
+        border-radius: 999px !important;
+        border: 1px solid rgba(160, 165, 210, 0.4) !important;
+      }
+      body[data-theme="editorial"] .source-switch-btn.is-active,
+      body[data-theme="editorial-dark"] .source-switch-btn.is-active {
+        border-radius: 999px !important;
+        box-shadow: none !important;
+      }
+      body[data-theme="editorial"] .source-switch-btn:hover:not(.is-active) {
+        background: rgba(0, 0, 0, 0.06) !important;
+        color: var(--px-text) !important;
+      }
+      body[data-theme="editorial-dark"]
+        .source-switch-btn:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: var(--px-text) !important;
       }
 
       /* ── Typography: DM Serif Display on hero number ── */
@@ -5974,6 +6196,11 @@
       body[data-mode="help"] #help-sheet {
         display: flex;
       }
+      body.is-demo[data-mode="help"] #help-sheet {
+        background: var(--px-bg);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
       body[data-mode="help"] #backdrop {
         opacity: 1;
         pointer-events: auto;
@@ -6154,6 +6381,32 @@
           gap: 12px;
           align-items: baseline;
         }
+      }
+      .help-pixel-art-section {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--px-border);
+      }
+      .help-pixel-art-title {
+        font-family: var(--px-font-ui);
+        font-size: 0.82rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--px-accent);
+        margin: 0 0 6px;
+      }
+      .help-pixel-art-desc {
+        font-family: var(--px-font-copy);
+        font-size: 0.9rem;
+        color: var(--px-muted);
+        margin: 0 0 12px;
+        line-height: 1.5;
+      }
+      .help-pixel-art-swatches {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        flex-wrap: wrap;
       }
       #help-close {
         margin-top: 12px;
@@ -6800,19 +7053,30 @@
       }
 
       .layer2-tank {
-        min-height: 240px;
+        min-height: 260px;
         justify-content: space-between;
         padding: 12px;
       }
 
       .layer2-cells-vertical {
-        grid-template-rows: repeat(8, minmax(0, 1fr));
+        grid-template-rows: repeat(10, minmax(0, 1fr));
         flex: 1;
-        min-height: 196px;
+        min-height: 200px;
       }
 
       .layer2-cell {
-        min-height: 20px;
+        min-height: 16px;
+      }
+
+      .tank-trend-arrow {
+        display: inline-block;
+        margin-left: 4px;
+        font-size: 0.7rem;
+        color: var(--px-accent);
+        font-style: normal;
+        line-height: 1;
+        vertical-align: middle;
+        transition: color 200ms steps(2);
       }
 
       .layer2-bottom-v2 {
@@ -7634,6 +7898,51 @@
         gap: 18px;
       }
 
+      /* Batteries LEFT of timeline, side-by-side, vertically aligned */
+      .demo-state-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 10px;
+        min-height: 180px;
+      }
+
+      .demo-state-row .demo-battery-pair {
+        flex: 0 0 auto;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: auto;
+        /* batteries slightly shorter than timeline — match height via flex-align */
+        align-self: center;
+      }
+
+      .demo-state-row .demo-timeline-pane {
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        align-items: stretch;
+      }
+
+      .demo-state-row .demo-timeline-svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Back button repositioned to topbar; hide old scene-footer instance */
+      .demo-scene-footer .demo-back-btn {
+        display: none;
+      }
+
+      /* Back button in topbar copy area */
+      .demo-back-top {
+        min-height: 36px;
+        padding: 0 12px;
+        font-size: 13px;
+        flex: 0 0 auto;
+      }
+
       .demo-scene-frame {
         min-height: 420px;
       }
@@ -7917,19 +8226,43 @@
     <header id="app-header">
       <div id="header-top-row">
         <button id="brand-home" class="brand-home" type="button">
-          Mental Meter
+          <img
+            src="data:image/jpeg;base64,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ygAAAAAAAAAAAAAABEiqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCqwqsKrCsyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACAAMAAAAh88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888880+999999999999999999999999999999999999999999999Po88888888888884e934wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww29vW88888888888M98c8888888888888888888888888888888888888888888888K1v0888888888s9q88888888888468888888+888888888888888888888888w888892888888888+9+8888888888/88/28888V++58888888888888A0888888uvc88o9s88888888889+888888888h+wA0v884l++++Z8886+8848+0q/Sw88280+/888o9o888888k9999+88888888y8gAAAo88v+6w0+t88cb/YkPP3do/8A69Hu/XVf/PPKPaPPPPPLvfffffvPPPPPPOnIBiwFPPL/ALAABz6Xyj+2zX39WzYH+Q5X7z/dX/zzyj2jzzzzz7333337zzzzzzh2A/8ArE4B4egEAE+++8v/APvvnf8A7z4D9bx73zh1X/zzyj2jzzzzz7333337zzzzzw+BvH8By/8Acge+Ae+f+8+n/wB/lv8A7z5Hfm4b3fH9X/zzyj2jzzzzz7333337zzzzwWTEsWtS/nyTMHoToX/7zy/badzBTxdU3Ky7jq7ADzzzyj2jzzzzz7333337zzzy+SX3tUTX1SSU0WD43/8A+8888884388888888888888888o9o88888+99999+888wkrjDrmpdGgtz5ae0/8A/wD7zzzzzy7/AM8888888888888888o9o88888+99999+88ms7P+VbY9/gbDHl0w/wD/AP8A+88nO+/+/OM8n++9s8WO888888o9o88888699999+8+/9c8rhcilgTNJbEn8/wD/AP8A+8+7V/8Adf7Tz/d2fw/4j/PPPPPKPaPPPPPPNvffffvG/fPPHYJLCA3fR+uvPP8A/wD/APvO7/fX9f8Azzv/AN9fB/28888888o9o888888su889+qzW88vH/wDOX1feTWPvPP8A/wD/APvLP2/njP2t2+cMBov1PPPPPPPKPaPPPPPPPPPPvfuB3/OlZ/PK80cW/LPPOv8A/wD/AOPPFb37POv8dsp2/qu1PPPPPPPKPaPPPPPPPPPOvdvL9T9RXPPLPV+aH/PPKPf/APl7zzxx7zzw5zzy57zzzzzzzzzzyz2zzzzzzzzzy71zzyxPxzzzzyw807zzzzy5137zzzzzzzzzzzzzzzzzzzzzzzzzyr3bzzzzzzzzzza1bzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzj/1zzzzzzzzzzzzf3zDLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLIz31bzzzzzzzzzzzyzr33333333333333333333333333333333333333333333333b7zzzzzzzzzzzzzzwy444444444444444444444444444444444444444444447zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz/2gAMAwEAAgADAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAY4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAkwgAAAAAAAAAAABmQBiwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwzQAoAAAAAAAAAAAAwMYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMSBgAAAAAAAAAAoGQAAAAAAAAAABgAAAAAAABDgAAAAAAAAAAAAAAAAAAAAAABQAAMQKwAAAAAAAABwIwAAAAAAAAAHPvjyQAABmwUMSAAAAAAAAAAAAOggAAAAAE7AgAEgAwAAAAAABAkQKAAAAAAAAAAvMgtvQABAQDDAJAAACQwAAhCwlfBygBAygg/AgAFAFwAAAAACYAAAKAAAAAAAAA3ohAAugAGBOMtqAQANvPCGjPvDFfPOBT/ACz4DwIABQBcAAAABQAAAACkAAAAAAAF6BrcBawB4TIQJ4BcBHgAPQPwtJ/nyED3mJTQLwIABQBcAAAAAMAAAACkAAAAAAb2TMlcTqpOSZjwagd4BbjPPGDysD4LwEBbkATYLwIABQBcAAAAAMAAAACkAAAAAQWSnOmh6lAaaYrhgPz4BeQU52vysD4Xy/46woHwLwIABQBcAAAAAMAAAACkAAAAD+Bde3NbsYahEO6aUbz4AALXfPDuoDOCfuiHr/L2/uAABQBcAAAAAMAAAACkAAABaAk4zOSkQTyvG9iDbzz4AAAAAAAIAAAAAAAAAAAAAAAABQBcAAAAAMAAAACkAAA+TO4rP6mDLjXO05h3zzz4AAAAAAfwIAAAAAAAAAAAAAAABQBcAAAAAMAAAACkAAuiRAHCl4BFgs0U9IHzzzz4AAI0+1fx38I2/wDgSP8ADQAAAAAFAFwAAAAAQAAAAKQAX+r/ANC3glURfPc9w1fzzzz4AfwqL7fzCLDooSzzzrAAAAAABQBcAAAABCsAAACkB1J/3u4SlMiWMK0jYJfzzzz4Bbz75zXwIAfz77zzyEAAAAAABQBcAAAAAAKPHcCgTF333K+ABSWsIdEAEBfzzzz4AGwwOSnyN3/oUnB/wIAAAAAABQBcAAAAAAAABcChYvr2EfoABQWc/vzEADDzzzzoAB2TzMJbzBv6RiBHAoAAAAAABQBcAAAAAAAABcCkCKM99eAABAsmexgAAAHbzzyMAADJEAAAEIABCAABIAAAAAAABIBcAAAAAAAAAAAMABF6OAAAABLCDMAAAABFNMAAAAAAAAAAAAAAAAAAAAAAAAAABcCMAAAAAAAAAAEA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKIQIAAAAAAAAAAIJDMU8888888888888888888888888888888888888888888+sARsAAAAAAAAAAAAK0gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAADJDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/xAAsEQACAQMDAwQBBAMBAAAAAAABAgADERIQIDEEITITMEFRYSIzQFAUgJFx/9oACAECAQE/AP8AQkJ9wKB/XWEKD4hBHugXirbQkCZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiZiBgdCLxlt7iCwvoz/AAP7BWtoRce2Bc6ObD3ACeJifr2ApPAhUjkfyDScC9tiH40cd/aTnR+fbSnfuYBbRkDRlKmx2AEmwiUQvPOtSiD3EIt7gF+0/wAZbc94RY230/MaHnUc6Px7FpYxB30fn2qaX7nbUW67KVPEXPO2utjlsCMeBCjDka4m15zPTf6hBHMTyGjg5GWOvpv9QgjmAE9xKfmNDztfjeqfJ2vz7KJkZx7FGnb9R3V/DWjQAGTaXlWiG7jmW72MAAFoqKvGjoHFjMCj2OzDJ7LEpqg7aMoYWMVQosIQBWsPvQ87X43KLnc/PsKpY2gAAsNzGw0o07/qO+v4aUVycDRxVc9xFSopuBEJIuZXWzg/eleoS2IgJBuJSfNQZXH61Oju2R7wsx+Z0q9iZVqYLeFiTcylVKHvxo37/wDzQ87X43JzufneASbCKoUWhMvtY3lKnke/E4l9oF51Hhp03np6qfc9VPueqn3K1QOwtpU8zp03hK/kuj+R06bwnVcDUcRv3/8Amh52vxuTnc/O7mImIhMJ0EGjG8VcjAAosITL7QLTqPDRGxYGA3EqdOb3WL07nmLRQC1owAew0qeZ06bwnUmxUwG4vKlBsrrKdAKP1cxLI5QR0Dixh6dxxKXTkG7aN+//AM0PO1+Nyc7n53U0t3MJhMvBBBGPxALm0AAEJl9BBoBbTqPDWlWKdjxBWQ/MNRB8yp1HwsvBXS17xjck6UKqqMTOoqBiAJRr4jFoKiH5j10XjvC5LZfMp9QD2aeon3H6hRx3i11IuTGqXqZQ10te+5+Nyc7n5200+TCYTLwQCARjacxVxEJhOgg0A16jw9g9O4F/4j8bk53PzsppfuYTaFpfQCAQm2iLbuYTCdBAIIBs6jw30/MaHn+G/G5Odz86omRhIAjNCdAIonEJvEX5MJhOoEAgG3qPDWlQL9zxBSQfENNDyJV6e3dZT8xp6KfUNBD8QixtKXT37tBTQcCGkh5Eq0CnccRRcgT0Uta0p9Oo8u8akhHHsvxuTnc/OiqWNp2UWEZpfQRROwFzAxYxFv3MZoTqBAJUqYD8yiboNvUeGlNcmAnEqdQxNli13B794rBhcR0xqi2h6h7w9Q5lBMn7wkAXMbqHJ7donUMD+qdiJjjVt+dKtfA2HMau7C3svxvBvtfnRVxEdtiiAWlR8jKIubQm0J1EUR3CC8ZixuZQ/bG3qPDTpvPTEfUxH1ALSqwNRRoedOl+ZzMR9TEfWjkGsLfjRzdifafjeDaZmepFa+j8xeRHh1URRaVHv2GnT8mNsUQkKLmO5Y3OlD9sbeo8NKTYuDpUV0MBdjYRaBt3JvAMalj8HR0KtYyn09xdpSHp1CpjLkLRg6mxih2NhDQ7c95T8xo3J9p+PaTnR+YDY3jd4w0AiLKj27DWgbNaMJbQCCwFzKlTM/jXpmutvrb1LdgNaNcWxac6VKyp/wCwkk3Mo1QwsedGcKLmO5ZspSrhuzc61a4UWXmIbMDLi14e59p+PaTnR+dKb9rGFZhFSO+IsNgNu8Rw4/MKwLAAJVqZdhxsp1CjXisGFxq7hBcx3Ltc7AxHBhdjydmbD5hJPOoZhwYWY8nW549kaPx7Smx0cfOq1CJ634hqk8bgbcQV2HM/yD9RqjNzuV2U3EHVN8iHqW+BGYsbn+WgudHPtqbjRlt/YAXgFoTaE3Ptg2MBvoUBnpzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAzAwIJa2jNf3QSIHB/sCwEZif4FyJkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZkZc/6Ef/xAAlEQADAAICAgEEAwEAAAAAAAAAARECECAxEjBRITJAQVBggEL/2gAIAQMBAT8A/wAEz+Qn4VKUpSlKUpSlKUpSlKUpSlKUpSlKUpSlKUpSlKX8Bav8+/bPRPyY+C0/UtP1pbao1OKW3j7vD0Lvm/UtP1JcWuCU45LhCPjHpd6ffCPa75vnOL9KV9KXLLreOPzt43aU01SR8JX9BKaaoj/rm/Y/Qleb0lzy61iq9OsjQjJfXWT/AFpOoy7Wm3SmBk4tJzT+7m+S5P0JTmxK+jLrWPeqioqMnXp96x6Mv1p96x6M+D+7m+S5PmlObYvTl1pOPTx+DxZ4o/en3rHoz08XRY/Ivo4NU8WLH50/u5vkuT5Jc2/Xl1tZQ8kVDy+NeSHrFmTpjlOyoeSL+xZfJUPJCyQ39aeS5PkuT4pc29L1Zdejxf4j5Lk+CXN6S5rhl1zXf4r5Lk9pX0pc1xy62saREQ8fgXevFHitLH5IiIeMEeKFj8jS9L5Lk9JU6LytEubcMeuOXWkq9PL4FkxOjUy15M8mYqvTyYsnqR6eUHk36X7HpKD5N0XNuax645dax71Cafa4YahNP7tPv1P0Uu2IfJvWPLobuseuOXWsXHppo+p4nT01GLH5F9HBjqFWeIu9P1P1LT5Ib3jybu8X9OOb3jl87eU1i7puDddFldvIXfsfqWnpMhCDc4p3g3eCcE7tuDd418K+FL7n7HunkeXPyPIbvJOHmebG7+WtP+nQhCEIQhCEIQhCEIQhCEIQhCEIQhCEIQhCEIQhCE/Bv9CpSlKUpSlKUpSlKUpSlKUpSlKUpSlKUpSlKUpS/wCCf//EADIQAAECBAMGBgICAwEBAAAAAAEAAgMREjEQIDAEEyEyM0BBQlFSYXFggSJQFGKRoCP/2gAIAQEAAT8C/wDAnMKpTP45UVV35MkTP8iDvXvCZfkoMu6JlmpVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVIVKkcoMu9DfX8fImiJZGnw7dxyNH5ERLIOI7lo/IyJ5Gdq/ILdxUPVVtVQ9dckC5W8b6reN9UCDb+vdHAsJpkUOMraDr4i/avvi2/bufKyJJyAkWTX+um5wbdOiE/GVsUi/FAgjh3bntbcpsRrrHsIxlDOItndbILdo6+LL9s93gNBjvA6L3UhEzMzna4tKBmJjuXGTScWmbQdeP08W8ozm2Rtu0dfFnavdLSYZjOTITKc6oz0YTpOl69zE6bsYXTGvH6eLeUabbdhMKYUwphG+LO0c6Q02H+Wd76j8abTNoOckC5W9Z6rfMQe02OUuAuUHNNjgSBcrfM9VvmIOabHGJ03YwyN2OKqHqFUPUKc8hIFyt6z1W+Yg9pscCZXQe0+bCP08W8o0221i700WdmTIImZ0xfNEfVwFtSDyZnxvBuVkRzfkJjw8cMXGozOBjfxEromd8kONLg62ETpuzDhZMdUwHCJG8G/9RM75GRS2/EKK+p3xhAdNvHwUfp4t5RpttquOky/ZWTjM9jFf5RqweTLGiVGQtkkfQ4tcWmYTXVNmE7lOjAdwpUTpuzwxSwBR3y/iNHZ/Mo/TxbyjTbbUdbTZfsnun9aovkivlwF9aByfvJFdSzGFCnxdZAStg+GHfBREjI4bO7+VPqncpxaKjIJkNrfvBzGuuE9tLpYQzKIFE6bsYbGlgmFu2e0Lds9oQa0WGDjMzwY0vMgmw2t8MHMa64URlB+Mdn8yj9PFvKNNttR+my/Yvd4DWbjEfSPnX2fk/eTaDxAwF+K37Plb9vyt+35W/b8qK5r+IwZweE7lOOzjgTk2gcAcYnTP1jC6YyRTKGcYLZM+8j21Nljs/mUfp4t5RpttqPvpsv2D3eA7FzqQiZmZ1itn6f7yR+pot4uCdynGD0xkj9PGJ0z9YwumMkfp4iwyu5zhs/mUfp4t5RpttqPvpsvrvdL77EmQmU51RnrHDZ+n+8m0c+AEzJbh/wtw/4W4f8AC3D/AIW4f8LcO+FDhUcfFO5TjB6YyR+njE6Z+sYXTGSP08WGbBlPE4bP5lH6eLeUabbaj76bL6zjIa4xe+o/Gscdn6f7ybQP4g4w31t+ckSLLg1CM8eM011TZp3KcYPTGSP08Xch+sYJnD+sHuobNb56a/esI8cYL5fxOSM/hSMdn8yj9PFvKNNttR99Nl9UmQRMzrAYudPWOTZ+n+8hExJOFJkcAZHghHPiF/kf6p0VzvjGB007lOMHpjJH6eRwpcRg1xYeC/yP9U5xeeOEDqKM2l3wcWxXN+V/kf6p0Zx+Mmz+ZR+ni3lGm22o++my+q50zrAYvd4dns/T/eWIysfKILTI5ocOribYGxxg9MZI/TyRmVcRfNCZS3jcpzQ4SKc0tPHKONkRIyOGz2KjdM4i2m22o++my+o90/rWAxc6XabP0/3mLQ66MD2lbl63T/RCA7x4JsFovxyPgzM2psA+Y5SJiRRgHwKhwaTN2L4Qd8FGC77W6f6IQHePBMhtZ94kAjinQPaVuX+i3T/RCAfEprA2yiQq+IuhAd4kJrQ0SGDoB8pTIMjN2o22o++my+m93gNYYuMu12fp/v8AuG21H302X0nulwHYkyV9Y59n6f71iZCadGcTw4JkYz/lb+obbUffTZfRe6XYngiZ6x0Nn6f71o3TOLeUf07baj76bL6DjII8dYYuM9Y6Oz9P960bpnFvKP6dttR99Nl85MgiZnWAxc6esdLZ+n+8znBt06P7Qt6/1W8f7kIzvHimRWu+DjG6Zx35lYLfu9At+70CbH4/yGR8Vrfkox3eHBbx/uW9f7k2OfME14dbI6OZ/wAUyNxk5OcGiZTo58oW9f6qHFJMndk22o++my+dzpnWAxe7w7nZ+n+8sSJQPlEzMzmhRfB2EbpnPD6YwixfK3MDI8FCiV3vhF6Zxc4uvi3mHZNtqPvpsvme6fDWY2fHFzpazW1GSjiVIGns/T/eRxkJomozOABcZBCB6lbgepT4Tm/IxgPm2R8FG6Zx3L/hbl/wty/4TYB82EZ9Lfk4shufZbgeJRgehTmlt8AZGYTTU2ajdM5A0usFuX/ChwqTM9k22o/TZfK93gNZrZnFxlrATMgmNpC2jy6ez9P95NoPADFjaGyyRmUu4WOEIyiBRumcW8oyxjOJ9YQ21ulkc0OEiiJGWGzngQo3TOMJlZ+FbtG21DxGmy+R7pDWAmUBLA8FfWhspHzhtHl09n6f7ybRz41u9xVbvcVW73FVu9xRJNzg3mCjdM4t5RlNzgCRYqt3uKrd7iq3e4qt3uKPG+Gz85+lG6ZxgiUPtW21XDSZfI4zOqOKaJDGIeMtaEyXE3x2jy6ez9P95I/U0YLKnT8Ao3TOLeUa0BkhM+KjdM4s5B9dq22sWzVJ0GYu5TrNbLI7mOrCZ5jk2jy6ez9P95NoHEHAcCqGe0KhvtCob7QqG+0IiG24CBhE+GEbpnFvKMd4z3YPEnnCDKqThdUN9oVDfaFQ32hUN9oTt024CZuzyywjdM4s5B9dq23aOvizGJy6rGy4nKbnUhsq4m2XaPLp7P0/3kitqZjCi08DZBwNjg6I1qe4vMzhBM4aiCbDjBiCVJUwo0Srg22Gzm4W0N82LIwPB2L4wHLxOAMjPCN0zizkH12rbdo6+LMX8uoxvicz+DzpsbUfhWy7QP4g6cEf/MZY0ORqFsk8RxPBMbS2WERtL82zt4VIiYkU9pYZHPDZW74wjdM4s5B9dq23aOvizJY6TGz+s8YcZ6TW1GSAkJDM8VMI0gJmSHASzPg+LP8AiIIvkbDc6wTIYZ94vaHiRTmObfJDhE8XcBi5ocJFPguFuIysgk34BNAaJDB4qaQiJGRTQXGQ7Ztu0dfFmSIPHRa2Z0HCoSREjLQAmZBMbSNCMyRqFjowGeY6O7Z7VumeiDGiwGcw2HyrdM9EGtFhmIBuFumei3TPRAAWGUgG4QAFh2zbdo6+Lb5XNla2domgJDReyr7REjxzATPBMZT96JExIqJDLPrPChT4ut/bG2QW7R+iWeiLSMZE+CEP11C0OujCPgqXDwXFUuPghBPig0NtqOgg8vBGE8eCkfQqk+hQgvPwmQmt+T/bv7h1sjT+SHicW37Y8DkBn+ROORtu2cMgMkDP8gLvTIBM9w4ZQ71Ux+OVImeUCXckSzzKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZUyplTKmVMqZU84Eu7LfT8jAmgJd6RNU/j8kG/wBFSFSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSqVSFIf+A//8QALBAAAQMCBgIBBAMBAQEAAAAAAQARMRAgITBBUWFxQKGBYJHw8VCxwaDR4f/aAAgBAQABPyH/AIEyJE9AiTX6bc7oAQHVAgx5wJIvAfUIJEeaPnIl5+pNdCGPktubQCYQPUru+mgAAAAAAAAAAAAAAAAAAAAAAAAAAAACO0oitfceQSwdEuXNmsgDR9PB7IhY2azx3i21mqfqEgEMU4awsTxSWD2PF9vqNpYWLeKWDWAzPIIZBcyB9GfDAX5ggdJAD/Hkm7idwOyBZ29SYD5ADj44MGIqUNkoQThgOWAclD4OLASIWEYSeROPLKtjbIk2Jt4GAuqOxcInA73i9nEHiS1k8b/cyG/RkhfM6BGeMb3kPkIYvJOCAiSS5koFi4lc2DPl7FfQvksh8SWsj4rFhOVOyLxqDOsnGkeS9Svp58vYr6F5iyHwOZcy5lzLGbVkfE7rREuXOU0HNxIAcwjcSMvkgXhcAdoj3dBcx+yj22Lgo3NArgHaId3whuH7KNzX1KjhIRuv2y/bIBAg2BXAO0R7ughvH7KJTQAOQARZgD0l7FfQvMWQ56JeciR8MTxRHDl4ANz7Qe8wn6m0kAOSwRzojdEklyXNmq8BTk+QoSwJRS6iBILiUdrTxKITkSbCE6+7ZSvUuIk5MU9E0YKRCciTZhykGcEUI3JJexX0LzFkOa6WEZUnhEgHKK9pmCbf9XNm7txCw+6gEwCURyL4qAoELWXoWsdjY+RaQvUumEcpKZaxmxjsbY/BS9ivoXmLIcwmy0nhOWGajsZ/qZ0lh5aTgKsfiDdABgAFA8cgRzyCjBFCehUoZCgsPuNBupuiGKj15ZepUthJIrEYqEIlgSdEQ5a0+6QoTg47mgDA7RdwoNY/BS9ivoXmLIcyQy5PBf2Nc4cXrBShEuXOaSwUtjqwejGaNUxp9i4fsXD9i4fsRwBL6vQ3PK9CvrNnzFqDAixvTs7nhVrOuKwB/srH4KXsV9C8xZD45J4De5rnAOUJFBPmdAiGkzicqSx/VkizG69C/f3XN6dn91cPVaLB5NI/BS9ivoXmLIfHJM9iwzgDoBghIQ1BnWcVJLAYTuKMAar8BX4CvwFfgK/AV+IoGIXT0L9/dc3p2A58Gr34sJYOUTh3NI/BS9ivoXmLIfHJM4PMiSS5zgajtiUbiRnFpWSw7sai4Eix9r6lEMegoQB1XoX7+6ouKpoHSgXH2RMcGHDJwwzajN3AxYMOsTNY/BS9ivoXmLIfHJM0TxRnjnMViCM4msksCOUFFLpUI8TFDRHpM0L7oYwwcVAjFqV6F+/urouNDR+fanNB+0/D+KP+xYqNyopnZsU79kDYMHFkfgpexX0LzFkPjkmYSAHKNxaZ2sa6D5ziWtktB2AgpsLG45wf3QDBhCFxcVBrMX6GgxIFG2m92yWCx7kIzQ2vgd7QJMDlGPIKDj8oXrAwji8xZD45JmOWGc1KxBOcSyONslwQwuh/4lEGgPyvzlE6ExnE5sfCAPoU4wG4QDBhFgCQFP8ACI5WITkQBXFx8CDhk/OUbIJigx3GrCBwg7HBRDoPyvzlHxDpC8GO6ETjf2TjABAcCIBDGCnGA3KbCAtoMgxZD45Jlv8AuzgerPnPJe6T+UGLIfHJMrnGcA5UUELokk5zie+TOAMUBYkMQog3LXb+EMWQ+OSZLHCc4B0AwoQByjE5zi0yJPBb0P4MxZD45JkBeREnOcDUhO+M4tMmTwW9D+DMWQ+OSXgcKO8c5isQRnE2VJcDubIux2iX/wArmIfQmA/AbsAgIK1TzGORZgPwBGwCE2pAOpBQHpC3P4qSwconAAHKKxljqnAsEVodr8YQzrwc4xZD45JcSwcrqqDM1jXQfOcSwy5LQmBicIjw5uICD4aHJzsXahnJezcRwmKYNgH3Q2rkHKK6CXzjFkPjklzpkUAzHToRmkQTQIDLMyQR5GXJYCcoCOWQ0bC5X/z0dNQF/kFdyrGBADq5X5CvyFOMQbYKFgIqQBhuUNZ+EHX+UfYaEFIEMA62ueih+4sU3OmcYshzAg5clv8AvUAQGX1SAYMEZTPlSgEBlkFIUFsTqVP5Zclhne0AcsJKGwnU2YlQdwws3oWu22CnGpKAADCKkKDHKRTrONjlYSgADAMPAMWQ5g4GXJZhQk0AQyTQ7QQAYUPESiSTlBDLGJYLEjKk/llyWCwjYUBILjAr9ov2i/aL9opcPdPYs3oWm5tzSVB0v2i/aL9ov2iIk5ObgbRzj4JiyHN1RlSWOZQQyTQCTBBaFoDJNWXxOKz+WXJY/qySBZYb0LTJySGExhY/ReCYshzgcCiDRMdkyZNZI1NqAQyDSU15sN+5BDIKNHfSLJ/LLksfFmoYCSHDwgQAhg8L9Yv1i/WIY446TcAfyF1ZvXrjMxTCafNHWg6HX6xfrF+sX6xOGc7MiJhd1a/ReCYsh8SWsjajIKNOcW+0gheUaPtB7tn8suSw4gSMRXc/9ELcRoMlzsF9kgocT6YJh8VYSsRCIA5IZBxXI70LiwMQsQB0aiITvugQYLokCSyEN3ES5cyjCCQhiHsfovBMWQ+JLWRqDnQXlE0/zrgYcoIXmh+JKAAMIt6gctrmxt3JTxY7c1AgAOSmvVrR+GhxFxARawhngK+yQ71BIgokmTUjGiTa/ReCYsh8SWsjU4hkQ4NkELiaO3N5sN+FBcTQjJDuj1hlGGElAwGlszTBFgIs2k3KEb7q/ZIUdwYb2FfgN0AwYRRhKxGyTCxP/YmQsKcqhEYGIQSgBgBt4JiyHxJayNmj+aunTp0TTqkAwYXhKSIYpFXo6ehBSFBbE6nI+bDJY5oyCAZDom0L85yCUgC/OVGouhwolUBWHB1bDh7UADrwjBsh8z51B06dPQp4IDAyRDsCI0DGjp09CNA5Qh3LJAQDgoo4x33kNptm/wDLYTsj8QINQWL3DOOArQqiIS3vwgAAwyxDAhpv2jMNNsKEQ0ZNukIYMzHid6W8ukRz9hAsfaUwPksUPyfy5YN5APZeDXsmG304WJUH6+MNQFi4TB/qJ3AWC3bxnByLCFggQ+oNLzEM4iLkCQfpt0QEYotgBywTBvJ00XOd1yFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFchXIVyFO3NwDwvneXrfUYkEDzQUJCMfp8EYC3f4EgGUdhN3Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13Xdd13IA0/4D//xAAtEAEAAQEFCAICAwEBAQAAAAABABEQITFRkSAwQWFxobHxQIHB8GDR4VCQoP/aAAgBAQABPxD/ANl6mZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmZKmf8AxMdauRFYB1mKOKuK/wAaCwR9ziVesdcacyAVQnzhKr6l3fQfyFCqRht1xz+YYoX+ERVVX+SKqXvCIAjUfk3QYsIqtXHYVoFisAgGKpy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3Wct1nLdZy3WOS6weJ9y/aVMzZag4sYNSp8c3XCM2I7CvAMoAoAP49f2GYlAD7z2OKdPj3Tw8tiiB38DL+Q00XRqr6c7RRqYkpmr4tbXAi1auLbezD+RgU48IlGjjbRT43nxaBzOxTtXyPHi+czozA/uugiVN93UGIvH0UyL1EgtROTX/AJy0KsUoBmoQwxcBaj97i7GHlbyAfiqpMi3oC/477+BI/fplw2EaqcuERKOZwd39fQYseR8nFrFq1b21CqRzGLHVOJBBk+XThMi9lJNzCj8BEqi01NggSiNRnIwO3UHK/YVRmfHwvMj4yivfxHjcKh7nE8NziSV2YxdULtt1T1PoY3FR7fJ56zGbqlVeMQEQNROEd/EF67/9ZnZwnYfG2Khy+Wl2vxb87/bdXMuA89tulA7xN9Jkbm9LhdH5PdfhF+szs4TsPjbxOmx52/UMUIhwzl5y85eMQqjb2vxArYrBEZKri7qluFx2nbgCqs4hMB+d0KNTEn3oddutCeakcpX1DBW8+qiNFuS0dkGoLmxWiWQ32UonmpGKV9Ci28uqmKlkN+lvdbRM0vCJ6xPWJ2rGuxSCeakcpX1ES3l1UuNrKt+lico4rSVfuStn6zOzhOw+NvE6bHnb1QKrQjYaoiqlee47L4aj6jOOnve27XIEdluKsvEvtW8oBmGy7MBVXhE3qnF6ZR0pOK12Fg6g8Soe8xMSwnMAqxeqq0MoARBeJwlEF69Fw8onaOK1tFGo0TjCzGuHj/aCARqN4k7rtD2BgkbEQo9SyvOKXP8ASJ2ritdhwd5uJGa8u8vWxeypSrxOE/WZ2cJ2Hxt4nTY87e3kXO+67D4TlaBK6XDAy3gqDns1qpdxnje9x8Gyj3p4cVqtGORWC1AzVaydE4ZmUwIMRk5Tv/icNiuVKXTYdnVv9OU7rtAoAq4BLlGiqZLErNAqzgZbF3W66bPfflP1mdnCdh8beJ02PO3lfpi3bvsPgqBVaBF4Yw5896ajzNioLeL04P73yr1Xg2HYqW4ZG1f6nlKGI4BSx4g4IeYGVEo2IwuKnUnf/E4WD1Xsc4Au8YvGViADILkl7nS8cyx6hc1OjdO621GsFTGemnpo5VWYXwsNCrMV51sA3XFMAgyhxSq2LhzkuT7h6/8AQDb335T9ZnZwnYfG3idNjzt4rjlXd9h8GpWuYs99cFxbrQoUOEy5xERVaq72sM7p4NhHgU1erOP75cxpAABhcFH9z1r+561/c9a/uCIm6hSpYovAzv8A4nCwRJetHTYFMXlT79WOqyRl9ebbKsDEd1oMnHdOGwxy9K8jwmDRs778p+szs4TsPjbxOmx528wem77D4FAtexZb5+VxhoBmWPL5XZjHgqt7hOiGE7h4NhVfI7l8VJnf/E4WGnOV77GF0/mzjO6bZPWbOEIIwAdtkgMDzWd9+U/WZ2cJ2Hxt4nTY87eYPTd9hvx4ow5RVat6203SKhAoE74jdKB3ib6TI31e4ws7h4NihwA+WxnAKoVwnM/bpOZ+3Scz9uk5n7dJzP26QVvT+uUavGUrS46Tv/icLO7fLsYfT+bOM7ptlWGQ97TB4keuwDJQCrKr8Rs778p+szs4TsPjbxOmx528wem77DfV03rAjtKrjaG07AK0MYJ58bAMSgXrLo1MB+bDecN929w8GwwBjo9GwURGiYQQ1KVPzbDuojm05EKoDiBMDUYZM7/4nCzu3y7GH0/mzjKXcV4tEZvqRYkv+BmZWKLqQB7gTB5zrY4oGqng5bDiqxpwMre+/KfrM7OE7D428TpsedvMHpu+w3qh7jvFH1mVoWU2XYpKuLbUV7ve2kptOxRUMdjuHg2BHqFGHxesczOw48MEhVOeqjGjiOYixh8TE/dpl4hOk7/4nCzu3y7GH0/mzjAqRwSIjyOnCyuLHFYM9KJwxMBgWBVmA6x1LguTxLRQA4cH7hQvNf3lFFVfbWYtW3vvyn6zOzhOw+NvE6bHnbzB6bvsN4ySgYsqLAYLCBAlNl2KGZwtxH6vxYECBKbmn58ItWrsdw8Gzw/6Qx4kO+0MFDXogEAAoBwjCYqDS1qrjV77CKnAWwImK0IFAIolUaIcGyCAKtwHGVIONycobVzg8Rzj87uBhsh7EwCDlRKNjHBIDT/YlHwo97MbiMliA28TpsedvMHpu+w3bcVZfnc72BAgSmwxjbWvYW0le9i5WBAgSmwxjaAqxKq7PcPBtUrTz4RjWhya949d0ggn+X9xm8XWrFyoX00mGFqV3FXAryiikOJeWAQUBQNgkKhRIR5UwJKCG8YAbWm+OOB6kfw3Jp5l5/V/cRurrVl0D+1TK1wduDEK657xi7oBBHg6iMCbleZT1+xV6ygJTo1whdOYC9hF3OObnGZVCiQbUcJcSVtxVMCvPcYnTY87eYPTd9hu6xS7iz5WBAgQJS1jG2rvwLTuceBFVVarAgQJSU2GMbFAqxlV2u4eD/qYnTY87eYPTd9huqCtfxcrAgQIEpYxjGNj0j7gAoYWVSx4GccpVYECBAlLWMY21V2G33Dwb5iaBViZycC/WGEZS5R/4jE6bHnbzB6bvsNyNO88DLnFVVarAgQIGwxjGxFQhUCxSlxNFhlAgQIEpaxjGNle5huO4eDfJKfGh3scIlRxT4/4eJ02PO3mD03fYbiql7wM4peqwIECBssWNgVaEE8+NigVaBjFubhgQgQIEpsMYsbOG+9z3Dwb7vjzY4Tt/j/h4nTY87eYPTd9htsnoEZfUZQIECBKWsYsWNlJVx8W1Fe73sCBA2WLFi2UVDHddw8G1TpyHF+olQRnfdI7jOgIC3ffRitwuZRiwmp9nRt7482lmkA4z9Fn6LBAReJcQvKlqSmh9HWI3V0qzEvpoRm5OoMSAXO4yhipirktBEoBVYwCeCKrHkVFKSlOsTh8kQQhneYs1rOglMJwCUv577E6bHnbzB6bvsNoESgYsS6uOBAggQNlixYtn4C3Efq/FgQIEpsMYsWy+s8ItWruu4eDZukguZc2PFJiu1XSO5eHXlZ3x520lxU2KoALh48jaDMDBINzAvMmZY1FxA72n6qigcC0KPA0132J02PO3mD03fYbV9N3vAsAgbLFixbLqbuBnMTrZSV72LlYLAJTZWLFjA32uRA8oB9sN33DwbGA+1jRVSvSw4nwS5Gm5H8xZcHnRjq6GPA6lqMlePmcJ3x5tNhQKkcuHLg4pjilVgAAKBcEat0uTkcW28Mxwv8AYcvbyBKe5OQrLlmuCYNj1USpMFwYZM8bybDX2phrE4g6wZCPAYG+xOmx5288Bu+w2cZOr8QLQDaWLFjGvrjiwACgYExesO5veBFUq1W0AlNlixYsKCsMSSvzGdp+G77h4Nikjjq9CxDCqUCHAFX5jalSjhAplLwMniWPf7nV9zvjzY4Tt/jZYdeA/NlFVab3lCZgCgHC0mqjxyc5jrtGxFTiB9zxvJbWb5f83KGTBgB8DE6bHnbyqcXCYNHddhsXgfiJjYCBssYsUWEvucoTOgWCMMMcpewQQNpixYsCAKtwEG4HGcuVnafhu+4eDYqZR8tgJULxOE9/nv8APf57/DAPMKq2JHMafM7482OE7f42amcR72NLWcaqVnv89/nv89/i1iYq1bG0M/yJ43ktF9L618HE6bHnb2vd38TddhbhE4Ct3SCCBtMWKLBJ1WYqHi521qHBqwIIG0xYotlCG9gyf3b2n4bvuHg2BSvM7lZoaqvFynfHmxwnb/GyaFku5pZhQOITxvJaaGfofBxOmx52+vghmA5RDFaSrJ0lWTpKsnTYxXK2tjGlIQbZixRYCgCq4EOu3vFy5bFQc0Fg2mKKy6BdxuPPY7T8N33DwbFDgVaPdgjgCriRu0KjRPTp6dPTp17EL4MG4LmAAAAOBBXrnm1ChgnxYoCrQOMz57awQChHBJypadG+xtJilCtGenT06enT06OmTIrZU1DvoUJZ43kt/QZfBxOmx53x12tuJ1IWDaWKKygoX8DLZ7553AxRRlwl9qgUKGGx2n4bvuHg2HKV7RagveCmP+JQReTY2qeG1X/IgTkGAWVA1W1RDcVU+r7aa9xTgkoAsyzEIMD9XWOrqh0M4odc6nCwURGiXiQwod2X+kFqQzGsBqQzWkeMJ9D+4iIqaq8YpdEqRUMxWeN5Lf0GXwcTpsed8ddrb0nfCwbKxWlagXcH52uqR1vtDZWKLKJvMR+IZMAUA2anLL9n+bu8mKe7ZZAvqg4v6tLmpcxUosc21ciKAS/+uJc7GpHGeW0LlMPQQsqhRikLvoFuIB0ZiA9WtpQF5XlQKFCeN5Lf0GXwcTpsed8ddraBFglI6OKpFFBlZWVi2C1l0dzvMNqg5cKusGKDK2Vi2Cwt9rkQuFA77WfKV6uERGjcm5xR2hBwAANlAIBHEZVVDqfDK4bkmwkVDoCV8XmL/FuGBLwxGMirwHBtL2hjBguax/pAIABQDhY9qDhmdIih0sT6iI0RE4NoKoFXgRcF52L6gkAd7LwKNA6xMi4Iw06rjyM4RuAofBxOmx53x92WxXuMLv7QYMLQ2BYlLAYsAgoGBt8YrByYFNEvgwbFYwwsKCuBMSSvzHcPQLz6O5c0LxQuWe4NoQySsfqj0u8QL/SO1E50v2kEolSK1qcwp4gT+amI1mF+0Zr5WKYTopFML1VhmnqbPbPVgtCeSnwu2+RhRcy10ozNhBKOEdpV8IMLQwso8XcXKEjuO+5rkpgHPkxIwODBtGFhxicCVy0xDlyNyGAFEYwrthk67YhQXix/xAAoXH/VdRypsGnR+J4C2k5GDUEwdl+ryuExZpmXxuxlZjU+ouP0IaEA4G7pVuTxI4pnK4xi6/VZwu1PxBpGKmMrzKVZm8XdoIiVHgx15Cx/xFMZzvxCguqidGdFGbkZv8RUu7iLjof9e5Z720KoHGBQDL4lSzL9i+eJh020OIMAwB9fxtQFcCOi+raQ8L3xqocMS1ixCBRfZl/IsZXcXYvRxvfGvs2CoPsZwyqv4n8fwxlaqdXYujgY/IrKV7HlsCjUaMQuFeZMFP42gxQ6zPjlMSaGRsIAVWFRY8X5CCUcGOq3vDaAwR9z3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3U91PdT3UVx1otcdlEAqsI1b1i/KSpRimRlMMf5Epcuzht17xfm4kX5ky4iI0RH+PY+dYBe68iABQKH/AAAKAesXk6MeEpTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSU59JTn0lOfSAYq+5gh/+A///gADAP/Z"
+            alt="Mental Meter"
+            class="brand-logo"
+          />
         </button>
         <span id="demo-header-badge" aria-live="polite">Demo mode</span>
-        <label class="header-source-control" for="demo-select">
-          <span class="header-source-label">Source</span>
-          <select id="demo-select" aria-label="Data source">
-            <option value="">Live data</option>
+        <div class="header-source-control" id="source-toggle-wrap">
+          <div class="source-switch" role="group" aria-label="Data source">
+            <button
+              class="source-switch-btn is-active"
+              id="source-live-btn"
+              type="button"
+              data-mode="live"
+            >
+              Live</button
+            ><button
+              class="source-switch-btn"
+              id="source-demo-btn"
+              type="button"
+              data-mode="demo"
+            >
+              Demo
+            </button>
+          </div>
+          <select
+            id="demo-select"
+            aria-label="Demo persona"
+            class="source-persona-select"
+            hidden
+          >
             <option value="sam">Sam</option>
             <option value="maya">Maya</option>
             <option value="alex">Alex</option>
             <option value="jordan">Jordan</option>
           </select>
-        </label>
+        </div>
         <details id="demo-dropdown">
           <summary>DEMO</summary>
           <div id="demo-panel">
@@ -7972,51 +8305,6 @@
             <button
               type="button"
               class="theme-swatch"
-              data-theme="arcade"
-              aria-pressed="true"
-              title="Arcade"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #0b0b14"></span
-                ><span style="background: #b388ff"></span>
-                <span style="background: #9fe86a"></span
-                ><span style="background: #ffc857"></span>
-              </div>
-              <span>ARCADE</span>
-            </button>
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="pastel"
-              aria-pressed="false"
-              title="Pastel"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #2a1f3d"></span
-                ><span style="background: #d6b3ff"></span>
-                <span style="background: #c5e8b5"></span
-                ><span style="background: #ff9eaa"></span>
-              </div>
-              <span>PASTEL</span>
-            </button>
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="acrylic"
-              aria-pressed="false"
-              title="Acrylic glass"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #0e1422"></span
-                ><span style="background: #8fbeff"></span>
-                <span style="background: #6ee0b6"></span
-                ><span style="background: #ff6b8c"></span>
-              </div>
-              <span>ACRYLIC</span>
-            </button>
-            <button
-              type="button"
-              class="theme-swatch"
               data-theme="light"
               aria-pressed="false"
               title="Light mode"
@@ -8045,19 +8333,34 @@
               <span>EDITORIAL</span>
             </button>
             <button
+              type="button"
+              class="theme-swatch"
+              data-theme="editorial-dark"
+              aria-pressed="false"
+              title="Editorial Dark (glass)"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #15152a"></span
+                ><span style="background: #9aa0e8"></span>
+                <span style="background: #6ec48a"></span
+                ><span style="background: #e06060"></span>
+              </div>
+              <span>DARK</span>
+            </button>
+            <button
               id="theme-mode-toggle"
               type="button"
               aria-pressed="false"
-              aria-label="Switch to light mode"
-              title="Switch to light mode"
+              aria-label="Switch to dark mode"
+              title="Switch to dark mode"
             >
               <span
                 class="theme-mode-icon"
                 data-theme-mode-icon
                 aria-hidden="true"
-                >☀</span
+                >☾</span
               >
-              <span class="theme-mode-label" data-theme-mode-label>LIGHT</span>
+              <span class="theme-mode-label" data-theme-mode-label>DARK</span>
             </button>
           </div>
         </details>
@@ -8183,11 +8486,13 @@
             type="button"
             class="layer-back-top"
             data-layer-back
-            aria-label="Collapse to battery"
+            aria-label="Minimize diagnostics"
           >
             <span class="layer-back-arrow">&#9664;</span
-            ><span>Back to battery</span>
+            ><span>Minimize Diagnostics</span>
           </button>
+
+          <!-- TOP ROW: Circadian chart (left) + Averages & key metrics (right) -->
           <div class="layer2-top layer2-top-v2">
             <div class="layer-card layer2-chart-wrap layer2-chart-card">
               <div class="layer2-action-row">
@@ -8211,65 +8516,79 @@
               <div id="layer2-circadian" aria-live="polite"></div>
             </div>
 
+            <!-- Right column: averages + 6 key metrics inline with circadian -->
             <div class="layer2-side-by-side">
-              <div class="layer-card layer2-system-card">
-                <div class="section-title">State tanks</div>
-                <div id="layer2-system" class="layer2-system">
-                  <div id="layer2-pressure-node" class="layer2-node">
-                    <span class="layer2-node-label">Pressure</span>
-                    <span class="layer2-node-value">--%</span>
-                  </div>
-                  <div
-                    id="layer2-energy-tank"
-                    class="layer2-tank layer2-tank-energy"
-                  >
-                    <div class="layer2-tank-title">Energy</div>
-                    <div
-                      id="layer2-energy-cells"
-                      class="layer2-cells-vertical"
-                    ></div>
-                  </div>
-                  <div
-                    id="layer2-stress-tank"
-                    class="layer2-tank layer2-tank-stress"
-                  >
-                    <div class="layer2-tank-title">Stress</div>
-                    <div
-                      id="layer2-stress-cells"
-                      class="layer2-cells-vertical"
-                    ></div>
-                  </div>
-                </div>
+              <div class="layer2-inline-right">
+                <div id="layer2-averages" class="layer2-averages"></div>
+                <div id="layer2-readout" class="layer2-readout"></div>
               </div>
             </div>
           </div>
 
-          <div class="layer2-bottom layer2-bottom-v2">
-            <div class="layer2-action-stack">
-              <button
-                id="btn-replay-tick"
-                class="layer2-action"
-                type="button"
-                title="Load the previous model snapshot — rewinds the displayed E and S values to the state from the tick before last."
-              >
-                Replay last tick
-              </button>
-              <button
-                id="btn-run-hour"
-                class="layer2-action"
-                type="button"
-                title="Simulate 60 minutes of model time at current drain pressure — useful for seeing how E and S would evolve without actually waiting."
-              >
-                Run +1 hour
-              </button>
-            </div>
-
-            <div id="layer2-averages" class="layer2-averages"></div>
-
-            <div id="layer2-readout" class="layer2-readout"></div>
+          <!-- Demo-only action buttons -->
+          <div class="layer2-action-stack">
+            <button
+              id="btn-replay-tick"
+              class="layer2-action"
+              type="button"
+              title="Load the previous model snapshot — rewinds the displayed E and S values to the state from the tick before last."
+            >
+              Replay last tick
+            </button>
+            <button
+              id="btn-run-hour"
+              class="layer2-action"
+              type="button"
+              title="Simulate 60 minutes of model time at current drain pressure — useful for seeing how E and S would evolve without actually waiting."
+            >
+              Run +1 hour
+            </button>
           </div>
 
+          <!-- VIZ ROW: State tanks (left, tall) + How model works (right) -->
           <div class="layer2-viz-row">
+            <div class="layer-card layer2-system-card">
+              <div class="section-title">State tanks</div>
+              <div id="layer2-system" class="layer2-system">
+                <div id="layer2-pressure-node" class="layer2-node">
+                  <span class="layer2-node-label">Pressure</span>
+                  <span class="layer2-node-value">--%</span>
+                </div>
+                <div
+                  id="layer2-energy-tank"
+                  class="layer2-tank layer2-tank-energy"
+                >
+                  <div class="layer2-tank-title">
+                    Energy
+                    <span
+                      id="layer2-energy-arrow"
+                      class="tank-trend-arrow"
+                    ></span>
+                  </div>
+                  <div
+                    id="layer2-energy-cells"
+                    class="layer2-cells-vertical"
+                  ></div>
+                </div>
+                <div
+                  id="layer2-stress-tank"
+                  class="layer2-tank layer2-tank-stress"
+                >
+                  <div class="layer2-tank-title">
+                    Stress
+                    <span
+                      id="layer2-stress-arrow"
+                      class="tank-trend-arrow"
+                    ></span>
+                  </div>
+                  <div
+                    id="layer2-stress-cells"
+                    class="layer2-cells-vertical"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
             <div class="layer2-model-explain">
               <div class="layer2-explain-title">How the model works</div>
               <div class="layer2-explain-body">
@@ -8313,28 +8632,10 @@ P = drain − 0.5·recovery</pre
                 </p>
               </div>
             </div>
-            <div class="layer-card phase-portrait-card">
-              <div class="section-title">
-                <span
-                  class="jargon-tip"
-                  data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
-                  tabindex="0"
-                  >Energy-Stress map</span
-                >
-              </div>
-              <div class="phase-portrait-shell">
-                <div class="phase-portrait-axis-label is-y">Stress</div>
-                <div class="phase-portrait-plot">
-                  <div id="phase-portrait" aria-live="polite"></div>
-                  <div class="phase-portrait-axis-label">Energy</div>
-                </div>
-              </div>
-              <div id="phase-portrait-legend-host"></div>
-            </div>
           </div>
 
           <button id="open-diagnostics" class="panel-link" type="button">
-            Show signal breakdown <span class="pix-arrow-down">&#9660;</span>
+            More Info <span class="pix-arrow-down">&#9660;</span>
           </button>
         </div>
       </section>
@@ -8385,6 +8686,49 @@ P = drain − 0.5·recovery</pre
               </div>
 
               <div id="breakdown-list" aria-live="polite"></div>
+            </div>
+          </details>
+
+          <details class="layer-legacy" id="phase-portrait-dropdown">
+            <summary>Energy-Stress Map</summary>
+            <div class="layer-legacy-body">
+              <div class="phase-portrait-dropdown-wrap">
+                <div class="phase-portrait-map-explain">
+                  <p>
+                    This map shows how your Energy (E) and Stress (S) evolve
+                    together over time. Each arrow shows the direction the model
+                    predicts you'll drift from that point.
+                  </p>
+                  <p>
+                    <strong>Top-left</strong> (high E, low S) = restored and
+                    focused. <strong>Bottom-right</strong> (low E, high S) =
+                    overloaded. Your current state is shown as a live dot.
+                  </p>
+                  <p>
+                    <strong>Erest</strong> pulls E toward the circadian baseline
+                    when pressure is low. High stress slows recovery even when
+                    you rest.
+                  </p>
+                </div>
+                <div class="layer-card phase-portrait-card">
+                  <div class="section-title">
+                    <span
+                      class="jargon-tip"
+                      data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
+                      tabindex="0"
+                      >Energy-Stress map</span
+                    >
+                  </div>
+                  <div class="phase-portrait-shell">
+                    <div class="phase-portrait-axis-label is-y">Stress</div>
+                    <div class="phase-portrait-plot">
+                      <div id="phase-portrait" aria-live="polite"></div>
+                      <div class="phase-portrait-axis-label">Energy</div>
+                    </div>
+                  </div>
+                  <div id="phase-portrait-legend-host"></div>
+                </div>
+              </div>
             </div>
           </details>
         </div>
@@ -8501,8 +8845,7 @@ P = drain − 0.5·recovery</pre
                 ActivityWatch runs locally on your machine and watches which
                 apps and windows are active. Mental Meter reads it every 5
                 minutes to estimate meeting load, focus duration, and context
-                switching — then feeds those into the
-                energy model.
+                switching — then feeds those into the energy model.
               </dd>
             </div>
             <div class="gloss-row">
@@ -8534,6 +8877,64 @@ P = drain − 0.5·recovery</pre
               </dd>
             </div>
           </dl>
+          <div class="help-pixel-art-section">
+            <h3 class="help-pixel-art-title">🎮 Pixel Art themes</h3>
+            <p class="help-pixel-art-desc">
+              Retro / game-console aesthetics. Click the toggle in the header to
+              return to Light.
+            </p>
+            <div
+              class="help-pixel-art-swatches"
+              role="group"
+              aria-label="Pixel Art themes"
+            >
+              <button
+                type="button"
+                class="theme-swatch"
+                data-theme="arcade"
+                aria-pressed="false"
+                title="Arcade"
+              >
+                <div class="swatch-grid" aria-hidden="true">
+                  <span style="background: #0b0b14"></span
+                  ><span style="background: #b388ff"></span>
+                  <span style="background: #9fe86a"></span
+                  ><span style="background: #ffc857"></span>
+                </div>
+                <span>ARCADE</span>
+              </button>
+              <button
+                type="button"
+                class="theme-swatch"
+                data-theme="pastel"
+                aria-pressed="false"
+                title="Pastel"
+              >
+                <div class="swatch-grid" aria-hidden="true">
+                  <span style="background: #2a1f3d"></span
+                  ><span style="background: #d6b3ff"></span>
+                  <span style="background: #c5e8b5"></span
+                  ><span style="background: #ff9eaa"></span>
+                </div>
+                <span>PASTEL</span>
+              </button>
+              <button
+                type="button"
+                class="theme-swatch"
+                data-theme="acrylic"
+                aria-pressed="false"
+                title="Acrylic"
+              >
+                <div class="swatch-grid" aria-hidden="true">
+                  <span style="background: #0e1422"></span
+                  ><span style="background: #8fbeff"></span>
+                  <span style="background: #6ee0b6"></span
+                  ><span style="background: #ff6b8c"></span>
+                </div>
+                <span>ACRYLIC</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div
@@ -8632,8 +9033,8 @@ P = drain − 0.5·recovery</pre
               <dt>Drain</dt>
               <dd>
                 Anything that pulls energy out: meetings, deep focus, context
-                switching, or late hours. High drain makes the
-                meter fall faster.
+                switching, or late hours. High drain makes the meter fall
+                faster.
               </dd>
             </div>
             <div class="gloss-row">
@@ -11725,43 +12126,48 @@ P = drain − 0.5·recovery</pre
         const dayStart = Number.isNaN(startDate.getTime())
           ? new Date()
           : startDate;
-        const dayStartMs = dayStart.getTime();
-        const DAY_MS = 24 * 60 * 60 * 1000;
-        const PAD_L = 22;
-        const PAD_R = 18;
-        const PAD_T = 22;
-        const PAD_B = 32;
-        const viewW = target.clientWidth || 400;
-        const viewH = target.clientHeight || 150;
+
+        // Map 8 AM – 10 PM of the same calendar day
+        const midnight = new Date(dayStart);
+        midnight.setHours(0, 0, 0, 0);
+        const WIN_START_H = 8;
+        const WIN_END_H = 22;
+        const WIN_SPAN_MS = (WIN_END_H - WIN_START_H) * 3600 * 1000;
+        const winStartMs = midnight.getTime() + WIN_START_H * 3600 * 1000;
+
+        const PAD_L = 6;
+        const PAD_R = 6;
+        const PAD_T = 24;
+        const PAD_B = 20;
+        const viewW = target.clientWidth || 360;
+        const viewH = target.clientHeight || 140;
         const plotW = viewW - PAD_L - PAD_R;
         const plotH = viewH - PAD_T - PAD_B;
+
         const events = [...(APP.demo.completedActivities || [])].sort(
-          (a, b) => {
-            return (
-              new Date(a.simClockBefore).getTime() -
-              new Date(b.simClockBefore).getTime()
-            );
-          },
+          (a, b) =>
+            new Date(a.simClockBefore).getTime() -
+            new Date(b.simClockBefore).getTime(),
         );
+
         const toX = (iso) => {
-          const value = new Date(iso);
-          const fraction = Number.isNaN(value.getTime())
-            ? 0
-            : clamp((value.getTime() - dayStartMs) / DAY_MS, 0, 1);
+          const ms = new Date(iso).getTime();
+          if (Number.isNaN(ms)) return PAD_L;
+          const fraction = clamp((ms - winStartMs) / WIN_SPAN_MS, 0, 1);
           return Number((PAD_L + fraction * plotW).toFixed(2));
         };
-        const toY = (pct) => {
-          return Number(
+        const toY = (pct) =>
+          Number(
             (
               PAD_T +
               (1 - clamp(Number(pct) || 0, 0, 100) / 100) * plotH
             ).toFixed(2),
           );
+        const fmtH = (h) => {
+          const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+          return `${h12}${h >= 12 ? "p" : "a"}`;
         };
-        const formatTimelineLabel = (hour) => {
-          const hour12 = ((hour + 11) % 12) + 1;
-          return `${hour12}${hour >= 12 ? "pm" : "am"}`;
-        };
+
         const iconMap = {
           go_outside: "☀️",
           connect_people: "💬",
@@ -11772,18 +12178,20 @@ P = drain − 0.5·recovery</pre
           deep_work: "💻",
           late_night_ai: "🌙",
         };
+
         const tickLines = [];
         const tickLabels = [];
-        for (let hour = 0; hour <= 24; hour += 3) {
-          const x = Number((PAD_L + (hour / 24) * plotW).toFixed(2));
-          const labelHour = (dayStart.getHours() + hour) % 24;
+        for (let h = WIN_START_H; h <= WIN_END_H; h += 2) {
+          const frac = (h - WIN_START_H) / (WIN_END_H - WIN_START_H);
+          const x = Number((PAD_L + frac * plotW).toFixed(2));
           tickLines.push(
-            `<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${PAD_T + plotH}" stroke="var(--px-border)" stroke-width="1.5" opacity="0.9"></line>`,
+            `<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${PAD_T + plotH}" stroke="var(--px-border)" stroke-width="1" opacity="0.8"></line>`,
           );
           tickLabels.push(
-            `<text x="${x}" y="${viewH - 4}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" fill="var(--px-muted)">${formatTimelineLabel(labelHour)}</text>`,
+            `<text x="${x}" y="${viewH - 4}" text-anchor="middle" font-family="var(--px-font-ui)" font-size="10" fill="var(--px-muted)">${fmtH(h)}</text>`,
           );
         }
+
         const energyPoints = [];
         const stressPoints = [];
         if (events.length) {
@@ -11793,48 +12201,32 @@ P = drain − 0.5·recovery</pre
           stressPoints.push(
             `${toX(events[0].simClockBefore)},${toY(events[0].stressBefore)}`,
           );
-          events.forEach((event) => {
+          events.forEach((ev) => {
             energyPoints.push(
-              `${toX(event.simClockAfter)},${toY(event.batteryAfter)}`,
+              `${toX(ev.simClockAfter)},${toY(ev.batteryAfter)}`,
             );
             stressPoints.push(
-              `${toX(event.simClockAfter)},${toY(event.stressAfter)}`,
+              `${toX(ev.simClockAfter)},${toY(ev.stressAfter)}`,
             );
           });
         }
+
         const icons = events
-          .map((event) => {
-            const x = toX(event.simClockAfter);
-            const icon = iconMap[event.id] || "•";
-            return `<text x="${x}" y="${PAD_T - 2}" text-anchor="middle" font-size="14">${icon}</text>`;
+          .map((ev) => {
+            const x = toX(ev.simClockAfter);
+            const icon = iconMap[ev.id] || "•";
+            return `<text x="${x}" y="${PAD_T - 6}" text-anchor="middle" font-size="13">${icon}</text>`;
           })
           .join("");
-        const currentE = events.length
-          ? events[events.length - 1].batteryAfter
-          : (APP.demo?.E ?? 70);
-        const currentS = events.length
-          ? events[events.length - 1].stressAfter
-          : (APP.demo?.S ?? 30);
-        const eY = toY(currentE);
-        const sY = toY(currentS);
-        const currentX = events.length
-          ? toX(events[events.length - 1].simClockAfter)
-          : toX(APP.demo.simClock || new Date().toISOString());
-        const nowCircles = events.length
-          ? `<circle cx="${currentX}" cy="${eY}" r="5" fill="none" stroke="var(--px-good)" stroke-width="2"></circle>
-             <circle cx="${currentX}" cy="${sY}" r="5" fill="none" stroke="var(--px-accent)" stroke-width="2"></circle>`
-          : "";
+
         target.innerHTML = `
         <svg class="demo-timeline-svg" viewBox="0 0 ${viewW} ${viewH}" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges">
           <rect x="${PAD_L}" y="${PAD_T}" width="${plotW}" height="${plotH}" fill="none" stroke="var(--px-border)" stroke-width="1"></rect>
           ${tickLines.join("")}
-          ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="3" points="${energyPoints.join(" ")}"></polyline>` : ""}
-          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="3" points="${stressPoints.join(" ")}"></polyline>` : ""}
-          ${nowCircles}
+          ${energyPoints.length ? `<polyline fill="none" stroke="var(--px-good)" stroke-width="2.5" points="${energyPoints.join(" ")}"></polyline>` : ""}
+          ${stressPoints.length ? `<polyline fill="none" stroke="var(--px-accent)" stroke-width="2.5" points="${stressPoints.join(" ")}"></polyline>` : ""}
           ${icons}
           ${tickLabels.join("")}
-          <text x="10" y="${eY}" dominant-baseline="middle" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" font-weight="700" fill="var(--px-good)">E</text>
-          <text x="10" y="${sY}" dominant-baseline="middle" text-anchor="middle" font-family="var(--px-font-ui)" font-size="11" font-weight="700" fill="var(--px-accent)">S</text>
         </svg>
       `;
       }
@@ -11926,13 +12318,21 @@ P = drain − 0.5·recovery</pre
         const topbar = `
         <div class="demo-topbar">
           <div class="demo-topbar-copy">
+            ${activity ? `<button type="button" class="demo-back-btn demo-back-top" data-demo-back>← Back</button>` : ""}
             <span class="demo-badge">Demo mode</span>
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
             <div class="demo-theme-swatches" aria-label="Theme">
               <span class="demo-theme-label">Theme</span>
-              ${["editorial", "arcade", "acrylic", "light", "pastel"]
+              ${[
+                "light",
+                "editorial",
+                "editorial-dark",
+                "arcade",
+                "pastel",
+                "acrylic",
+              ]
                 .map(
                   (t) =>
                     `<button type="button" class="demo-theme-swatch" data-set-theme="${t}" data-active="${t === currentTheme}" title="${t[0].toUpperCase() + t.slice(1)} theme"></button>`,
@@ -11988,8 +12388,10 @@ P = drain − 0.5·recovery</pre
             </div>
             <div class="demo-right-bar">
               <div class="demo-rb-label">Current state</div>
-              <div class="demo-battery-pair" data-demo-battery-pair></div>
-              <div class="demo-timeline-pane" data-demo-timeline></div>
+              <div class="demo-state-row">
+                <div class="demo-battery-pair" data-demo-battery-pair></div>
+                <div class="demo-timeline-pane" data-demo-timeline></div>
+              </div>
             </div>
           </div>
         `;
@@ -13411,23 +13813,30 @@ P = drain − 0.5·recovery</pre
         DOM.layer2Circadian.replaceChildren(svg);
 
         DOM.layer2EnergyCells.innerHTML = Array.from(
-          { length: 8 },
+          { length: 10 },
           (_, index) => {
-            // bottom-up fill: bars[7] is bottom, bars[0] is top
-            const filled = Math.round(currentEnergy / 12.5);
-            const active = 8 - index <= filled;
+            // bottom-up fill: bars[9] is bottom, bars[0] is top
+            const filled = Math.round(currentEnergy / 10);
+            const active = 10 - index <= filled;
             return `<div class="layer2-cell${active ? " is-on" : ""}" style="--cell-tone:${levelColor(currentEnergy)}"></div>`;
           },
         ).join("");
 
         DOM.layer2StressCells.innerHTML = Array.from(
-          { length: 8 },
+          { length: 10 },
           (_, index) => {
-            const filled = Math.round(currentStress / 12.5);
-            const active = 8 - index <= filled;
+            const filled = Math.round(currentStress / 10);
+            const active = 10 - index <= filled;
             return `<div class="layer2-cell${active ? " is-on" : ""}" style="--cell-tone:${stressColor(currentStress)}"></div>`;
           },
         ).join("");
+
+        const eArrowEl = document.getElementById("layer2-energy-arrow");
+        if (eArrowEl)
+          eArrowEl.textContent = dE > 0.01 ? "▲" : dE < -0.01 ? "▼" : "→";
+        const sArrowEl = document.getElementById("layer2-stress-arrow");
+        if (sArrowEl)
+          sArrowEl.textContent = dS > 0.01 ? "▲" : dS < -0.01 ? "▼" : "→";
 
         const readouts = [
           {
@@ -15340,26 +15749,43 @@ P = drain − 0.5·recovery</pre
       function applyDemoModeBody() {
         DOM.body.classList.toggle("is-demo", APP.demo.enabled);
         document.body.style.overflow = APP.demo.enabled ? "hidden" : "";
+        syncSourceToggleUI();
+      }
+
+      function syncSourceToggleUI() {
+        const liveBtn = document.getElementById("source-live-btn");
+        const demoBtn = document.getElementById("source-demo-btn");
+        const personaSelect = DOM.demoSelect;
+        const hasProfile = !!getActiveDemoId();
+        const isDemo = hasProfile;
+        if (liveBtn) liveBtn.classList.toggle("is-active", !isDemo);
+        if (demoBtn) demoBtn.classList.toggle("is-active", isDemo);
+        if (personaSelect) personaSelect.hidden = !isDemo;
       }
 
       // ── Theme ──
       const THEME_KEY = "pb_theme";
       const LAST_DARK_THEME_KEY = "pb_last_dark_theme";
       const LIGHT_THEME = "light";
-      const DARK_THEMES = ["arcade", "acrylic"];
+      // Pixel-art themes are only accessible from the ? menu (not main picker)
+      const PIXEL_ART_THEMES = ["arcade", "pastel", "acrylic"];
+      // Editorial themes: shown in main picker; dark/light variants
+      const DARK_THEMES = ["arcade", "acrylic", "editorial-dark"];
       const LIGHT_THEMES = ["light", "pastel", "editorial"];
-      const VALID_THEMES = [...DARK_THEMES, ...LIGHT_THEMES];
+      const VALID_THEMES = [...new Set([...DARK_THEMES, ...LIGHT_THEMES])];
       const THEME_LABELS = {
         arcade: "ARCADE",
         pastel: "PASTEL",
         acrylic: "ACRYLIC",
         light: "LIGHT",
         editorial: "EDITORIAL",
+        "editorial-dark": "DARK",
       };
 
       function getPreferredDarkTheme() {
-        const stored = localStorage.getItem(LAST_DARK_THEME_KEY) || "arcade";
-        return DARK_THEMES.includes(stored) ? stored : "arcade";
+        const stored =
+          localStorage.getItem(LAST_DARK_THEME_KEY) || "editorial-dark";
+        return DARK_THEMES.includes(stored) ? stored : "editorial-dark";
       }
 
       function rememberDarkTheme(theme) {
@@ -15371,33 +15797,41 @@ P = drain − 0.5·recovery</pre
       function updateThemeModeToggle(theme) {
         const btn = DOM.themeModeToggle;
         if (!btn) return;
-        const isLight = theme === LIGHT_THEME;
         const iconEl = btn.querySelector("[data-theme-mode-icon]");
         const labelEl = btn.querySelector("[data-theme-mode-label]");
-        const darkTheme = getPreferredDarkTheme();
-        if (iconEl) iconEl.textContent = isLight ? "☾" : "☀";
-        if (labelEl) {
-          labelEl.textContent = isLight
-            ? THEME_LABELS[darkTheme] || darkTheme.toUpperCase()
-            : "LIGHT";
+        if (PIXEL_ART_THEMES.includes(theme)) {
+          // On any pixel-art theme: toggle always goes back to LIGHT
+          if (iconEl) iconEl.textContent = "☀";
+          if (labelEl) labelEl.textContent = "LIGHT";
+          btn.setAttribute("aria-pressed", "false");
+          btn.setAttribute("aria-label", "Switch to Light mode");
+          btn.title = "Switch to Light mode";
+        } else if (LIGHT_THEMES.includes(theme)) {
+          // On light / editorial (light): offer editorial-dark
+          if (iconEl) iconEl.textContent = "☾";
+          if (labelEl) labelEl.textContent = "DARK";
+          btn.setAttribute("aria-pressed", "true");
+          btn.setAttribute("aria-label", "Switch to Editorial Dark mode");
+          btn.title = "Switch to Editorial Dark mode";
+        } else {
+          // editorial-dark or any other dark: offer light
+          if (iconEl) iconEl.textContent = "☀";
+          if (labelEl) labelEl.textContent = "LIGHT";
+          btn.setAttribute("aria-pressed", "false");
+          btn.setAttribute("aria-label", "Switch to Light mode");
+          btn.title = "Switch to Light mode";
         }
-        const tip = isLight
-          ? `Switch back to ${THEME_LABELS[darkTheme] || darkTheme.toUpperCase()} dark mode`
-          : "Switch to light mode";
-        btn.setAttribute("aria-pressed", String(isLight));
-        btn.setAttribute("aria-label", tip);
-        btn.title = tip;
       }
 
       function setThemePreference(theme) {
-        const t = VALID_THEMES.includes(theme) ? theme : "arcade";
+        const t = VALID_THEMES.includes(theme) ? theme : "editorial";
         if (DARK_THEMES.includes(t)) rememberDarkTheme(t);
         localStorage.setItem(THEME_KEY, t);
         applyTheme(t);
       }
 
       function applyTheme(theme) {
-        const t = VALID_THEMES.includes(theme) ? theme : "arcade";
+        const t = VALID_THEMES.includes(theme) ? theme : "editorial";
         if (t === "arcade") {
           document.body.removeAttribute("data-theme");
         } else {
@@ -15417,9 +15851,11 @@ P = drain − 0.5·recovery</pre
         const nameEl = document.querySelector("[data-theme-name]");
         if (nameEl) nameEl.textContent = THEME_LABELS[t] || t.toUpperCase();
         updateThemeModeToggle(t);
-        // Load editorial fonts on demand
+        // Load editorial fonts on demand (both editorial variants)
         const editorialFonts = document.getElementById("editorial-fonts");
-        if (editorialFonts && t === "editorial") editorialFonts.media = "all";
+        if (editorialFonts && (t === "editorial" || t === "editorial-dark")) {
+          editorialFonts.media = "all";
+        }
       }
 
       function initTheme() {
@@ -15431,18 +15867,22 @@ P = drain − 0.5·recovery</pre
             const t = btn.dataset.theme;
             if (!VALID_THEMES.includes(t)) return;
             setThemePreference(t);
-            if (picker && picker.tagName === "DETAILS") picker.open = false;
+            // Close the main picker (not the help sheet pixel-art section)
+            if (picker && picker.tagName === "DETAILS" && picker.contains(btn))
+              picker.open = false;
           });
         });
         if (DOM.themeModeToggle) {
           DOM.themeModeToggle.addEventListener("click", () => {
-            const current = localStorage.getItem(THEME_KEY) || "light";
-            if (LIGHT_THEMES.includes(current)) {
-              setThemePreference(getPreferredDarkTheme());
+            const current = localStorage.getItem(THEME_KEY) || "editorial";
+            if (PIXEL_ART_THEMES.includes(current)) {
+              // From pixel art: always go to light
+              setThemePreference(LIGHT_THEME);
+            } else if (LIGHT_THEMES.includes(current)) {
+              // From light/editorial: go to editorial-dark
+              setThemePreference("editorial-dark");
             } else {
-              rememberDarkTheme(
-                DARK_THEMES.includes(current) ? current : "arcade",
-              );
+              // From editorial-dark: go to light
               setThemePreference(LIGHT_THEME);
             }
             if (picker && picker.tagName === "DETAILS") picker.open = false;
@@ -15761,6 +16201,24 @@ P = drain − 0.5·recovery</pre
           void refreshModelState({ allowCache: false });
           void refreshAwData({ reason: "expand" });
         });
+
+        // Source Live/Demo toggle switch
+        document
+          .getElementById("source-live-btn")
+          ?.addEventListener("click", () => {
+            if (DOM.demoSelect.value === "") return; // already live
+            DOM.demoSelect.value = "";
+            DOM.demoSelect.dispatchEvent(new Event("change"));
+          });
+        document
+          .getElementById("source-demo-btn")
+          ?.addEventListener("click", () => {
+            const currentVal = DOM.demoSelect.value;
+            if (!currentVal) DOM.demoSelect.value = "sam";
+            DOM.demoSelect.dispatchEvent(new Event("change"));
+          });
+        // Set initial toggle state
+        syncSourceToggleUI();
 
         DOM.batteryToggle.addEventListener("click", () => {
           APP.uiLayer = APP.uiLayer === 0 ? 1 : 0;
