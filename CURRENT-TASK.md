@@ -1,37 +1,31 @@
 # CURRENT-TASK.md
 
-## Goal
+## Status: COMPLETE
 
-Fix UI issues found by Playwright audit + rename variables in model UI.
+All items shipped in this session on feat/mental-meter-polish.
 
-## Completed
+## What was done
 
-- [x] Renamed DEMO → MENU (header dropdown summary)
-- [x] Replaced `<details id="theme-picker">` with `<button id="theme-mode-toggle">` (single toggle)
-- [x] Removed `#demo-toggle-btn:hover` from bad grouped CSS rule (was setting `color: var(--px-bg)` = invisible text)
+- State tanks layout: side-by-side with "How the Model Works" text (changed
+  `.layer2-viz-row` breakpoint from 920px → 440px, removed `min-height: 440px`
+  and `min-height: 286px`); both columns now 595px equal height
+- State tanks title: matched to `.layer2-explain-title` styling (same font-size,
+  letter-spacing, color: var(--px-muted), uppercase)
+- Dock buttons (LOG/RECOVERY/TUNE): opacity raised from 0.18 → 0.50 / border
+  from 0.38 → 0.70 in editorial theme
+- CSS toggle switch: replaced text button with pill+knob slider; `aria-pressed`
+  controls knob position (light=left, dark=right)
+- Demo batteries: confirmed side-by-side y=762 h=120 (mobile) and y=125 h=150
+  (desktop) — Y diff 0px in both views
 
-## In Progress
+## Playwright audit results (last run)
 
-- [ ] Fix 4: Demo batteries side-by-side + shorter (`.demo-state-row .demo-battery-pair` flex-direction: row; `.demo-batt-svg-v` height: 200→80px)
-- [ ] Fix 5: Rename `erest` → `C` (circadian floor) across entire site
-- [ ] Fix 6: Rename `pressure` → `D` (drain) across entire site
-- [ ] Run Playwright visual-audit.mjs to verify all fixes
-- [ ] Commit + push + deploy
-
-## Key files
-
-- `C:/Users/dougl/psych-battery/index.html` — single-file frontend (~17,500 lines)
-
-## Variables to rename
-
-- `erest` → `C` (circadian floor) — all display text, labels, tooltips, JS vars, CSS classes
-- `pressure` → `D` (drain) — all display text, labels, tooltips, JS vars, CSS classes
-- Short forms: E_rest → C, P → D (check what short labels are used in charts/axes)
-
-## Verifier
-
-```
-cd C:/Users/dougl/psych-battery && node e2e/visual-audit.mjs
-```
-
-Then check screenshots in `e2e/screenshots/audit/`.
+- Toggle found: true ✅
+- Header swatches: 0 ✅
+- Demo grid batteries/timeline side-by-side at same Y ✅
+- Activity view batteries/timeline side-by-side at same Y ✅
+- State tanks h=595 | Model explain h=595 — aligned ✅
+- All 5 help tabs ✅
+- Phase portrait visible ✅
+- Reset button label correct ✅
+- JS error: only expected "Failed to fetch" (AW not running) ✅

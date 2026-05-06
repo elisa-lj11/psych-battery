@@ -730,8 +730,7 @@
       #tour-btn,
       #story-btn,
       #calib-btn,
-      #timeline-toggle-btn,
-      #theme-mode-toggle {
+      #timeline-toggle-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -764,8 +763,6 @@
       #calib-btn:focus-visible,
       #timeline-toggle-btn:hover,
       #timeline-toggle-btn:focus-visible,
-      #theme-mode-toggle:hover,
-      #theme-mode-toggle:focus-visible,
       .theme-toggle:hover,
       .theme-toggle:focus-visible {
         border-color: var(--px-accent);
@@ -5357,8 +5354,8 @@
       body[data-theme="editorial"] #self-log-dock #log-btn,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger,
       body[data-theme="editorial"] #self-log-dock #tune-trigger {
-        background: rgba(130, 130, 210, 0.18) !important;
-        border: 1px solid rgba(130, 130, 210, 0.38) !important;
+        background: rgba(130, 130, 210, 0.5) !important;
+        border: 1px solid rgba(130, 130, 210, 0.7) !important;
         color: #3a3068 !important;
         box-shadow: none !important;
         outline: none !important;
@@ -5368,8 +5365,8 @@
       body[data-theme="editorial"] #self-log-dock #log-btn:hover,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger:hover,
       body[data-theme="editorial"] #self-log-dock #tune-trigger:hover {
-        background: rgba(130, 130, 210, 0.28) !important;
-        box-shadow: 0 2px 10px rgba(80, 80, 180, 0.1) !important;
+        background: rgba(130, 130, 210, 0.65) !important;
+        box-shadow: 0 2px 10px rgba(80, 80, 180, 0.15) !important;
       }
       body[data-theme="editorial"] .layer-back-top {
         border-radius: 999px !important;
@@ -5910,35 +5907,70 @@
       #theme-mode-toggle {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 6px;
-        min-height: 44px;
-        padding: 0 12px;
-        border: 2px solid var(--px-border);
-        background: var(--px-button-surface);
+        min-height: 36px;
+        padding: 0 8px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-label);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 2px 2px 0 0 var(--px-button-shadow);
       }
 
-      #theme-mode-toggle[aria-pressed="true"] {
+      #theme-mode-toggle:hover .theme-switch-pill,
+      #theme-mode-toggle:focus-visible .theme-switch-pill {
         border-color: var(--px-accent);
-        background: var(--px-accent-soft);
-        color: var(--px-accent);
       }
 
       .theme-mode-icon {
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1;
       }
 
-      .theme-mode-label {
-        display: inline-flex;
-        align-items: center;
+      .theme-switch-pill {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 24px;
+        background: var(--px-border);
+        border: 1.5px solid var(--px-border);
+        border-radius: 999px;
+        flex-shrink: 0;
+        transition:
+          background 200ms,
+          border-color 200ms;
+      }
+
+      .theme-switch-knob {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 15px;
+        height: 15px;
+        background: var(--px-bg);
+        border-radius: 50%;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+        transition: left 180ms ease;
+      }
+
+      /* Light mode: aria-pressed="true" → knob LEFT (day side) */
+      #theme-mode-toggle[aria-pressed="true"] .theme-switch-pill {
+        background: rgba(200, 200, 240, 0.55);
+        border-color: var(--px-accent);
+      }
+      #theme-mode-toggle[aria-pressed="true"] .theme-switch-knob {
+        left: 3px;
+      }
+
+      /* Dark mode: aria-pressed="false" → knob RIGHT (night side) */
+      #theme-mode-toggle[aria-pressed="false"] .theme-switch-pill {
+        background: var(--px-accent-soft);
+        border-color: var(--px-accent);
+      }
+      #theme-mode-toggle[aria-pressed="false"] .theme-switch-knob {
+        left: calc(100% - 18px);
       }
 
       /* Self-log dock log button — color tracks active kind */
@@ -7011,12 +7043,20 @@
       }
 
       .layer-feature-card > .section-title,
-      .layer2-system-card > .section-title,
       .layer2-formula-v2 > .section-title {
         margin: 0;
         font-size: calc(var(--fs-label) + 2px);
         letter-spacing: 0.12em;
         line-height: 1.2;
+      }
+
+      .layer2-system-card > .section-title {
+        margin: 0;
+        font-size: var(--fs-label);
+        letter-spacing: 0.1em;
+        line-height: 1.2;
+        color: var(--px-muted);
+        text-transform: uppercase;
       }
 
       .layer-feature-card > .section-title {
@@ -7071,7 +7111,6 @@
       }
 
       .layer2-system {
-        min-height: 286px;
         align-items: stretch;
         gap: 14px;
         flex: 1;
@@ -7132,7 +7171,6 @@
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
         gap: 16px;
         align-items: stretch;
-        min-height: 440px;
       }
 
       .layer2-model-explain {
@@ -7321,7 +7359,7 @@
         min-height: 220px;
       }
 
-      @media (max-width: 920px) {
+      @media (max-width: 440px) {
         .layer2-viz-row {
           grid-template-columns: 1fr;
           min-height: unset;
@@ -7513,7 +7551,7 @@
 
       @media (max-width: 860px) {
         .layer2-system {
-          min-height: 252px;
+          min-height: unset;
         }
       }
 
@@ -7790,8 +7828,7 @@
       #tour-btn,
       #story-btn,
       #calib-btn,
-      #timeline-toggle-btn,
-      #theme-mode-toggle {
+      #timeline-toggle-btn {
         min-height: 44px;
         padding-inline: 14px;
         font-size: 15px;
@@ -8386,7 +8423,9 @@
           <span class="theme-mode-icon" data-theme-mode-icon aria-hidden="true"
             >☾</span
           >
-          <span class="theme-mode-label" data-theme-mode-label>DARK</span>
+          <span class="theme-switch-pill" aria-hidden="true">
+            <span class="theme-switch-knob"></span>
+          </span>
         </button>
         <button
           id="help-trigger"
