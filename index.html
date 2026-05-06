@@ -3837,8 +3837,7 @@
       .metric-card {
         min-height: 96px;
         border-radius: 14px;
-        border: 1px solid var(--px-border);
-        background: var(--px-panel);
+        background: transparent;
         padding: 12px;
         display: flex;
         flex-direction: column;
@@ -3955,8 +3954,6 @@
 
       .diag-col {
         border-radius: 16px;
-        border: 1px solid var(--px-border);
-        background: rgba(255, 255, 255, 0.02);
         padding: 14px;
       }
 
@@ -4043,13 +4040,13 @@
         justify-content: center;
         gap: 10px;
         padding: 12px 16px calc(env(safe-area-inset-bottom, 8px) + 12px);
-        background: rgba(15, 15, 19, 0.72);
+        background: rgba(15, 15, 19, 0.18);
         border: 0;
         border-top: 1px solid rgba(255, 255, 255, 0.07);
         border-radius: 0;
-        box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28);
-        backdrop-filter: blur(16px) saturate(160%);
-        -webkit-backdrop-filter: blur(16px) saturate(160%);
+        box-shadow: none;
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
         z-index: 30;
       }
 
@@ -5114,9 +5111,9 @@
       }
       body[data-theme="editorial"] .metric-card {
         border-radius: var(--panel-radius) !important;
-        border: 1px solid rgba(255, 255, 255, 0.66) !important;
-        background: rgba(255, 255, 255, 0.56);
-        box-shadow: var(--panel-shadow);
+        border: none !important;
+        background: transparent;
+        box-shadow: none;
       }
       body[data-theme="editorial"] .today-signal-tile {
         border: 1px solid rgba(255, 255, 255, 0.66) !important;
@@ -5159,9 +5156,9 @@
       }
       /* Dock bar itself: light glass instead of dark bar */
       body[data-theme="editorial"] #self-log-dock {
-        background: rgba(232, 232, 240, 0.72) !important;
-        border-top: 1px solid rgba(200, 200, 220, 0.35) !important;
-        box-shadow: 0 -4px 20px rgba(50, 50, 90, 0.08) !important;
+        background: rgba(232, 232, 240, 0.15) !important;
+        border-top: 1px solid rgba(200, 200, 220, 0.25) !important;
+        box-shadow: none !important;
       }
       body[data-theme="editorial"] #self-log-dock #log-btn,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger,
@@ -5852,8 +5849,8 @@
       } /* kill blurry glow */
 
       .metric-card {
-        border: 2px solid var(--px-border);
-        background: var(--px-panel);
+        background: transparent;
+        border: none;
       }
 
       .drain-row,
@@ -6253,9 +6250,7 @@
       }
 
       .layer-card {
-        border: 2px solid var(--px-border);
         background: var(--px-panel-soft);
-        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
         padding: 12px;
       }
 
