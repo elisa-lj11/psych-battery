@@ -344,7 +344,8 @@
       #demo-toggle-btn:hover,
       #demo-toggle-btn:focus-visible {
         border-color: var(--px-accent);
-        color: var(--px-accent);
+        background: var(--px-button-surface-strong);
+        color: var(--px-text);
         outline: none;
       }
       /* In demo mode the button bg is accent — keep text visible on hover */
@@ -699,6 +700,9 @@
       }
       #demo-panel > button {
         width: 100%;
+      }
+      #demo-panel #story-btn {
+        margin-bottom: 6px;
       }
       #demo-panel #demo-select {
         display: inline-flex !important;
@@ -1191,13 +1195,16 @@
       .brand-home {
         border: none;
         background: transparent;
-        padding: 0;
+        padding: 0 4px;
         color: var(--px-text);
         font-family: var(--px-font-ui);
         font-size: var(--fs-body);
         letter-spacing: 0.12em;
         text-transform: uppercase;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
       }
 
       .brand-home:hover,
@@ -1207,10 +1214,11 @@
       }
 
       .brand-logo {
-        height: 32px;
+        height: 42px;
         width: auto;
         display: block;
         pointer-events: none;
+        border-radius: 6px;
       }
 
       .demo-topbar {
@@ -3988,11 +3996,11 @@
       }
 
       .panel-link {
-        min-height: 48px;
+        min-height: 44px;
         border: none;
         background: transparent;
         padding: 0;
-        margin-top: 12px;
+        margin-top: 4px;
         color: var(--px-accent);
         font-family: var(--px-font-ui);
         font-weight: 700;
@@ -4126,19 +4134,17 @@
         font-size: var(--fs-label, 0.82rem);
       }
       #self-log-dock #recovery-trigger {
-        background: rgba(116, 199, 255, 0.52);
-        border-color: var(--px-recovery);
-        color: var(--px-recovery);
-        outline: 2px solid var(--px-recovery);
-        outline-offset: 1px;
+        background: rgba(154, 150, 230, 0.22);
+        border-color: rgba(154, 150, 230, 0.45);
+        color: var(--px-accent);
+        outline: none;
       }
       #self-log-dock #tune-trigger {
-        background: rgba(176, 140, 255, 0.5);
-        border-color: var(--px-accent);
+        background: rgba(154, 150, 230, 0.22);
+        border-color: rgba(154, 150, 230, 0.45);
         color: var(--px-accent);
         border-radius: 0;
-        outline: 2px solid var(--px-accent);
-        outline-offset: 1px;
+        outline: none;
       }
 
       #backdrop {
@@ -5213,7 +5219,6 @@
 
       /* Editorial-dark glass panels */
       body[data-theme="editorial-dark"] #battery-card,
-      body[data-theme="editorial-dark"] #layer-1,
       body[data-theme="editorial-dark"] #layer-2,
       body[data-theme="editorial-dark"] .header-shell,
       body[data-theme="editorial-dark"] #self-log-dock,
@@ -5230,7 +5235,6 @@
 
       /* Inherit editorial's rounded-corner overrides */
       body[data-theme="editorial-dark"] #battery-card,
-      body[data-theme="editorial-dark"] #layer-1,
       body[data-theme="editorial-dark"] #layer-2 {
         border-radius: var(--panel-radius) !important;
         border: var(--glass-border) !important;
@@ -5278,7 +5282,6 @@
 
       /* ── Glass surfaces: all major panels get blur + white glass bg ── */
       body[data-theme="editorial"] #battery-card,
-      body[data-theme="editorial"] #layer-1,
       body[data-theme="editorial"] #layer-2,
       body[data-theme="editorial"] .header-shell,
       body[data-theme="editorial"] #self-log-dock,
@@ -5351,39 +5354,22 @@
         border-top: 1px solid rgba(200, 200, 220, 0.25) !important;
         box-shadow: none !important;
       }
-      body[data-theme="editorial"] #self-log-dock #log-btn {
-        background: rgba(127, 229, 140, 0.52) !important;
-        border: 1px solid rgba(127, 229, 140, 0.8) !important;
-        color: #1a1a2e !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-      body[data-theme="editorial"] #self-log-dock #recovery-trigger {
-        background: rgba(116, 199, 255, 0.52) !important;
-        border: 1px solid rgba(116, 199, 255, 0.8) !important;
-        color: #1a1a2e !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-        outline: 2px solid rgba(116, 199, 255, 0.6) !important;
-        outline-offset: 1px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
+      body[data-theme="editorial"] #self-log-dock #log-btn,
+      body[data-theme="editorial"] #self-log-dock #recovery-trigger,
       body[data-theme="editorial"] #self-log-dock #tune-trigger {
-        background: rgba(176, 140, 255, 0.5) !important;
-        border: 1px solid rgba(176, 140, 255, 0.8) !important;
-        color: #1a1a2e !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-        outline: 2px solid rgba(176, 140, 255, 0.6) !important;
-        outline-offset: 1px;
+        background: rgba(130, 130, 210, 0.18) !important;
+        border: 1px solid rgba(130, 130, 210, 0.38) !important;
+        color: #3a3068 !important;
+        box-shadow: none !important;
+        outline: none !important;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
       }
       body[data-theme="editorial"] #self-log-dock #log-btn:hover,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger:hover,
       body[data-theme="editorial"] #self-log-dock #tune-trigger:hover {
-        background: rgba(255, 255, 255, 0.5) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+        background: rgba(130, 130, 210, 0.28) !important;
+        box-shadow: 0 2px 10px rgba(80, 80, 180, 0.1) !important;
       }
       body[data-theme="editorial"] .layer-back-top {
         border-radius: 999px !important;
@@ -6197,9 +6183,10 @@
         display: flex;
       }
       body.is-demo[data-mode="help"] #help-sheet {
-        background: var(--px-bg);
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
+        background: rgba(var(--px-bg-rgb, 15, 15, 20), 0.82);
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
       }
       body[data-mode="help"] #backdrop {
         opacity: 1;
@@ -6359,6 +6346,36 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+      }
+      .help-plain-text {
+        font-family: var(--px-font-copy);
+        font-size: 0.95rem;
+        line-height: 1.65;
+        color: var(--px-text);
+        margin: 14px 0 8px;
+      }
+      .help-plain-text:first-child {
+        margin-top: 0;
+      }
+      .help-plain-muted {
+        color: var(--px-muted);
+        font-size: 0.88rem;
+        margin-top: 16px;
+      }
+      .help-plain-list {
+        margin: 0 0 0 1.1em;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-family: var(--px-font-copy);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--px-text);
+      }
+      .help-plain-list strong {
+        color: var(--px-text);
+        font-weight: 700;
       }
       .help-model-dl dt {
         font-family: var(--px-font-ui);
@@ -6946,6 +6963,34 @@
         gap: 16px;
       }
 
+      /* Layer 1 content card — clips the glass surface to the content area,
+         above the More Info button */
+      .layer1-content-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      body[data-theme="editorial"] .layer1-content-card {
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(18px) saturate(120%);
+        -webkit-backdrop-filter: blur(18px) saturate(120%);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow:
+          0 2px 20px rgba(50, 50, 90, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        padding: 14px 16px;
+      }
+      body[data-theme="editorial-dark"] .layer1-content-card {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border-radius: 18px;
+        border: var(--glass-border);
+        box-shadow: var(--panel-shadow);
+        padding: 14px 16px;
+      }
+
       .layer-card-pressure,
       .layer-feature-card,
       .layer2-chart-card,
@@ -7031,6 +7076,7 @@
         min-height: 286px;
         align-items: stretch;
         gap: 14px;
+        flex: 1;
       }
 
       .layer2-node {
@@ -7219,6 +7265,33 @@
         border: 2px solid var(--px-border);
         white-space: pre;
         overflow-x: auto;
+      }
+
+      /* Phase portrait — always-visible section in layer 2 */
+      .phase-portrait-section {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .phase-portrait-plain-explain {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-family: var(--px-font-copy, var(--px-font-ui));
+        font-size: 0.9rem;
+        color: var(--px-text-2, var(--px-muted));
+        line-height: 1.55;
+      }
+      .phase-portrait-plain-explain p {
+        margin: 0;
+      }
+      .phase-portrait-plain-explain strong {
+        color: var(--px-text);
+        font-weight: 700;
+      }
+      .phase-portrait-plain-explain em {
+        font-style: italic;
+        color: var(--px-accent);
       }
 
       .layer2-viz-row .phase-portrait-card {
@@ -7902,19 +7975,20 @@
       .demo-state-row {
         display: flex;
         flex-direction: row;
-        align-items: stretch;
+        align-items: center;
         gap: 10px;
-        min-height: 180px;
+        min-height: 120px;
+        max-height: 140px;
       }
 
       .demo-state-row .demo-battery-pair {
         flex: 0 0 auto;
+        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 6px;
         width: auto;
-        /* batteries slightly shorter than timeline — match height via flex-align */
         align-self: center;
       }
 
@@ -7923,6 +7997,7 @@
         min-width: 0;
         display: flex;
         align-items: stretch;
+        height: 120px;
       }
 
       .demo-state-row .demo-timeline-svg {
@@ -8021,14 +8096,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
+        gap: 4px;
+        padding: 6px 8px;
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
       }
 
       .demo-timeline-svg {
-        height: 150px;
+        height: 110px;
         width: 100%;
       }
 
@@ -8301,28 +8376,13 @@
             <span data-theme-name>ARCADE</span>
             <span class="theme-toggle-caret" aria-hidden="true">▾</span>
           </summary>
-          <div class="theme-panel" role="group" aria-label="Settings">
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="light"
-              aria-pressed="false"
-              title="Light mode"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #f8fbff"></span
-                ><span style="background: #7f61d9"></span>
-                <span style="background: #2f9e57"></span
-                ><span style="background: #2487d8"></span>
-              </div>
-              <span>LIGHT</span>
-            </button>
+          <div class="theme-panel" role="group" aria-label="Theme">
             <button
               type="button"
               class="theme-swatch"
               data-theme="editorial"
               aria-pressed="false"
-              title="Editorial (glass)"
+              title="Clean (light glass)"
             >
               <div class="swatch-grid" aria-hidden="true">
                 <span style="background: #e8e8ec"></span
@@ -8330,14 +8390,14 @@
                 <span style="background: #3d8a5e"></span
                 ><span style="background: #9a6820"></span>
               </div>
-              <span>EDITORIAL</span>
+              <span>CLEAN</span>
             </button>
             <button
               type="button"
               class="theme-swatch"
               data-theme="editorial-dark"
               aria-pressed="false"
-              title="Editorial Dark (glass)"
+              title="Dark (dark glass)"
             >
               <div class="swatch-grid" aria-hidden="true">
                 <span style="background: #15152a"></span
@@ -8346,21 +8406,6 @@
                 ><span style="background: #e06060"></span>
               </div>
               <span>DARK</span>
-            </button>
-            <button
-              id="theme-mode-toggle"
-              type="button"
-              aria-pressed="false"
-              aria-label="Switch to dark mode"
-              title="Switch to dark mode"
-            >
-              <span
-                class="theme-mode-icon"
-                data-theme-mode-icon
-                aria-hidden="true"
-                >☾</span
-              >
-              <span class="theme-mode-label" data-theme-mode-label>DARK</span>
             </button>
           </div>
         </details>
@@ -8492,147 +8537,154 @@
             ><span>Minimize Diagnostics</span>
           </button>
 
-          <!-- TOP ROW: Circadian chart (left) + Averages & key metrics (right) -->
-          <div class="layer2-top layer2-top-v2">
-            <div class="layer-card layer2-chart-wrap layer2-chart-card">
-              <div class="layer2-action-row">
-                <div class="layer-title-stack">
-                  <div class="section-title">
-                    <span
-                      class="jargon-tip"
-                      data-tip="Your built-in 24-hour energy rhythm. Energy peaks late morning for larks (~14h) or evening for owls (~21h), with a natural mid-afternoon dip. The model shifts your resting energy target based on your chronotype."
-                      tabindex="0"
-                      >Circadian model</span
-                    >
-                  </div>
-                  <div class="layer2-mini">
-                    Daily rhythm curve with current energy
-                  </div>
-                </div>
-                <div id="layer2-clock" class="layer2-mini layer2-mini-readout">
-                  --h
-                </div>
-              </div>
-              <div id="layer2-circadian" aria-live="polite"></div>
-            </div>
-
-            <!-- Right column: averages + 6 key metrics inline with circadian -->
-            <div class="layer2-side-by-side">
-              <div class="layer2-inline-right">
-                <div id="layer2-averages" class="layer2-averages"></div>
-                <div id="layer2-readout" class="layer2-readout"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Demo-only action buttons -->
-          <div class="layer2-action-stack">
-            <button
-              id="btn-replay-tick"
-              class="layer2-action"
-              type="button"
-              title="Load the previous model snapshot — rewinds the displayed E and S values to the state from the tick before last."
-            >
-              Replay last tick
-            </button>
-            <button
-              id="btn-run-hour"
-              class="layer2-action"
-              type="button"
-              title="Simulate 60 minutes of model time at current drain pressure — useful for seeing how E and S would evolve without actually waiting."
-            >
-              Run +1 hour
-            </button>
-          </div>
-
-          <!-- VIZ ROW: State tanks (left, tall) + How model works (right) -->
-          <div class="layer2-viz-row">
-            <div class="layer-card layer2-system-card">
-              <div class="section-title">State tanks</div>
-              <div id="layer2-system" class="layer2-system">
-                <div id="layer2-pressure-node" class="layer2-node">
-                  <span class="layer2-node-label">Pressure</span>
-                  <span class="layer2-node-value">--%</span>
-                </div>
-                <div
-                  id="layer2-energy-tank"
-                  class="layer2-tank layer2-tank-energy"
-                >
-                  <div class="layer2-tank-title">
-                    Energy
-                    <span
-                      id="layer2-energy-arrow"
-                      class="tank-trend-arrow"
-                    ></span>
+          <!-- Clipped content card — glass bg ends here, above the More Info button -->
+          <div class="layer1-content-card">
+            <!-- TOP ROW: Circadian chart (left) + Averages & key metrics (right) -->
+            <div class="layer2-top layer2-top-v2">
+              <div class="layer-card layer2-chart-wrap layer2-chart-card">
+                <div class="layer2-action-row">
+                  <div class="layer-title-stack">
+                    <div class="section-title">
+                      <span
+                        class="jargon-tip"
+                        data-tip="Your built-in 24-hour energy rhythm. Energy peaks late morning for larks (~14h) or evening for owls (~21h), with a natural mid-afternoon dip. The model shifts your resting energy target based on your chronotype."
+                        tabindex="0"
+                        >Circadian model</span
+                      >
+                    </div>
+                    <div class="layer2-mini">
+                      Daily rhythm curve with current energy
+                    </div>
                   </div>
                   <div
-                    id="layer2-energy-cells"
-                    class="layer2-cells-vertical"
-                  ></div>
-                </div>
-                <div
-                  id="layer2-stress-tank"
-                  class="layer2-tank layer2-tank-stress"
-                >
-                  <div class="layer2-tank-title">
-                    Stress
-                    <span
-                      id="layer2-stress-arrow"
-                      class="tank-trend-arrow"
-                    ></span>
+                    id="layer2-clock"
+                    class="layer2-mini layer2-mini-readout"
+                  >
+                    --h
                   </div>
-                  <div
-                    id="layer2-stress-cells"
-                    class="layer2-cells-vertical"
-                  ></div>
+                </div>
+                <div id="layer2-circadian" aria-live="polite"></div>
+              </div>
+
+              <!-- Right column: averages + 6 key metrics inline with circadian -->
+              <div class="layer2-side-by-side">
+                <div class="layer2-inline-right">
+                  <div id="layer2-averages" class="layer2-averages"></div>
+                  <div id="layer2-readout" class="layer2-readout"></div>
                 </div>
               </div>
             </div>
 
-            <div class="layer2-model-explain">
-              <div class="layer2-explain-title">How the model works</div>
-              <div class="layer2-explain-body">
-                <dl class="model-mini-dl">
-                  <div>
-                    <dt>E — Energy</dt>
-                    <dd>
-                      Cognitive fuel, 0–100. Drains under load; mean-reverts
-                      toward Erest in ~2 h.
-                    </dd>
+            <!-- Demo-only action buttons -->
+            <div class="layer2-action-stack">
+              <button
+                id="btn-replay-tick"
+                class="layer2-action"
+                type="button"
+                title="Load the previous model snapshot — rewinds the displayed E and S values to the state from the tick before last."
+              >
+                Replay last tick
+              </button>
+              <button
+                id="btn-run-hour"
+                class="layer2-action"
+                type="button"
+                title="Simulate 60 minutes of model time at current drain pressure — useful for seeing how E and S would evolve without actually waiting."
+              >
+                Run +1 hour
+              </button>
+            </div>
+
+            <!-- VIZ ROW: State tanks (left, tall) + How model works (right) -->
+            <div class="layer2-viz-row">
+              <div class="layer-card layer2-system-card">
+                <div class="section-title">State tanks</div>
+                <div id="layer2-system" class="layer2-system">
+                  <div id="layer2-pressure-node" class="layer2-node">
+                    <span class="layer2-node-label">Pressure</span>
+                    <span class="layer2-node-value">--%</span>
                   </div>
-                  <div>
-                    <dt>S — Stress</dt>
-                    <dd>
-                      Nervous-system load, 0–100. Builds fast under pressure;
-                      decays over days, not hours.
-                    </dd>
+                  <div
+                    id="layer2-energy-tank"
+                    class="layer2-tank layer2-tank-energy"
+                  >
+                    <div class="layer2-tank-title">
+                      Energy
+                      <span
+                        id="layer2-energy-arrow"
+                        class="tank-trend-arrow"
+                      ></span>
+                    </div>
+                    <div
+                      id="layer2-energy-cells"
+                      class="layer2-cells-vertical"
+                    ></div>
                   </div>
-                  <div>
-                    <dt>P — Pressure</dt>
-                    <dd>
-                      Weighted drain signal (0–1). High P burns E faster and
-                      keeps S elevated.
-                    </dd>
+                  <div
+                    id="layer2-stress-tank"
+                    class="layer2-tank layer2-tank-stress"
+                  >
+                    <div class="layer2-tank-title">
+                      Stress
+                      <span
+                        id="layer2-stress-arrow"
+                        class="tank-trend-arrow"
+                      ></span>
+                    </div>
+                    <div
+                      id="layer2-stress-cells"
+                      class="layer2-cells-vertical"
+                    ></div>
                   </div>
-                  <div>
-                    <dt>Erest — Circadian floor</dt>
-                    <dd>
-                      Expected E at this hour based on your chronotype. E pulls
-                      toward it when pressure is low.
-                    </dd>
-                  </div>
-                </dl>
-                <pre class="model-mini-math">
+                </div>
+              </div>
+
+              <div class="layer2-model-explain">
+                <div class="layer2-explain-title">How the model works</div>
+                <div class="layer2-explain-body">
+                  <dl class="model-mini-dl">
+                    <div>
+                      <dt>E — Energy</dt>
+                      <dd>
+                        Cognitive fuel, 0–100. Drains under load; mean-reverts
+                        toward Erest in ~2 h.
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>S — Stress</dt>
+                      <dd>
+                        Nervous-system load, 0–100. Builds fast under pressure;
+                        decays over days, not hours.
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>P — Pressure</dt>
+                      <dd>
+                        Weighted drain signal (0–1). High P burns E faster and
+                        keeps S elevated.
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Erest — Circadian floor</dt>
+                      <dd>
+                        Expected E at this hour based on your chronotype. E
+                        pulls toward it when pressure is low.
+                      </dd>
+                    </div>
+                  </dl>
+                  <pre class="model-mini-math">
 dE/dt = −0.05·P·E + (Erest−E)/120
 dS/dt = 1.5·P − S/4320
 P = drain − 0.5·recovery</pre
-                >
-                <p class="model-mini-footer">
-                  Tap <strong>?</strong> → How it works for full details.
-                </p>
+                  >
+                  <p class="model-mini-footer">
+                    Tap <strong>?</strong> → How it works for full details.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+          <!-- /.layer1-content-card -->
 
           <button id="open-diagnostics" class="panel-link" type="button">
             More Info <span class="pix-arrow-down">&#9660;</span>
@@ -8689,48 +8741,44 @@ P = drain − 0.5·recovery</pre
             </div>
           </details>
 
-          <details class="layer-legacy" id="phase-portrait-dropdown">
-            <summary>Energy-Stress Map</summary>
-            <div class="layer-legacy-body">
-              <div class="phase-portrait-dropdown-wrap">
-                <div class="phase-portrait-map-explain">
-                  <p>
-                    This map shows how your Energy (E) and Stress (S) evolve
-                    together over time. Each arrow shows the direction the model
-                    predicts you'll drift from that point.
-                  </p>
-                  <p>
-                    <strong>Top-left</strong> (high E, low S) = restored and
-                    focused. <strong>Bottom-right</strong> (low E, high S) =
-                    overloaded. Your current state is shown as a live dot.
-                  </p>
-                  <p>
-                    <strong>Erest</strong> pulls E toward the circadian baseline
-                    when pressure is low. High stress slows recovery even when
-                    you rest.
-                  </p>
-                </div>
-                <div class="layer-card phase-portrait-card">
-                  <div class="section-title">
-                    <span
-                      class="jargon-tip"
-                      data-tip="Map of how energy and stress evolve together. Arrows show drift direction at each point."
-                      tabindex="0"
-                      >Energy-Stress map</span
-                    >
+          <div
+            class="layer-card phase-portrait-section"
+            id="phase-portrait-dropdown"
+          >
+            <div class="section-title">Energy-Stress Map</div>
+            <div class="phase-portrait-plain-explain">
+              <p>
+                This diagram shows where your Energy and Stress are heading
+                right now. Think of it like a weather map for your brain: each
+                arrow shows which direction you'd drift from that spot if you
+                kept today's pace.
+              </p>
+              <p>
+                <strong>Top-left</strong> (high energy, low stress) = restored
+                and sharp. <strong>Bottom-right</strong> (low energy, high
+                stress) = overloaded. Your current state is the live dot.
+              </p>
+              <p>
+                The dashed lines (nullclines) mark where energy or stress would
+                stop changing. Where they cross is your
+                <em>equilibrium</em> — the point today's activity pattern is
+                slowly pulling you toward. A heavy workday pulls it down-right;
+                rest and recovery push it back up-left.
+              </p>
+            </div>
+            <div class="phase-portrait-dropdown-wrap">
+              <div class="layer-card phase-portrait-card">
+                <div class="phase-portrait-shell">
+                  <div class="phase-portrait-axis-label is-y">Stress</div>
+                  <div class="phase-portrait-plot">
+                    <div id="phase-portrait" aria-live="polite"></div>
+                    <div class="phase-portrait-axis-label">Energy</div>
                   </div>
-                  <div class="phase-portrait-shell">
-                    <div class="phase-portrait-axis-label is-y">Stress</div>
-                    <div class="phase-portrait-plot">
-                      <div id="phase-portrait" aria-live="polite"></div>
-                      <div class="phase-portrait-axis-label">Energy</div>
-                    </div>
-                  </div>
-                  <div id="phase-portrait-legend-host"></div>
                 </div>
+                <div id="phase-portrait-legend-host"></div>
               </div>
             </div>
-          </details>
+          </div>
         </div>
       </section>
 
@@ -8813,6 +8861,17 @@ P = drain − 0.5·recovery</pre
         >
           HOW IT WORKS
         </button>
+        <button
+          type="button"
+          role="tab"
+          id="help-tab-pixelart"
+          class="help-tab"
+          data-help-tab="pixelart"
+          aria-selected="false"
+          aria-controls="help-panel-pixelart"
+        >
+          PIXEL ART
+        </button>
       </div>
 
       <div class="help-panels">
@@ -8877,64 +8936,6 @@ P = drain − 0.5·recovery</pre
               </dd>
             </div>
           </dl>
-          <div class="help-pixel-art-section">
-            <h3 class="help-pixel-art-title">🎮 Pixel Art themes</h3>
-            <p class="help-pixel-art-desc">
-              Retro / game-console aesthetics. Click the toggle in the header to
-              return to Light.
-            </p>
-            <div
-              class="help-pixel-art-swatches"
-              role="group"
-              aria-label="Pixel Art themes"
-            >
-              <button
-                type="button"
-                class="theme-swatch"
-                data-theme="arcade"
-                aria-pressed="false"
-                title="Arcade"
-              >
-                <div class="swatch-grid" aria-hidden="true">
-                  <span style="background: #0b0b14"></span
-                  ><span style="background: #b388ff"></span>
-                  <span style="background: #9fe86a"></span
-                  ><span style="background: #ffc857"></span>
-                </div>
-                <span>ARCADE</span>
-              </button>
-              <button
-                type="button"
-                class="theme-swatch"
-                data-theme="pastel"
-                aria-pressed="false"
-                title="Pastel"
-              >
-                <div class="swatch-grid" aria-hidden="true">
-                  <span style="background: #2a1f3d"></span
-                  ><span style="background: #d6b3ff"></span>
-                  <span style="background: #c5e8b5"></span
-                  ><span style="background: #ff9eaa"></span>
-                </div>
-                <span>PASTEL</span>
-              </button>
-              <button
-                type="button"
-                class="theme-swatch"
-                data-theme="acrylic"
-                aria-pressed="false"
-                title="Acrylic"
-              >
-                <div class="swatch-grid" aria-hidden="true">
-                  <span style="background: #0e1422"></span
-                  ><span style="background: #8fbeff"></span>
-                  <span style="background: #6ee0b6"></span
-                  ><span style="background: #ff6b8c"></span>
-                </div>
-                <span>ACRYLIC</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <div
@@ -9146,11 +9147,111 @@ P = drain − 0.5·recovery</pre
               </dd>
             </div>
           </dl>
+          <h3 class="help-section-sub">The phase diagram, plain English</h3>
+          <p class="help-plain-text">
+            The Energy-Stress map is a <em>phase portrait</em> — a picture of
+            how two things (energy and stress) push and pull each other over
+            time. You don't need to know any math to read it:
+          </p>
+          <ul class="help-plain-list">
+            <li>
+              <strong>Each arrow</strong> shows which direction you'd move from
+              that spot if you kept today's pace going.
+            </li>
+            <li>
+              <strong>The dashed lines</strong> (called nullclines) are the
+              borders where one variable would stop changing. Energy stops
+              changing on the horizontal dashed line; stress stops changing on
+              the vertical one.
+            </li>
+            <li>
+              <strong>Where the dashes cross</strong> is your equilibrium — the
+              resting point today's activity is slowly pulling you toward. A
+              packed day pulls it down and right (low energy, high stress). Rest
+              and recovery push it up and left.
+            </li>
+            <li>
+              <strong>The live dot</strong> is where you are right now. Watching
+              where the equilibrium sits tells you more than the dot alone —
+              it's the trajectory that matters, not just the snapshot.
+            </li>
+          </ul>
+          <p class="help-plain-text help-plain-muted">
+            Under the hood, the model runs two differential equations (rate
+            equations) that update continuously. If you're curious about the
+            exact formulas, tap the meter → More Info → signal breakdown.
+          </p>
+        </div>
+
+        <div
+          class="help-panel"
+          role="tabpanel"
+          id="help-panel-pixelart"
+          aria-labelledby="help-tab-pixelart"
+          hidden
+        >
+          <h2>Pixel Art themes</h2>
+          <p class="help-about-lead">
+            Retro / game-console aesthetics for the meter. Pick a style below —
+            tap the swatch to switch themes. Return to CLEAN or DARK any time
+            from the theme picker in the header.
+          </p>
+          <div
+            class="help-pixel-art-swatches"
+            role="group"
+            aria-label="Pixel Art themes"
+          >
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="arcade"
+              aria-pressed="false"
+              title="Arcade"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #0b0b14"></span
+                ><span style="background: #b388ff"></span>
+                <span style="background: #9fe86a"></span
+                ><span style="background: #ffc857"></span>
+              </div>
+              <span>ARCADE</span>
+            </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="pastel"
+              aria-pressed="false"
+              title="Pastel"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #2a1f3d"></span
+                ><span style="background: #d6b3ff"></span>
+                <span style="background: #c5e8b5"></span
+                ><span style="background: #ff9eaa"></span>
+              </div>
+              <span>PASTEL</span>
+            </button>
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme="acrylic"
+              aria-pressed="false"
+              title="Acrylic"
+            >
+              <div class="swatch-grid" aria-hidden="true">
+                <span style="background: #0e1422"></span
+                ><span style="background: #8fbeff"></span>
+                <span style="background: #6ee0b6"></span
+                ><span style="background: #ff6b8c"></span>
+              </div>
+              <span>ACRYLIC</span>
+            </button>
+          </div>
         </div>
       </div>
 
       <button id="reset-onboarding-btn" type="button">
-        Reset onboarding tips
+        Reset first-visit experience
       </button>
       <button id="help-close" type="button">Close</button>
     </section>
@@ -12323,22 +12424,6 @@ P = drain − 0.5·recovery</pre
             <span class="demo-clock">${formatDemoClock(APP.demo.simClock)}</span>
           </div>
           <div class="demo-topbar-actions">
-            <div class="demo-theme-swatches" aria-label="Theme">
-              <span class="demo-theme-label">Theme</span>
-              ${[
-                "light",
-                "editorial",
-                "editorial-dark",
-                "arcade",
-                "pastel",
-                "acrylic",
-              ]
-                .map(
-                  (t) =>
-                    `<button type="button" class="demo-theme-swatch" data-set-theme="${t}" data-active="${t === currentTheme}" title="${t[0].toUpperCase() + t.slice(1)} theme"></button>`,
-                )
-                .join("")}
-            </div>
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
@@ -12494,8 +12579,10 @@ P = drain − 0.5·recovery</pre
           </div>
           <div class="demo-right-bar">
             <div class="demo-rb-label">Current state</div>
-            <div class="demo-battery-pair" data-demo-battery-pair></div>
-            <div class="demo-timeline-pane" data-demo-timeline></div>
+            <div class="demo-state-row">
+              <div class="demo-battery-pair" data-demo-battery-pair></div>
+              <div class="demo-timeline-pane" data-demo-timeline></div>
+            </div>
             <div class="demo-rb-pipe">
               <div class="demo-feature-list">${rows}</div>
               ${unchangedFeatureCount > 0 ? `<div class="demo-feature-footnote">${unchangedFeatureCount} other features unchanged</div>` : ""}
@@ -15777,8 +15864,8 @@ P = drain − 0.5·recovery</pre
         arcade: "ARCADE",
         pastel: "PASTEL",
         acrylic: "ACRYLIC",
-        light: "LIGHT",
-        editorial: "EDITORIAL",
+        light: "CLEAN",
+        editorial: "CLEAN",
         "editorial-dark": "DARK",
       };
 
@@ -16471,11 +16558,17 @@ P = drain − 0.5·recovery</pre
                 localStorage.removeItem(key);
               } catch (_) {}
             });
-            showToast("Onboarding tips reset");
+            showToast("First-visit experience reset");
           });
         }
 
-        const HELP_TABS = ["about", "shortcuts", "glossary", "howitworks"];
+        const HELP_TABS = [
+          "about",
+          "shortcuts",
+          "glossary",
+          "howitworks",
+          "pixelart",
+        ];
         function setHelpTab(name) {
           if (!HELP_TABS.includes(name)) name = "about";
           document.querySelectorAll(".help-tab").forEach((btn) => {
