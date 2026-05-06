@@ -5858,6 +5858,7 @@
 
       .drain-row,
       .diag-row {
+        border: none;
         border-bottom: 1px solid var(--px-border);
         background: transparent;
       }
@@ -16175,7 +16176,10 @@ P = drain − 0.5·recovery</pre
             const labels = unloggedRow.dataset.labels || "";
             const pop = document.createElement("div");
             pop.className = "layer-feature-popover";
-            pop.innerHTML = `<h4>Not Logged</h4><p>These features weren't captured this window:<br>${labels.split(",").map((l) => `• ${l.trim()}`).join("<br>")}</p>`;
+            pop.innerHTML = `<h4>Not Logged</h4><p>These features weren't captured this window:<br>${labels
+              .split(",")
+              .map((l) => `• ${l.trim()}`)
+              .join("<br>")}</p>`;
             document.body.appendChild(pop);
             const r = unloggedRow.getBoundingClientRect();
             pop.style.top = window.scrollY + r.bottom + 6 + "px";
