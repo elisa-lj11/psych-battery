@@ -495,8 +495,17 @@ def _build_aw_fallback_state() -> dict:
     if active_min > 0:
         last_feats['active_min'] = round(active_min, 1)
 
+    # Derive a simple stress estimate from AW features so the stress tank
+    # renders meaningfully even without the Flask ODE model.
+    cs_norm   = min(1.0, float(context_switches) / 30.0)
+    frag_norm = min(1.0, max(0.0, fragmentation_dev + 1.0))
+    ah_norm   = min(1.0, float(after_hours_frac))
+    stress    = max(0, min(100, round(cs_norm * 40 + frag_norm * 35 + ah_norm * 25)))
+
     return {
         'E_display':      round(battery / 100, 4),
+        'E_internal':     battery,           # energy tank bars
+        'S':              stress,            # stress tank bars
         'battery_pct':    battery,
         'trend':          _next_trend(battery),
         'aw_connected':   True,
