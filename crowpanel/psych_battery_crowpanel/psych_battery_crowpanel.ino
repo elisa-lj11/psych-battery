@@ -15,7 +15,7 @@ int    currentCharge = 100;
 String currentTrend  = "flat";
 unsigned long lastPacketAtMs = 0;
 bool   needsRedraw   = true;
-int    g_fillW       = 0;  // right-edge of fill; pixels at x >= (EPD_W - g_fillW) are black
+int    g_fillW       = 0;  // visual fill width (0-792); pixels at x >= (792 - g_fillW) are black
 
 #define LED_R 15  // Red anode
 #define LED_G 17  // Green anode
@@ -190,10 +190,10 @@ void drawBattery(int pct, const String& trend) {
   pct = constrain(pct, 0, 100);
 
   // Fill from right edge — drains left as pct decreases
-  int fillW = (long)EPD_W * pct / 100;
+  int fillW = (long)792 * pct / 100;
   g_fillW = fillW;
   if (fillW > 0) {
-    EPD_DrawRectangle(EPD_W - fillW, 0, EPD_W, EPD_H, BLACK, 1);
+    EPD_DrawRectangle(792 - fillW, 0, 791, EPD_H, BLACK, 1);
   }
 
   char buf[4];
@@ -201,12 +201,11 @@ void drawBattery(int pct, const String& trend) {
   int numDigits = strlen(buf);
   int blockW = numDigits * 24 + 12;  // buffer-y span of "NN%"
 
-  // Editorial layout: number + arrow near physical bottom (low buffer-x),
-  // centered horizontally. Fill is the primary visual; data reads as a caption.
-  // Number at buffer-x 132 → physical-Y ~620-668 (~80% down the display).
-  // Arrow at buffer-x 56  → physical-Y ~700-744, centered below the number.
+  // Number at buffer-x 132 (~80% down display). Lower buffer-x = physically above.
+  // "up" arrow above number (buffer-x 56), "down"/"flat" below (buffer-x 188).
   drawPercentRotatedCCW(132, EPD_H / 2 - blockW / 2, pct);
-  drawTrendArrow(trend, 56, EPD_H / 2 - 20);
+  int arrowX = (trend == "up") ? 56 : 188;
+  drawTrendArrow(trend, arrowX, EPD_H / 2 - 20);
 }
 
 // Solid filled triangle via horizontal scan lines in buffer space.
@@ -229,29 +228,28 @@ void drawFilledTriangleBuf(int x0, int y0, int x1, int y1, int x2, int y2) {
     if (ax > bx) { int t = ax; ax = bx; bx = t; }
     // Fill-aware: pixels in the charged region use WHITE on black, others BLACK on white
     for (int px = ax; px <= bx; px++) {
-      uint16_t col = (px >= EPD_W - g_fillW) ? WHITE : BLACK;
+      uint16_t col = (px >= 792 - g_fillW) ? WHITE : BLACK;
       setPixelSafe(px, by, col);
     }
   }
 }
 
-// Draw solid trend arrow. Display is CCW-rotated, so buffer-x maps to physical-down.
-// "up" (energy rising)  → physical UP = increasing buffer-x → ► in buffer
-// "down" (energy falling) → physical DOWN = decreasing buffer-x → ◄ in buffer
-// "flat" → horizontal bar (= vertical bar on physical display)
+// Draw solid trend arrow.
+// "up"   → ▲ physically: ◄ in buffer (apex at low bx), placed above number
+// "down" → ▼ physically: ► in buffer (apex at high bx), placed below number
 void drawTrendArrow(const String& trend, int x, int y) {
-  const int H  = 44;   // span in buffer-x direction (= physical height of arrow)
-  const int HW = 20;   // half-width in buffer-y direction (base = 40px physical width)
-  int midY = y + HW;   // buffer-y center of the arrow block
+  const int H  = 44;   // span in buffer-x direction
+  const int HW = 20;   // half-width in buffer-y direction (base = 40px)
+  int midY = y + HW;
 
   if (trend == "up") {
-    // ► in buffer: apex right, base left
-    drawFilledTriangleBuf(x + H, midY, x, midY - HW, x, midY + HW);
-  } else if (trend == "down") {
-    // ◄ in buffer: apex left, base right
+    // ◄ in buffer → ▲ on display
     drawFilledTriangleBuf(x, midY, x + H, midY - HW, x + H, midY + HW);
+  } else if (trend == "down") {
+    // ► in buffer → ▼ on display
+    drawFilledTriangleBuf(x + H, midY, x, midY - HW, x, midY + HW);
   }
-  // flat: draw nothing — only show an arrow when actively changing
+  // flat: no arrow
 }
 
 uint16_t fontByte(char chr, uint16_t size, uint16_t idx) {
@@ -293,7 +291,7 @@ void drawCharRotatedCCW(int dstX, int dstY, int srcX, int srcY, int blockW,
       int rx = dstX + py;
       int ry = dstY + blockW - 1 - px;
 
-      if (temp & 0x01) setPixelSafe(rx, ry, (rx >= EPD_W - g_fillW) ? WHITE : BLACK);
+      if (temp & 0x01) setPixelSafe(rx, ry, (rx >= 792 - g_fillW) ? WHITE : BLACK);
       temp >>= 1;
     }
   }

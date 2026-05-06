@@ -894,6 +894,7 @@
         font-size: 14px;
         letter-spacing: 0.12em;
         text-align: center;
+        cursor: pointer;
         animation: battery-hint-blink 2s steps(2, end) infinite;
       }
       .battery-expand-hint .pix-arrow {
@@ -6377,7 +6378,7 @@
         letter-spacing: 0.06em;
         color: var(--px-muted);
         border: 1px dashed var(--px-border);
-        cursor: help;
+        cursor: pointer;
       }
 
       .layer-legacy {
@@ -6521,6 +6522,9 @@
         flex-direction: column;
         gap: 8px;
         align-self: stretch;
+      }
+      body:not(.is-demo) .layer2-action-stack {
+        display: none;
       }
 
       .layer2-action {
@@ -9060,7 +9064,7 @@ P = drain − 0.5·recovery</pre
       const MODEL_BASE = localStorage.getItem("pb_api") || "";
       const AW = "/aw";
       const STATE_CACHE_KEY = "pb_state";
-      const MODEL_POLL_MS = 30_000;
+      const MODEL_POLL_MS = 10_000;
       const AW_POLL_MS = 30_000;
       const BATTERY_INNER_WIDTH = 204;
       const DEMO_KEY = "pb_demo_profile";
@@ -13008,7 +13012,7 @@ P = drain − 0.5·recovery</pre
             .join("");
           const unloggedRow =
             missingLabels.length > 0
-              ? `<div class="layer-feature-unlogged" title="${missingLabels.join(", ")}">${missingLabels.length} feature${missingLabels.length > 1 ? "s" : ""} not logged &#9432;</div>`
+              ? `<div class="layer-feature-unlogged" data-labels="${missingLabels.join(", ")}">${missingLabels.length} feature${missingLabels.length > 1 ? "s" : ""} not logged &#9432;</div>`
               : "";
           target.innerHTML = rows + unloggedRow;
         };
@@ -15427,9 +15431,20 @@ P = drain − 0.5·recovery</pre
       let modelPollId = 0;
       let awPollId = 0;
 
+      function _scheduleModelPoll(delayMs) {
+        if (modelPollId) window.clearTimeout(modelPollId);
+        modelPollId = window.setTimeout(async () => {
+          if (!document.hidden && !APP.demo.enabled) {
+            await refreshModelState({ allowCache: false });
+          }
+          const nextMs = APP.model.payload?.next_refresh_in_ms ?? MODEL_POLL_MS;
+          _scheduleModelPoll(nextMs);
+        }, delayMs);
+      }
+
       function stopPolling() {
         if (modelPollId) {
-          window.clearInterval(modelPollId);
+          window.clearTimeout(modelPollId);
           modelPollId = 0;
         }
         if (awPollId) {
@@ -15440,11 +15455,7 @@ P = drain − 0.5·recovery</pre
 
       function startPolling() {
         stopPolling();
-        modelPollId = window.setInterval(() => {
-          if (!document.hidden && !APP.demo.enabled) {
-            void refreshModelState({ allowCache: true });
-          }
-        }, MODEL_POLL_MS);
+        _scheduleModelPoll(0);
 
         awPollId = window.setInterval(() => {
           if (!document.hidden && !APP.demo.enabled && APP.uiLayer >= 1) {
@@ -15682,6 +15693,7 @@ P = drain − 0.5·recovery</pre
         }
 
         DOM.demoSelect.addEventListener("change", (event) => {
+          APP.uiLayer = 0;
           const id = event.target.value;
           if (id && DEMO_PROFILES[id]) {
             localStorage.setItem(DEMO_KEY, id);
@@ -16146,6 +16158,26 @@ P = drain − 0.5·recovery</pre
             pop.innerHTML = `<h4>${meta.title}</h4><p>${meta.body}</p>`;
             document.body.appendChild(pop);
             const r = helpBtn.getBoundingClientRect();
+            pop.style.top = window.scrollY + r.bottom + 6 + "px";
+            const popW = 320;
+            pop.style.left =
+              Math.max(
+                8,
+                Math.min(window.innerWidth - popW - 8, window.scrollX + r.left),
+              ) + "px";
+            activeFeaturePopover = pop;
+            return;
+          }
+          const unloggedRow = e.target.closest(".layer-feature-unlogged");
+          if (unloggedRow) {
+            e.stopPropagation();
+            closeFeaturePopover();
+            const labels = unloggedRow.dataset.labels || "";
+            const pop = document.createElement("div");
+            pop.className = "layer-feature-popover";
+            pop.innerHTML = `<h4>Not Logged</h4><p>These features weren't captured this window:<br>${labels.split(",").map((l) => `• ${l.trim()}`).join("<br>")}</p>`;
+            document.body.appendChild(pop);
+            const r = unloggedRow.getBoundingClientRect();
             pop.style.top = window.scrollY + r.bottom + 6 + "px";
             const popW = 320;
             pop.style.left =

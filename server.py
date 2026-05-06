@@ -7,6 +7,7 @@ Mental Meter local server.
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
 from threading import Lock, Thread
+import time
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -140,11 +141,16 @@ def _match_rate(app: str, title: str) -> float:
     return 4.0
 
 
+STATE_REFRESH_SEC = 10
+
 SERVER_START  = datetime.now(timezone.utc)
 _prev_battery = None
 _demo_state   = None
 _last_display_heartbeat_at = None
-_STATE_LOCK   = Lock()
+_STATE_LOCK      = Lock()
+_state_cache: 'dict | None' = None
+_STATE_CACHE_LOCK = Lock()
+_last_refresh_at: float = 0.0
 
 
 def _now_local() -> datetime:
@@ -427,34 +433,91 @@ def _build_aw_fallback_state() -> dict:
     events = _fetch_json(url, timeout=10)
 
     total_drain = 0.0
+    last_app = None
+    context_switches = 0
+    session_mins = []
+    cur_min = 0.0
     for ev in events:
         mins = ev['duration'] / 60
-        if mins < 0.1:
-            continue
-        total_drain += mins * _match_rate(ev['data'].get('app', ''), ev['data'].get('title', ''))
+        app  = ev['data'].get('app', '')
+        if mins >= 0.1:
+            total_drain += mins * _match_rate(app, ev['data'].get('title', ''))
+        if app != last_app:
+            if last_app is not None:
+                if cur_min > 0:
+                    session_mins.append(cur_min)
+                context_switches += 1
+            cur_min  = mins
+            last_app = app
+        else:
+            cur_min += mins
+    if cur_min > 0:
+        session_mins.append(cur_min)
 
-    # Subtract AFK recharge
+    focus_block_min   = sum(m for m in session_mins if m >= 10)
+    frag_std          = _statistics.stdev(session_mins) if len(session_mins) >= 2 else 0.0
+    fragmentation_dev = round(frag_std / 10.0 - 1.0, 3)
+
+    active_min      = 0.0
+    afk_10plus_min  = 0.0
+    after_hours_min = 0.0
     if afk_bucket:
         url = f'{AW_BASE}/buckets/{urllib.parse.quote(afk_bucket)}/events?start={s}&end={e}&limit=-1'
         afk_events = _fetch_json(url, timeout=10)
+        afk_blocks = []
         for ev in afk_events:
-            if ev['data'].get('status') == 'afk':
-                mins = ev['duration'] / 60
-                if mins < 0.1:
-                    continue
-                total_drain -= mins * AFK_RECHARGE
+            dur    = ev['duration']
+            status = ev['data'].get('status', '')
+            if status == 'afk':
+                mins = dur / 60
+                if mins >= 0.1:
+                    total_drain -= mins * AFK_RECHARGE
+                afk_blocks.append(dur)
+            else:
+                active_min += dur / 60
+                ts = ev.get('timestamp', '')
+                if ts and _is_after_hours(ts):
+                    after_hours_min += dur / 60
+        afk_10plus_min = sum(d for d in afk_blocks if d >= 10 * 60) / 60
+
+    after_hours_frac = round(after_hours_min / active_min, 3) if active_min > 0 else 0.0
 
     capacity = window_hours * 60 * HIGH_DRAIN
     battery  = max(0, min(100, round(100 - (total_drain / capacity) * 100)))
 
-    return {
-        'E_display': round(battery / 100, 4),
-        'battery_pct': battery,
-        'trend': _next_trend(battery),
-        'aw_connected': True,
-        'source': 'aw-fallback',
-        'last_tick_iso': now.isoformat(),
+    last_feats: dict = {
+        'context_switches':  float(context_switches),
+        'focus_block_min':   round(focus_block_min, 1),
+        'afk_10plus_min':    round(afk_10plus_min, 1),
+        'fragmentation_dev': fragmentation_dev,
+        'after_hours_frac':  after_hours_frac,
     }
+    if active_min > 0:
+        last_feats['active_min'] = round(active_min, 1)
+
+    return {
+        'E_display':      round(battery / 100, 4),
+        'battery_pct':    battery,
+        'trend':          _next_trend(battery),
+        'aw_connected':   True,
+        'source':         'aw-fallback',
+        'last_tick_iso':  now.isoformat(),
+        'last_feats':     last_feats,
+    }
+
+
+def _state_refresh_loop() -> None:
+    """Background thread: recompute shared state every STATE_REFRESH_SEC seconds."""
+    global _state_cache, _last_refresh_at
+    while True:
+        try:
+            payload = build_state_payload()
+            with _STATE_CACHE_LOCK:
+                _state_cache = payload
+                _last_refresh_at = time.time()
+        except Exception as exc:
+            logging.warning('state refresh failed: %s', exc)
+        time.sleep(STATE_REFRESH_SEC)
 
 
 def build_state_payload() -> dict:
@@ -592,7 +655,15 @@ class Handler(SimpleHTTPRequestHandler):
 
     def _state(self):
         try:
-            self._send_json(build_state_payload())
+            with _STATE_CACHE_LOCK:
+                payload = _state_cache
+                last_refresh = _last_refresh_at
+            if payload is None:
+                payload = build_state_payload()
+                last_refresh = time.time()
+            elapsed = time.time() - last_refresh
+            next_ms = max(0, int((STATE_REFRESH_SEC - elapsed) * 1000)) + 200
+            self._send_json({**payload, 'next_refresh_in_ms': next_ms})
         except Exception as ex:
             msg = str(ex).encode()
             self.send_response(502)
@@ -694,6 +765,7 @@ if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 3131))
     addr = ('', port)
+    Thread(target=_state_refresh_loop, daemon=True).start()
     print(f'Mental Meter running at http://localhost:{port}')
     print(f'  Battery state: http://localhost:{port}/state')
     ThreadedHTTPServer(addr, Handler).serve_forever()

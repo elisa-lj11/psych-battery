@@ -53,7 +53,7 @@ def _coerce_pct(data: dict) -> int:
     return max(0, min(100, round(e_display * 100)))
 
 
-def fetch_state(session: requests.Session) -> tuple[int, str, str] | None:
+def fetch_state(session: requests.Session) -> tuple[int, str, str, int] | None:
     try:
         r = session.get(STATE_URL, timeout=15)
         r.raise_for_status()
@@ -65,7 +65,8 @@ def fetch_state(session: requests.Session) -> tuple[int, str, str] | None:
             trend = "flat"
         if status not in {"live", "stale", "offline"}:
             status = "offline"
-        return charge, trend, status
+        next_ms = int(data.get("next_refresh_in_ms", POLL_SEC * 1000))
+        return charge, trend, status, next_ms
     except Exception as e:
         print(f"[state] fetch failed: {e}")
         return None
@@ -96,10 +97,13 @@ def run(port: str) -> None:
     session = requests.Session()
     last_sent = None
 
+    next_poll_sec = POLL_SEC
     while True:
+        time.sleep(next_poll_sec)
         result = fetch_state(session)
         if result is not None:
-            charge, trend, status = result
+            charge, trend, status, next_ms = result
+            next_poll_sec = max(1, next_ms / 1000.0)
             msg = f"{charge} {trend} {status}\n".encode()
             try:
                 ser.reset_input_buffer()
@@ -118,7 +122,8 @@ def run(port: str) -> None:
                     print("[heartbeat] skipped because the CrowPanel did not ACK the packet")
             except Exception as e:
                 print(f"[serial] write failed: {e}")
-        time.sleep(POLL_SEC)
+        else:
+            next_poll_sec = POLL_SEC
 
 
 def main() -> None:
