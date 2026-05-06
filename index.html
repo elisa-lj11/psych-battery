@@ -6490,8 +6490,6 @@
         box-shadow: 2px 2px 0 0 #000;
       }
 
-      #demo-toggle-btn:hover,
-      #demo-toggle-btn:focus-visible,
       .calib-actions .calib-submit:hover,
       .calib-actions .calib-submit:focus-visible,
       #help-close:hover,
@@ -7975,21 +7973,22 @@
       .demo-state-row {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: stretch;
         gap: 10px;
-        min-height: 120px;
-        max-height: 140px;
       }
 
       .demo-state-row .demo-battery-pair {
         flex: 0 0 auto;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        gap: 4px;
         width: auto;
-        align-self: center;
+      }
+
+      .demo-state-row .demo-batt-wrap-v {
+        flex: 1 1 0;
       }
 
       .demo-state-row .demo-timeline-pane {
@@ -8087,8 +8086,8 @@
       }
 
       .demo-batt-svg-v {
-        width: 52px;
-        height: 200px;
+        width: 44px;
+        height: 80px;
         flex: 0 0 auto;
       }
 
@@ -8097,7 +8096,7 @@
         flex-direction: column;
         align-items: center;
         gap: 4px;
-        padding: 6px 8px;
+        padding: 4px 6px;
         border: 2px solid var(--px-border);
         background: var(--px-surface-2);
       }
@@ -8288,7 +8287,15 @@
         }
 
         .demo-batt-svg-v {
-          height: 200px;
+          height: 110px;
+        }
+
+        .demo-state-row {
+          max-height: 160px;
+        }
+
+        .demo-state-row .demo-timeline-pane {
+          height: 150px;
         }
 
         .demo-timeline-svg {
@@ -8339,7 +8346,7 @@
           </select>
         </div>
         <details id="demo-dropdown">
-          <summary>DEMO</summary>
+          <summary>MENU</summary>
           <div id="demo-panel">
             <button id="demo-toggle-btn" type="button" aria-pressed="false">
               Interactive Demo
@@ -8369,46 +8376,18 @@
           <summary>More</summary>
           <div id="header-more-menu" aria-label="More actions"></div>
         </details>
-        <details id="theme-picker">
-          <summary class="theme-toggle" aria-label="Settings" title="Settings">
-            <span class="theme-toggle-dot" aria-hidden="true"></span>
-            <span>&#9881;</span>
-            <span data-theme-name>ARCADE</span>
-            <span class="theme-toggle-caret" aria-hidden="true">▾</span>
-          </summary>
-          <div class="theme-panel" role="group" aria-label="Theme">
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="editorial"
-              aria-pressed="false"
-              title="Clean (light glass)"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #e8e8ec"></span
-                ><span style="background: #6e78c8"></span>
-                <span style="background: #3d8a5e"></span
-                ><span style="background: #9a6820"></span>
-              </div>
-              <span>CLEAN</span>
-            </button>
-            <button
-              type="button"
-              class="theme-swatch"
-              data-theme="editorial-dark"
-              aria-pressed="false"
-              title="Dark (dark glass)"
-            >
-              <div class="swatch-grid" aria-hidden="true">
-                <span style="background: #15152a"></span
-                ><span style="background: #9aa0e8"></span>
-                <span style="background: #6ec48a"></span
-                ><span style="background: #e06060"></span>
-              </div>
-              <span>DARK</span>
-            </button>
-          </div>
-        </details>
+        <button
+          id="theme-mode-toggle"
+          type="button"
+          aria-pressed="false"
+          aria-label="Switch to Dark mode"
+          title="Switch to Dark mode"
+        >
+          <span class="theme-mode-icon" data-theme-mode-icon aria-hidden="true"
+            >☾</span
+          >
+          <span class="theme-mode-label" data-theme-mode-label>DARK</span>
+        </button>
         <button
           id="help-trigger"
           type="button"
@@ -8647,7 +8626,7 @@
                       <dt>E — Energy</dt>
                       <dd>
                         Cognitive fuel, 0–100. Drains under load; mean-reverts
-                        toward Erest in ~2 h.
+                        toward C in ~2 h.
                       </dd>
                     </div>
                     <div>
@@ -8665,7 +8644,7 @@
                       </dd>
                     </div>
                     <div>
-                      <dt>Erest — Circadian floor</dt>
+                      <dt>C — Circadian floor</dt>
                       <dd>
                         Expected E at this hour based on your chronotype. E
                         pulls toward it when pressure is low.
@@ -8673,7 +8652,7 @@
                     </div>
                   </dl>
                   <pre class="model-mini-math">
-dE/dt = −0.05·P·E + (Erest−E)/120
+dE/dt = −0.05·D·E + (C−E)/120
 dS/dt = 1.5·P − S/4320
 P = drain − 0.5·recovery</pre
                   >
@@ -8697,7 +8676,7 @@ P = drain − 0.5·recovery</pre
           <div class="layer-card layer-card-pressure">
             <div class="layer1-pressure-head">
               <div class="layer-copy-stack">
-                <div class="section-title">Drain pressure</div>
+                <div class="section-title">D (drain)</div>
                 <div id="layer1-pressure-copy" class="layer1-pressure-copy">
                   --%
                 </div>
@@ -9110,9 +9089,9 @@ P = drain − 0.5·recovery</pre
               <dt>Energy (E)</dt>
               <dd>
                 Tracks cognitive fuel — 100% is fully rested, 0% is depleted. It
-                decays under pressure (P) and recovers toward a circadian
-                baseline (Erest) with a ~2-hour time constant. Two hours of
-                low-pressure activity brings you most of the way back.
+                decays under D (drain) and recovers toward a circadian baseline
+                (C) with a ~2-hour time constant. Two hours of low-pressure
+                activity brings you most of the way back.
               </dd>
             </div>
             <div>
@@ -9126,7 +9105,7 @@ P = drain − 0.5·recovery</pre
               </dd>
             </div>
             <div>
-              <dt>Drain pressure (P)</dt>
+              <dt>D (drain)</dt>
               <dd>
                 A weighted sum of active drain inputs (meetings, async comms,
                 deep work) minus a fraction of recovery inputs. Higher P means
@@ -9484,9 +9463,7 @@ P = drain − 0.5·recovery</pre
           activities lift it; drains pull it down. It also drifts back toward
           your <em>resting baseline</em> over time.
         </p>
-        <div class="demo-help-eq">
-          dE/dt = recovery − drain − k·(E − E_rest)
-        </div>
+        <div class="demo-help-eq">dE/dt = recovery − drain − k·(E − C)</div>
 
         <h3>Stress (S)</h3>
         <p>
@@ -9494,7 +9471,7 @@ P = drain − 0.5·recovery</pre
           meetings, late-night focus). High S accelerates drain on E and
           shortens its recovery half-life.
         </p>
-        <div class="demo-help-eq">dS/dt = pressure_in − decay·S</div>
+        <div class="demo-help-eq">dS/dt = D_in − decay·S</div>
 
         <h3>Pressure</h3>
         <p>
@@ -9622,7 +9599,7 @@ P = drain − 0.5·recovery</pre
             E_display: 0.4,
             E_internal: 42,
             S: 82,
-            E_rest_now: 72,
+            C_now: 72,
             last_tick_iso: null, // filled in at load time
             phase: 2,
             chronotype: "intermediate",
@@ -9670,7 +9647,7 @@ P = drain − 0.5·recovery</pre
             E_display: 0.8,
             E_internal: 78,
             S: 28,
-            E_rest_now: 74,
+            C_now: 74,
             last_tick_iso: null,
             phase: 2,
             chronotype: "intermediate",
@@ -9719,7 +9696,7 @@ P = drain − 0.5·recovery</pre
             E_display: 0.44,
             E_internal: 45,
             S: 68,
-            E_rest_now: 68,
+            C_now: 68,
             last_tick_iso: null,
             phase: 2,
             chronotype: "intermediate",
@@ -9766,7 +9743,7 @@ P = drain − 0.5·recovery</pre
             E_display: 0.82,
             E_internal: 82,
             S: 32,
-            E_rest_now: 75,
+            C_now: 75,
             last_tick_iso: null,
             phase: 2,
             chronotype: "intermediate",
@@ -11700,11 +11677,11 @@ P = drain − 0.5·recovery</pre
                   label: "Circadian",
                   value: modelUnavailable
                     ? "--%"
-                    : `${Math.round(payload.E_rest_now)}%`,
+                    : `${Math.round(payload.C_now)}%`,
                   unit: "Expected now",
                   color: modelUnavailable
                     ? "var(--px-text)"
-                    : levelColor(Math.round(payload.E_rest_now)),
+                    : levelColor(Math.round(payload.C_now)),
                 },
               ]
             : []),
@@ -11809,7 +11786,7 @@ P = drain − 0.5·recovery</pre
         return clamp(value / cap, 0, 1);
       }
 
-      function computePressure(feats) {
+      function computeD(feats) {
         const drainSum = DRAIN_FEATS.reduce(
           (sum, item) => sum + normalizeFeature(item.key, feats[item.key]),
           0,
@@ -11886,24 +11863,23 @@ P = drain − 0.5·recovery</pre
           },
           {},
         );
-        const pressure = computePressure(projectedFeatures);
+        const D = computeD(projectedFeatures);
         let nextCursor = new Date(cursor);
         let nextEnergy = clamp(Number(energy) || 0, 0, 100);
         let nextStress = clamp(Number(stress) || 0, 0, 100);
-        let eRest = computeERest(getHourValue(nextCursor), chronotype);
+        let C = computeERest(getHourValue(nextCursor), chronotype);
 
         for (let minute = 0; minute < minutes; minute += 1) {
           nextCursor = new Date(nextCursor.getTime() + 60_000);
           const hour = getHourValue(nextCursor);
-          eRest = computeERest(hour, chronotype);
+          C = computeERest(hour, chronotype);
           nextEnergy = clamp(
-            nextEnergy +
-              (-0.05 * pressure * nextEnergy + (eRest - nextEnergy) / 120),
+            nextEnergy + (-0.05 * D * nextEnergy + (C - nextEnergy) / 120),
             0,
             100,
           );
           nextStress = clamp(
-            nextStress + (1.5 * pressure - nextStress / 4320),
+            nextStress + (1.5 * D - nextStress / 4320),
             0,
             100,
           );
@@ -11913,8 +11889,8 @@ P = drain − 0.5·recovery</pre
           cursor: nextCursor,
           energy: Number(nextEnergy.toFixed(2)),
           stress: Number(nextStress.toFixed(2)),
-          eRest: Number(eRest.toFixed(2)),
-          pressure: Number(pressure.toFixed(4)),
+          C: Number(C.toFixed(2)),
+          D: Number(D.toFixed(4)),
           modelFeatures: projectedFeatures,
           normalizedFeatures,
         };
@@ -12504,7 +12480,7 @@ P = drain − 0.5·recovery</pre
               : finalFill;
             const tone =
               item.kind === "drain"
-                ? getPressureTone(fill)
+                ? getDTone(fill)
                 : getFeatureTone("recovery", fill);
             const rawVal = Math.round(fill * item.cap);
             const unitStr = item.unit ? ` ${item.unit}` : "";
@@ -12776,13 +12752,12 @@ P = drain − 0.5·recovery</pre
           100,
         );
         const stress = clamp(Number(APP.demo.S) || 0, 0, 100);
-        const eRest =
-          APP.demo.activity?.eRest ?? computeERest(hour, chronotype);
+        const C = APP.demo.activity?.C ?? computeERest(hour, chronotype);
         return {
           E_display: Number((displayEnergy / 100).toFixed(4)),
           E_internal: Number(internalEnergy.toFixed(2)),
           S: Number(stress.toFixed(2)),
-          E_rest_now: Number(eRest.toFixed(2)),
+          C_now: Number(C.toFixed(2)),
           last_tick_iso: tickDate.toISOString(),
           last_update_iso: tickDate.toISOString(),
           last_feats: modelFeats,
@@ -12935,8 +12910,8 @@ P = drain − 0.5·recovery</pre
           displayBattery: beforeBattery,
           deltaE: Number((finalEnergy - beforeBattery).toFixed(2)),
           deltaS: Number((finalStress - beforeStress).toFixed(2)),
-          pressure: stepped.pressure,
-          eRest: stepped.eRest,
+          D: stepped.D,
+          C: stepped.C,
           normalized,
           preNormalized,
           changedKeys: Object.keys(activity.deltas),
@@ -13089,14 +13064,14 @@ P = drain − 0.5·recovery</pre
         );
       }
 
-      function getPressureTone(value) {
+      function getDTone(value) {
         if (value > 0.7) return "var(--px-critical)";
         if (value > 0.4) return "var(--px-warn)";
         return "var(--px-good)";
       }
 
       function getFeatureTone(group, value) {
-        if (group === "drain") return getPressureTone(value);
+        if (group === "drain") return getDTone(value);
         if (value > 0.7) return "var(--px-good)";
         if (value > 0.4) return "var(--px-info)";
         return "var(--px-warn)";
@@ -13149,13 +13124,13 @@ P = drain − 0.5·recovery</pre
 
         const payload = getModelPayload();
         const feats = getLastFeats();
-        const pressure = computePressure(feats);
+        const D = computeD(feats);
         const tickDate = getModelTickDate(payload);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
         const chronotype = getResolvedChronotype(payload?.chronotype);
         const eRestNow =
-          payload && typeof payload.E_rest_now === "number"
-            ? clamp(Number(payload.E_rest_now), 0, 100)
+          payload && typeof payload.C_now === "number"
+            ? clamp(Number(payload.C_now), 0, 100)
             : computeERest(hour, chronotype);
         const energyValue = Number(payload?.E_internal);
         const stressValue = Number(payload?.S);
@@ -13172,17 +13147,13 @@ P = drain − 0.5·recovery</pre
           const clampedEnergy = clamp(Number(sampleEnergy) || 0, 0, 100);
           const clampedStress = clamp(Number(sampleStress) || 0, 0, 100);
           return {
-            dE_dt:
-              -0.05 * pressure * clampedEnergy +
-              (eRestNow - clampedEnergy) / 120,
-            dS_dt: 1.5 * pressure - clampedStress / 4320,
+            dE_dt: -0.05 * D * clampedEnergy + (eRestNow - clampedEnergy) / 120,
+            dS_dt: 1.5 * D - clampedStress / 4320,
           };
         };
         const energyNullclineE =
-          pressure > -1 / 6
-            ? clamp(eRestNow / (1 + pressure * 6), 0, 100)
-            : null;
-        const stressNullclineS = clamp(6480 * pressure, 0, 100);
+          D > -1 / 6 ? clamp(eRestNow / (1 + D * 6), 0, 100) : null;
+        const stressNullclineS = clamp(6480 * D, 0, 100);
         const trail = hasPayload
           ? APP.phasePortraitTrail
               .filter(
@@ -13477,9 +13448,9 @@ P = drain − 0.5·recovery</pre
       function renderLayer1() {
         const payload = getModelPayload();
         const feats = getLastFeats();
-        const pressure = computePressure(feats);
-        const tone = getPressureTone(pressure);
-        const pressurePercent = Math.round(pressure * 100);
+        const D = computeD(feats);
+        const tone = getDTone(D);
+        const DPercent = Math.round(D * 100);
         const drainLoad = DRAIN_FEATS.reduce(
           (sum, item) => sum + normalizeFeature(item.key, feats[item.key]),
           0,
@@ -13489,16 +13460,14 @@ P = drain − 0.5·recovery</pre
           0,
         );
 
-        DOM.layer1PressureCopy.textContent = payload
-          ? `${pressurePercent}%`
-          : "--%";
+        DOM.layer1PressureCopy.textContent = payload ? `${DPercent}%` : "--%";
         DOM.layer1PressureCopy.style.color = payload ? tone : "var(--px-muted)";
         DOM.layer1PressureMeta.textContent = payload
-          ? `P ${pressure.toFixed(2)} from ${drainLoad.toFixed(2)} drain vs ${recoveryLoad.toFixed(2)} recovery`
+          ? `D ${D.toFixed(2)} from ${drainLoad.toFixed(2)} drain vs ${recoveryLoad.toFixed(2)} recovery`
           : "Waiting for model";
 
         const pressureSvg = buildSvgRoot(360, 30, "0 0 360 30");
-        const activeSegs = payload ? Math.round(pressure * 12) : 0;
+        const activeSegs = payload ? Math.round(D * 12) : 0;
         for (let index = 0; index < 12; index += 1) {
           const rect = document.createElementNS(SVG_NS, "rect");
           rect.setAttribute("x", String(6 + index * 29));
@@ -13566,22 +13535,22 @@ P = drain − 0.5·recovery</pre
         if (!vizEl) return;
         const payload = getModelPayload();
         const feats = getLastFeats();
-        const pressure = computePressure(feats);
+        const D = computeD(feats);
         const currentEnergy = clamp(Number(payload?.E_internal) || 0, 0, 100);
         const currentStress = clamp(Number(payload?.S) || 0, 0, 100);
         const tickDate = getModelTickDate(payload);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
         const chronotype = getResolvedChronotype(payload?.chronotype);
         const eRestNow =
-          payload && typeof payload.E_rest_now === "number"
-            ? Number(payload.E_rest_now)
+          payload && typeof payload.C_now === "number"
+            ? Number(payload.C_now)
             : computeERest(hour, chronotype);
         const dE = payload
-          ? -0.05 * pressure * currentEnergy + (eRestNow - currentEnergy) / 120
+          ? -0.05 * D * currentEnergy + (eRestNow - currentEnergy) / 120
           : 0;
-        const dS = payload ? 1.5 * pressure - currentStress / 4320 : 0;
-        const pressurePct = Math.round(pressure * 100);
-        const pressureColor = getPressureTone(pressure);
+        const dS = payload ? 1.5 * D - currentStress / 4320 : 0;
+        const DPct = Math.round(D * 100);
+        const DColor = getDTone(D);
         const eColor = levelColor(currentEnergy);
         const sColor = stressColor(currentStress);
 
@@ -13656,8 +13625,8 @@ P = drain − 0.5·recovery</pre
                 </div>
               </div>
               <div class="model-viz-sep">
-                <div class="model-viz-pressure-badge" style="color:${pressureColor};border-color:${pressureColor}">
-                  P<br>${pressurePct}%
+                <div class="model-viz-pressure-badge" style="color:${DColor};border-color:${DColor}">
+                  P<br>${DPct}%
                 </div>
                 <div class="model-viz-couple">⟷</div>
               </div>
@@ -13691,13 +13660,13 @@ P = drain − 0.5·recovery</pre
       function renderLayer2Static() {
         const payload = getModelPayload();
         const feats = getLastFeats();
-        const pressure = computePressure(feats);
+        const D = computeD(feats);
         const tickDate = getModelTickDate(payload);
         const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
         const chronotype = getResolvedChronotype(payload?.chronotype);
         const eRestNow =
-          payload && typeof payload.E_rest_now === "number"
-            ? Number(payload.E_rest_now)
+          payload && typeof payload.C_now === "number"
+            ? Number(payload.C_now)
             : computeERest(hour, chronotype);
         const currentEnergy = payload
           ? clamp(Number(payload.E_internal) || 0, 0, 100)
@@ -13706,20 +13675,20 @@ P = drain − 0.5·recovery</pre
           ? clamp(Number(payload.S) || 0, 0, 100)
           : 0;
         const dE = payload
-          ? -0.05 * pressure * currentEnergy + (eRestNow - currentEnergy) / 120
+          ? -0.05 * D * currentEnergy + (eRestNow - currentEnergy) / 120
           : 0;
-        const dS = payload ? 1.5 * pressure - currentStress / 4320 : 0;
-        const pressureTone = getPressureTone(pressure);
+        const dS = payload ? 1.5 * D - currentStress / 4320 : 0;
+        const DTone = getDTone(D);
 
         DOM.layer2Clock.textContent = payload
           ? `${hour.toFixed(1)}h · ${chronotype}`
           : "--h";
         DOM.layer2PressureNode.innerHTML = `
         <span class="layer2-node-label">Pressure</span>
-        <span class="layer2-node-value">${payload ? `${Math.round(pressure * 100)}%` : "--%"}</span>
+        <span class="layer2-node-value">${payload ? `${Math.round(D * 100)}%` : "--%"}</span>
       `;
-        DOM.layer2PressureNode.style.borderColor = pressureTone;
-        DOM.layer2PressureNode.style.color = pressureTone;
+        DOM.layer2PressureNode.style.borderColor = DTone;
+        DOM.layer2PressureNode.style.color = DTone;
 
         const width = DOM.layer2Circadian.clientWidth || 720;
         const height = DOM.layer2Circadian.clientHeight || 160;
@@ -13740,7 +13709,7 @@ P = drain − 0.5·recovery</pre
         const line = document.createElementNS(SVG_NS, "polyline");
         const dot = document.createElementNS(SVG_NS, "circle");
 
-        // 1) Circadian baseline curve (Erest by time of day)
+        // 1) Circadian baseline curve (C by time of day)
         const points = Array.from({ length: 72 }, (_, index) => {
           const sampleHour = (index / 71) * 24;
           const value = computeERest(sampleHour, chronotype);
@@ -13927,10 +13896,10 @@ P = drain − 0.5·recovery</pre
 
         const readouts = [
           {
-            id: "pressure",
-            label: "Pressure",
-            value: payload ? `${Math.round(pressure * 100)}%` : "--%",
-            popTitle: "Drain Pressure",
+            id: "D",
+            label: "D",
+            value: payload ? `${Math.round(D * 100)}%` : "--%",
+            popTitle: "D — Drain",
             popBody:
               "Weighted aggregate of all active drain signals — meetings, context switches, sleep debt, after-hours work. 0% = restorative window; 100% = full drain load. This is the primary driver of how fast your energy falls.",
             popFormula: "Normalized weighted sum of drain features",
@@ -13954,12 +13923,12 @@ P = drain − 0.5·recovery</pre
             popFormula: "Rises under pressure, fades slowly over time",
           },
           {
-            id: "erest",
-            label: "Erest",
+            id: "C",
+            label: "C",
             value: payload ? `${eRestNow.toFixed(1)}%` : "--%",
             popTitle: "Circadian Rest Energy",
             popBody:
-              'What your energy "should" be at this time of day, based on your chronotype and the circadian model. If your actual E is below Erest, the model pulls energy upward (recovery). If above, it drains slightly.',
+              'What your energy "should" be at this time of day, based on your chronotype and the circadian model. If your actual E is below C, the model pulls energy upward (recovery). If above, it drains slightly.',
             popFormula: "computeERest(hour, chronotype)",
           },
           {
@@ -13969,7 +13938,7 @@ P = drain − 0.5·recovery</pre
             popTitle: "Energy Rate of Change",
             popBody:
               "How fast your energy is changing right now, per minute. Negative = draining, positive = recovering. Near zero during rest. A value of −0.03 means losing ~2% energy per hour.",
-            popFormula: "−0.05 × P × E + (Erest − E) / 120",
+            popFormula: "−0.05 × D × E + (C − E) / 120",
           },
           {
             id: "ds",
@@ -13978,7 +13947,7 @@ P = drain − 0.5·recovery</pre
             popTitle: "Stress Rate of Change",
             popBody:
               "How fast your stress is changing per minute. Near zero = stable; strongly positive = escalating; negative = unwinding. Low pressure periods let stress decay naturally over hours.",
-            popFormula: "1.5 × Pressure − S / 4320",
+            popFormula: "1.5 × D − S / 4320",
           },
         ];
 
@@ -14089,13 +14058,13 @@ P = drain − 0.5·recovery</pre
           }
           const {
             field: fieldRect,
-            pressure: pressureRect,
+            D: DRect,
             energy: energyRect,
             stress: stressRect,
           } = _layer2Rects;
           const start = {
-            x: pressureRect.left + pressureRect.width / 2 - fieldRect.left,
-            y: pressureRect.bottom - fieldRect.top + 4,
+            x: DRect.left + DRect.width / 2 - fieldRect.left,
+            y: DRect.bottom - fieldRect.top + 4,
           };
           const targets = {
             energy: {
@@ -14157,7 +14126,7 @@ P = drain − 0.5·recovery</pre
 
         payload.E_internal = stepped.energy;
         payload.S = stepped.stress;
-        payload.E_rest_now = stepped.eRest;
+        payload.C_now = stepped.C;
         payload.E_display = Number((payload.E_internal / 100).toFixed(4));
         payload.last_tick_iso = stepped.cursor.toISOString();
         payload.last_feats = feats;
@@ -14567,19 +14536,17 @@ P = drain − 0.5·recovery</pre
 
         let netShift = NaN;
         if (payload) {
-          const pressure = computePressure(feats);
+          const D = computeD(feats);
           const tickDate = getModelTickDate(payload);
           const hour = tickDate.getHours() + tickDate.getMinutes() / 60;
           const chronotype = getResolvedChronotype(payload?.chronotype);
           const eRestNow =
-            typeof payload.E_rest_now === "number"
-              ? Number(payload.E_rest_now)
+            typeof payload.C_now === "number"
+              ? Number(payload.C_now)
               : computeERest(hour, chronotype);
           const currentEnergy = clamp(Number(payload.E_internal) || 0, 0, 100);
           netShift =
-            (-0.05 * pressure * currentEnergy +
-              (eRestNow - currentEnergy) / 120) *
-            60;
+            (-0.05 * D * currentEnergy + (eRestNow - currentEnergy) / 120) * 60;
         } else if (
           Number.isFinite(drainTotal) &&
           Number.isFinite(recoveryTotal)
