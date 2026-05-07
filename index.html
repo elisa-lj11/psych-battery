@@ -7406,7 +7406,7 @@
       /* Phase portrait — always-visible section in layer 2 */
       .phase-portrait-section {
         display: grid;
-        grid-template-columns: minmax(220px, 0.8fr) 1fr;
+        grid-template-columns: minmax(320px, 1.1fr) 1fr;
         grid-template-areas: "title title" "chart text";
         gap: 14px 28px;
         align-items: start;
@@ -7422,10 +7422,11 @@
       }
       .phase-portrait-dropdown-wrap .phase-portrait-frame {
         aspect-ratio: 1 / 1;
-        min-height: 200px;
+        min-height: 280px;
       }
       .phase-portrait-dropdown-wrap .phase-portrait-shell {
         align-items: start;
+        gap: 4px;
       }
       .phase-portrait-plain-explain {
         grid-area: text;
@@ -8245,6 +8246,7 @@
         width: 56px;
         height: 110px;
         flex: 0 0 auto;
+        clip-path: inset(0 round 8px);
       }
 
       .demo-batt-wrap-v {
@@ -11130,6 +11132,18 @@ P = drain − 0.5·recovery</pre
           unit: "×base",
           source: "aw",
         },
+        {
+          key: "sleep_debt_h",
+          label: "Sleep debt",
+          unit: "h",
+          source: "aw",
+        },
+        {
+          key: "todoist_overdue_count",
+          label: "Overdue tasks",
+          unit: "",
+          source: "todoist",
+        },
       ];
 
       const RECOVERY_FEATS = [
@@ -12311,7 +12325,9 @@ P = drain − 0.5·recovery</pre
         target.innerHTML = buildBatterySvg(level, false);
       }
 
+      let _battClipId = 0;
       function buildBatterySvgVertical(level, isStress) {
+        const clipId = `bc${++_battClipId}`;
         const hasValue = level != null && !Number.isNaN(Number(level));
         const clamped = hasValue ? clamp(Number(level), 0, 100) : null;
         const rounded = hasValue ? Math.round(clamped) : null;
@@ -12330,13 +12346,16 @@ P = drain − 0.5·recovery</pre
               : 10;
           const slotY = 14 + (9 - index) * 11;
           const cellY = cellH < 10 ? slotY + (10 - cellH) : slotY;
-          cells += `<rect x="7" y="${cellY}" width="20" height="${cellH}" fill="${filled ? color : "var(--px-surface-2)"}" opacity="${filled ? "1" : "0.45"}"></rect>`;
+          cells += `<rect x="7" y="${cellY}" width="20" height="${cellH}" fill="${filled ? color : "var(--px-surface-2)"}" opacity="${filled ? "1" : "0.45"}" shape-rendering="crispEdges"></rect>`;
         }
-        return `<svg class="demo-batt-svg demo-batt-svg-v" viewBox="0 0 34 132" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges"${isStress ? "" : " data-demo-battery"}>
-          <rect x="2" y="8" width="30" height="120" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
-          <rect x="10" y="0" width="14" height="8" fill="var(--px-border-2)"></rect>
-          ${cells}
-          <text x="17" y="68" text-anchor="middle" dominant-baseline="middle" font-family="VT323, monospace" font-size="20" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? "--" : rounded}</text>
+        return `<svg class="demo-batt-svg demo-batt-svg-v" viewBox="0 0 34 132" preserveAspectRatio="none" aria-hidden="true"${isStress ? "" : " data-demo-battery"}>
+          <defs><clipPath id="${clipId}"><rect x="0" y="0" width="34" height="132" rx="5"></rect></clipPath></defs>
+          <g clip-path="url(#${clipId})">
+            <rect x="2" y="0" width="30" height="128" rx="5" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
+            <rect x="2" y="0" width="30" height="14" fill="var(--px-border-2)"></rect>
+            ${cells}
+            <text x="17" y="68" text-anchor="middle" dominant-baseline="middle" font-family="VT323, monospace" font-size="20" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? "--" : rounded}</text>
+          </g>
         </svg>`;
       }
 
@@ -13716,7 +13735,10 @@ P = drain − 0.5·recovery</pre
               // sees the full recovery panel and can tell what they can log.
               const rawVal = feats[item.key];
               const effectiveRaw =
-                !hasFeatureValue(rawVal) && item.source === "log" ? 0 : rawVal;
+                !hasFeatureValue(rawVal) &&
+                (item.source === "log" || group === "drain")
+                  ? 0
+                  : rawVal;
               const { text, zero, missing } = formatFeatureValue(
                 item.key,
                 item.unit,
@@ -14050,7 +14072,16 @@ P = drain − 0.5·recovery</pre
         dot.style.fill = "var(--px-accent)";
         svg.appendChild(dot);
 
-        // Mini legend (top-right)
+        // Mini legend (top-right) — glass backing rect so dots don't obscure text
+        const legendBg = document.createElementNS(SVG_NS, "rect");
+        legendBg.setAttribute("x", String(width - margin.right - 88));
+        legendBg.setAttribute("y", String(margin.top - 2));
+        legendBg.setAttribute("width", "84");
+        legendBg.setAttribute("height", "52");
+        legendBg.setAttribute("rx", "5");
+        legendBg.style.fill = "var(--px-bg)";
+        legendBg.style.fillOpacity = "0.82";
+        svg.appendChild(legendBg);
         appendSvgText(
           svg,
           width - margin.right - 6,
