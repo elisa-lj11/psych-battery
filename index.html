@@ -4116,7 +4116,7 @@
         position: relative;
         z-index: 1;
         min-height: 48px;
-        margin-top: 12px;
+        margin-top: 0;
         border: none;
         background: transparent;
         padding: 10px 28px;
@@ -7512,6 +7512,13 @@
         font-style: italic;
         color: var(--px-accent);
       }
+      .phase-portrait-plain-explain-note {
+        font-size: 0.8rem;
+        color: var(--px-muted);
+        border-top: 1px solid var(--px-border);
+        padding-top: 6px;
+        margin-top: 4px;
+      }
 
       .layer2-viz-row .phase-portrait-card {
         min-width: 0;
@@ -8752,13 +8759,13 @@
                     <div class="section-title">
                       <span
                         class="jargon-tip"
-                        data-tip="Your built-in 24-hour energy rhythm. Energy peaks late morning for larks (~14h) or evening for owls (~21h), with a natural mid-afternoon dip. The model shifts your resting energy target based on your chronotype."
+                        data-tip="Your built-in 24-hour energy rhythm. The curve shows C — your circadian baseline, the energy level the model pulls you toward at each hour of day. Peaks late morning for early chronotypes or late afternoon for owls, with a natural mid-afternoon dip. Your actual Energy E and Stress S are plotted on top as colored dots."
                         tabindex="0"
-                        >Circ. Floor</span
+                        >Circadian Baseline</span
                       >
                     </div>
                     <div class="layer2-mini">
-                      C — circadian floor &middot; D — drain
+                      Curve = C (baseline) &middot; dots = E &amp; S over time
                     </div>
                   </div>
                   <div
@@ -8953,22 +8960,54 @@ P = drain − 0.5·recovery</pre
             <div class="section-title">Energy-Stress Map</div>
             <div class="phase-portrait-plain-explain">
               <p>
-                This diagram shows where your Energy and Stress are heading
-                right now. Think of it like a weather map for your brain: each
-                arrow shows which direction you'd drift from that spot if you
-                kept today's pace.
+                This is a <strong>phase portrait</strong> — a map of how your
+                Energy (E) and Stress (S) evolve together in real time. Each
+                arrow shows the direction you'd drift from that point if today's
+                pace continued. <strong>Top-left</strong> (high E, low S) =
+                restored and sharp. <strong>Bottom-right</strong> (low E, high
+                S) = overloaded.
               </p>
               <p>
-                <strong>Top-left</strong> (high energy, low stress) = restored
-                and sharp. <strong>Bottom-right</strong> (low energy, high
-                stress) = overloaded. Your current state is the live dot.
+                <strong>How the arrows are computed.</strong> Two differential
+                equations run continuously: <em>dE/dt</em> (rate of energy
+                change) and <em>dS/dt</em> (rate of stress change). Drain
+                features — back-to-back meetings, heavy async load, late nights
+                — push dE/dt negative and dS/dt positive. Recovery activities
+                reverse both. Each arrow in the field is the vector (dE/dt,
+                dS/dt) evaluated at that grid point.
               </p>
               <p>
-                The dashed lines (nullclines) mark where energy or stress would
-                stop changing. Where they cross is your
-                <em>equilibrium</em> — the point today's activity pattern is
-                slowly pulling you toward. A heavy workday pulls it down-right;
-                rest and recovery push it back up-left.
+                <strong>The nullclines</strong> are where one variable pauses.
+                The
+                <strong style="color: var(--px-good)"
+                  >green vertical line</strong
+                >
+                is where dE/dt = 0 — left of it, energy falls; right of it,
+                energy rises. The
+                <strong style="color: var(--px-critical)"
+                  >red horizontal line</strong
+                >
+                is where dS/dt = 0 — below it, stress rises; above it, stress
+                falls. The lines shift as your activity pattern changes: more
+                drain moves both lines toward the bottom-right corner.
+              </p>
+              <p>
+                <strong>Where they cross</strong> is your <em>equilibrium</em> —
+                the (E, S) point today's pattern is slowly pulling you toward,
+                even if you never reach it. The shaded square marks it. Your
+                live dot shows where you are now.
+              </p>
+              <p>
+                <strong>Connecting to the model.</strong> Log energy or stress
+                (E / S keys) to move the live dot. Add recovery activities (R
+                key) to shift the nullclines up-left. Calibrate your chronotype
+                (TUNE) to tune the circadian baseline C, which sets the energy
+                nullcline position throughout the day.
+              </p>
+              <p class="phase-portrait-plain-explain-note">
+                The "How the Model Works" panel below details the full ODE
+                system, parameter definitions, and the research references
+                behind each design decision.
               </p>
             </div>
             <div class="phase-portrait-dropdown-wrap">
@@ -10930,36 +10969,24 @@ P = drain − 0.5·recovery</pre
             break;
           case "hydrate":
             art = `
-            ${sky}${floor}
-            ${pxRects([[32, 80, 96, 6]], surfaceDark)}
-            ${pxRects([[32, 86, 96, 22]], surface)}
-            ${pxRects([[88, 34, 22, 48]], borderDark)}
-            ${pxRects([[90, 36, 18, 44]], bg)}
-            ${pxRects([[90, 58, 18, 20]], "#4090d8")}
-            ${pxRects([[88, 80, 22, 2]], surfaceDark)}
-            <g transform="translate(94 50)">
-              <g class="scene-anim anim-drop" fill="${info}">
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAEY0lEQVR42u3dQWgcZRgG4DdFQQpGU0IwUEokILkJxaKHgojgxSIqFEQUFXopQlsVSi/2kHooOVQj9dSeoodCwJYaQYRaUC8SEIpQcqmGJZAallSrlFYL8dBG3LBpNnGzO7P7PKfsZDO7M/vx8v/zzZ/tOTsxvhRoky1OAe103+D2Hc4CEpAuTcDvJz90Fv5j9953nAQJSNck4PIPlfnFtr6RHYPb2vo+ll8fCUg3JiDt8fWXkx19fM89v1cCIgFZw2MvjbXkdWbmqq0Z202PGQMiAUtnfq7S1tcfGOhNkvT3PZgkqV77oyn7XVi4XsjzKQGRgEXS6t74T5d+6OrzKQGJC9EoQDAG5F/Nmv1KQFCAKEBQgChAMAtOYXvB3XY+JSASMHrBafddK3rBSEDap1V3KpsFQ70ELMq6WOtzJSD4zwjdnrwvP/t4kuTzC5ckIJRmFnzjemPXsbb29rZlf0hAcB0wesF6wdD0BGz2WKzVYzvrgvWCMQkBBYgCBAWIWTDtNnX8UN3te458JAFBAnaYTr8LRgIiAaMXvGljw6KMFfWCkYCxLjhr9YIb/V6Nzf7eDr1gJCApzHepLTt/YXxD+99+4Nyd1xm6aBYMErDDnDxxcI1nXIzrgKAAUYDgf8MgAeGunrMT40tOQ3HsevHtpuxn+twnEhDWHAO2uvfJvf1y9VqS5NFH+pIkN27dXtff/3r3O+bK8rlKQBQgChAUIAoQ3A3Dxi3PnufmJCBIwLI7/MXNdT3/vd1/J0nuNwaEBhKwbOtgD757tO728ROjHfGB7Hqir+bx5cvr/Hx2DyYpz/pmCYhe8EZ8c/KtJMmew58lKU/vM+vsBack65slIGbBrUy+ZVNjryVJqj5L1wGh4xOwOvB0VyTY/x1Dug4IZU7AI5XBmsenHzhT83jfzVdqHh/fMW8WHHfDQLkTcN+3t5Ik/UO5Z+KtlpidkoRxPyBsvp7vJg4Val3w/p+fupuAQ03Z37EtZ0r1gcxse70p+xlZ/FQCQtfcD1idna27/f2h+mPHlbPqZfN/tfc4ypJcEpAOuR/w6kJHHMjRrefrbh+dfWGVqKm/uVPOhwQEa0JWT8ZkwKcvAZGAXerHirGeBEQCVuaKlQRv5nSSZGrog3X9XdGOAwlIGRJw53AxZ4M7f/84STL60IHGnj9sVisBYd1jwEqx75+7fWWm5vFv1Tsr/h/ur133Whl2H6AEBAWIAoRGx4D9I08W+x1eaexphT8OJCAKEBQgRbojer7o189GGnpW8Y8DCUgB/0Pq4GBHHEinHIcEBAWIAgQFiAIEBYgChE3Qc2r0jaUivrHJr6aTJNXFP2u273/1mYZ+jwSElLYTsjLZsqLjsdbvkYCw9hhw6tSRJacBCYgCBAWIAgQFSKwJAQmITghIQBQgKEAUIChAFCAoQKITAhIQnRCQgChAUIAoQFCAKEBQgEQnBCQgOiEgAVGAKEBQgChAUIAoQIhOCBIQdEKQgLBp/gEbFwo8yG1wZQAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g transform="translate(100 48)">
+              <g class="scene-anim anim-drop" fill="#4090d8">
                 <rect x="0" y="0" width="3" height="3"></rect>
-                <rect x="5" y="2" width="2" height="3"></rect>
-                <rect x="2" y="5" width="3" height="3"></rect>
+                <rect x="1" y="3" width="2" height="4"></rect>
+                <rect x="0" y="6" width="3" height="2"></rect>
+                <rect x="4" y="1" width="2" height="2"></rect>
+                <rect x="4" y="4" width="2" height="3"></rect>
               </g>
             </g>
-            <g transform="translate(100 46)">
-              <g class="scene-anim anim-drop-2" fill="${info}">
-                <rect x="0" y="0" width="2" height="2"></rect>
-                <rect x="3" y="4" width="3" height="3"></rect>
+            <g transform="translate(112 44)">
+              <g class="scene-anim anim-drop-2" fill="#60aaec">
+                <rect x="0" y="0" width="3" height="3"></rect>
+                <rect x="1" y="3" width="2" height="4"></rect>
+                <rect x="0" y="6" width="3" height="2"></rect>
+                <rect x="4" y="1" width="2" height="2"></rect>
+                <rect x="4" y="4" width="2" height="3"></rect>
               </g>
-            </g>
-            <g class="scene-person">
-              ${pxRects([[46, 38, 8, 8]], text)}
-              ${pxRects([[44, 36, 12, 4]], text)}
-              ${pxRects([[48, 46, 4, 18]], accent)}
-              ${pxRects([[36, 50, 14, 4]], accent)}
-              ${pxRects([[34, 38, 4, 16]], text)}
-              ${pxRects([[46, 64, 4, 18]], surfaceDark)}
-              ${pxRects([[52, 64, 4, 18]], surfaceDark)}
-              ${pxRects([[42, 80, 10, 6]], text)}
-              ${pxRects([[52, 82, 8, 4]], text)}
             </g>
           `;
             break;
@@ -10986,26 +11013,25 @@ P = drain − 0.5·recovery</pre
             break;
           case "stretch":
             art = `
-            ${sky}${floor}
-            ${pxRects([[44, 100, 72, 6]], good)}
-            <g class="scene-person">
-              ${pxRects([[76, 34, 8, 8]], text)}
-              ${pxRects([[74, 32, 12, 4]], text)}
-              ${pxRects([[79, 42, 2, 4]], text)}
-              ${pxRects([[73, 46, 14, 18]], accent)}
-              ${pxRects([[55, 46, 20, 6]], accent)}
-              ${pxRects([[50, 26, 7, 24]], accent)}
-              ${pxRects([[88, 46, 20, 6]], accent)}
-              ${pxRects([[103, 26, 7, 24]], accent)}
-              ${pxRects([[48, 22, 10, 6]], text)}
-              ${pxRects([[102, 22, 10, 6]], text)}
-              ${pxRects([[74, 64, 6, 24]], surfaceDark)}
-              ${pxRects([[82, 64, 6, 24]], surfaceDark)}
-              ${pxRects([[70, 86, 10, 6]], text)}
-              ${pxRects([[82, 86, 10, 6]], text)}
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAEDklEQVR42u3dwWuTdxgH8KdSVIZYkVAJiFQLIkPPXsZEGGPg/gARUYR6EhRRXMHpwe0woUV68WJhTDwIHrrjDkNRPOjFSxGKUC2lUCxBJoyxDbE7vMbxxrQmbU3y/vL53Prmpcn7y9dv3jdPE3smbo4tBrTJOktAO/WWt++wCmhABBAEEAEEAUQAQQARQBBA0tQ7PzdrFdCAmAWDBkQAQQARQBBABBAEEAEEASTMgkEDYhYMGhABBAFEAEEAEUAQQAQQBJAwCwYNiFkwaEAEEAQQAUQALQECiACCACKAEGbBaEAwC0YDggAigCCACCAIIAIIa6C3Ww709cNfIiJicPdAbnul/0BHPL7Swv3cz9PPZiIiou+L4xoQzIJXaV9N81V1yvGX1ud/rjb1ZOLPjwbELLglFl7U3dwxx9/pj08D4iq4wKpXu0MP/snOuQayc6yfYr4jHt/Q34ezxzmTXf2Of7khvA8In1jPo7sTi9144B804Y72NOHwbLkrm08DogGL3ISXz5ysu/3K2A3NpwFxFVwQ1eYZepA10XA014TXLx6NiIhvL9zSfBqQwp0DTtwcW7QM/7v0fFvunPDMusd199u3vv7kYvLfnXW3j73dn2u+H3a9tNgaEFfBib9P6JxPA6IB02nC91fPG2/XneXW0nwaEA2YbhMuRfNpQMIkJFKbmAzPNrc/GpAUGvDYb99FRET/nv5l9xsZOGdV0YAk9rngq3tPRUTE6Js7y+6X/ueMyw3t5bu3NSBJfi54pv7mhamFrB++Sfxzxg0Wm+/e1oCkdBV8fmZ02ds/dnUMGhABBAGkOOeA974/GxERhxr8hfci2//gj9eSXLA3v07lfv6jkl0WbynVXPWe7pMuDUjhG3Cwf6tVQgPiO6Kbku4stM8sWAPSNbPglf47TncW+tosWAMigCCACCAIIIW9Cp588jhW/67Xhz72e4trT5cfvwZEAEEASeKvYf7KvvmzXF7i866Hvl7RL/5sie3z8/n7Oz/9e6EWrNTgOeBopRjHNTL4VVP71z5/GpA0/h6wmuxWqb2/rbtLxVixqcZ26/TjefWssqrnfa3yogHpjAZcq9f0ps8hpp8WYqE2jWd/F1R5dTm3ffOFz7Nz3vHb727/M9eUG9/d3qmafd6dA+IbUrvR+2Zb4e1oQDRg8ZyYy/7vuDiyrf4Oc9HQ7T9v93/DaUA0YNFoLg2ISUh88klI9Z15oq3PQ5iEYBLSwknISJRbO3lp9aTH/WlAXISAACKAIIAIIAgg7ddz48rxRcuABiRMQsI79+7PJAQvwSCACCAIIAIIAkiYhIAGJExCwqTA/WlAvASDACKAIIAIIAggYRICGpAwCQmTAvenAfESDAKIAIIAIoAggLTVf6/qUCZJCuIUAAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <g class="anim-z" transform="translate(30 42) scale(1.0)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
             </g>
-            ${zGlyph(34, 10, 0.9, "anim-z")}
-            ${zGlyph(108, 10, 0.9, "anim-z-2")}
+            <g class="anim-z anim-z-2" transform="translate(94 38) scale(0.85)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
+            </g>
+            <g class="anim-z" transform="translate(58 28) scale(0.65)">
+              <rect x="0" y="0" width="8" height="2" fill="#c0c8d4"></rect>
+              <rect x="6" y="2" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="2" y="4" width="2" height="2" fill="#c0c8d4"></rect>
+              <rect x="0" y="6" width="8" height="2" fill="#c0c8d4"></rect>
+            </g>
           `;
             break;
           case "take_nap":
@@ -11033,22 +11059,11 @@ P = drain − 0.5·recovery</pre
             break;
           case "back_to_back":
             art = `
-            ${pxRects([[0, 0, 160, 160]], bg)}
-            ${pxRects([[18, 14, 124, 136]], surface)}
-            ${pxRects([[18, 14, 124, 18]], surfaceDark)}
-            ${pxRects([[22, 18, 50, 10]], warn)}
-            ${pxRects([[76, 18, 62, 10]], critical)}
-            ${pxRects([[20, 34, 120, 3]], border)}
-            ${pxRects([[20, 39, 120, 26]], "#d04030")}
-            ${pxRects([[20, 39, 120, 2]], critical)}
-            ${pxRects([[20, 67, 120, 3]], border)}
-            ${pxRects([[20, 72, 120, 26]], "#d04030")}
-            ${pxRects([[20, 72, 120, 2]], critical)}
-            ${pxRects([[20, 100, 120, 3]], border)}
-            ${pxRects([[20, 105, 120, 26]], "#c03820")}
-            ${pxRects([[20, 105, 120, 2]], critical)}
-            ${pxRects([[20, 133, 120, 3]], border)}
-            <rect x="130" y="16" width="8" height="12" fill="${warn}" class="anim-eye" opacity="0.8"></rect>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADXUlEQVR42u3dsUuUYRwH8J8hIXrYcqTD4WASQhT9AzWFQ0EQREtQQyA0R64RNBWBSwSBQ0FLSEFQU1PR0tDQJCEOh8ihL6J2ikRgg0hYl95dR969z+ezKXcnPHz5vj/f533f61peWtgKOCCHLAECiACCACKAIIAIIPwP3fu9YGO9apVoWm9fQQPSwQ244/zFcauVY0+6Ky39vNLL12ZActSApGF0qPhP758pZ/4LRgPS4Y68+rDr59VLZ/b8fTgPiAaMiOHhkbpeNzc36/1t+P6wE0LYigMBJAFd+90TsrMXbCckktgJadV5wJ2dEHvBOA9I52h0J8MMiAak843/GGzp573VgITTMCCACCAIIAIIAkh04HnAR5MTVgsNSKINeOLk6YiIuP/gYVN/aOL2rZq/93n5/Lx6n6ihAXEIRgBBABFAiLa8J+RbtbnnBGaL2/caDEzes9oJKE5N78qNe0JwCAYBJJK+JySrrERExNCp40kvePnL13zPgBqQXDfg02fP63rd9WtXrS4aEDPg7lkwyzpqgTYWlqVEA6IBzXZoQMyAZio0IAIIAogZsE6jb95ZbTQgiTbg5uMrVjsBPTdfaEAcgkEAcT1g/H53XLb5PdcLWuw5nHSgShoQh2AQQFwPWMNqdbOtFuBYsV8KNCACCAKIGdDMhQZEAEEAMQO2SOnOe6uNBiTRBpy5cM5qJ6DRe380IJ4PiBkQ8j0DllfWIiKiUCxa9RqqHfbcxL/OgBoQ1wOCBsQMmONZBw2IAIIAIoAggAggCCDhPOAfxj5+stpoQFJ9PuCNy1Y7AcWpaQ2IQzAIIK4H/DUDVla2Z4SRUi4WLpudl55aM6AGxCEYBBA7IWYnNCACCAKIAIIAkuR/wY0+Nw4NCPm5HnD+7lmrnYBGnwWuAUlrJyQKbf5NSdU1qTADogE9HxANiAY0Y6EB0YDhu+LQgGjA5ngyQngyggbEIRgEkORmwM8z5YiIOFrsT2qBF7O0znuOaUBcDxj2jNGAmAHNRGhAXA8IGhABBAFEAEEAEUAEEMK3ZaIBQQARQHA9IBoQBBABBNcDogHhABtwYGCwqT+QLVasMhqQ9tS1vLSwtdcLNtarVomm9fYVNCAdPAPul2AwAyKAIIAIIAggAggCSNv7CVcH3PMn66G8AAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <rect x="130" y="10" width="16" height="14" rx="3" fill="#c83228" class="anim-eye" opacity="0.85"></rect>
+            <rect x="132" y="12" width="12" height="10" rx="2" fill="#f05040" class="anim-eye" opacity="0.85"></rect>
+            <rect x="134" y="14" width="4" height="6" fill="white" opacity="0.9"></rect>
+            <rect x="140" y="14" width="4" height="6" fill="white" opacity="0.9"></rect>
           `;
             break;
           case "zoom_meeting":
@@ -11090,26 +11105,10 @@ P = drain − 0.5·recovery</pre
             break;
           case "after_hours":
             art = `
-            ${pxRects([[0, 0, 160, 160]], "#0c0c1e")}
-            ${pxRects([[0, 90, 160, 70]], "#16162a")}
-            ${pxRects([[16, 16, 44, 56]], "#1e2040")}
-            ${pxRects([[18, 18, 40, 52]], "#0a0a18")}
-            ${pxRects([[22, 24, 8, 6]], "#c8d8f0")}
-            ${pxRects([[24, 22, 4, 4]], "#c8d8f0")}
-            ${pxRects([[34, 30, 20, 24]], "#203080")}
-            <rect x="34" y="30" width="20" height="24" fill="#3050c8" class="anim-glow" opacity="0.5"></rect>
-            ${pxRects([[34, 54, 20, 2]], "#c8d8f0")}
-            ${pxRects([[100, 10, 46, 64]], "#1a1a30")}
-            ${pxRects([[104, 14, 38, 56]], "#2030a0")}
-            <rect x="104" y="14" width="38" height="56" fill="#4060d8" class="anim-glow" opacity="0.6"></rect>
-            ${pxRects([[120, 72, 6, 18]], "#1a1a30")}
-            ${pxRects([[108, 88, 30, 6]], "#1a1a30")}
-            ${pxRects([[68, 62, 8, 8]], text)}
-            ${pxRects([[66, 60, 12, 4]], text)}
-            ${pxRects([[70, 70, 4, 18]], text)}
-            ${pxRects([[68, 88, 4, 18]], text)}
-            ${pxRects([[74, 88, 4, 18]], text)}
-            <rect x="116" y="40" width="4" height="8" fill="${accent}" class="anim-cursor" opacity="0.9"></rect>
+            <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAFcUlEQVR42u3d/2sbdRzH8VdGGrMQ4qxhzFLqSKFKkTH2Q6lDhP3iDyrCwJ+kv/iD3Q9KJyj7YX/CRBhB0dVfFMr8cSLzl/2gIENmhbkfZCiYMscoY4ZasxCzdrT+kBx6Wb5c0rv7fO7u+fil9HK55O7evPjc3fsuqWNHXtoVYMg+NgFMStfrNbYCSEAkNAE7JyycLEV6hVYurbFXSUBgxAR0nPtsNZAPPPPWXCDLd5YLEhCgAEEBAqOPAU258eMHkqRi8fG+801OL7L3SEAgZgk4KPlAAgLxS8Afrp5nb5CAQMgJmM8XfE2w4y+8O9L7nffdqSzv6Xv4tT4gAZHMfsDinhIsaNXq331fp7+RBASiex4w7CscWw9JzH4y6QIJCBLQt6Pkr764aOWGKI4fpBr+P9beuMcYEPGXminN7yb5nhBnDOgk4NrOfKILorTvmisBGQOCe0KUwHtC5pZvRGpHri4eFecBAQoQFCAQ1SshjKlIQCB6/YAy1EHd2YUz7PpsbHa/Fjy3tGRXIpfLRj436PogARGPfkC/O6Q1Yv8h/YD+Cnp7koCI51FwWB3ScRtzcRQMRCEBgx7jmRa1a8FRPa9JAiKaCRjX5AMJCBIw+Gcu2/5MZ64Fk4BIYgLyOxstv3z8Xaif99zbJ0hAgAIEBQjQDxiSXv2ASR2TiX5A8HvB0KFS1ervd3etKPoBAdvvirPt+XtBP+sEJCBIwEfVDrxmdEULm19bOcYiAYEkPRkh6E5jv7pYTHVEZ8vHJUnXr3zomj57+Xlft8PhrdaTam9l3iABQQLCEo1GQ5L07UdvSpJePbPCGBCITQJGpdPY1PdcPdt0/X/53EJrTLqY9TRWjVonNwmIhB0F7/GpU2E9scDU07HeqbvX88vXf22/8mws710hARHvfsBe/XaypL/Ntu8n+gGBGPcDmn7qlNf1Det7Hizc7jG99ff0lVzf+Xq5V5uiHxCw7ijY7/ttg7p3I+iO6M5um1x+3JflNuobHAUDFCAoQCDwMeCL84ckSd9fuxuLZ6A4v5erW0F/zu+to0xNBLsePex4nI8EBAnYL/G8Jp/tnF8ID1s2P2FkfcZzZtebBES0ErAz+YYd+w17V5pifp9w0PdLD16vuhX3SZOAiEYCdibdoOQrFJwO3qyVK16rNdn74jwg6AfsPgaY2n9zpAXe/mfWGeW0xzrNdiIeaCfPZkdShjs9k86G0ucmw32SA9dva92K7UACwtJ+wP2tP8WctxqtNnZc/WP/jQHVNZlMT7fluYhjY2OSpO0H9z3Nv7293fX9jyzvyae6vv/BH7+1ki9jx3YgAWH3UfD1ire+uOJ4XpJ0uND6nZENzRod6w2aHlU76x2/4/L0MxwFA/Y/H9CyMaAiesWjc3mPifOAgP0JyBiwu0unnvA038kLf/mynJfPkoCA9wQ8Nl0c6jzgzT8n28kj15WHZqPp+t9hanrU3K/8pH7n9aR5xoDA0An46elS1xfKF++4ks2rXstDy+KF6ogX7Sdd/y+fGu0p/s7+ef+TdSv2FwkIo1Kfv3dil82QPOVvKpKkpVemSUCIhlSAAgQFCFCASIz01Z8rbIUEM73/SUAYlZqamOE8oEUKpQVP89XWVkaanzEgQAGCAgQkpbPZHFshgobdb7buZxIQZhOw2WywFSyS8Tifs9+GnZ8EBChAUIAABQgKEBQgQAGCAgQoQCRKaqZ0lH5AkIAQ14IBEhAUIEABggIEKEBQgAAFCAoQoAAh7gsGSEBwLRggAUEBAhQgKECAAgQFCFCAoAABChDiWjBAAoJrwQAJCAoQoABBAYICBChAUIAABQgKEBDXgkECAlwLBgkIUICgAAH//QvLjNu7EG4vAAAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
+            <rect x="68" y="24" width="64" height="48" fill="#1428a0" class="anim-glow" opacity="0.12" rx="2"></rect>
+            <rect x="26" y="54" width="36" height="22" fill="#1428a0" class="anim-glow" opacity="0.08" rx="2"></rect>
+            <rect x="112" y="56" width="4" height="7" fill="#48c848" class="anim-cursor" opacity="0.95"></rect>
           `;
             break;
           case "late_night_ai":
@@ -14425,28 +14424,51 @@ P = drain − 0.5·recovery</pre
         line.style.opacity = "0.65";
         svg.appendChild(line);
 
-        // 2) Energy + Stress overlays — lines + dots from tick history (last 24h)
-        const overlayHistory = loadTickHistory();
-        const overlayCutoff = Date.now() - 24 * 3600 * 1000;
+        // 2) Energy + Stress overlays — demo seed OR real tick history
         const overlaySamples = [];
-        overlayHistory.forEach((entry) => {
-          if (!entry || !entry.payload) return;
-          const ts =
-            entry.savedAt || Date.parse(entry.payload.last_tick_iso || "");
-          if (!Number.isFinite(ts) || ts < overlayCutoff) return;
-          const d = new Date(ts);
-          const sampleHour = d.getHours() + d.getMinutes() / 60;
-          const e = Number(entry.payload.E_internal ?? entry.payload.E);
-          const s = Number(entry.payload.S);
-          overlaySamples.push({ sampleHour, e, s, isCurrent: false });
-        });
-        if (payload) {
+        if (APP.demo.enabled && APP.demo.completedActivities?.length) {
+          APP.demo.completedActivities.forEach((act) => {
+            const d = new Date(act.simClockBefore);
+            overlaySamples.push({
+              sampleHour: d.getHours() + d.getMinutes() / 60,
+              e: act.batteryBefore,
+              s: act.stressBefore,
+              isCurrent: false,
+            });
+          });
+          const last =
+            APP.demo.completedActivities[
+              APP.demo.completedActivities.length - 1
+            ];
+          const dLast = new Date(last.simClockAfter);
           overlaySamples.push({
-            sampleHour: hour,
-            e: currentEnergy,
-            s: currentStress,
+            sampleHour: dLast.getHours() + dLast.getMinutes() / 60,
+            e: last.batteryAfter,
+            s: last.stressAfter,
             isCurrent: true,
           });
+        } else {
+          const overlayHistory = loadTickHistory();
+          const overlayCutoff = Date.now() - 24 * 3600 * 1000;
+          overlayHistory.forEach((entry) => {
+            if (!entry || !entry.payload) return;
+            const ts =
+              entry.savedAt || Date.parse(entry.payload.last_tick_iso || "");
+            if (!Number.isFinite(ts) || ts < overlayCutoff) return;
+            const d = new Date(ts);
+            const sampleHour = d.getHours() + d.getMinutes() / 60;
+            const e = Number(entry.payload.E_internal ?? entry.payload.E);
+            const s = Number(entry.payload.S);
+            overlaySamples.push({ sampleHour, e, s, isCurrent: false });
+          });
+          if (payload) {
+            overlaySamples.push({
+              sampleHour: hour,
+              e: currentEnergy,
+              s: currentStress,
+              isCurrent: true,
+            });
+          }
         }
         // Sort by time so polylines connect in chronological order
         overlaySamples.sort((a, b) => a.sampleHour - b.sampleHour);
