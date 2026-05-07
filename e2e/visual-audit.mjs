@@ -9,7 +9,7 @@ const BASE = "http://localhost:3131";
 const DIR = "./e2e/screenshots/audit";
 mkdirSync(DIR, { recursive: true });
 
-const VIEWPORT = { width: 480, height: 900 };
+const VIEWPORT = { width: 1440, height: 900 };
 
 let page, browser;
 const errors = [];
@@ -61,7 +61,18 @@ async function enterDemo() {
 
   page.on("pageerror", (e) => findings.push(`PAGE ERROR: ${e.message}`));
   page.on("console", (m) => {
-    if (m.type() === "error") findings.push(`JS ERROR: ${m.text()}`);
+    if (m.type() === "error") {
+      const txt = m.text();
+      // Filter expected 502/network noise from Flask/AW not running locally
+      if (
+        txt.includes("502") ||
+        txt.includes("Failed to fetch") ||
+        txt.includes("net::ERR_") ||
+        txt.includes("NetworkError")
+      )
+        return;
+      findings.push(`JS ERROR: ${txt}`);
+    }
   });
 
   await page.goto(BASE, { waitUntil: "networkidle" });
@@ -99,6 +110,65 @@ async function enterDemo() {
   console.log("\n── [3] DARK theme ──");
   await fresh("editorial-dark");
   await shot("03-layer0-dark");
+
+  // Battery shape check in dark mode
+  const darkBattSvgVisible = await page.evaluate(() => {
+    const svg = document.querySelector("#battery-visual svg");
+    if (!svg) return "no-svg";
+    const display = window.getComputedStyle(svg).display;
+    return display === "none" ? "hidden" : `VISIBLE(${display})`;
+  });
+  console.log(`  Dark battery SVG: ${darkBattSvgVisible}`);
+  if (darkBattSvgVisible !== "hidden" && darkBattSvgVisible !== "no-svg")
+    findings.push(
+      `❌ Dark mode: #battery-visual svg is ${darkBattSvgVisible} — should be hidden (CSS pill battery should render instead)`,
+    );
+
+  const darkBattBox = await page.evaluate(() => {
+    const el = document.querySelector("#battery-visual");
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { w: Math.round(r.width), h: Math.round(r.height) };
+  });
+  console.log(
+    `  Dark battery visual: ${darkBattBox?.w}×${darkBattBox?.h}px (expect ~92×230)`,
+  );
+  if (darkBattBox && (darkBattBox.w < 80 || darkBattBox.h < 200))
+    findings.push(
+      `❌ Dark mode: #battery-visual too small (${darkBattBox.w}×${darkBattBox.h}) — CSS pill battery may not be rendering`,
+    );
+
+  // Also check after live theme toggle (not just fresh load)
+  await fresh("editorial");
+  await page.waitForTimeout(300);
+  const toggle = await page.$("#theme-mode-toggle");
+  if (toggle) {
+    await toggle.click();
+    await page.waitForTimeout(500);
+    await shot("03b-dark-after-toggle");
+    const toggledSvg = await page.evaluate(() => {
+      const svg = document.querySelector("#battery-visual svg");
+      if (!svg) return "no-svg";
+      return window.getComputedStyle(svg).display === "none"
+        ? "hidden"
+        : "VISIBLE";
+    });
+    const toggledBox = await page.evaluate(() => {
+      const el = document.querySelector("#battery-visual");
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { w: Math.round(r.width), h: Math.round(r.height) };
+    });
+    console.log(
+      `  After toggle → dark: SVG=${toggledSvg}, battery=${toggledBox?.w}×${toggledBox?.h}`,
+    );
+    if (toggledSvg !== "hidden" && toggledSvg !== "no-svg")
+      findings.push(`❌ After toggle to dark: SVG still ${toggledSvg}`);
+    if (toggledBox && (toggledBox.w < 80 || toggledBox.h < 200))
+      findings.push(
+        `❌ After toggle to dark: battery visual too small (${toggledBox.w}×${toggledBox.h})`,
+      );
+  }
 
   // ── 4. Demo mode — CLEAN — home grid ─────────────────────────────────────
   console.log("\n── [4] Demo home grid (CLEAN) ──");

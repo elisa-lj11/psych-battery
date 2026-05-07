@@ -1,8 +1,36 @@
 # CURRENT-TASK.md
 
-## Status: COMPLETE
+## Status: IN PROGRESS — Tech Debt Cleanup
 
-All items shipped in this session on feat/mental-meter-polish.
+**Goal:** Address every open item in TECH_DEBT_AUDIT.md (F01–F11) that hasn't already been fixed.
+
+### Remaining steps (do in order)
+
+1. **Verify which items are already fixed** — read current code for F02 (particle loop), F04 (reduced-motion), F10 (theme picker overlap). Check CLAUDE.md for stale known-bugs references.
+2. **F01 — credentials.json** — move `credentials.json` from repo root to `~/.config/psych-battery/`, update any code that reads it, rotate secret if needed.
+3. **F03 — server.py logging** — replace bare `except Exception: pass` in `_enrich_last_feats` (server.py:192) with `logging.warning("_enrich_last_feats failed: %s", exc)`.
+4. **F04 — prefers-reduced-motion** — add `window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', syncLayer2Motion)` after line 14924 of index.html (verify exact current line first). Remove bug from CLAUDE.md known-bugs.
+5. **F05 — npm test** — change `package.json` scripts.test from the error stub to `"node e2e/editorial-full.mjs"`.
+6. **F09 — CLAUDE.md line count** — fix "4650 lines" → "16 k lines" on line 8 of project CLAUDE.md.
+7. **F11 — touch target** — add `min-height: 44px` to `.toggle-banner-end` in index.html.
+8. **F02 — getBoundingClientRect cache** — cache rects in layer2AnimLoop via ResizeObserver (see TECH_DEBT_AUDIT.md for snippet).
+9. **F07 — dev file cleanup** — move agent context docs to `.claude/`, root snap scripts to `tools/`. Check `.gitignore` covers BACKGROUND-TASKS.md etc.
+10. **F08 — screenshot script consolidation** — delete root-level snap scripts (superseded by e2e/).
+11. **F10 — theme picker overlap** — verify current state. If still overlapping, move help trigger left of theme picker.
+12. **Commit + push to upstream/main.**
+
+### Notes
+
+- F06 (pb_api validation) is intentional debug override — skip.
+- F01 is the only High severity item; do it first.
+- F02, F04 may already be partially fixed — verify before touching.
+- All other items are S (small) effort.
+
+---
+
+## Previously completed (this session)
+
+All items shipped on feat/mental-meter-polish:
 
 ## What was done
 
