@@ -13291,8 +13291,8 @@ P = drain − 0.5·recovery</pre
 
       function getDTone(value) {
         if (value > 0.7) return "var(--px-critical)";
-        if (value > 0.4) return "var(--px-warn)";
-        return "var(--px-good)";
+        if (value > 0.15) return "var(--px-warn)";
+        return "var(--px-muted)";
       }
 
       function getFeatureTone(group, value) {
