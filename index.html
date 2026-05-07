@@ -6835,8 +6835,8 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 16px;
-        padding-top: 44px;
-        min-height: 270px;
+        padding-top: 32px;
+        min-height: 300px;
       }
 
       .layer2-node {
@@ -7233,7 +7233,7 @@
       }
 
       .layer2-tank {
-        min-height: 260px;
+        min-height: 300px;
         justify-content: space-between;
         padding: 12px;
       }
@@ -7241,7 +7241,7 @@
       .layer2-cells-vertical {
         grid-template-rows: repeat(10, minmax(0, 1fr));
         flex: 1;
-        min-height: 200px;
+        min-height: 240px;
       }
 
       .layer2-cell {
@@ -7353,7 +7353,7 @@
         font-size: var(--fs-label);
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: var(--px-muted);
+        color: var(--px-text);
         margin-bottom: 2px;
       }
 
@@ -7362,8 +7362,8 @@
         justify-content: space-between;
         gap: 8px;
         font-family: var(--px-font-body);
-        font-size: 1rem;
-        color: var(--px-muted);
+        font-size: 1.1rem;
+        color: var(--px-text);
         padding: 3px 0;
         border-bottom: 1px solid var(--px-border);
       }
@@ -7374,13 +7374,15 @@
 
       .avg-label {
         flex: 0 0 auto;
+        color: var(--px-text);
       }
 
       .avg-values {
         display: flex;
         gap: 12px;
         font-family: var(--px-font-ui);
-        font-size: 0.95rem;
+        font-size: 1.15rem;
+        font-weight: 600;
       }
 
       .avg-e {
@@ -7414,6 +7416,16 @@
       }
       .phase-portrait-dropdown-wrap {
         grid-area: chart;
+      }
+      .phase-portrait-dropdown-wrap .phase-portrait-plot {
+        min-height: 0;
+      }
+      .phase-portrait-dropdown-wrap .phase-portrait-frame {
+        aspect-ratio: 1 / 1;
+        min-height: 200px;
+      }
+      .phase-portrait-dropdown-wrap .phase-portrait-shell {
+        align-items: start;
       }
       .phase-portrait-plain-explain {
         grid-area: text;
@@ -10386,6 +10398,70 @@ P = drain − 0.5·recovery</pre
           whyResearch:
             "Evening blue-light exposure suppresses melatonin and shifts circadian phase later (Chang et al., 2015). Frequent context switching at night compounds cognitive cost and degrades sleep quality the same night.",
         },
+        {
+          id: "stretch",
+          label: "Stretch break",
+          durationMin: 10,
+          kind: "recovery",
+          accent: "var(--px-good)",
+          deltas: { outside_min: 5 },
+          targetDeltaE: 4,
+          targetDeltaS: -2,
+          dataSources: ["Manual recovery log"],
+          whyResearch:
+            "Brief movement breaks restore attention and reduce musculoskeletal tension. Even 5–10 minutes of light stretching lowers cortisol and improves alertness (Thayer et al., 1994). Standing and moving counteracts the cognitive cost of prolonged sedentary posture.",
+        },
+        {
+          id: "hydrate",
+          label: "Hydrate & step away",
+          durationMin: 10,
+          kind: "recovery",
+          accent: "var(--px-info)",
+          deltas: { hydration_cnt: 1 },
+          targetDeltaE: 3,
+          targetDeltaS: -1,
+          dataSources: ["Manual recovery log"],
+          whyResearch:
+            "Mild dehydration (1–2% body weight) impairs cognitive performance, mood, and alertness (Adan, 2012). Stepping away from the screen — even briefly — resets attention by breaking attentional fixation and reducing eye strain.",
+        },
+        {
+          id: "back_to_back",
+          label: "Back-to-back meetings",
+          durationMin: 90,
+          kind: "drain",
+          accent: "var(--px-warn)",
+          deltas: {
+            meeting_min: 90,
+            synchronous_load: 2,
+            context_switch_cnt: 6,
+          },
+          targetDeltaE: -18,
+          targetDeltaS: 12,
+          dataSources: [
+            "Google Calendar · consecutive meeting blocks",
+            "ActivityWatch · Zoom/Meet window time",
+            "Manual drain log",
+          ],
+          whyResearch:
+            "Back-to-back meetings eliminate the micro-recovery periods between synchronous blocks. Without recovery gaps, cortisol accumulates and prefrontal resources deplete faster than with the same meeting time spaced out (Rosen et al., 2021).",
+        },
+        {
+          id: "after_hours",
+          label: "After-hours work",
+          durationMin: 60,
+          kind: "drain",
+          accent: "var(--px-critical)",
+          deltas: { after_hours_min: 60, focus_min: 60 },
+          targetDeltaE: -16,
+          targetDeltaS: 8,
+          dataSources: [
+            "System clock · after-hours detection (>8pm)",
+            "ActivityWatch · active window time",
+            "Manual drain log",
+          ],
+          whyResearch:
+            "Work after 8pm suppresses melatonin and delays circadian phase, degrading that night's sleep (Åkerstedt et al., 2002). The cost compounds: next-day energy baseline is lower, and the drain-to-recovery ratio worsens over multiple nights.",
+        },
       ];
 
       const DEMO_ACTIVITY_BY_ID = Object.fromEntries(
@@ -10784,6 +10860,7 @@ P = drain − 0.5·recovery</pre
             <rect x="62" y="34" width="6" height="4" fill="rgba(235,240,255,0.70)" class="anim-bubble"></rect>
           `;
             break;
+          case "hydrate":
           case "eat_food":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADNklEQVR42u3dMUgbYRiA4T/FQpGCIrcIJRSEklmELtKhFKFbpuLo0EkkUsjQLiW41EEoSMnk4OgYOrRFSoeSwUJxDsVCyZylUEKhUDtp0QT1MLm7XJ5n0jQ55O71++/MWQtHB3vHAVJywy5AgAgQBIgAQYAIEJIwYReMpv3GXua/xqXysgmIJRgswXlWLG9d6/XtRnVg2zq/PRMQSzAIEAGCABEgCBABggARIAIEASJAECACBAEiQAjuiCYM6g7kJLdlAmIJBktwznXnn1/r9ZOHmwPb1vntmYBYgkGACBAEiABBgAgQBIgAESAIEAGCABEgCBABggAJbsknu+LcAp/ktq6icHSwd+wQBn8jLqTzd+MswTgHRICQj4uQ6uralZ+7VX/jCAiQPJzMj32AcSbf6SV/51sIIYRudE9ZzgHBEsyQdaYenH4c/fyczwDrGxVHmuEG+HJ9zd4z7UZvCX64uh1CCOFT3ZRMQ9ZCTDxA4ZmKLkJMu9GfgMXZ6MznrXbHETftTECcA2IqJh+gn/2ZdqkE2CzthhBCqIR9R9y0S28CPmkuxX7NbvmHSsZ8KroZARchjO85oAmIABEgCBAXIYk7+b2QfvyuSDw7L54NZDtPX702AbEED91K464jIEDwg+jMieYWMvu1db5/7ft4aXZqINtvbtf6Pr5YqeUvwIveQ87Ce8Xtdjsz4RWLxWS++YpRb/RDuuHYBIyhu17tPVgbF7+m2rk8mo25iiV4nDRbvae+i6W/vsNGIcCdzZq9hqtg8qFw8K7u/4jGBESAIEAECImZaH54G/tFh1/+vxXUulm+9PmlP40zn8/fXwilyV/2/phodW+bgGR0AkYz09fawMl0W3r8qO+/77//2PNYNDMdwm8TcFxc1JgJiIsQBAgCxN0wyV+iX+FGx1KfGyTJx/FKLcDOrTsnH8V4Lukb7PGyBOMcEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAIEASJAECACBAEyJgq7teVjuwETEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABQlz/ADs6mzAuLmp2AAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10805,6 +10882,7 @@ P = drain − 0.5·recovery</pre
             </g>
           `;
             break;
+          case "stretch":
           case "take_nap":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADv0lEQVR42u3cMWhUdxwH8F+sUggpIoRCi0jwQnIUhQ5RaBDBxQ7JUJciiVOXEhEcLFIoZHAQKY4lDkIXGyk4tENEXByidDgkdEykJ3KECBKUg3IoSu1gTzyJ93LmXXOX/+cz5eUl7+7+78v3/d+9u9cztHfkZcAm2WYIEEAEEAQQAQQBRABBABFAaKfthmBzHf50d9P11+8tdtXrGRsqNl0/v7KsAdGArNOzF/lub1dfb8Pyk79r5oA4CQEBxByQxN1fmmm6fu/wSQ2IQzCbpFS6GKXSRQEEc8AEHTz4nUMwaEA64ix5o2fFGhCHYNI9SxZAzAFJ9yxZA6IB6Rx5X+vVgDgEgwAigCCACCAIIAIIAki4EkKs904G3bZ9DYhDMAgg5oC0Lu+7V7k7Fghg+C5IhzyuAGIOSHTtd0E2+rgaEHNA0rsrlgBiDki6d8XSgAggCCACiACCACKAIIAIIAggAggCiACCACKAIIAIIIRPRCfgw5z3UO1pra3b14Ck0YBL18cnN/LAw2Nzs4Y/20d9feaA0LFzwHL5z5aarFD4fNKwowFxFkzE/Mpy0q9HA9JdDbh0dfTLiIioPn6/R6w+Xn1zO8MTf9y0G8wBQQARQBBABBAEEAEEAUQAIVwLpu0OT/8UERFfHSpeWmv973cWpyIi5s+d0oAk2ID1a7f1T0RPT99pcQuVhmu/I4N2QjcaGfwnIiLu/rVNA5LiHHDH8sSbi/07e43mFlD/ztxiZXXBWTAa8G2fDX7w6ofnu6+++mFhrNnfa8buUgnvA6IBsx07fWM2IkK/oQFxJeRdpr4/17A8eWy8pf+f/W0u1+dz6cK0va4B4X++Flx5UF7z9zM/nHiv/2vVnoGCva0BYZMasN5AWY03fvaXhuXbt47n+jxWqzV7XQNCzg2Y1Sz1udzOjO3M/XiirXNADdhc/X3dhQtfX15z/cSMBkQDvnZ06nLGXzxf13bK9x5ERERhaKBhub//QK4vOPv5EhERWeP03/q7Z77VgCTcgMXCJ5HH5yvebr76cjXnF5z9fHEWjAZsl2rGnK4+56vaNxoQttyVENCApNOA5doeo4wGRABBANlic8DT568ZRTQgAggCSGJzwP1fHDGKCZsvXdGAJNyAqw8rRhENSHfqOTq676VhQAOS5hywsvJoQxsoHv/ZKCZs8ddvNCAOwSCACCAIIN2jpzjwsfcB0YAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggneVflau6hNm0nyIAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10828,6 +10906,7 @@ P = drain − 0.5·recovery</pre
             </g>
           `;
             break;
+          case "back_to_back":
           case "zoom_meeting":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD7klEQVR42u3dvWsbZxwH8J9LCyFDvBwmWYyhi4dCQRiyBPoHNEMmDaGDhnbx4FAiGpVCh05Oq1DiwUszaCiluEM8JBkDAQ8JGENfKJpC0JJgbmkohkBoOlxTMCR6SXS6F30+i3HukC7Pff3180in88L9uzdfBBTkHUOAACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAgjjeNcQTGa9fW3o9u3uZYOkARHAOZGmaaRpaiAEkCpaKPu9YZqtK6U6niRZGtGIh6U63p3eVQ0IlV8FHz49KslxPKrEeC2dOmkOCLV7HXDl9EqpjufRk6wR1z5Yi4iIwVE/n7nciF8AzZNhFQzeCXmNXqcxdHtr86DQ4/ttuzN0e7+1eez7s6urERHxoN8PrwOCBpwvVW8+DYgGZHxVXeVqQAQQBBBzwCKc7nQjIqIzcr+LERHxZLM90+O71cgmd4MbW2Ptd/7gKDQgCCACCAKIAIJV8KvNelU7qbqtajUgGjBmcAVyWR0+/Dt8JkQDogHz8fKzF47PHBDmrwGPBgelOp4/n/5z/FNxA/eJeaMArrcu5fIE273rRpnyNeDXlz575b9/c/2HXJ5v4+LwT8Vt/VRss97qnhu6/Xx7zxwQatOA2199cvwn/IsfnQ2rYJiTBkzXvo+IiGT/82wO9G3WiNaQGhDq14DJ4b1j3386OBMREZvnsibs7D3INgyyLzdO/OzsaECo+Tsh/zdfTi40drJi7Y/aL/u6e9Cc6f9/uZtERMR69Mfab9BONSAIIAIIlZkDpksfZXO+/1a/4+4fccdZ0oDgesA3MutV7aTqtqrVgFSzAV9e2Vt2ZT3O/T/2w19K0oCYAw73fHe8u7u3nRtzQBBABBAEEAGEyq+CuxuLE+3fbDlJGhDybsCyv3JelVf20YBUyML9uzdfGIZJ5qRXhm7f6V01SBoQAQQBRABBABFAEEAEEAQQAQQBJLwXPJn+43If3+oZodKAhCuic5Km5b6XSvPL7ybaf96vntGA1KsB+7e3cj3gpLFRqxOQ93hNfY778YYGRAO+1vJyzsvA9JepPlzrWrF3tcp9vMwBYY7vkDpK7/KaFGhABBAEkLmbA/6+tzvVB3x/0aDW2bTzogEptgGTlcZUH3Dw63g/IYsfXjD6JfLXmOctmfJ504AU24DvPSvmAruinpdynTcNSHgZBgEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBABBAFEAEEACX8t820kq2eNagUVdd40IH4FI4AggAggCCACCAKIAEKu/gVQJ7v6HfM4ngAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10865,6 +10944,7 @@ P = drain − 0.5·recovery</pre
             <rect x="94" y="70" width="4" height="6" fill="#b8d8ff" class="anim-cursor"></rect>
           `;
             break;
+          case "after_hours":
           case "late_night_ai":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAElElEQVR42u3dT2hbdQAH8F9rC7NkxtZH52TG6sA/MHDsMKGoVxWhzKvssLMIuwzxJOLFIbvs4sWDCmMXLzIQxPMYs4hU2KEKm7MON0vYiM1ittXVi4U1mD9t3sv7Je/zuWRd0uaX97799vf+5GVsNpnbCJCTcYsAAUQAQQARQBBABBAEEAEEAUQAIQsTrf8xX3m24zf8eOOPqF/Qocef6Hj/hZVfrHUNCG0asJt6cz2VJ04eKW35uvpX3drQgFDwAC4ungqLi6esGQGECOeAWUvKUyGEEK78/GnHxz3z3DvWngaEnAJoroYGpLhzwMOHT1h6aEAKHkBzQTQgxd0PaC6IBsSRkE5zxCyast2RkmOvnRypFbS7vLvj/Wu1NQ0I0TagOWK6arVaCCGEcrlsDggjdzZMbB6ajGs8rc2X9/j+uacB0YDp6fc8v1fnKpmMa3LvwVyWR7eCmcxpKnjv+pI5IAXcCMn72K9jz46EQH5zwLz369mvqAEhvwZsvaJBWrL6uWlZvfKDtDxg+uEJDYj9gGRs7sDruT7/1UvfmgOiAUPaV7HK7OpYMzMjuaKSJBno81WrVVvBBLthQAARwODYLxoQ+wEH9K634NhvLlulGhANqKHikfWRCA2IBqR3pQOzuT5//dKqBgQNmLOpZLBvR2tUa+aAIIAIIAggUVk4shAWjiwIILaCC2FUt0p36tzX5/wJRgNGa6WxHEIIYV+bt1Zcq44X8khEFnPB7TSiBkQDDsL7n13seP+7b80H7wMOfZ+Ns925oAZEA+bhg+PHgvcBh77PwN7unE8DMtwNWNqVTmk27zYz+bm9+uj0F1HOAUNB9v9pQIazAZt360PxwpbDVMucr/PV92cq/38V/FpKV4NHA2IrmKK/D1gDEpWx2WRuYxRfWLs53XZtzgFv/b0eQgjh6Jnft9z/3YlXonrdqzeuhkFeI9pnxWEOGKObK0s7asLN7wuRflqmOSBowPycOfqkhfCAT97e19Pj3jt7TQOiAUPRPxlo1Jw9v9LXbE8DogGz1Khd39bjd5X3bPn60McXJ1t+WTO9/f740791Gt9Lp3994b9/3o/htnHyqTu2gtGAo2r5qw83f+M3WhpgLKPbbuOptown19tKj8vxYOX+lq+XVsY1IBowesn+NwZ6qnTt/JfdxvN8VAvo8ufBHJDgbBhS0e3Yc79nn6StdW7XK3NAgpMREECLAAFEACHYDxifmdk9QzXem6t/Rjmuza1eDYgGHCaNRiMM837E2PYbakA0YCfz++Maz/La1FCt0NqdtQEvz84dduGyBkQD9i6ZLkU1npenb/f1/d/8VC/48qxrQDRgYb35YslC0IAIIAggAggCiK3gNqq3ettv1m0PO2EojlhpQPwJRgBBABFAEEAEEAQQAYRMTSSPrg/lwZn4xu0g2k7WkwYk3xjXbzfjGtFjvZ1BHN24iyal9aQBsRGCAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACiACCAFJQY5W9yYbFgAakkP4FS2QdiUCdWFcAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -17245,7 +17325,7 @@ P = drain − 0.5·recovery</pre
         {
           targetId: "battery-toggle",
           title: "THREE LAYERS OF DETAIL",
-          body: "Tap the meter to drill down. Layer 1 opens diagnostics: a circadian daily-rhythm curve showing your expected energy peak, two state tanks (energy E and stress S), and an Energy-Stress map plotting where you are in the phase space right now. Layer 2 adds the full signal breakdown — which specific inputs are draining you most (meetings, async comms, after-hours work) and which recovery signals have been logged (focus blocks, AFK time, naps).",
+          body: "Tap the meter to drill down. Layer 1 opens the signal breakdown: a drain-pressure bar and feature rows showing which inputs are costing you most (meetings, async comms, after-hours work) and which recovery signals you've logged today. Tap 'Show full diagnostics' to reach Layer 2: the circadian daily-rhythm curve, two pixel state tanks (energy E and stress S), the Energy-Stress phase map, and a particle field visualizing active signals.",
           pos: "below",
         },
         {
@@ -17383,32 +17463,37 @@ P = drain − 0.5·recovery</pre
       const STORY_STEPS = [
         {
           title: "MORNING",
-          body: "Your day starts near peak — the meter fill opens high because your circadian curve has lifted you.",
+          body: "Your day starts near peak — the circadian curve has lifted E high. Stress is low after a good night's sleep.",
           batteryPct: 85,
+          stressPct: 18,
           highlight: "circadian",
         },
         {
           title: "TWO ZOOM MEETINGS",
-          body: "Each video meeting cuts the fill and stacks pressure.",
-          batteryPct: 62,
+          body: "Each video meeting cuts E and stacks S. Cognitive load rises fast under synchronous pressure.",
+          batteryPct: 60,
+          stressPct: 48,
           highlight: "drain",
         },
         {
           title: "LUNCH + WALK",
-          body: "Outside time, people, and a meal lift the fill back up.",
+          body: "Outside time, a meal, and people contact lift E and flush S back down. The ODE's recovery terms kick in.",
           batteryPct: 74,
+          stressPct: 28,
           highlight: "recovery",
         },
         {
           title: "DEEP WORK AFTERNOON",
-          body: "Focus is sustainable when stress stays low and the fill comes down gradually.",
-          batteryPct: 58,
+          body: "Sustained focus drains E slowly but keeps S low — deep work is costly but not stressful when uninterrupted.",
+          batteryPct: 55,
+          stressPct: 32,
           highlight: "drain",
         },
         {
           title: "EVENING REST",
-          body: "By bedtime, recovery has restored most of the day's drain and the fill steadies again.",
+          body: "By bedtime recovery has restored most of the day's drain. E climbs back and S falls toward baseline.",
           batteryPct: 78,
+          stressPct: 14,
           highlight: "recovery",
         },
       ];
@@ -17417,75 +17502,26 @@ P = drain − 0.5·recovery</pre
 
       function ensureStoryBatterySvg() {
         const host = document.getElementById("story-battery");
-        if (!host || host.querySelector("svg")) return;
-        const CELL_W = 22,
-          CELL_H = 80,
-          CELL_X0 = 14,
-          CELL_Y = 14,
-          CELL_GAP = 3;
-        let cells = "";
-        for (let i = 0; i < 10; i++) {
-          const x = CELL_X0 + i * (CELL_W + CELL_GAP);
-          cells +=
-            '<rect class="story-bat-cell" data-idx="' +
-            i +
-            '" x="' +
-            x +
-            '" y="' +
-            CELL_Y +
-            '" width="' +
-            CELL_W +
-            '" height="' +
-            CELL_H +
-            '" fill="#2a2a3a" opacity="0.35"></rect>';
-        }
+        if (!host || host.querySelector(".story-batt-pair")) return;
+        const lbl =
+          "font-family:var(--px-font-ui,monospace);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--px-muted);text-align:center;margin-bottom:4px";
         host.innerHTML =
-          '<svg width="280" height="108" viewBox="0 0 296 108" role="img" aria-hidden="true" shape-rendering="crispEdges">' +
-          '<rect x="2" y="2" width="262" height="104" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>' +
-          '<rect x="270" y="34" width="16" height="40" fill="var(--px-border-2)"></rect>' +
-          "<g>" +
-          cells +
-          "</g>" +
-          '<text id="story-bat-pct" x="148" y="68" text-anchor="middle" font-family="VT323, ui-monospace, monospace" font-size="36" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="3" paint-order="stroke fill">--%</text>' +
-          "</svg>";
+          '<div class="story-batt-pair" style="display:flex;gap:20px;justify-content:center;align-items:flex-end">' +
+          '<div style="display:flex;flex-direction:column;align-items:center"><div style="' +
+          lbl +
+          '">E</div><div id="story-bat-e"></div></div>' +
+          '<div style="display:flex;flex-direction:column;align-items:center"><div style="' +
+          lbl +
+          '">S</div><div id="story-bat-s"></div></div>' +
+          "</div>";
       }
 
-      function renderStoryBattery(pct) {
+      function renderStoryBattery(ePct, sPct) {
         ensureStoryBatterySvg();
-        const cells = document.querySelectorAll(
-          "#story-battery .story-bat-cell",
-        );
-        const txt = document.getElementById("story-bat-pct");
-        const color =
-          pct >= 70
-            ? "var(--px-good)"
-            : pct >= 40
-              ? "var(--px-warn)"
-              : pct >= 20
-                ? "var(--low, #fb923c)"
-                : "var(--px-critical)";
-        const full = Math.floor(pct / 10);
-        const partial = pct / 10 - full;
-        const CELL_W = 22;
-        cells.forEach((cell, i) => {
-          if (i < full) {
-            cell.setAttribute("width", CELL_W);
-            cell.style.fill = color;
-            cell.setAttribute("opacity", "1");
-          } else if (i === full && partial > 0) {
-            cell.setAttribute(
-              "width",
-              Math.max(2, CELL_W * partial).toFixed(2),
-            );
-            cell.style.fill = color;
-            cell.setAttribute("opacity", "1");
-          } else {
-            cell.setAttribute("width", CELL_W);
-            cell.style.fill = "var(--px-surface-2)";
-            cell.setAttribute("opacity", "0.5");
-          }
-        });
-        if (txt) txt.textContent = Math.round(pct) + "%";
+        const eHost = document.getElementById("story-bat-e");
+        const sHost = document.getElementById("story-bat-s");
+        if (eHost) eHost.innerHTML = buildBatterySvgVertical(ePct ?? 0, false);
+        if (sHost) sHost.innerHTML = buildBatterySvgVertical(sPct ?? 0, true);
       }
 
       function startStoryMode() {
@@ -17494,7 +17530,7 @@ P = drain − 0.5·recovery</pre
         _storyIdx = 0;
         overlay.removeAttribute("hidden");
         ensureStoryBatterySvg();
-        renderStoryBattery(0);
+        renderStoryBattery(0, 0);
         requestAnimationFrame(() => showStoryStep(0));
       }
 
@@ -17520,7 +17556,7 @@ P = drain − 0.5·recovery</pre
           }
         });
 
-        renderStoryBattery(step.batteryPct);
+        renderStoryBattery(step.batteryPct, step.stressPct ?? 20);
 
         const back = document.getElementById("story-back");
         const next = document.getElementById("story-next");
