@@ -5354,8 +5354,8 @@
       body[data-theme="editorial"] #self-log-dock #log-btn,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger,
       body[data-theme="editorial"] #self-log-dock #tune-trigger {
-        background: rgba(130, 130, 210, 0.78) !important;
-        border: 1px solid rgba(130, 130, 210, 0.9) !important;
+        background: rgba(195, 195, 240, 0.92) !important;
+        border: 1px solid rgba(175, 175, 225, 0.97) !important;
         color: #3a3068 !important;
         box-shadow: none !important;
         outline: none !important;
@@ -5365,7 +5365,7 @@
       body[data-theme="editorial"] #self-log-dock #log-btn:hover,
       body[data-theme="editorial"] #self-log-dock #recovery-trigger:hover,
       body[data-theme="editorial"] #self-log-dock #tune-trigger:hover {
-        background: rgba(130, 130, 210, 0.9) !important;
+        background: rgba(195, 195, 240, 0.99) !important;
         box-shadow: 0 2px 10px rgba(80, 80, 180, 0.2) !important;
       }
       body[data-theme="editorial"] .layer-back-top {
@@ -7124,7 +7124,7 @@
       .layer2-system-card {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 4px;
       }
 
       .layer-copy-stack,
@@ -7274,6 +7274,7 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+        padding-top: 12px;
       }
 
       .layer2-explain-title {
@@ -7402,11 +7403,20 @@
 
       /* Phase portrait — always-visible section in layer 2 */
       .phase-portrait-section {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
+        display: grid;
+        grid-template-columns: minmax(220px, 0.8fr) 1fr;
+        grid-template-areas: "title title" "chart text";
+        gap: 14px 28px;
+        align-items: start;
+      }
+      .phase-portrait-section .section-title {
+        grid-area: title;
+      }
+      .phase-portrait-dropdown-wrap {
+        grid-area: chart;
       }
       .phase-portrait-plain-explain {
+        grid-area: text;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -8220,8 +8230,8 @@
       }
 
       .demo-batt-svg-v {
-        width: 44px;
-        height: 80px;
+        width: 56px;
+        height: 110px;
         flex: 0 0 auto;
       }
 
@@ -8231,8 +8241,8 @@
         align-items: center;
         gap: 4px;
         padding: 4px 6px;
-        border: 2px solid var(--px-border);
-        background: var(--px-surface-2);
+        border: none;
+        background: none;
       }
 
       .demo-timeline-svg {
@@ -12246,7 +12256,7 @@ P = drain − 0.5·recovery</pre
           <rect x="2" y="8" width="30" height="120" fill="none" stroke="var(--px-border-2)" stroke-width="4"></rect>
           <rect x="10" y="0" width="14" height="8" fill="var(--px-border-2)"></rect>
           ${cells}
-          <text x="17" y="68" text-anchor="middle" dominant-baseline="middle" font-family="VT323, monospace" font-size="14" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? "--" : rounded}%</text>
+          <text x="17" y="68" text-anchor="middle" dominant-baseline="middle" font-family="VT323, monospace" font-size="20" fill="var(--px-text)" stroke="var(--px-bg)" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill">${rounded == null ? "--" : rounded}</text>
         </svg>`;
       }
 
@@ -12254,12 +12264,12 @@ P = drain − 0.5·recovery</pre
         if (!target) return;
         target.innerHTML = `
         <div class="demo-batt-wrap-v">
-          ${buildBatterySvgVertical(energyLevel, false)}
           <div class="demo-batt-label">E</div>
+          ${buildBatterySvgVertical(energyLevel, false)}
         </div>
         <div class="demo-batt-wrap-v">
-          ${buildBatterySvgVertical(stressLevel, true)}
           <div class="demo-batt-label">S</div>
+          ${buildBatterySvgVertical(stressLevel, true)}
         </div>
       `;
       }
@@ -12345,7 +12355,7 @@ P = drain − 0.5·recovery</pre
         const midnight = new Date(dayStart);
         midnight.setHours(0, 0, 0, 0);
         const WIN_START_H = 8;
-        const WIN_END_H = 22;
+        const WIN_END_H = 20;
         const WIN_SPAN_MS = (WIN_END_H - WIN_START_H) * 3600 * 1000;
         const winStartMs = midnight.getTime() + WIN_START_H * 3600 * 1000;
 
@@ -12585,7 +12595,7 @@ P = drain − 0.5·recovery</pre
               </div>
             </div>
             <div class="demo-right-bar">
-              <div class="demo-rb-label">Current state</div>
+              <div class="demo-rb-label">Battery levels and timeline</div>
               <div class="demo-state-row">
                 <div class="demo-battery-pair" data-demo-battery-pair></div>
                 <div class="demo-timeline-pane" data-demo-timeline></div>
@@ -12683,15 +12693,13 @@ P = drain − 0.5·recovery</pre
                   <div class="demo-scene-zoomer is-${activity.kind}">${renderDemoSceneSvg(activity.id)}</div>
                   <div class="demo-scene-footer">
                     <button type="button" class="demo-back-btn" data-demo-back>← Back</button>
-                    <div class="demo-step-dots">${stepIndicator}</div>
                   </div>
                 </div>
-                <div class="demo-step-caption${activity.step === "done" ? " is-complete" : ""}">${stepCaption}</div>
               </div>
             </div>
           </div>
           <div class="demo-right-bar">
-            <div class="demo-rb-label">Current state</div>
+            <div class="demo-rb-label">Battery levels and timeline</div>
             <div class="demo-state-row">
               <div class="demo-battery-pair" data-demo-battery-pair></div>
               <div class="demo-timeline-pane" data-demo-timeline></div>
@@ -12713,7 +12721,7 @@ P = drain − 0.5·recovery</pre
                 <div class="demo-data-sources-title">Where this data comes from</div>
                 <div class="demo-data-sources-list">${dataChips}</div>
               </div>
-              <details class="demo-why">
+              <details class="demo-why" open>
                 <summary>Why? · How does this affect my energy level?</summary>
                 <div class="demo-why-body">${activity.whyResearch || ""}</div>
               </details>
