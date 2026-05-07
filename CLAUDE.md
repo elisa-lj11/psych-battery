@@ -4,7 +4,13 @@
 
 ## What this repo is
 
-A UC Berkeley PhD research app: a single-file vanilla JS web app (`index.html`, 16,286 lines, no build step) that visualizes a user's mental energy as a pixel-art battery. Fork of `elisa-lj11/psych-battery`.
+A UC Berkeley PhD research app that visualizes a user's mental energy as a pixel-art battery. Fork of `elisa-lj11/psych-battery`.
+
+**Current state (not a constraint):** `index.html` is ~16,286 lines of vanilla JS + CSS in one file with no build step. This started as a one-file app and has grown past the point where that's a benefit. **Splitting into `index.html` + `app.css` + `app.js` (and per-feature modules) is welcome and recommended** — it's blocked by no architectural rule, only by "we haven't done it yet." Codex dispatches against the single file currently fail rule #5 of the avoidance list (>5k-line single-file apps), so the split also unblocks delegation.
+
+**CrowPanel firmware:** always use `arduino-cli` for upload/flash. Don't hand-build scripts. Verify port first with `arduino-cli board list`, then `arduino-cli upload -p COM<n> --fqbn esp32:esp32:esp32s3 <sketch-dir>`.
+
+**Pre-merge review:** use `/walmart-ultrareview main...HEAD` from inside this repo (not the parent Drive folder, which isn't a git repo). The standard `/ultrareview` is blocked by the "not in git repo" check when run from `Claude Research Folder/`.
 
 **Live:** https://psych-battery.vercel.app  
 **Repo:** https://github.com/douglaspmcgowan/psych-battery (private fork)  

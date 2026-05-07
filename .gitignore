@@ -3,8 +3,14 @@
 .vercel/
 node_modules/
 screenshots/
+e2e/screenshots/
 # Google OAuth credentials — stored in ~/.config/psych-battery/, not the repo
 credentials.json
 token.json
 __pycache__/
 *.pyc
+# Agent planning/context docs — kept locally, not in repo
+BACKGROUND-TASKS.md
+PLAN.md
+SESSION_CONTEXT.md
+DAY_TIMELINE_PLAN.md

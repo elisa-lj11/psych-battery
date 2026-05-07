@@ -5588,12 +5588,13 @@
         overflow: hidden !important;
         border: none !important;
         flex-shrink: 0 !important;
-        background: rgba(18, 15, 44, 0.96) !important;
+        background: #0c0a20 !important;
         clip-path: path(
           "M 36,0 L 56,0 L 56,8 L 76,8 A 16,16 0 0,1 92,24 L 92,214 A 16,16 0 0,1 76,230 L 16,230 A 16,16 0 0,1 0,214 L 0,24 A 16,16 0 0,1 16,8 L 36,8 Z"
         ) !important;
-        filter: drop-shadow(0 0 2px rgba(160, 140, 255, 0.5))
-          drop-shadow(0 3px 16px rgba(100, 80, 200, 0.3)) !important;
+        filter: drop-shadow(0 0 6px rgba(160, 140, 255, 0.85))
+          drop-shadow(0 0 2px rgba(200, 180, 255, 0.6))
+          drop-shadow(0 4px 20px rgba(80, 60, 180, 0.45)) !important;
         transition: --battery-pct 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
 
@@ -14194,7 +14195,7 @@ P = drain − 0.5·recovery</pre
           }
           const {
             field: fieldRect,
-            D: DRect,
+            pressure: DRect,
             energy: energyRect,
             stress: stressRect,
           } = _layer2Rects;
@@ -16072,8 +16073,8 @@ P = drain − 0.5·recovery</pre
               // From light/editorial: go to editorial-dark
               setThemePreference("editorial-dark");
             } else {
-              // From editorial-dark: go to light
-              setThemePreference(LIGHT_THEME);
+              // From editorial-dark: go back to editorial (the default light variant)
+              setThemePreference("editorial");
             }
             if (picker && picker.tagName === "DETAILS") picker.open = false;
           });
