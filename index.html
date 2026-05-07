@@ -5163,8 +5163,8 @@
         --px-border: rgba(180, 185, 230, 0.18);
         --px-border-2: rgba(180, 185, 230, 0.32);
         --px-text: #e8e8f4;
-        --px-text-2: #b0b0cc;
-        --px-muted: #7878a0;
+        --px-text-2: #c0c0dc;
+        --px-muted: #a0a0c8;
         --px-good: #6ec48a;
         --px-warn: #d4a84a;
         --px-low: #e0804a;
@@ -7197,6 +7197,19 @@
         min-height: 300px;
       }
 
+      /* Right column of circadian top row — averages at top, readout pushed to bottom */
+      .layer2-inline-right {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        min-width: 0;
+        gap: 12px;
+      }
+
+      .layer2-inline-right #layer2-readout {
+        margin-top: auto;
+      }
+
       .layer2-mini-readout {
         display: inline-flex;
         align-items: center;
@@ -7406,7 +7419,7 @@
       /* Phase portrait — always-visible section in layer 2 */
       .phase-portrait-section {
         display: grid;
-        grid-template-columns: minmax(320px, 1.1fr) 1fr;
+        grid-template-columns: minmax(400px, 1.35fr) 1fr;
         grid-template-areas: "title title" "chart text";
         gap: 14px 28px;
         align-items: start;
@@ -7422,11 +7435,15 @@
       }
       .phase-portrait-dropdown-wrap .phase-portrait-frame {
         aspect-ratio: 1 / 1;
-        min-height: 280px;
+        min-height: 400px;
       }
       .phase-portrait-dropdown-wrap .phase-portrait-shell {
         align-items: start;
         gap: 4px;
+        grid-template-columns: 1fr; /* STRESS is inside SVG; no external label */
+      }
+      .phase-portrait-dropdown-wrap .phase-portrait-axis-label.is-y {
+        display: none;
       }
       .phase-portrait-plain-explain {
         grid-area: text;
@@ -7605,7 +7622,7 @@
         display: grid;
         grid-template-columns: auto 1fr;
         align-items: stretch;
-        gap: 14px;
+        gap: 6px;
         width: 100%;
       }
 
@@ -7615,7 +7632,7 @@
         align-items: center;
         gap: 10px;
         min-width: 0;
-        min-height: 320px;
+        min-height: 420px;
       }
 
       .phase-portrait-caption {
@@ -7641,6 +7658,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 14px;
+        padding: 0;
+        margin-right: 2px;
       }
 
       @media (min-width: 720px) {
@@ -8688,11 +8708,11 @@
                         class="jargon-tip"
                         data-tip="Your built-in 24-hour energy rhythm. Energy peaks late morning for larks (~14h) or evening for owls (~21h), with a natural mid-afternoon dip. The model shifts your resting energy target based on your chronotype."
                         tabindex="0"
-                        >Circadian model</span
+                        >Circ. Floor</span
                       >
                     </div>
                     <div class="layer2-mini">
-                      Daily rhythm curve with current energy
+                      C — circadian floor &middot; D — drain
                     </div>
                   </div>
                   <div
@@ -12450,10 +12470,10 @@ P = drain − 0.5·recovery</pre
           ? new Date()
           : startDate;
 
-        // Map 8 AM – 10 PM of the same calendar day
+        // Map 6 AM – 10 PM of the same calendar day (matches demo clock start at 6AM)
         const midnight = new Date(dayStart);
         midnight.setHours(0, 0, 0, 0);
-        const WIN_START_H = 8;
+        const WIN_START_H = 6;
         const WIN_END_H = 20;
         const WIN_SPAN_MS = (WIN_END_H - WIN_START_H) * 3600 * 1000;
         const winStartMs = midnight.getTime() + WIN_START_H * 3600 * 1000;
@@ -13512,6 +13532,22 @@ P = drain − 0.5·recovery</pre
           fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
           fontSize: "12px",
         });
+
+        // Rotated STRESS label along Y-axis (inside SVG, adjacent to axis)
+        const stressAxisLabel = document.createElementNS(SVG_NS, "text");
+        const stressLabelCY = Math.round(plotTop + plotSize / 2);
+        stressAxisLabel.setAttribute(
+          "transform",
+          `translate(9,${stressLabelCY}) rotate(-90)`,
+        );
+        stressAxisLabel.style.fill = "var(--px-muted)";
+        stressAxisLabel.style.fontSize = "9px";
+        stressAxisLabel.style.fontFamily = "var(--px-font-ui, sans-serif)";
+        stressAxisLabel.style.letterSpacing = "0.1em";
+        stressAxisLabel.style.textTransform = "uppercase";
+        stressAxisLabel.setAttribute("text-anchor", "middle");
+        stressAxisLabel.textContent = "STRESS";
+        svg.appendChild(stressAxisLabel);
 
         if (hasPayload) {
           const vectorGroup = document.createElementNS(SVG_NS, "g");
