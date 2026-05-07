@@ -14201,10 +14201,7 @@ P = drain − 0.5·recovery</pre
               // sees the full recovery panel and can tell what they can log.
               const rawVal = feats[item.key];
               const effectiveRaw =
-                !hasFeatureValue(rawVal) &&
-                (item.source === "log" || group === "drain")
-                  ? 0
-                  : rawVal;
+                !hasFeatureValue(rawVal) && item.source === "log" ? 0 : rawVal;
               const { text, zero, missing } = formatFeatureValue(
                 item.key,
                 item.unit,
