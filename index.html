@@ -1532,6 +1532,26 @@
         background: var(--px-surface-2);
       }
 
+      .demo-theme-toggle-btn {
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--px-border);
+        background: var(--px-surface);
+        color: var(--px-text);
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.6);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        line-height: 1;
+      }
+
+      .demo-theme-toggle-btn:hover {
+        background: var(--px-surface-2);
+      }
+
       .demo-help-modal {
         position: fixed;
         inset: 0;
@@ -2629,6 +2649,31 @@
 
       .demo-scene-frame.animating[data-activity="late_night_ai"] .anim-glow {
         animation: glow-pulse 1.5s steps(4, end) infinite;
+      }
+
+      /* New unique activity scenes */
+      .demo-scene-frame.animating[data-activity="stretch"] .anim-z {
+        animation: float-up 2.2s steps(6, end) infinite;
+      }
+      .demo-scene-frame.animating[data-activity="stretch"] .anim-z-2 {
+        animation: float-up 2.2s steps(6, end) infinite;
+        animation-delay: 0.9s;
+      }
+      .demo-scene-frame.animating[data-activity="hydrate"] .anim-drop {
+        animation: steam-rise 1.8s steps(5, end) infinite;
+      }
+      .demo-scene-frame.animating[data-activity="hydrate"] .anim-drop-2 {
+        animation: steam-rise 1.8s steps(5, end) infinite;
+        animation-delay: 0.7s;
+      }
+      .demo-scene-frame.animating[data-activity="back_to_back"] .anim-eye {
+        animation: blink-opacity 2.5s steps(4, end) infinite;
+      }
+      .demo-scene-frame.animating[data-activity="after_hours"] .anim-glow {
+        animation: glow-pulse 2s steps(4, end) infinite;
+      }
+      .demo-scene-frame.animating[data-activity="after_hours"] .anim-cursor {
+        animation: cursor-blink 1s step-end infinite;
       }
 
       /* 8-bit character breathing — 2-frame asymmetric: 300ms up, 500ms hold */
@@ -7601,7 +7646,7 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: center;
         gap: 10px;
       }
 
@@ -10883,6 +10928,40 @@ P = drain − 0.5·recovery</pre
           `;
             break;
           case "hydrate":
+            art = `
+            ${sky}${floor}
+            ${pxRects([[32, 80, 96, 6]], surfaceDark)}
+            ${pxRects([[32, 86, 96, 22]], surface)}
+            ${pxRects([[88, 34, 22, 48]], borderDark)}
+            ${pxRects([[90, 36, 18, 44]], bg)}
+            ${pxRects([[90, 58, 18, 20]], "#4090d8")}
+            ${pxRects([[88, 80, 22, 2]], surfaceDark)}
+            <g transform="translate(94 50)">
+              <g class="scene-anim anim-drop" fill="${info}">
+                <rect x="0" y="0" width="3" height="3"></rect>
+                <rect x="5" y="2" width="2" height="3"></rect>
+                <rect x="2" y="5" width="3" height="3"></rect>
+              </g>
+            </g>
+            <g transform="translate(100 46)">
+              <g class="scene-anim anim-drop-2" fill="${info}">
+                <rect x="0" y="0" width="2" height="2"></rect>
+                <rect x="3" y="4" width="3" height="3"></rect>
+              </g>
+            </g>
+            <g class="scene-person">
+              ${pxRects([[46, 38, 8, 8]], text)}
+              ${pxRects([[44, 36, 12, 4]], text)}
+              ${pxRects([[48, 46, 4, 18]], accent)}
+              ${pxRects([[36, 50, 14, 4]], accent)}
+              ${pxRects([[34, 38, 4, 16]], text)}
+              ${pxRects([[46, 64, 4, 18]], surfaceDark)}
+              ${pxRects([[52, 64, 4, 18]], surfaceDark)}
+              ${pxRects([[42, 80, 10, 6]], text)}
+              ${pxRects([[52, 82, 8, 4]], text)}
+            </g>
+          `;
+            break;
           case "eat_food":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADNklEQVR42u3dMUgbYRiA4T/FQpGCIrcIJRSEklmELtKhFKFbpuLo0EkkUsjQLiW41EEoSMnk4OgYOrRFSoeSwUJxDsVCyZylUEKhUDtp0QT1MLm7XJ5n0jQ55O71++/MWQtHB3vHAVJywy5AgAgQBIgAQYAIEJIwYReMpv3GXua/xqXysgmIJRgswXlWLG9d6/XtRnVg2zq/PRMQSzAIEAGCABEgCBABggARIAIEASJAECACBAEiQAjuiCYM6g7kJLdlAmIJBktwznXnn1/r9ZOHmwPb1vntmYBYgkGACBAEiABBgAgQBIgAESAIEAGCABEgCBABggAJbsknu+LcAp/ktq6icHSwd+wQBn8jLqTzd+MswTgHRICQj4uQ6uralZ+7VX/jCAiQPJzMj32AcSbf6SV/51sIIYRudE9ZzgHBEsyQdaYenH4c/fyczwDrGxVHmuEG+HJ9zd4z7UZvCX64uh1CCOFT3ZRMQ9ZCTDxA4ZmKLkJMu9GfgMXZ6MznrXbHETftTECcA2IqJh+gn/2ZdqkE2CzthhBCqIR9R9y0S28CPmkuxX7NbvmHSsZ8KroZARchjO85oAmIABEgCBAXIYk7+b2QfvyuSDw7L54NZDtPX702AbEED91K464jIEDwg+jMieYWMvu1db5/7ft4aXZqINtvbtf6Pr5YqeUvwIveQ87Ce8Xtdjsz4RWLxWS++YpRb/RDuuHYBIyhu17tPVgbF7+m2rk8mo25iiV4nDRbvae+i6W/vsNGIcCdzZq9hqtg8qFw8K7u/4jGBESAIEAECImZaH54G/tFh1/+vxXUulm+9PmlP40zn8/fXwilyV/2/phodW+bgGR0AkYz09fawMl0W3r8qO+/77//2PNYNDMdwm8TcFxc1JgJiIsQBAgCxN0wyV+iX+FGx1KfGyTJx/FKLcDOrTsnH8V4Lukb7PGyBOMcEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABggARIAIEASJAECACBAEyJgq7teVjuwETEAGCABEgCBABggARIAgQAYIAESAIEAGCABEgCBABQlz/ADs6mzAuLmp2AAAAAElFTkSuQmCC" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10905,6 +10984,29 @@ P = drain − 0.5·recovery</pre
           `;
             break;
           case "stretch":
+            art = `
+            ${sky}${floor}
+            ${pxRects([[44, 100, 72, 6]], good)}
+            <g class="scene-person">
+              ${pxRects([[76, 34, 8, 8]], text)}
+              ${pxRects([[74, 32, 12, 4]], text)}
+              ${pxRects([[79, 42, 2, 4]], text)}
+              ${pxRects([[73, 46, 14, 18]], accent)}
+              ${pxRects([[55, 46, 20, 6]], accent)}
+              ${pxRects([[50, 26, 7, 24]], accent)}
+              ${pxRects([[88, 46, 20, 6]], accent)}
+              ${pxRects([[103, 26, 7, 24]], accent)}
+              ${pxRects([[48, 22, 10, 6]], text)}
+              ${pxRects([[102, 22, 10, 6]], text)}
+              ${pxRects([[74, 64, 6, 24]], surfaceDark)}
+              ${pxRects([[82, 64, 6, 24]], surfaceDark)}
+              ${pxRects([[70, 86, 10, 6]], text)}
+              ${pxRects([[82, 86, 10, 6]], text)}
+            </g>
+            ${zGlyph(34, 10, 0.9, "anim-z")}
+            ${zGlyph(108, 10, 0.9, "anim-z-2")}
+          `;
+            break;
           case "take_nap":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAADv0lEQVR42u3cMWhUdxwH8F+sUggpIoRCi0jwQnIUhQ5RaBDBxQ7JUJciiVOXEhEcLFIoZHAQKY4lDkIXGyk4tENEXByidDgkdEykJ3KECBKUg3IoSu1gTzyJ93LmXXOX/+cz5eUl7+7+78v3/d+9u9cztHfkZcAm2WYIEEAEEAQQAQQBRABBABFAaKfthmBzHf50d9P11+8tdtXrGRsqNl0/v7KsAdGArNOzF/lub1dfb8Pyk79r5oA4CQEBxByQxN1fmmm6fu/wSQ2IQzCbpFS6GKXSRQEEc8AEHTz4nUMwaEA64ix5o2fFGhCHYNI9SxZAzAFJ9yxZA6IB6Rx5X+vVgDgEgwAigCCACCAIIAIIAki4EkKs904G3bZ9DYhDMAgg5oC0Lu+7V7k7Fghg+C5IhzyuAGIOSHTtd0E2+rgaEHNA0rsrlgBiDki6d8XSgAggCCACiACCACKAIIAIIAggAggCiACCACKAIIAIIIRPRCfgw5z3UO1pra3b14Ck0YBL18cnN/LAw2Nzs4Y/20d9feaA0LFzwHL5z5aarFD4fNKwowFxFkzE/Mpy0q9HA9JdDbh0dfTLiIioPn6/R6w+Xn1zO8MTf9y0G8wBQQARQBBABBAEEAEEAUQAIVwLpu0OT/8UERFfHSpeWmv973cWpyIi5s+d0oAk2ID1a7f1T0RPT99pcQuVhmu/I4N2QjcaGfwnIiLu/rVNA5LiHHDH8sSbi/07e43mFlD/ztxiZXXBWTAa8G2fDX7w6ofnu6+++mFhrNnfa8buUgnvA6IBsx07fWM2IkK/oQFxJeRdpr4/17A8eWy8pf+f/W0u1+dz6cK0va4B4X++Flx5UF7z9zM/nHiv/2vVnoGCva0BYZMasN5AWY03fvaXhuXbt47n+jxWqzV7XQNCzg2Y1Sz1udzOjO3M/XiirXNADdhc/X3dhQtfX15z/cSMBkQDvnZ06nLGXzxf13bK9x5ERERhaKBhub//QK4vOPv5EhERWeP03/q7Z77VgCTcgMXCJ5HH5yvebr76cjXnF5z9fHEWjAZsl2rGnK4+56vaNxoQttyVENCApNOA5doeo4wGRABBANlic8DT568ZRTQgAggCSGJzwP1fHDGKCZsvXdGAJNyAqw8rRhENSHfqOTq676VhQAOS5hywsvJoQxsoHv/ZKCZs8ddvNCAOwSCACCAIIN2jpzjwsfcB0YAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggneVflau6hNm0nyIAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10929,6 +11031,25 @@ P = drain − 0.5·recovery</pre
           `;
             break;
           case "back_to_back":
+            art = `
+            ${pxRects([[0, 0, 160, 160]], bg)}
+            ${pxRects([[18, 14, 124, 136]], surface)}
+            ${pxRects([[18, 14, 124, 18]], surfaceDark)}
+            ${pxRects([[22, 18, 50, 10]], warn)}
+            ${pxRects([[76, 18, 62, 10]], critical)}
+            ${pxRects([[20, 34, 120, 3]], border)}
+            ${pxRects([[20, 39, 120, 26]], "#d04030")}
+            ${pxRects([[20, 39, 120, 2]], critical)}
+            ${pxRects([[20, 67, 120, 3]], border)}
+            ${pxRects([[20, 72, 120, 26]], "#d04030")}
+            ${pxRects([[20, 72, 120, 2]], critical)}
+            ${pxRects([[20, 100, 120, 3]], border)}
+            ${pxRects([[20, 105, 120, 26]], "#c03820")}
+            ${pxRects([[20, 105, 120, 2]], critical)}
+            ${pxRects([[20, 133, 120, 3]], border)}
+            <rect x="130" y="16" width="8" height="12" fill="${warn}" class="anim-eye" opacity="0.8"></rect>
+          `;
+            break;
           case "zoom_meeting":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAD7klEQVR42u3dvWsbZxwH8J9LCyFDvBwmWYyhi4dCQRiyBPoHNEMmDaGDhnbx4FAiGpVCh05Oq1DiwUszaCiluEM8JBkDAQ8JGENfKJpC0JJgbmkohkBoOlxTMCR6SXS6F30+i3HukC7Pff3180in88L9uzdfBBTkHUOAACKAIIAIIAggAggCiACCACKAIIAIIAggAggCiACCACKAIIAIIAggAgjjeNcQTGa9fW3o9u3uZYOkARHAOZGmaaRpaiAEkCpaKPu9YZqtK6U6niRZGtGIh6U63p3eVQ0IlV8FHz49KslxPKrEeC2dOmkOCLV7HXDl9EqpjufRk6wR1z5Yi4iIwVE/n7nciF8AzZNhFQzeCXmNXqcxdHtr86DQ4/ttuzN0e7+1eez7s6urERHxoN8PrwOCBpwvVW8+DYgGZHxVXeVqQAQQBBBzwCKc7nQjIqIzcr+LERHxZLM90+O71cgmd4MbW2Ptd/7gKDQgCCACCAKIAIJV8KvNelU7qbqtajUgGjBmcAVyWR0+/Dt8JkQDogHz8fKzF47PHBDmrwGPBgelOp4/n/5z/FNxA/eJeaMArrcu5fIE273rRpnyNeDXlz575b9/c/2HXJ5v4+LwT8Vt/VRss97qnhu6/Xx7zxwQatOA2199cvwn/IsfnQ2rYJiTBkzXvo+IiGT/82wO9G3WiNaQGhDq14DJ4b1j3386OBMREZvnsibs7D3INgyyLzdO/OzsaECo+Tsh/zdfTi40drJi7Y/aL/u6e9Cc6f9/uZtERMR69Mfab9BONSAIIAIIlZkDpksfZXO+/1a/4+4fccdZ0oDgesA3MutV7aTqtqrVgFSzAV9e2Vt2ZT3O/T/2w19K0oCYAw73fHe8u7u3nRtzQBBABBAEEAGEyq+CuxuLE+3fbDlJGhDybsCyv3JelVf20YBUyML9uzdfGIZJ5qRXhm7f6V01SBoQAQQBRABBABFAEEAEEAQQAQQBJLwXPJn+43If3+oZodKAhCuic5Km5b6XSvPL7ybaf96vntGA1KsB+7e3cj3gpLFRqxOQ93hNfY778YYGRAO+1vJyzsvA9JepPlzrWrF3tcp9vMwBYY7vkDpK7/KaFGhABBAEkLmbA/6+tzvVB3x/0aDW2bTzogEptgGTlcZUH3Dw63g/IYsfXjD6JfLXmOctmfJ504AU24DvPSvmAruinpdynTcNSHgZBgEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBAEEAEEAUQAQQARQBBABBABBAFEAEEACX8t820kq2eNagUVdd40IH4FI4AggAggCCACCAKIAEKu/gVQJ7v6HfM4ngAAAABJRU5ErkJggg==" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -10967,6 +11088,29 @@ P = drain − 0.5·recovery</pre
           `;
             break;
           case "after_hours":
+            art = `
+            ${pxRects([[0, 0, 160, 160]], "#0c0c1e")}
+            ${pxRects([[0, 90, 160, 70]], "#16162a")}
+            ${pxRects([[16, 16, 44, 56]], "#1e2040")}
+            ${pxRects([[18, 18, 40, 52]], "#0a0a18")}
+            ${pxRects([[22, 24, 8, 6]], "#c8d8f0")}
+            ${pxRects([[24, 22, 4, 4]], "#c8d8f0")}
+            ${pxRects([[34, 30, 20, 24]], "#203080")}
+            <rect x="34" y="30" width="20" height="24" fill="#3050c8" class="anim-glow" opacity="0.5"></rect>
+            ${pxRects([[34, 54, 20, 2]], "#c8d8f0")}
+            ${pxRects([[100, 10, 46, 64]], "#1a1a30")}
+            ${pxRects([[104, 14, 38, 56]], "#2030a0")}
+            <rect x="104" y="14" width="38" height="56" fill="#4060d8" class="anim-glow" opacity="0.6"></rect>
+            ${pxRects([[120, 72, 6, 18]], "#1a1a30")}
+            ${pxRects([[108, 88, 30, 6]], "#1a1a30")}
+            ${pxRects([[68, 62, 8, 8]], text)}
+            ${pxRects([[66, 60, 12, 4]], text)}
+            ${pxRects([[70, 70, 4, 18]], text)}
+            ${pxRects([[68, 88, 4, 18]], text)}
+            ${pxRects([[74, 88, 4, 18]], text)}
+            <rect x="116" y="40" width="4" height="8" fill="${accent}" class="anim-cursor" opacity="0.9"></rect>
+          `;
+            break;
           case "late_night_ai":
             art = `
             <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAElElEQVR42u3dT2hbdQAH8F9rC7NkxtZH52TG6sA/MHDsMKGoVxWhzKvssLMIuwzxJOLFIbvs4sWDCmMXLzIQxPMYs4hU2KEKm7MON0vYiM1ittXVi4U1mD9t3sv7Je/zuWRd0uaX97799vf+5GVsNpnbCJCTcYsAAUQAQQARQBBABBAEEAEEAUQAIQsTrf8xX3m24zf8eOOPqF/Qocef6Hj/hZVfrHUNCG0asJt6cz2VJ04eKW35uvpX3drQgFDwAC4ungqLi6esGQGECOeAWUvKUyGEEK78/GnHxz3z3DvWngaEnAJoroYGpLhzwMOHT1h6aEAKHkBzQTQgxd0PaC6IBsSRkE5zxCyast2RkmOvnRypFbS7vLvj/Wu1NQ0I0TagOWK6arVaCCGEcrlsDggjdzZMbB6ajGs8rc2X9/j+uacB0YDp6fc8v1fnKpmMa3LvwVyWR7eCmcxpKnjv+pI5IAXcCMn72K9jz46EQH5zwLz369mvqAEhvwZsvaJBWrL6uWlZvfKDtDxg+uEJDYj9gGRs7sDruT7/1UvfmgOiAUPaV7HK7OpYMzMjuaKSJBno81WrVVvBBLthQAARwODYLxoQ+wEH9K634NhvLlulGhANqKHikfWRCA2IBqR3pQOzuT5//dKqBgQNmLOpZLBvR2tUa+aAIIAIIAggUVk4shAWjiwIILaCC2FUt0p36tzX5/wJRgNGa6WxHEIIYV+bt1Zcq44X8khEFnPB7TSiBkQDDsL7n13seP+7b80H7wMOfZ+Ns925oAZEA+bhg+PHgvcBh77PwN7unE8DMtwNWNqVTmk27zYz+bm9+uj0F1HOAUNB9v9pQIazAZt360PxwpbDVMucr/PV92cq/38V/FpKV4NHA2IrmKK/D1gDEpWx2WRuYxRfWLs53XZtzgFv/b0eQgjh6Jnft9z/3YlXonrdqzeuhkFeI9pnxWEOGKObK0s7asLN7wuRflqmOSBowPycOfqkhfCAT97e19Pj3jt7TQOiAUPRPxlo1Jw9v9LXbE8DogGz1Khd39bjd5X3bPn60McXJ1t+WTO9/f740791Gt9Lp3994b9/3o/htnHyqTu2gtGAo2r5qw83f+M3WhpgLKPbbuOptown19tKj8vxYOX+lq+XVsY1IBowesn+NwZ6qnTt/JfdxvN8VAvo8ufBHJDgbBhS0e3Yc79nn6StdW7XK3NAgpMREECLAAFEACHYDxifmdk9QzXem6t/Rjmuza1eDYgGHCaNRiMM837E2PYbakA0YCfz++Maz/La1FCt0NqdtQEvz84dduGyBkQD9i6ZLkU1npenb/f1/d/8VC/48qxrQDRgYb35YslC0IAIIAggAggCiK3gNqq3ettv1m0PO2EojlhpQPwJRgBBABFAEEAEEAQQAYRMTSSPrg/lwZn4xu0g2k7WkwYk3xjXbzfjGtFjvZ1BHN24iyal9aQBsRGCAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACCAKIAIIAIoAggAggCCACiACCAFJQY5W9yYbFgAakkP4FS2QdiUCdWFcAAAAASUVORK5CYII=" x="0" y="0" width="160" height="160" image-rendering="pixelated"></image>
@@ -12200,6 +12344,296 @@ P = drain − 0.5·recovery</pre
         return now.toISOString();
       }
 
+      // Build pre-seeded activity history for each persona so the timeline
+      // is populated when the demo opens. Returns { activities, finalE, finalS, finalClock }.
+      function getDemoSeedActivities(profileId) {
+        const base = new Date();
+        base.setHours(6, 0, 0, 0);
+
+        function addMin(isoTs, minutes) {
+          return new Date(
+            new Date(isoTs).getTime() + minutes * 60000,
+          ).toISOString();
+        }
+
+        function act(id, label, kind, startIso, durationMin, e0, e1, s0, s1) {
+          return {
+            id,
+            label,
+            kind,
+            simClockBefore: startIso,
+            simClockAfter: addMin(startIso, durationMin),
+            batteryBefore: Math.round(e0 * 10) / 10,
+            batteryAfter: Math.round(e1 * 10) / 10,
+            stressBefore: Math.round(s0 * 10) / 10,
+            stressAfter: Math.round(s1 * 10) / 10,
+          };
+        }
+
+        const start = base.toISOString();
+
+        const seeds = {
+          // Sam: Buried in comms and meetings by late morning. High stress, depleted.
+          sam() {
+            let t = start;
+            const a = [];
+            a.push(
+              act(
+                "stretch",
+                "Stretch break",
+                "recovery",
+                t,
+                10,
+                70,
+                74,
+                30,
+                28,
+              ),
+            );
+            t = addMin(t, 10);
+            a.push(
+              act(
+                "heavy_async",
+                "Heavy async comms",
+                "drain",
+                t,
+                60,
+                74,
+                57,
+                28,
+                44,
+              ),
+            );
+            t = addMin(t, 60);
+            a.push(
+              act("eat_food", "Eat food", "recovery", t, 25, 57, 62, 44, 43),
+            );
+            t = addMin(t, 25);
+            a.push(
+              act(
+                "back_to_back",
+                "Back-to-back meetings",
+                "drain",
+                t,
+                90,
+                62,
+                48,
+                43,
+                55,
+              ),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act(
+                "hydrate",
+                "Hydrate & step away",
+                "recovery",
+                t,
+                10,
+                48,
+                51,
+                55,
+                54,
+              ),
+            );
+            t = addMin(t, 10);
+            a.push(
+              act(
+                "zoom_meeting",
+                "Zoom meeting",
+                "drain",
+                t,
+                45,
+                51,
+                41,
+                54,
+                62,
+              ),
+            );
+            t = addMin(t, 45);
+            return { activities: a, finalE: 41, finalS: 62, finalClock: t };
+          },
+
+          // Maya: Morning outdoors, sustained deep work, healthy pacing.
+          maya() {
+            let t = start;
+            const a = [];
+            a.push(
+              act(
+                "go_outside",
+                "Go outside",
+                "recovery",
+                t,
+                20,
+                68,
+                76,
+                22,
+                19,
+              ),
+            );
+            t = addMin(t, 20);
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 76, 68, 19, 23),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act("eat_food", "Eat food", "recovery", t, 25, 68, 73, 23, 22),
+            );
+            t = addMin(t, 25);
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 73, 65, 22, 26),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act(
+                "stretch",
+                "Stretch break",
+                "recovery",
+                t,
+                10,
+                65,
+                69,
+                26,
+                24,
+              ),
+            );
+            t = addMin(t, 10);
+            a.push(
+              act(
+                "connect_people",
+                "Connect with people",
+                "recovery",
+                t,
+                30,
+                69,
+                75,
+                24,
+                20,
+              ),
+            );
+            t = addMin(t, 30);
+            return { activities: a, finalE: 75, finalS: 20, finalClock: t };
+          },
+
+          // Alex: Grinds without breaks — deep work blocks stack up, no recovery.
+          alex() {
+            let t = start;
+            const a = [];
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 72, 64, 20, 24),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 64, 56, 24, 28),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act(
+                "heavy_async",
+                "Heavy async comms",
+                "drain",
+                t,
+                60,
+                56,
+                42,
+                28,
+                40,
+              ),
+            );
+            t = addMin(t, 60);
+            a.push(
+              act(
+                "zoom_meeting",
+                "Zoom meeting",
+                "drain",
+                t,
+                45,
+                42,
+                34,
+                40,
+                48,
+              ),
+            );
+            t = addMin(t, 45);
+            return { activities: a, finalE: 34, finalS: 48, finalClock: t };
+          },
+
+          // Jordan: Balanced — deep work, one meeting, movement breaks, stays healthy.
+          jordan() {
+            let t = start;
+            const a = [];
+            a.push(
+              act(
+                "go_outside",
+                "Go outside",
+                "recovery",
+                t,
+                20,
+                70,
+                78,
+                22,
+                19,
+              ),
+            );
+            t = addMin(t, 20);
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 78, 70, 19, 23),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act(
+                "zoom_meeting",
+                "Zoom meeting",
+                "drain",
+                t,
+                45,
+                70,
+                59,
+                23,
+                31,
+              ),
+            );
+            t = addMin(t, 45);
+            a.push(
+              act(
+                "stretch",
+                "Stretch break",
+                "recovery",
+                t,
+                10,
+                59,
+                63,
+                31,
+                29,
+              ),
+            );
+            t = addMin(t, 10);
+            a.push(
+              act("deep_work", "Deep work", "drain", t, 90, 63, 55, 29, 33),
+            );
+            t = addMin(t, 90);
+            a.push(
+              act(
+                "go_outside",
+                "Go outside",
+                "recovery",
+                t,
+                20,
+                55,
+                63,
+                33,
+                30,
+              ),
+            );
+            t = addMin(t, 20);
+            return { activities: a, finalE: 63, finalS: 30, finalClock: t };
+          },
+        };
+
+        const builder = seeds[profileId] || seeds.sam;
+        return builder();
+      }
+
       function getDemoActivity(activityId) {
         return DEMO_ACTIVITY_BY_ID[activityId] || null;
       }
@@ -12658,6 +13092,8 @@ P = drain − 0.5·recovery</pre
         ];
 
         const currentTheme = document.body.dataset.theme || "arcade";
+        const LIGHT_THEMES = ["editorial", "light", "pastel"];
+        const isLightTheme = LIGHT_THEMES.includes(currentTheme);
         const topbar = `
         <div class="demo-topbar">
           <div class="demo-topbar-copy">
@@ -12667,6 +13103,7 @@ P = drain − 0.5·recovery</pre
           </div>
           <div class="demo-topbar-actions">
             <button type="button" class="demo-help-btn" data-demo-help aria-label="How the model works">?</button>
+            <button type="button" class="demo-theme-toggle-btn" data-demo-theme-toggle aria-label="Toggle light/dark theme" title="${isLightTheme ? "Switch to dark" : "Switch to light"}">${isLightTheme ? "☾" : "☀"}</button>
             <button type="button" class="demo-exit-btn" data-demo-exit>Exit demo</button>
           </div>
         </div>
@@ -13258,14 +13695,16 @@ P = drain − 0.5·recovery</pre
         APP.model.stale = false;
         APP.uiLayer = 0;
         APP.mode = "normal";
-        APP.demo.E = 70;
-        APP.demo.S = 30;
-        APP.demo.simClock = createDemoClockStart();
-        APP.demo.simClockStart = APP.demo.simClock;
+        APP.demo.simClockStart = createDemoClockStart();
         APP.demo.activity = null;
         APP.demo.featureAccum = getDemoFeatureSeed();
         APP.demo.animationStopId = null;
-        APP.demo.completedActivities = [];
+        // Pre-populate timeline with persona-appropriate history
+        const _demoSeed = getDemoSeedActivities(getActiveDemoId() || "sam");
+        APP.demo.completedActivities = _demoSeed.activities;
+        APP.demo.E = _demoSeed.finalE;
+        APP.demo.S = _demoSeed.finalS;
+        APP.demo.simClock = _demoSeed.finalClock;
         renderToggleBanner();
         renderApp();
         scheduleDemoStateSync(0);
@@ -13524,21 +13963,12 @@ P = drain − 0.5·recovery</pre
           });
         });
 
-        appendSvgText(svg, plotRight + 6, plotBottom + 30, "E", {
-          fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-          fontSize: "12px",
-        });
-        appendSvgText(svg, 5, plotTop - 6, "S", {
-          fill: hasPayload ? "var(--px-text)" : "var(--px-muted)",
-          fontSize: "12px",
-        });
-
         // Rotated STRESS label along Y-axis (inside SVG, adjacent to axis)
         const stressAxisLabel = document.createElementNS(SVG_NS, "text");
         const stressLabelCY = Math.round(plotTop + plotSize / 2);
         stressAxisLabel.setAttribute(
           "transform",
-          `translate(9,${stressLabelCY}) rotate(-90)`,
+          `translate(14,${stressLabelCY}) rotate(-90)`,
         );
         stressAxisLabel.style.fill = "var(--px-muted)";
         stressAxisLabel.style.fontSize = "9px";
@@ -14189,7 +14619,7 @@ P = drain − 0.5·recovery</pre
         const readouts = [
           {
             id: "D",
-            label: "D",
+            label: "Drain",
             value: payload ? `${Math.round(D * 100)}%` : "--%",
             popTitle: "D — Drain",
             popBody:
@@ -14216,7 +14646,7 @@ P = drain − 0.5·recovery</pre
           },
           {
             id: "C",
-            label: "C",
+            label: "Circ. Floor",
             value: payload ? `${eRestNow.toFixed(1)}%` : "--%",
             popTitle: "Circadian Rest Energy",
             popBody:
@@ -16478,9 +16908,21 @@ P = drain − 0.5·recovery</pre
           const exitBtn = event.target.closest("[data-demo-exit]");
           const backBtn = event.target.closest("[data-demo-back]");
           const helpBtn = event.target.closest("[data-demo-help]");
+          const themeToggleBtn = event.target.closest(
+            "[data-demo-theme-toggle]",
+          );
           const windowBtn = event.target.closest("[data-demo-window-hours]");
           if (windowBtn) {
             applyWindowHoursSelection(windowBtn.dataset.demoWindowHours);
+            return;
+          }
+          if (themeToggleBtn) {
+            const LIGHT_THEMES_SET = ["editorial", "light", "pastel"];
+            const t = document.body.dataset.theme || "arcade";
+            setThemePreference(
+              LIGHT_THEMES_SET.includes(t) ? "editorial-dark" : "editorial",
+            );
+            renderDemoLayout();
             return;
           }
           if (helpBtn) {
