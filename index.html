@@ -17660,6 +17660,10 @@ P = drain − 0.5·recovery</pre
 
       async function start() {
         initUi();
+        // Reset any stale server-side demo override from a prior session/refresh
+        try {
+          await fetch(modelUrl("/demo-state"), { method: "DELETE" });
+        } catch (_) {}
         maybeShowIntroSplash();
         await refreshModelState({ allowCache: true });
         if (!APP.model.payload) {

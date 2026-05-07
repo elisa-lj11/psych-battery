@@ -592,6 +592,10 @@ class Handler(SimpleHTTPRequestHandler):
     def do_DELETE(self):
         if self.path == '/demo-state':
             _clear_demo_state()
+            # Invalidate cached snapshot so next /state recomputes from live source
+            global _state_cache
+            with _STATE_CACHE_LOCK:
+                _state_cache = None
             self._send_json({'ok': True, 'demo_active': False})
         else:
             self.send_response(404)
