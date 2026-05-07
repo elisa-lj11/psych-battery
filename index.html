@@ -7480,15 +7480,16 @@
       }
       .phase-portrait-dropdown-wrap .phase-portrait-frame {
         aspect-ratio: 1 / 1;
-        min-height: 400px;
+        min-height: 480px;
+        width: 100%;
       }
       .phase-portrait-dropdown-wrap .phase-portrait-shell {
-        align-items: start;
+        align-items: stretch;
         gap: 4px;
-        grid-template-columns: 1fr; /* STRESS is inside SVG; no external label */
+        grid-template-columns: auto 1fr;
       }
-      .phase-portrait-dropdown-wrap .phase-portrait-axis-label.is-y {
-        display: none;
+      .phase-portrait-dropdown-wrap #phase-portrait {
+        width: 100%;
       }
       .phase-portrait-plain-explain {
         grid-area: text;
@@ -13962,22 +13963,6 @@ P = drain − 0.5·recovery</pre
             fontSize: "11px",
           });
         });
-
-        // Rotated STRESS label along Y-axis (inside SVG, adjacent to axis)
-        const stressAxisLabel = document.createElementNS(SVG_NS, "text");
-        const stressLabelCY = Math.round(plotTop + plotSize / 2);
-        stressAxisLabel.setAttribute(
-          "transform",
-          `translate(14,${stressLabelCY}) rotate(-90)`,
-        );
-        stressAxisLabel.style.fill = "var(--px-muted)";
-        stressAxisLabel.style.fontSize = "9px";
-        stressAxisLabel.style.fontFamily = "var(--px-font-ui, sans-serif)";
-        stressAxisLabel.style.letterSpacing = "0.1em";
-        stressAxisLabel.style.textTransform = "uppercase";
-        stressAxisLabel.setAttribute("text-anchor", "middle");
-        stressAxisLabel.textContent = "STRESS";
-        svg.appendChild(stressAxisLabel);
 
         if (hasPayload) {
           const vectorGroup = document.createElementNS(SVG_NS, "g");
